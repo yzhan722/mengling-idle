@@ -31,18 +31,23 @@ function applyCostMultiplier(cost, mul) {
  */
 export function dexCaughtCount(state) {
   const caught = state.dex?.caught ?? {};
+  // 去 IP 化后仅统计 roster 内物种（旧存档可能留有被裁物种记录）
+  const roster = Array.isArray(globalThis.BEAST_ROSTER) ? globalThis.BEAST_ROSTER : null;
+  const rosterSet = roster ? new Set(roster.map((d) => `p${String(d).padStart(3, "0")}`)) : null;
   let unique = 0;
   let total = 0;
-  for (const v of Object.values(caught)) {
+  for (const [pid, v] of Object.entries(caught)) {
     const n = typeof v === "number" ? v : 0;
-    if (n > 0) unique++;
+    if (n <= 0) continue;
+    if (rosterSet && !rosterSet.has(pid)) continue;
+    unique++;
     total += n;
   }
   return { unique, total };
 }
 
 /**
- * 图鉴加成效果（每种精灵提升资源产量）
+ * 图鉴加成效果（每种萌灵提升资源产量）
  */
 export function computeDexEffects(state) {
   const { unique } = dexCaughtCount(state);
@@ -249,7 +254,7 @@ export function getResearchEfficiency(state) {
 }
 
 /**
- * 精灵球制作成本
+ * 灵球制作成本
  * @param {number} qty
  * @param {object} state
  * @param {object} ui

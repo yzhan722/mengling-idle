@@ -15,13 +15,13 @@ export function createRenderDailyTasks({ elDailyTasks, fmt, dailyTasks }) {
     if (signin) {
       const NAME = {
         futurecoin: "未来币",
-        catnip: "树果",
-        wood: "球果",
-        minerals: "碎片",
-        pokeball: "精灵球",
-        evolutionStone: "进化石",
-        rareCandy: "稀有糖果",
-        evolutionEnergy: "进化能量",
+        catnip: "灵果",
+        wood: "灵木",
+        minerals: "灵晶",
+        pokeball: "灵球",
+        evolutionStone: "灵晶石",
+        rareCandy: "跃级糖丸",
+        evolutionEnergy: "灵源",
       };
       const next = signin.nextRewards || {};
       const parts = Object.entries(next)

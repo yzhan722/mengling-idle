@@ -1,12 +1,12 @@
 // 捕获系统管理
 import { CAPTURE_AREAS } from "../config.js";
-import { getCaptureRate } from "../pokemon_defs.js";
+import { getCatchRate } from "../beast_defs.js";
 
 export function createCaptureSystem({ defs, getState, state, ui, randFloat }) {
   const readState = typeof getState === "function" ? getState : () => state;
   const rng = typeof randFloat === "function" ? randFloat : Math.random;
 
-  // 获取已捕获的唯一宝可梦数量
+  // 获取已捕获的唯一萌灵数量
   function getCaughtUniqueCount() {
     const s = readState();
     const caught = s?.dex?.caught ?? {};
@@ -36,7 +36,7 @@ export function createCaptureSystem({ defs, getState, state, ui, randFloat }) {
   function ensureAreaValid() {
     const unlocked = getUnlockedAreas();
     if (unlocked.length === 0) {
-      ui.captureAreaId = "kanto";
+      ui.captureAreaId = "meadow";
       return;
     }
     const current = unlocked.find((a) => a.id === ui.captureAreaId);
@@ -52,22 +52,22 @@ export function createCaptureSystem({ defs, getState, state, ui, randFloat }) {
     return areas.find((a) => a.id === ui.captureAreaId) ?? areas[0];
   }
 
-  // 获取当前区域的宝可梦池
+  // 获取当前区域的萌灵池
   function getPool() {
     const area = getActiveArea();
-    const pool = defs.pokemon.filter(area.pool);
+    const pool = defs.beasts.filter(area.pool);
     return pool;
   }
 
-  // 获取神话宝可梦池
+  // 获取神话萌灵池
   function getMythicPool() {
-    return defs.pokemon.filter((p) => p && p.tier === "epic");
+    return defs.beasts.filter((p) => p && p.tier === "epic");
   }
 
   // 基于官方 capture_rate 计算基础捕获概率
   // 公式：(capture_rate / 255) / 2，即官方概率的一半
   function getBaseCatchChanceByDex(dex) {
-    const rate = getCaptureRate(dex);
+    const rate = getCatchRate(dex);
     return (rate / 255) / 2;
   }
 
@@ -80,7 +80,7 @@ export function createCaptureSystem({ defs, getState, state, ui, randFloat }) {
     return getBaseCatchChanceByDex(10); // common, capture_rate ~255
   }
 
-  // 从池中随机选择宝可梦
+  // 从池中随机选择萌灵
   function pickRandomFromPool(pool) {
     const weights = {
       common: 80,

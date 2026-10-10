@@ -327,28 +327,28 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
       state.res.futurecoin.value = Math.max(0, (state.res.futurecoin?.value ?? 0) - price);
       if (kind === "rareCandy") {
         addRes("rareCandy", amount);
-        addLog(`兑换：未来币 -${price} → 神奇糖果 +${amount}`);
+        addLog(`兑换：未来币 -${price} → 跃级糖丸 +${amount}`);
       } else if (kind === "masterball") {
         addRes("masterball", amount);
-        addLog(`购买：未来币 -${price} → 大师球 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 究极灵球 +${amount}`, true);
       } else if (kind === "ultraball") {
         addRes("ultraball", amount);
-        addLog(`购买：未来币 -${price} → 高级球 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 高级灵球 +${amount}`, true);
       } else if (kind === "quickball") {
         addRes("quickball", amount);
-        addLog(`购买：未来币 -${price} → 先机球 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 迅捷灵球 +${amount}`, true);
       } else if (kind === "luxuryball") {
         addRes("luxuryball", amount);
-        addLog(`购买：未来币 -${price} → 豪华球 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 豪华灵球 +${amount}`, true);
       } else if (kind === "expCandy") {
         addRes("expCandy", amount);
-        addLog(`购买：未来币 -${price} → 经验糖果 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 历练糖丸 +${amount}`, true);
       } else if (kind === "expCandyL") {
         addRes("expCandyL", amount);
-        addLog(`购买：未来币 -${price} → 经验糖果L +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 历练糖丸L +${amount}`, true);
       } else if (kind === "expCandyXL") {
         addRes("expCandyXL", amount);
-        addLog(`购买：未来币 -${price} → 经验糖果XL +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 历练糖丸XL +${amount}`, true);
       } else if (kind === "affectionTreat") {
         addRes("affectionTreat", amount);
         addLog(`购买：未来币 -${price} → 亲密点心 +${amount}`, true);
@@ -357,22 +357,22 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
         addLog(`购买：未来币 -${price} → 友谊手环 +${amount}`, true);
       } else if (kind === "shinyCharm") {
         addRes("shinyCharm", amount);
-        addLog(`购买：未来币 -${price} → 闪耀护符 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 虹彩护符 +${amount}`, true);
       } else if (kind === "luckyEgg") {
         addRes("luckyEgg", amount);
-        addLog(`购买：未来币 -${price} → 幸运蛋 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 福缘蛋 +${amount}`, true);
       } else if (kind === "bottleCap") {
         addRes("bottleCap", amount);
-        addLog(`购买：未来币 -${price} → 银色王冠 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 银桂冠 +${amount}`, true);
       } else if (kind === "goldBottleCap") {
         addRes("goldBottleCap", amount);
-        addLog(`购买：未来币 -${price} → 金色王冠 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 金桂冠 +${amount}`, true);
       } else if (kind === "netball") {
         addRes("netball", amount);
-        addLog(`购买：未来币 -${price} → 捕网球 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 捕灵球 +${amount}`, true);
       } else if (kind === "duskball") {
         addRes("duskball", amount);
-        addLog(`购买：未来币 -${price} → 黑暗球 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 暗夜灵球 +${amount}`, true);
       } else if (kind === "energyDrink") {
         addRes("energyDrink", amount);
         addLog(`购买：未来币 -${price} → 能量饮料 +${amount}`, true);
@@ -384,10 +384,10 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
         addLog(`购买：未来币 -${price} → 高级搜索电池 +${amount}`, true);
       } else if (kind === "sootheBell") {
         addRes("sootheBell", amount);
-        addLog(`购买：未来币 -${price} → 安抚之铃 +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 暖心铃 +${amount}`, true);
       } else if (kind === "expCandyS") {
         addRes("expCandyS", amount);
-        addLog(`购买：未来币 -${price} → 经验糖果S +${amount}`, true);
+        addLog(`购买：未来币 -${price} → 历练糖丸S +${amount}`, true);
       } else if (kind === "autoResearch") {
         state.unlocks.autoResearch = true;
         addLog("解锁：自动科研", true);
@@ -510,7 +510,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
         state.res.catnip.value = Math.max(0, state.res.catnip.value - cost);
         addRes("bigBerry", 1);
         dailyTasks?.onEvent("craft", { item: "bigBerry" });
-        addLog(`制作：树果 -${cost} → 大树果 +1`, true);
+        addLog(`制作：灵果 -${cost} → 大灵果 +1`, true);
         ui.futureDirty = true;
         render();
         return;
@@ -542,12 +542,12 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
       if (craftType === "energyToStone") {
         const costEnergy = 10;
         if ((state.res.evolutionEnergy?.value ?? 0) < costEnergy) {
-          addLog("兑换失败：进化能量不足。", true);
+          addLog("兑换失败：灵源不足。", true);
           return;
         }
         state.res.evolutionEnergy.value = Math.max(0, (state.res.evolutionEnergy?.value ?? 0) - costEnergy);
         addRes("evolutionStone", 1);
-        addLog(`兑换：进化能量 -${costEnergy} → 进化石 +1`, true);
+        addLog(`兑换：灵源 -${costEnergy} → 灵晶石 +1`, true);
         ui.futureDirty = true;
         render();
         return;
@@ -561,7 +561,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
         const stoneCost = Math.min(10000, 500 + made0 * 10);
         const stoneTime = applyPsychicCraftBoost(state, 1800); // 30分钟
         if ((state.res.minerals?.value ?? 0) < stoneCost) {
-          addLog("合成失败：进化石碎片不足。", true);
+          addLog("合成失败：灵晶碎片不足。", true);
           return;
         }
         state.res.minerals.value = Math.max(0, (state.res.minerals?.value ?? 0) - stoneCost);
@@ -569,7 +569,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           remainingSec: stoneTime,
           totalSec: stoneTime,
         };
-        addLog("开始合成：进化能量（30分钟）", true);
+        addLog("开始合成：灵源（30分钟）", true);
         ui.futureDirty = true;
         render();
         return;
@@ -579,7 +579,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
         const ropeCostStone = 3;
         const ropeTime = applyPsychicCraftBoost(state, 3600); // 60分钟
         if ((state.res.evolutionStone?.value ?? 0) < ropeCostStone) {
-          addLog("合成失败：进化石不足。", true);
+          addLog("合成失败：灵晶石不足。", true);
           return;
         }
         state.res.evolutionStone.value = Math.max(0, (state.res.evolutionStone?.value ?? 0) - ropeCostStone);
@@ -587,7 +587,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           remainingSec: ropeTime,
           totalSec: ropeTime,
         };
-        addLog("开始合成：通信绳（60分钟）", true);
+        addLog("开始合成：灵契绳（60分钟）", true);
         ui.futureDirty = true;
         render();
         return;
@@ -598,11 +598,11 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
         const hugeCostBig = 30;
         const hugeTime = applyPsychicCraftBoost(state, 7200); // 2小时
         if ((state.res.catnip?.value ?? 0) < hugeCostCatnip) {
-          addLog("合成失败：树果不足。", true);
+          addLog("合成失败：灵果不足。", true);
           return;
         }
         if ((state.res.bigBerry?.value ?? 0) < hugeCostBig) {
-          addLog("合成失败：大树果不足。", true);
+          addLog("合成失败：大灵果不足。", true);
           return;
         }
         state.res.catnip.value = Math.max(0, (state.res.catnip?.value ?? 0) - hugeCostCatnip);
@@ -611,7 +611,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           remainingSec: hugeTime,
           totalSec: hugeTime,
         };
-        addLog("开始合成：巨大树果（2小时）", true);
+        addLog("开始合成：巨大灵果（2小时）", true);
         ui.futureDirty = true;
         render();
         return;
@@ -621,7 +621,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
         const megaCostStone = 10;
         const megaTime = applyPsychicCraftBoost(state, 7200); // 2小时
         if ((state.res.evolutionStone?.value ?? 0) < megaCostStone) {
-          addLog("合成失败：进化石不足。", true);
+          addLog("合成失败：灵晶石不足。", true);
           return;
         }
         state.res.evolutionStone.value = Math.max(0, (state.res.evolutionStone?.value ?? 0) - megaCostStone);
@@ -629,7 +629,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           remainingSec: megaTime,
           totalSec: megaTime,
         };
-        addLog("开始合成：MEGA进化石（2小时）", true);
+        addLog("开始合成：觉醒石（2小时）", true);
         ui.futureDirty = true;
         render();
         return;

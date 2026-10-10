@@ -362,7 +362,7 @@ export function dailyGoalsChecklist(state) {
 /** One-line live next goal for help coach. */
 export function liveNextGoalLine(state, { dexPct = 0, eraQuest = "", pveNext = "" } = {}) {
   const catches = Math.max(0, Math.floor(state?.catchCount || 0));
-  if (catches <= 0) return "下一目标：打开「捕捉」，用手里的球抓第一只精灵。";
+  if (catches <= 0) return "下一目标：打开「捕捉」，用手里的球抓第一只萌灵。";
   if (eraQuest) return `下一目标：时代任务 — ${eraQuest}`;
   if (pveNext) return `下一目标：挑战 — ${pveNext}`;
   if (typeof dexPct === "number" && dexPct < 100) return `下一目标：图鉴完成度 ${Math.max(0, Math.floor(dexPct))}%`;
@@ -374,7 +374,7 @@ export const DAILY_SPIN_REWARDS = Object.freeze([
   { id: "fc5", w: 40, futurecoin: 5, label: "小额未来币 +5" },
   { id: "fc15", w: 28, futurecoin: 15, label: "中额未来币 +15" },
   { id: "fc30", w: 15, futurecoin: 30, label: "大额未来币 +30" },
-  { id: "berry", w: 12, bigBerry: 1, label: "大树果 ×1" },
+  { id: "berry", w: 12, bigBerry: 1, label: "大灵果 ×1" },
   { id: "fc80", w: 5, futurecoin: 80, label: "幸运大奖 +80" },
 ]);
 
@@ -519,7 +519,7 @@ export const SEASON_GHOST_RIVALS = [
   { name: "短裤小子", score: 80 },
   { name: "迷你裙", score: 220 },
   { name: "精英阿哲", score: 900 },
-  { name: "道馆影子", score: 1800 },
+  { name: "试炼影子", score: 1800 },
 ];
 
 /** Returns progress line vs next/top ghost (daily-drifting scores by default). */
@@ -534,7 +534,7 @@ export function seasonBarVsGhosts(myScore, ghosts) {
       beaten: 0,
       total: 0,
       needDex: 0,
-      tip: "榜上还没有其他训练家 — 去捕捉提升图鉴",
+      tip: "榜上还没有其他育灵师 — 去捕捉提升图鉴",
       nextName: null,
     };
   }
@@ -550,7 +550,7 @@ export function seasonBarVsGhosts(myScore, ghosts) {
   const topPct = top.score > 0 ? Math.min(100, Math.round((score / top.score) * 100)) : 100;
   const tip = next
     ? `再登记 ${needDex} 种超过 ${targetName}`
-    : `已超过全部 ${list.length} 位幽灵训练家`;
+    : `已超过全部 ${list.length} 位幽灵育灵师`;
   return { score, topScore: top.score, topPct, beaten, total: list.length, needDex, tip, nextName: next?.name || null };
 }
 

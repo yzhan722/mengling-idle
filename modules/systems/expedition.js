@@ -14,10 +14,10 @@ export const EXPEDITION_SEASON_BLURBS = {
 /** Random flavor event on expedition complete — small bonus already in tick rewards. */
 export const EXPEDITION_EVENT_CARDS = [
   { id: "scout_trail", title: "侦察小径", blurb: "队伍抄近路归来，士气高涨。", bonusFuturecoin: 2 },
-  { id: "berry_cache", title: "树果储藏", blurb: "在废墟中发现补给，分给了全队。", bonusFuturecoin: 1 },
+  { id: "berry_cache", title: "灵果储藏", blurb: "在废墟中发现补给，分给了全队。", bonusFuturecoin: 1 },
   { id: "rival_echo", title: "劲敌残影", blurb: "远处传来对战呐喊，你们加快了脚步。", bonusFuturecoin: 3 },
   { id: "ancient_mark", title: "古代刻痕", blurb: "岩壁上刻着未知图腾，研究员记下坐标。", bonusFuturecoin: 2 },
-  { id: "lucky_find", title: "意外拾遗", blurb: "草丛里滚出一枚完好精灵球。", bonusFuturecoin: 1 },
+  { id: "lucky_find", title: "意外拾遗", blurb: "草丛里滚出一枚完好灵球。", bonusFuturecoin: 1 },
 ];
 
 export function pickExpeditionEventCard(randFloat = Math.random) {
@@ -162,20 +162,20 @@ export function expeditionTypeMulFromTypes(monTypes, dungeonType) {
 /**
  * @param {{ dex?: number }} mon
  * @param {string|null|undefined} dungeonType
- * @param {(dex: number) => { types?: string[] } | null | undefined} getPokeApiDataByDex
+ * @param {(dex: number) => { types?: string[] } | null | undefined} getBeastDataByDex
  */
-export function expeditionTypeMul(mon, dungeonType, getPokeApiDataByDex) {
-  const monTypes = getMonTypesForExpedition(mon, getPokeApiDataByDex);
+export function expeditionTypeMul(mon, dungeonType, getBeastDataByDex) {
+  const monTypes = getMonTypesForExpedition(mon, getBeastDataByDex);
   return expeditionTypeMulFromTypes(monTypes, dungeonType);
 }
 
-export function getMonTypesForExpedition(mon, getPokeApiDataByDex) {
-  const localTypes = globalThis.POKEMON_TYPES;
+export function getMonTypesForExpedition(mon, getBeastDataByDex) {
+  const localTypes = globalThis.BEAST_TYPES;
   if (localTypes && typeof localTypes === "object" && mon && mon.dex != null) {
     const lt = localTypes[mon.dex];
     if (Array.isArray(lt) && lt.length > 0) return lt;
   }
-  const api = typeof getPokeApiDataByDex === "function" ? getPokeApiDataByDex(mon?.dex) : null;
+  const api = typeof getBeastDataByDex === "function" ? getBeastDataByDex(mon?.dex) : null;
   const types = Array.isArray(api?.types) ? api.types.slice(0, 2) : [];
   return types.filter((x) => typeof x === "string");
 }

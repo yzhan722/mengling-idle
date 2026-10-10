@@ -41,7 +41,7 @@ export function initCaptureTab({
   getSpeciesByPid,
   computeTechEffects,
   baseCatchChanceByDex,
-  awardCaughtPokemon,
+  awardCaughtBeast,
   doCatch,
   pushTickerEvent,
   onPokeballCraft,
@@ -52,7 +52,7 @@ export function initCaptureTab({
   const rareWeight = (p, base, rareWeightMul) =>
     (p?.tier === "rare" || p?.tier === "epic") ? base * rareWeightMul : base;
   const getMonTypesForBias = (p) => {
-    const localTypes = globalThis.POKEMON_TYPES;
+    const localTypes = globalThis.BEAST_TYPES;
     return localTypes && typeof localTypes === "object" ? localTypes[p?.dex] : null;
   };
 
@@ -61,7 +61,7 @@ export function initCaptureTab({
     const r = state.res?.[ballType];
     if (!r) return;
     r.value = Math.max(0, (r.value ?? 0) + 1);
-    addLog("捡拾：精灵球被弹回！");
+    addLog("捡拾：灵球被弹回！");
   };
 
   const onCatchSuccessFun = (state) => {
@@ -69,7 +69,7 @@ export function initCaptureTab({
     if (streak >= 3) addLog(`连捕中：×${streak}`);
     if (reward?.berry > 0) {
       addRes("catnip", reward.berry);
-      addLog(`★ ${reward.label}：树果 +${reward.berry}`, true);
+      addLog(`★ ${reward.label}：灵果 +${reward.berry}`, true);
     }
   };
 
@@ -79,7 +79,7 @@ export function initCaptureTab({
 
   if (elCaptureArea) {
     elCaptureArea.addEventListener("change", () => {
-      ui.captureAreaId = String(elCaptureArea.value || "kanto");
+      ui.captureAreaId = String(elCaptureArea.value || "meadow");
       markCaptureDirty();
     });
   }
@@ -245,7 +245,7 @@ export function initCaptureTab({
         const charges1 = Math.max(0, Math.min(maxCharges, Math.floor(charges0)));
         if (charges1 <= 0) return false;
 
-        if (ui.captureAreaId === "mythic") {
+        if (ui.captureAreaId === "sanctum") {
           const need = 100;
           const cur = Math.max(0, Math.floor(state.res.futurecoin?.value ?? 0));
           if (cur < need) {
@@ -257,16 +257,16 @@ export function initCaptureTab({
             return true;
           }
           state.res.futurecoin.value = cur - need;
-          addLog(`神兽领域：未来币 -${need}（遭遇）`);
+          addLog(`幻梦秘境：未来币 -${need}（遭遇）`);
         }
 
         const pool = getCapturePool();
         if (!pool || pool.length === 0) {
-          addLog("遭遇失败：该区域没有可遭遇的宝可梦。", true);
+          addLog("遭遇失败：该区域没有可遭遇的萌灵。", true);
           return false;
         }
         const mythicChance = 0.002;
-        const isNormalArea = ui.captureAreaId !== "mythic";
+        const isNormalArea = ui.captureAreaId !== "sanctum";
         const hitMythic = isNormalArea && randFloat() < mythicChance;
         const mythicPool = hitMythic && typeof getMythicPool === "function" ? getMythicPool() : null;
         const techEff = computeTechEffects();
@@ -297,7 +297,7 @@ export function initCaptureTab({
 
         ui.encounterPid = p.id;
         ui.encounterNature = rollNature();
-        // 闪光概率计算：基础 1/4096，激活闪耀护符时 x2
+        // 闪光概率计算：基础 1/4096，激活虹彩护符时 x2
         const baseShinyRate = 1 / 4096;
         const charmOn = typeof state.shinyCharmRemainingSec === "number" && state.shinyCharmRemainingSec > 0;
         const shinyMul = Math.max(0, typeof techEff.shinyChanceMul === "number" ? techEff.shinyChanceMul : 1);
@@ -317,15 +317,15 @@ export function initCaptureTab({
         );
         if (p.tier === "epic") {
           ui.mythicModalOpen = true;
-          addLog(`！！！神兽出现：${p.name}！！！`, true);
-          if (typeof pushTickerEvent === "function") pushTickerEvent("mythic", `遭遇神兽 ${p.name}`);
+          addLog(`！！！幻灵出现：${p.name}！！！`, true);
+          if (typeof pushTickerEvent === "function") pushTickerEvent("mythic", `遭遇幻灵 ${p.name}`);
         }
         if (isShiny) {
           ui.shinyModalOpen = true;
           addLog(`！！！闪光出现：${p.name}！！！`, true);
           if (typeof pushTickerEvent === "function") pushTickerEvent("shiny", `遭遇闪光 ${p.name}`);
         }
-        // 遭遇后若开启自动投球且非神兽/闪光，标记待自动投球
+        // 遭遇后若开启自动投球且非幻灵/闪光，标记待自动投球
         if (ui.captureAutoThrow && p.tier !== "epic" && !isShiny) {
           ui._pendingAutoThrow = true;
         }
@@ -346,7 +346,7 @@ export function initCaptureTab({
         const pid = typeof ui.encounterPid === "string" ? ui.encounterPid : null;
         const p = pid ? getSpeciesByPid(pid) : null;
         if (!p) return false;
-        // 神兽/闪光遭遇不自动投球，让玩家手动决策
+        // 幻灵/闪光遭遇不自动投球，让玩家手动决策
         if (p.tier === "epic" || Boolean(ui.encounterIsShiny)) return false;
         const ballType = ui.selectedBallType || "pokeball";
         if ((state.res[ballType]?.value ?? 0) < 1) return false;
@@ -391,9 +391,9 @@ export function initCaptureTab({
         ui.shinyModalOpen = false;
         ui.mythicModalOpen = false;
         const luxuryBonus = ballType === "luxuryball" ? 20 : 0;
-        awardCaughtPokemon(p, { isShiny, affectionBonus: luxuryBonus, ballType, nature: ui.encounterNature || undefined });
+        awardCaughtBeast(p, { isShiny, affectionBonus: luxuryBonus, ballType, nature: ui.encounterNature || undefined });
         onCatchSuccessFun(state);
-        if (luxuryBonus > 0) addLog(`豪华球效果：${p.name} 亲密度 +${luxuryBonus}`);
+        if (luxuryBonus > 0) addLog(`豪华灵球效果：${p.name} 亲密度 +${luxuryBonus}`);
         const didAuto = tryAutoEncounter();
         if (!didAuto) { markCaptureDirty(); render(); }
         return true;
@@ -419,7 +419,7 @@ export function initCaptureTab({
         const bonusMade = Math.max(0, afterBonus - after);
         state.pokeballMade = Math.max(0, (state.pokeballMade ?? 0) + made + bonusMade);
         if (made > 0 && typeof onPokeballCraft === "function") onPokeballCraft(made + bonusMade);
-        if (made > 0) addLog(`制作：精灵球 +${made + bonusMade}${bonusMade > 0 ? `（时代加成 +${bonusMade}）` : ""}`);
+        if (made > 0) addLog(`制作：灵球 +${made + bonusMade}${bonusMade > 0 ? `（时代加成 +${bonusMade}）` : ""}`);
         markCaptureDirty();
         render();
         return;
@@ -450,7 +450,7 @@ export function initCaptureTab({
         const charges1 = Math.max(0, Math.min(maxCharges, Math.floor(charges0)));
         if (charges1 <= 0) return;
 
-        if (ui.captureAreaId === "mythic") {
+        if (ui.captureAreaId === "sanctum") {
           const need = 100;
           const cur = Math.max(0, Math.floor(state.res.futurecoin?.value ?? 0));
           if (cur < need) {
@@ -462,17 +462,17 @@ export function initCaptureTab({
             return;
           }
           state.res.futurecoin.value = cur - need;
-          addLog(`神兽领域：未来币 -${need}（高级遭遇）`);
+          addLog(`幻梦秘境：未来币 -${need}（高级遭遇）`);
         }
 
         const pool = getCapturePool();
         if (!pool || pool.length === 0) {
-          addLog("遭遇失败：该区域没有可遭遇的宝可梦。", true);
+          addLog("遭遇失败：该区域没有可遭遇的萌灵。", true);
           return;
         }
 
         const mythicChance = 0.002;
-        const isNormalArea = ui.captureAreaId !== "mythic";
+        const isNormalArea = ui.captureAreaId !== "sanctum";
         const hitMythic = isNormalArea && randFloat() < mythicChance;
         const mythicPool = hitMythic && typeof getMythicPool === "function" ? getMythicPool() : null;
 
@@ -508,7 +508,7 @@ export function initCaptureTab({
 
         ui.encounterPid = chosen.id;
         ui.encounterNature = rollNature();
-        // 闪光概率计算：基础 1/1024，激活闪耀护符时 x2
+        // 闪光概率计算：基础 1/1024，激活虹彩护符时 x2
         const baseShinyRate = 1 / 1024;
         const charmOn = typeof state.shinyCharmRemainingSec === "number" && state.shinyCharmRemainingSec > 0;
         const shinyMul = Math.max(0, typeof techEff.shinyChanceMul === "number" ? techEff.shinyChanceMul : 1);
@@ -522,8 +522,8 @@ export function initCaptureTab({
         addLog(`高级遭遇：${chosen.name}`);
         if (chosen.tier === "epic") {
           ui.mythicModalOpen = true;
-          addLog(`！！！神兽出现：${chosen.name}！！！`, true);
-          if (typeof pushTickerEvent === "function") pushTickerEvent("mythic", `高级遭遇神兽 ${chosen.name}`);
+          addLog(`！！！幻灵出现：${chosen.name}！！！`, true);
+          if (typeof pushTickerEvent === "function") pushTickerEvent("mythic", `高级遭遇幻灵 ${chosen.name}`);
         }
         if (isShiny) {
           ui.shinyModalOpen = true;
@@ -555,7 +555,7 @@ export function initCaptureTab({
         ];
         const lossParts = [];
         if (!ok) {
-          const nameMap = { catnip: "树果", wood: "木材", stone: "石头", iron: "铁矿" };
+          const nameMap = { catnip: "灵果", wood: "木材", stone: "石头", iron: "铁矿" };
           const keys0 = ["catnip", "wood", "stone", "iron"];
           const keys = keys0.filter((k) => state.res?.[k] && (state.res[k].value ?? 0) > 0);
 
@@ -666,7 +666,7 @@ export function initCaptureTab({
             ui.mythicModalOpen = false;
             addLog(`捕捉失败：${p.name} 逃走了。`);
           } else {
-            addLog(`捕捉失败：${p.name} 挣扎中！可以继续投掷精灵球。`);
+            addLog(`捕捉失败：${p.name} 挣扎中！可以继续投掷灵球。`);
           }
 
           markCaptureDirty();
@@ -693,30 +693,30 @@ export function initCaptureTab({
           setTimeout(() => elCaptureActions.classList.remove(flashClass), 900);
         }
         
-        // 豪华球效果：捕获后亲密度+20
+        // 豪华灵球效果：捕获后亲密度+20
         const luxuryBonus = ballType === "luxuryball" ? 20 : 0;
         
         // 记录捕捉前的唯一数量，用于里程碑检测
         const uniqueBefore = Object.values(state.dex?.caught ?? {}).filter((v) => typeof v === "number" && v > 0).length;
         
-        awardCaughtPokemon(p, { isShiny, affectionBonus: luxuryBonus, ballType, nature: ui.encounterNature || undefined });
+        awardCaughtBeast(p, { isShiny, affectionBonus: luxuryBonus, ballType, nature: ui.encounterNature || undefined });
         onCatchSuccessFun(state);
         
         if (luxuryBonus > 0) {
-          addLog(`豪华球效果：${p.name} 亲密度 +${luxuryBonus}`);
+          addLog(`豪华灵球效果：${p.name} 亲密度 +${luxuryBonus}`);
         }
         
         // 里程碑检测：检查是否刚达到某区域解锁门槛
-        const MILESTONES = [20, 55, 110, 170, 230, 290, 360, 440];
+        const MILESTONES = [5, 13, 26, 38, 51, 64, 77, 96];
         const MILESTONE_NAMES = {
-          20: "城都树林", 55: "丰缘海岸", 110: "神奥雪原",
-          170: "合众沙漠", 230: "卡洛斯花田", 290: "阿罗拉海滩",
-          360: "伽勒尔旷野", 440: "神兽领域",
+          5: "蜜露林径", 13: "溪光浅滩", 26: "风铃高原",
+          38: "星砂荒漠", 51: "月见花园", 64: "霜晶山脊",
+          77: "龙眠幽谷", 96: "幻梦秘境",
         };
         const uniqueAfter = Object.values(state.dex?.caught ?? {}).filter((v) => typeof v === "number" && v > 0).length;
         for (const m of MILESTONES) {
           if (uniqueBefore < m && uniqueAfter >= m) {
-            addLog(`★ 新区域解锁：${MILESTONE_NAMES[m]}！快去遭遇新宝可梦吧！`, true);
+            addLog(`★ 新区域解锁：${MILESTONE_NAMES[m]}！快去遭遇新萌灵吧！`, true);
             if (typeof pushTickerEvent === "function") pushTickerEvent("unlock", `解锁新区域 ${MILESTONE_NAMES[m]}`);
           }
         }
@@ -745,7 +745,7 @@ export function initCaptureTab({
         ui.encounterIsShiny = false;
         ui.shinyModalOpen = false;
         ui.mythicModalOpen = false;
-        // 大师球捕捉动画
+        // 究极灵球捕捉动画
         if (elCaptureActions) {
           elCaptureActions.classList.remove("capture-success-flash", "capture-shiny-flash");
           void elCaptureActions.offsetWidth;
@@ -753,14 +753,14 @@ export function initCaptureTab({
           setTimeout(() => elCaptureActions.classList.remove("capture-success-flash"), 900);
         }
         const uniqueBeforeMb = Object.values(state.dex?.caught ?? {}).filter((v) => typeof v === "number" && v > 0).length;
-        awardCaughtPokemon(p, { isShiny, ballType: "masterball", nature: ui.encounterNature || undefined });
+        awardCaughtBeast(p, { isShiny, ballType: "masterball", nature: ui.encounterNature || undefined });
         onCatchSuccessFun(state);
-        addLog(`大师球捕捉：${p.name} 捕捉成功！`, true);
+        addLog(`究极灵球捕捉：${p.name} 捕捉成功！`, true);
         const uniqueAfterMb = Object.values(state.dex?.caught ?? {}).filter((v) => typeof v === "number" && v > 0).length;
-        const MILESTONES_MB = { 20:"城都树林",55:"丰缘海岸",110:"神奥雪原",170:"合众沙漠",230:"卡洛斯花田",290:"阿罗拉海滩",360:"伽勒尔旷野",440:"神兽领域" };
+        const MILESTONES_MB = { 5:"蜜露林径",13:"溪光浅滩",26:"风铃高原",38:"星砂荒漠",51:"月见花园",64:"霜晶山脊",77:"龙眠幽谷",96:"幻梦秘境" };
         for (const [m, name] of Object.entries(MILESTONES_MB)) {
           if (uniqueBeforeMb < Number(m) && uniqueAfterMb >= Number(m)) {
-            addLog(`★ 新区域解锁：${name}！快去遭遇新宝可梦吧！`, true);
+            addLog(`★ 新区域解锁：${name}！快去遭遇新萌灵吧！`, true);
             if (typeof pushTickerEvent === "function") pushTickerEvent("unlock", `解锁新区域 ${name}`);
           }
         }

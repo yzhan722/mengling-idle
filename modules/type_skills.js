@@ -27,26 +27,26 @@ export const TYPE_SKILL_DESC = {
   fire: "生蛋剩余时间 -15 分钟",
   water: "种植中的果树 -10 分钟",
   electric: "研究剩余时间 -10 分钟",
-  grass: "消耗 1万树果，种植 8 小时后得大树果",
+  grass: "消耗 1万灵果，种植 8 小时后得大灵果",
   ice: "饱腹自然下降减半（60分钟）",
   fighting: "训练经验叠加 +1 层（1小时）",
   poison: "建造/研究/搓球成本 -20%（60分钟）",
-  ground: "挖矿 10 分钟后得进化能量",
+  ground: "挖矿 10 分钟后得灵源",
   flying: "远征剩余时间 -30 分钟",
   psychic: "合成加速次数 +10",
   bug: "攻击全服林佬 Boss",
   rock: "建筑成本 -20%（60分钟）",
-  ghost: "随机其他冷却中精灵 CD 减半",
+  ghost: "随机其他冷却中萌灵 CD 减半",
   dragon: "捕获率 +10%（10分钟）",
   dark: "PvE 伤害 +50%（10分钟）",
-  steel: "精灵球成本 -10%（+100 次）",
+  steel: "灵球成本 -10%（+100 次）",
   fairy: "亲密度获取 ×2（60分钟）",
 };
 
 export const IMPLEMENTED_SKILL_TYPES = Object.freeze(Object.keys(TYPE_SKILLS));
 
 /**
- * Global buff / charge skills: batch button only fires once（用第一只就绪精灵），
+ * Global buff / charge skills: batch button only fires once（用第一只就绪萌灵），
  * 避免 50 只牛马叠出夸张层数。
  */
 export const BATCH_ONCE_SKILL_TYPES = Object.freeze([

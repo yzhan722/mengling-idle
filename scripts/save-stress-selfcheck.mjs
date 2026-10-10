@@ -6,9 +6,9 @@ import { serializeState } from "../modules/state.js";
 function makeMon(id) {
   return {
     id,
-    pid: "pikachu",
+    pid: "p25chu",
     dex: 25,
-    name: "皮卡丘",
+    name: "电毛球",
     lvl: 5,
     exp: 0,
     stars: 0,
@@ -26,7 +26,7 @@ for (let i = 1; i <= 5000; i += 1) mons.push(makeMon(i));
 const state = {
   version: 1,
   res: { catnip: { value: 10, cap: 100 } },
-  dex: { caught: { pikachu: 1 } },
+  dex: { caught: { p25chu: 1 } },
   mons: { list: mons, nextId: 5001 },
   unlocks: {},
   buildings: {},

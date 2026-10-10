@@ -2,9 +2,9 @@
 // 即此处的数值就是游戏实际运行值，无需额外缩放
 export const BUILDING_DEFS = {
   field: {
-    name: "树果田",
-    category: "树果",
-    desc: "提供树果自动产出。",
+    name: "灵果园",
+    category: "灵果",
+    desc: "提供灵果自动产出。",
     baseCost: { catnip: 3 },      // 原10 × 0.25 = 2.5 → 3
     costMul: 1.12,
     effects: (state) => {
@@ -17,9 +17,9 @@ export const BUILDING_DEFS = {
     visible: () => true,
   },
   hut: {
-    name: "球果营地",
-    category: "球果",
-    desc: "解锁球果。增加球果产出。",
+    name: "灵木营",
+    category: "灵木",
+    desc: "解锁灵木。增加灵木产出。",
     baseCost: { catnip: 5 },      // 原20 × 0.25
     costMul: 1.18,
     effects: (state) => {
@@ -33,16 +33,16 @@ export const BUILDING_DEFS = {
     visible: (state) => state.res.catnip.value >= 5 || state.buildings.hut.owned > 0,
   },
   workshop: {
-    name: "碎片工坊",
-    category: "碎片",
-    desc: "解锁进化石碎片，并提供少量碎片产出。",
+    name: "灵晶工坊",
+    category: "灵晶",
+    desc: "解锁灵晶碎片，并提供少量灵晶产出。",
     baseCost: { catnip: 30, wood: 8 }, // 原120×0.25, 30×0.25
     costMul: 1.1831,
     effects: (state) => {
       const n = state.buildings.workshop.owned;
       return {
         unlockMinerals: n > 0,
-        mineralsPerSec: 0.015 * n, // 新增：少量碎片产出
+        mineralsPerSec: 0.015 * n, // 新增：少量灵晶产出
       };
     },
     visible: (state) => state.unlocks.wood || state.buildings.workshop.owned > 0,
@@ -57,9 +57,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.buildings.workshop.owned > 0 || state.buildings.researchLab.owned > 0,
   },
   granary: {
-    name: "树果仓",
-    category: "树果",
-    desc: "大幅提升树果上限。",
+    name: "灵果仓",
+    category: "灵果",
+    desc: "大幅提升灵果上限。",
     baseCost: { catnip: 9, wood: 2 }, // 原35×0.25, 8×0.25
     costMul: 1.15,
     effects: (state) => {
@@ -71,9 +71,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.unlocks.wood || state.tech.berryCultivation || state.buildings.granary.owned > 0,
   },
   berryPress: {
-    name: "树果压榨坊",
-    category: "树果",
-    desc: "提供大量树果自动产出。",
+    name: "灵果压榨坊",
+    category: "灵果",
+    desc: "提供大量灵果自动产出。",
     baseCost: { catnip: 45, wood: 9 }, // 原180×0.25, 35×0.25
     costMul: 1.1712,
     effects: (state) => {
@@ -85,9 +85,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.tech.composting || state.buildings.berryPress.owned > 0,
   },
   storehouse: {
-    name: "球果储藏棚",
-    category: "球果",
-    desc: "提升球果上限。",
+    name: "灵木储藏棚",
+    category: "灵木",
+    desc: "提升灵木上限。",
     baseCost: { catnip: 50, wood: 10 }, // 原200×0.25, 40×0.25
     costMul: 1.12,
     effects: (state) => {
@@ -99,9 +99,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.unlocks.wood || state.buildings.storehouse.owned > 0,
   },
   lumberYard: {
-    name: "球果堆场",
-    category: "球果",
-    desc: "增加球果产出与上限。",
+    name: "灵木堆场",
+    category: "灵木",
+    desc: "增加灵木产出与上限。",
     baseCost: { catnip: 65, wood: 30 }, // 原260×0.25, 120×0.25
     costMul: 1.1604,
     effects: (state) => {
@@ -114,9 +114,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.tech.carpentry || state.buildings.lumberYard.owned > 0,
   },
   quarry: {
-    name: "采石场",
-    category: "碎片",
-    desc: "增加进化石碎片产出与上限。",
+    name: "采晶场",
+    category: "灵晶",
+    desc: "增加灵晶碎片产出与上限。",
     baseCost: { wood: 45, minerals: 18 }, // 原180×0.25, 70×0.25
     costMul: 1.1712,
     effects: (state) => {
@@ -129,9 +129,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.unlocks.minerals || state.buildings.quarry.owned > 0,
   },
   mineralSilo: {
-    name: "碎片储藏箱",
-    category: "碎片",
-    desc: "提升进化石碎片上限。",
+    name: "灵晶储藏箱",
+    category: "灵晶",
+    desc: "提升灵晶碎片上限。",
     baseCost: { catnip: 4, wood: 3 }, // 原15×0.25, 10×0.25
     costMul: 1.19,
     effects: (state) => {
@@ -143,9 +143,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.unlocks.minerals || state.buildings.mineralSilo.owned > 0,
   },
   rangerPost: {
-    name: "巡护哨",
-    category: "碎片",
-    desc: "提升进化石碎片上限。",
+    name: "巡林哨",
+    category: "灵晶",
+    desc: "提升灵晶碎片上限。",
     baseCost: { catnip: 81, wood: 28, minerals: 10 }, // 原325×0.25, 110×0.25, 40×0.25
     costMul: 1.11,
     effects: (state) => {
@@ -157,9 +157,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.tech.fieldGuide || state.buildings.rangerPost.owned > 0,
   },
   ballBench: {
-    name: "制球台",
-    category: "精灵球",
-    desc: "提升精灵球上限。",
+    name: "灵球台",
+    category: "灵球",
+    desc: "提升灵球上限。",
     baseCost: { catnip: 30, wood: 18 }, // 原120×0.25, 70×0.25
     costMul: 1.13,
     effects: (state) => {
@@ -171,9 +171,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.tech.pokeballBasics || state.buildings.ballBench.owned > 0,
   },
   ballFactory: {
-    name: "球厂",
-    category: "精灵球",
-    desc: "大幅提升精灵球上限。",
+    name: "灵球厂",
+    category: "灵球",
+    desc: "大幅提升灵球上限。",
     baseCost: { catnip: 88, wood: 40, minerals: 15 }, // 原350×0.25, 160×0.25, 60×0.25
     costMul: 1.11,
     effects: (state) => {
@@ -195,9 +195,9 @@ export const BUILDING_DEFS = {
     visible: (state) => state.unlocks.minerals || state.buildings.trainingGround.owned > 0,
   },
   breedingHouse: {
-    name: "饲养屋",
+    name: "育灵屋",
     category: "功能建筑",
-    desc: "解锁饲养屋功能，并提升生蛋效率。",
+    desc: "解锁育灵屋功能，并提升生蛋效率。",
     baseCost: { catnip: 25, wood: 25, minerals: 25 }, // 原100×0.25
     costMul: 1.668,
     maxLevel: 10,
@@ -218,8 +218,8 @@ export const BUILDING_DEFS = {
   },
   library: {
     name: "图书室",
-    category: "树果",
-    desc: "提升树果上限。",
+    category: "灵果",
+    desc: "提升灵果上限。",
     baseCost: { catnip: 200, wood: 85 }, // 原800×0.25, 340×0.25
     costMul: 1.1283,
     effects: (state) => {
@@ -233,7 +233,7 @@ export const BUILDING_DEFS = {
   commandCenter: {
     name: "指挥中心",
     category: "存储",
-    desc: "显著提升球果上限。",
+    desc: "显著提升灵木上限。",
     baseCost: { catnip: 550, wood: 225, minerals: 175 }, // 原2200×0.25, 900×0.25, 700×0.25
     costMul: 1.1001,
     effects: (state) => {

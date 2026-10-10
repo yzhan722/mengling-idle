@@ -9,7 +9,7 @@ export function createRenderLeaderboard({
   ui,
   escapeHtml,
   fmtDuration,
-  renderPokemonIcon,
+  renderBeastIcon,
   renderOwnerIcon,
   renderSelfAvatarPreview,
   trainerIconSrc,
@@ -118,7 +118,7 @@ export function createRenderLeaderboard({
         </div>
         <div class="row__right">
           <div style="display:flex;align-items:center;gap:8px">
-            <input class="input" data-lb-name value="${escapeHtml(ui.lbName || "")}" placeholder="训练家" />
+            <input class="input" data-lb-name value="${escapeHtml(ui.lbName || "")}" placeholder="育灵师" />
             ${renderSelfAvatarPreview()}
             <input type="file" accept="image/*" data-lb-avatar style="display:none" />
             <button class="btn btn--small" data-lb-act="pickAvatar" ${ui.lbBusy ? "disabled" : ""}>上传头像</button>
@@ -263,7 +263,7 @@ export function createRenderLeaderboard({
                         const name = typeof m?.name === "string" ? m.name : dex ? `#${dex}` : "";
                         const pow = typeof m?.power === "number" && Number.isFinite(m.power) ? Math.max(0, Math.floor(m.power)) : 0;
                         const shiny = Boolean(m?.isShiny);
-                        return `<div style="display:flex;align-items:center;gap:6px;min-width:0">${dex ? renderPokemonIcon(dex, name, shiny) : ""}<div style="min-width:0"><div style="line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(name)}</div><div class="muted" style="line-height:1.1">${pow}</div></div></div>`;
+                        return `<div style="display:flex;align-items:center;gap:6px;min-width:0">${dex ? renderBeastIcon(dex, name, shiny) : ""}<div style="min-width:0"><div style="line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(name)}</div><div class="muted" style="line-height:1.1">${pow}</div></div></div>`;
                       })
                       .join("")}</div></div>`
                   : "";

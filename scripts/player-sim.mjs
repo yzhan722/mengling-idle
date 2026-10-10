@@ -4,14 +4,13 @@
  * Usage: node scripts/player-sim.mjs
  * Env: SIM_HOURS=48 SIM_DT=30 SIM_SEED=1
  */
-import "../data/pokemon_catch_rate.js";
-import "../data/pokemon_types.js";
-import "../data/pokemon_tier.js";
+import "../data/beasts.js";
+import "../data/beasts_zh.js";
 
 import { defaultState, BUILDING_MAX_LEVEL } from "../modules/state.js";
 import { createTick } from "../modules/tick.js";
 import { createCaptureSystem } from "../modules/app/capture_system.js";
-import { awardCaughtPokemon as awardCaughtCore } from "../modules/app/capture_award.js";
+import { awardCaughtBeast as awardCaughtCore } from "../modules/app/capture_award.js";
 import {
   createMonInstance as createMonInstance0,
   addExpToMon as addExpToMon0,
@@ -26,7 +25,7 @@ import {
   releaseMonIds,
   BOX_SOFT_LIMIT,
 } from "../modules/systems/mon_release.js";
-import { pokemon } from "../modules/pokemon_defs.js";
+import { beasts } from "../modules/beast_defs.js";
 import { BUILDING_DEFS } from "../modules/defs_buildings.js";
 import { RESOURCE_DEFS } from "../modules/defs_resources.js";
 import { EXTRA_TECH_DEFS } from "../modules/tech_defs.js";
@@ -108,7 +107,7 @@ ensureLuckyWeek(state);
 
 const ui = {
   activeTab: "capture",
-  captureAreaId: "kanto",
+  captureAreaId: "meadow",
   serverBuffLevels: new Map(),
   logLastMsg: null,
   logLastCount: 0,
@@ -122,11 +121,11 @@ const ui = {
 const defs = {
   resources: RESOURCE_DEFS,
   buildings: BUILDING_DEFS,
-  pokemon,
+  beasts,
   tech: { ...CORE_TECH_DEFS, ...EXTRA_TECH_DEFS },
 };
 
-const speciesByPid = new Map(pokemon.map((p) => [p.id, p]));
+const speciesByPid = new Map(beasts.map((p) => [p.id, p]));
 function getSpeciesByPid(pid) {
   return speciesByPid.get(pid) || null;
 }
@@ -221,7 +220,7 @@ function syncEraProgress() {
   syncEraQuests(state, getCaptureAreas);
 }
 
-function awardCaughtPokemon(p, opts = null) {
+function awardCaughtBeast(p, opts = null) {
   awardCaughtCore(state, p, opts, {
     createMonInstance: (s) => createMonInstance(s),
     ui,
@@ -246,7 +245,7 @@ function doCatch() {
   const fails = typeof state.rng?.catchFails === "number" ? state.rng.catchFails : 0;
   const pity = Math.min(0.02 * Math.max(0, Math.floor(fails)), 0.2);
   let chance = clamp(base * Math.max(1, 1 + add) + pity, 0, 0.95);
-  chance = clamp(chance * luckyCatchMul(state, globalThis.POKEMON_TYPES?.[p.dex]), 0, 0.95);
+  chance = clamp(chance * luckyCatchMul(state, globalThis.BEAST_TYPES?.[p.dex]), 0, 0.95);
   if (randFloat() > chance) {
     if (!state.rng) state.rng = { catchFails: 0 };
     state.rng.catchFails = Math.max(0, (state.rng.catchFails ?? 0) + pityFailStep(state, randFloat));
@@ -255,7 +254,7 @@ function doCatch() {
   }
   if (!state.rng) state.rng = { catchFails: 0 };
   state.rng.catchFails = 0;
-  awardCaughtPokemon(p, { ballType: "pokeball" });
+  awardCaughtBeast(p, { ballType: "pokeball" });
   return true;
 }
 
@@ -284,7 +283,7 @@ function gatherOnce() {
 
 
 function pveTeamScore(mon, stage) {
-  const atkTypes = globalThis.POKEMON_TYPES?.[mon.dex] || ["normal"];
+  const atkTypes = globalThis.BEAST_TYPES?.[mon.dex] || ["normal"];
   let typeBonus = 0;
   for (const e of stage.enemies || []) {
     const defTypes = Array.isArray(e.types) && e.types.length ? e.types : [stage.type || "normal"];
@@ -504,7 +503,7 @@ function tryPve() {
   state.pve.dailyAttempts = (state.pve.dailyAttempts || 0) + 1;
   const team = teamMons.map((m) => ({
     name: m.name,
-    types: globalThis.POKEMON_TYPES?.[m.dex] || ["normal"],
+    types: globalThis.BEAST_TYPES?.[m.dex] || ["normal"],
     stats: getMonCurrentStats(m, null),
   }));
   const clearedBefore = Boolean(state.pve.progress[st.id]);

@@ -23,7 +23,7 @@ export function createSocialTab({
   state,
   createPvpBattle,
   getMonCurrentStats,
-  getPokeApiDataByDex,
+  getBeastDataByDex,
   pushTickerEvent,
 }) {
   
@@ -31,7 +31,7 @@ export function createSocialTab({
   ui.pvpRecent = normalizePvpRecent(state?.meta?.pvpRecent);
 
   function monTypes(mon) {
-    const api = typeof getPokeApiDataByDex === "function" ? getPokeApiDataByDex(mon.dex) : null;
+    const api = typeof getBeastDataByDex === "function" ? getBeastDataByDex(mon.dex) : null;
     return Array.isArray(api?.types) ? api.types.slice() : [];
   }
 
@@ -109,7 +109,7 @@ export function createSocialTab({
     panelSocial.innerHTML = `
       <div class="social-container">
         <div class="social-section">
-          <h3>训练家对战（离线）</h3>
+          <h3>育灵师对战（离线）</h3>
           <div class="row">
             <div class="row__left">
               <div class="row__title">无需登录</div>
@@ -302,8 +302,8 @@ export function createSocialTab({
     const weeklyLine = weekly.claimed
       ? "本周挑战奖励已领取"
       : weekly.canClaim
-        ? "已击败全部 3 位训练家 — 可领取 +20 未来币"
-        : `本周挑战：击败全部训练家（${weekly.beatenIds.length}/${weekly.total}）→ +20 未来币`;
+        ? "已击败全部 3 位育灵师 — 可领取 +20 未来币"
+        : `本周挑战：击败全部育灵师（${weekly.beatenIds.length}/${weekly.total}）→ +20 未来币`;
     el.innerHTML =
       trainers
         .map((t) => {
@@ -409,7 +409,7 @@ export function createSocialTab({
       const trainerId = npcBtn.getAttribute("data-npc-fight");
       if (!trainerId) return;
       if (!selectedTeam.length) {
-        addLog("请先在「我的队伍」选择精灵，再挑战训练家", true);
+        addLog("请先在「我的队伍」选择萌灵，再挑战育灵师", true);
         try {
           if (typeof window.showToast === "function") {
             window.showToast("先选队伍，再挑战 NPC", "warn", 3200);
@@ -697,16 +697,16 @@ export function createSocialTab({
   function openTeamSelector() {
     const list = state?.mons?.list;
     if (!Array.isArray(list) || list.length === 0) {
-      addLog("没有可用的精灵", true);
+      addLog("没有可用的萌灵", true);
       return;
     }
 
-    // 游戏内精灵没有 mon.hp 字段；用当前能力值筛可用单位
+    // 游戏内萌灵没有 mon.hp 字段；用当前能力值筛可用单位
     const mons = list
       .map((m) => toPvpFighter(m))
       .filter((m) => m && m.hp > 0);
     if (mons.length === 0) {
-      addLog("没有可用的精灵", true);
+      addLog("没有可用的萌灵", true);
       return;
     }
 
@@ -731,7 +731,7 @@ export function createSocialTab({
 
     document.body.appendChild(modal);
 
-    // 渲染精灵列表
+    // 渲染萌灵列表
     const monSelector = modal.querySelector("#monSelector");
     let html = "";
     for (const mon of mons.slice(0, 30)) {
@@ -762,7 +762,7 @@ export function createSocialTab({
       } else {
         const selectedCount = monSelector.querySelectorAll("input[type=checkbox]:checked").length;
         if (selectedCount >= 6) {
-          addLog("最多只能选择6只精灵", true);
+          addLog("最多只能选择6只萌灵", true);
           return;
         }
         checkbox.checked = true;
@@ -784,13 +784,13 @@ export function createSocialTab({
       );
 
       if (selectedIds.length === 0) {
-        addLog("请至少选择一只精灵", true);
+        addLog("请至少选择一只萌灵", true);
         return;
       }
 
       selectedTeam = mons.filter((m) => selectedIds.includes(m.id));
       renderMyTeam();
-      addLog(`已选择 ${selectedTeam.length} 只精灵`, true);
+      addLog(`已选择 ${selectedTeam.length} 只萌灵`, true);
       close();
     });
   }
@@ -843,7 +843,7 @@ export function createSocialTab({
     
     // 只分享重要成就
     const shouldShare = 
-      (type === "rare_catch" && data.tier <= 2) || // 稀有精灵
+      (type === "rare_catch" && data.tier <= 2) || // 稀有萌灵
       (type === "rare_catch" && data.isShiny) || // 闪光
       (type === "dex_milestone" && data.count % 50 === 0) || // 图鉴里程碑
       (type === "shiny_milestone" && data.count % 10 === 0); // 闪光里程碑

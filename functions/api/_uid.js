@@ -11,7 +11,7 @@ export function clampUid(v) {
 
 export function clampName(v) {
   const s = typeof v === "string" ? v.trim() : "";
-  return s ? s.slice(0, 32) : "训练家";
+  return s ? s.slice(0, 32) : "育灵师";
 }
 
 export function clampUsername(v) {

@@ -46,7 +46,7 @@ export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, g
             ${pvpSeasonStatsHtml()}
             如何开始 PvP：
             <ol style="margin:0.5rem 0 0 1.2rem;padding:0;">
-              <li>在下方「我的队伍」选择最多 6 只精灵</li>
+              <li>在下方「我的队伍」选择最多 6 只萌灵</li>
               <li>好友资料页点击「对战邀请」向好友发起挑战</li>
               <li>收到邀请后点「应战」，系统自动模拟战斗并记录结果</li>
             </ol>
@@ -65,7 +65,7 @@ export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, g
         <div class="row">
           <div class="row__left">
             <div class="row__title">好友对战邀请${pvpSeasonSuffix()}</div>
-            <div class="row__desc">登录云账号后可收发好友挑战。上方「训练家对战」无需登录。</div>
+            <div class="row__desc">登录云账号后可收发好友挑战。上方「育灵师对战」无需登录。</div>
             ${pvpSeasonStatsHtml()}
           </div>
         </div>
@@ -171,7 +171,7 @@ export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, g
       let html = `
         <div class="row">
           <div class="row__left">
-            <div class="row__title">训练家动态</div>
+            <div class="row__title">育灵师动态</div>
             <div class="row__desc">还没有好友分享 — 先用 NPC 垫场；登录后可见真实好友动态。</div>
           </div>
         </div>
@@ -198,7 +198,7 @@ export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, g
 
       switch (achievement.achievement_type) {
         case "rare_catch":
-          content = `捕获了稀有精灵 <strong>${escapeHtml(data.name)}</strong>`;
+          content = `捕获了稀有萌灵 <strong>${escapeHtml(data.name)}</strong>`;
           if (data.isShiny) content += " ✨";
           break;
         case "dex_milestone":
@@ -208,7 +208,7 @@ export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, g
           content = `${escapeHtml(data.name)} 升到了 <strong>Lv.${data.level}</strong>`;
           break;
         case "shiny_milestone":
-          content = `闪光精灵达到 <strong>${data.count}</strong> 只`;
+          content = `闪光萌灵达到 <strong>${data.count}</strong> 只`;
           break;
         default:
           content = escapeHtml(JSON.stringify(data));
@@ -338,7 +338,7 @@ export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, g
       html += `
         <div class="row">
           <div class="row__left">
-            <div class="row__title">精灵展示 (最近${profile.mons.length}只)</div>
+            <div class="row__title">萌灵展示 (最近${profile.mons.length}只)</div>
           </div>
         </div>
       `;

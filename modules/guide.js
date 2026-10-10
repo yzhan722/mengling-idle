@@ -7,15 +7,15 @@ const HANDOFF_WORLD_KEY = "kittens_mvp_handoff_world_v1";
 const GUIDE_STEPS = [
   {
     id: "gather",
-    title: "第1步：先采集树果",
-    desc: "点顶栏【采集】换树果。树果是研究与建造的燃料。",
+    title: "第1步：先采集灵果",
+    desc: "点顶栏【采集】换灵果。灵果是研究与建造的燃料。",
     targetId: "btnGather",
     position: "right",
   },
   {
     id: "research",
-    title: "第2步：研究精灵球基础",
-    desc: "打开「研究」，点「精灵球基础」（便宜又快）。完成后送 5 个球。",
+    title: "第2步：研究灵球基础",
+    desc: "打开「研究」，点「灵球基础」（便宜又快）。完成后送 5 个球。",
     targetSelector: ".tab[data-tab='science']",
     position: "bottom",
   },
@@ -200,7 +200,7 @@ export function maybeNewbieHandoff({ state, activateTab, addLog, pushTickerEvent
       if (balls >= 1 && (state.catchCount || 0) === 0) {
         localStorage.setItem(HANDOFF_CATCH_KEY, "1");
         if (typeof addLog === "function") addLog("新手提示：球已到手 → 打开「捕捉」抓第一只。", true);
-        if (typeof hint === "function") hint("去「捕捉」抓第一只精灵！", 4000);
+        if (typeof hint === "function") hint("去「捕捉」抓第一只萌灵！", 4000);
         try {
           if (typeof window.showToast === "function") window.showToast("球已到手 → 去捕捉", "ok", 4000);
         } catch {}

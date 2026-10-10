@@ -35,7 +35,7 @@ import {
 import { EXP_LEVELS, getExpLevelDef } from "../modules/expedition_defs.js";
 import { BUILDING_DEFS } from "../modules/defs_buildings.js";
 import { computeDerived as computeDerivedCore } from "../modules/systems/compute_derived.js";
-import { awardCaughtPokemon as awardCaughtCore } from "../modules/app/capture_award.js";
+import { awardCaughtBeast as awardCaughtCore } from "../modules/app/capture_award.js";
 import { pickWeakMonIds, releaseCandyRefund } from "../modules/systems/mon_release.js";
 import { listNpcTrainers, buildNpcTeam, recordNpcFight, npcRecordLine } from "../modules/systems/npc_pvp.js";
 import { resetEvoFamilyCacheForTest, isSameEvoFamily } from "../modules/evo_utils.js";
@@ -233,7 +233,7 @@ assert(Math.abs(getStarBonusMul(5) - 2.4) < 1e-9, "★5 mul");
   const hint = techReqHint({ buildings: { field: { owned: 1 } } }, "irrigation", {
     req: (s) => (s.buildings?.field?.owned ?? 0) >= 2,
   });
-  assert(hint.includes("树果田") && hint.includes("Lv.2"), "tech req hint irrigation");
+  assert(hint.includes("灵果园") && hint.includes("Lv.2"), "tech req hint irrigation");
   const capState = {
     buildings: { hut: { owned: 1 } },
     tech: {},
@@ -282,7 +282,7 @@ assert(Math.abs(getStarBonusMul(5) - 2.4) < 1e-9, "★5 mul");
     shinyCount: 0,
     mons: { nextId: 1, list: [] },
   };
-  const sp = { id: "bulbasaur", name: "妙蛙种子", dex: 1, tier: "common" };
+  const sp = { id: "p001_seed", name: "芽苞苞", dex: 1, tier: "common" };
   awardCaughtCore(capSt, sp, { isShiny: true, ballType: "greatball" }, {
     createMonInstance: (p) => ({ id: 1, pid: p.id, name: p.name }),
     ui: {},
@@ -290,7 +290,7 @@ assert(Math.abs(getStarBonusMul(5) - 2.4) < 1e-9, "★5 mul");
     syncEraProgress: () => {},
   });
   assert(capSt.catchCount === 1, "capture award catchCount");
-  assert(capSt.dex.caught.bulbasaur === 1, "capture award dex");
+  assert(capSt.dex.caught.p001_seed === 1, "capture award dex");
   assert(capSt.shinyCount === 1, "capture award shiny");
   assert(capSt.mons.list[0]?.caughtWith === "greatball", "capture award ball");
 }
@@ -321,7 +321,7 @@ assert(Math.abs(getStarBonusMul(5) - 2.4) < 1e-9, "★5 mul");
     smartIds.length === 1 && smartIds[0] === 3,
     "smart release protects shiny, starred, and sole species"
   );
-  globalThis.POKEMON_EVO = { p001: ["p002"], p002: ["p003"] };
+  globalThis.BEAST_EVO = { p001: ["p002"], p002: ["p003"] };
   resetEvoFamilyCacheForTest();
   const familyIds = pickWeakMonIds(
     [
@@ -335,14 +335,14 @@ assert(Math.abs(getStarBonusMul(5) - 2.4) < 1e-9, "★5 mul");
     familyIds.length === 1 && familyIds[0] === 12,
     "smart release protects last mon per evolution family"
   );
-  globalThis.POKEMON_EVO = { p001: ["p002"], p002: ["p003"] };
+  globalThis.BEAST_EVO = { p001: ["p002"], p002: ["p003"] };
   resetEvoFamilyCacheForTest();
   assert(isSameEvoFamily("p001", "p003") === true, "evo family same line");
   assert(isSameEvoFamily("p001", "p999") === false, "evo family different");
   const pvpLine = summarizePvpBattle({
     winner: 2,
     rounds: 8,
-    battleLog: ["你 派出 皮卡丘！", "对手 倒下了！", "你获胜！"],
+    battleLog: ["你 派出 电毛球！", "对手 倒下了！", "你获胜！"],
   });
   assert(pvpLine.includes("险胜"), "pvp narrative win");
   const seasonLine = summarizePvpBattle(
@@ -495,6 +495,8 @@ const newbie = spawnSync(process.execPath, [path.join(__dirname, "newbie-path-se
 if (newbie.status !== 0) failed += 1;
 const restart = spawnSync(process.execPath, [path.join(__dirname, "restart-p1-p13-selfcheck.mjs")], { stdio: "inherit" });
 if (restart.status !== 0) failed += 1;
+const branding = spawnSync(process.execPath, [path.join(__dirname, "branding-selfcheck.mjs")], { stdio: "inherit" });
+if (branding.status !== 0) failed += 1;
 
 if (failed) {
   console.error(`selfcheck: ${failed} failed`);

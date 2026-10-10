@@ -6,7 +6,7 @@ import { createMonInstance as createMonInstance0 } from "./mons.js";
 
 import { ensureMonAbility } from "./abilities.js";
 
-import { legacyIdMap, pokemon } from "./pokemon_defs.js";
+import { legacyIdMap, beasts } from "./beast_defs.js";
 
 import { BUILDING_DEFS } from "./defs_buildings.js";
 
@@ -1523,7 +1523,8 @@ export function loadFromRaw(raw) {
 
           dex,
 
-          name: typeof it.name === "string" ? it.name : `宝可梦${pad3(dex)}`,
+          // 名以名表为准（去 IP 化：旧存档里的旧名一律替换；roster 外物种显示为逸散萌灵）
+          name: globalThis.BEAST_ZH?.[pid] || (typeof pid === "string" && /^p\d+$/.test(pid) ? "逸散的萌灵" : (typeof it.name === "string" ? it.name : `萌灵${pad3(dex)}`)),
 
           tier: typeof it.tier === "string" ? it.tier : "common",
 
@@ -1585,7 +1586,7 @@ export function loadFromRaw(raw) {
 
   } else {
 
-    // 老存档迁移：如果之前只有 dex.caught，则生成少量精灵实例用于展示
+    // 老存档迁移：如果之前只有 dex.caught，则生成少量萌灵实例用于展示
 
     const caught = data.dex?.caught;
 
@@ -1607,7 +1608,7 @@ export function loadFromRaw(raw) {
 
         if (!pid) continue;
 
-        const p = pokemon.find((x) => x.id === pid);
+        const p = beasts.find((x) => x.id === pid);
 
         if (!p) continue;
 
@@ -1643,7 +1644,7 @@ export function loadFromRaw(raw) {
 
 
 
-  // 兼容旧存档：如果精灵是通过进化/解锁获得，但 dex.caught 没记录，则用现有精灵列表补登记
+  // 兼容旧存档：如果萌灵是通过进化/解锁获得，但 dex.caught 没记录，则用现有萌灵列表补登记
 
   if (!s.dex || typeof s.dex !== "object") s.dex = { caught: {} };
 

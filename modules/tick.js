@@ -129,7 +129,7 @@ export function createTick(ctx) {
   let __evoPrev = null;
   function __getEvoPrev() {
     if (__evoPrev) return __evoPrev;
-    const evo = globalThis.POKEMON_EVO;
+    const evo = globalThis.BEAST_EVO;
     const prev = {};
     if (evo && typeof evo === "object") {
       for (const [from, tos] of Object.entries(evo)) {
@@ -165,7 +165,7 @@ export function createTick(ctx) {
   function breedingEggTotalSec(lvl) {
     const l = Math.max(0, Math.min(10, Math.floor(typeof lvl === "number" && Number.isFinite(lvl) ? lvl : 0)));
     if (l <= 0) return 0;
-    // 优化：基础时间从12h降为6h，epic精灵乘数从×10降为×4（约1天/只，可接受）
+    // 优化：基础时间从12h降为6h，epic萌灵乘数从×10降为×4（约1天/只，可接受）
     const hours = Math.max(1, 7 - l);
     return hours * 3600;
   }
@@ -612,7 +612,7 @@ export function createTick(ctx) {
               if ((state.res.minerals?.value ?? 0) >= stoneCost) {
                 state.res.minerals.value = Math.max(0, (state.res.minerals?.value ?? 0) - stoneCost);
                 startTask("evolutionEnergy", stoneTime);
-                addLog("自动合成：进化能量（30分钟）");
+                addLog("自动合成：灵源（30分钟）");
               }
             }
 
@@ -622,7 +622,7 @@ export function createTick(ctx) {
               if ((state.res.evolutionStone?.value ?? 0) >= ropeCostStone) {
                 state.res.evolutionStone.value = Math.max(0, (state.res.evolutionStone?.value ?? 0) - ropeCostStone);
                 startTask("linkRope", ropeTime);
-                addLog("自动合成：通信绳（60分钟）");
+                addLog("自动合成：灵契绳（60分钟）");
               }
             }
 
@@ -632,7 +632,7 @@ export function createTick(ctx) {
               if ((state.res.evolutionStone?.value ?? 0) >= megaCostStone) {
                 state.res.evolutionStone.value = Math.max(0, (state.res.evolutionStone?.value ?? 0) - megaCostStone);
                 startTask("megaStone", megaTime);
-                addLog("自动合成：MEGA进化石（2小时）");
+                addLog("自动合成：觉醒石（2小时）");
               }
             }
 
@@ -644,7 +644,7 @@ export function createTick(ctx) {
                 state.res.catnip.value = Math.max(0, (state.res.catnip?.value ?? 0) - hugeCostCatnip);
                 state.res.bigBerry.value = Math.max(0, (state.res.bigBerry?.value ?? 0) - hugeCostBig);
                 startTask("hugeBerry", hugeTime);
-                addLog("自动合成：巨大树果（2小时）");
+                addLog("自动合成：巨大灵果（2小时）");
               }
             }
           }
@@ -659,7 +659,7 @@ export function createTick(ctx) {
           stone.remainingSec = rem1;
           if (rem1 <= 0) {
             addRes("evolutionEnergy", 1);
-            addLog("合成完成：进化能量 +1", true);
+            addLog("合成完成：灵源 +1", true);
             state.evolutionStoneMade = Math.max(0, (state.evolutionStoneMade ?? 0) + 1);
             craftObj[stoneKey] = null;
             if (ui.activeTab === "future") ui.futureDirty = true;
@@ -675,7 +675,7 @@ export function createTick(ctx) {
             if (n > 0) {
               state.res.evolutionEnergy.value = Math.max(0, haveEnergy - n * costEnergy);
               addRes("evolutionStone", n);
-              addLog(`自动合成：进化石 +${n}`);
+              addLog(`自动合成：灵晶石 +${n}`);
               if (ui.activeTab === "future") ui.futureDirty = true;
             }
           }
@@ -689,7 +689,7 @@ export function createTick(ctx) {
           rope.remainingSec = rem1;
           if (rem1 <= 0) {
             addRes("linkRope", 1);
-            addLog("合成完成：通信绳 +1", true);
+            addLog("合成完成：灵契绳 +1", true);
             craftObj.linkRope = null;
           }
         }
@@ -702,7 +702,7 @@ export function createTick(ctx) {
           huge.remainingSec = rem1;
           if (rem1 <= 0) {
             addRes("hugeBerry", 1);
-            addLog("合成完成：巨大树果 +1", true);
+            addLog("合成完成：巨大灵果 +1", true);
             craftObj.hugeBerry = null;
           }
         }
@@ -715,7 +715,7 @@ export function createTick(ctx) {
           mega.remainingSec = rem1;
           if (rem1 <= 0) {
             addRes("megaStone", 1);
-            addLog("合成完成：MEGA进化石 +1", true);
+            addLog("合成完成：觉醒石 +1", true);
             craftObj.megaStone = null;
           }
         }
@@ -832,11 +832,11 @@ export function createTick(ctx) {
             if (at0 === "ground") {
               const qty = Math.random() < 0.5 ? 1 : 2;
               addRes("evolutionEnergy", qty);
-              addLog(`挖矿完成：进化能量 +${qty}`, true);
+              addLog(`挖矿完成：灵源 +${qty}`, true);
             }
             if (at0 === "grass") {
               addRes("bigBerry", 1);
-              addLog("果树成熟：大树果 +1", true);
+              addLog("果树成熟：大灵果 +1", true);
             }
             m.skillActiveType = null;
             m.skillActiveRemainingSec = 0;

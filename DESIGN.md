@@ -53,7 +53,7 @@
 
 ## Component notes
 
-- **Resource chip**：圆角 12；名称 12 / 数值 16 Rajdhani；速率 11 青绿；底缘容量条；树果琥珀 / 球果橙 / 碎片冰蓝
+- **Resource chip**：圆角 12；名称 12 / 数值 16 Rajdhani；速率 11 青绿；底缘容量条；灵果琥珀 / 灵木橙 / 灵晶冰蓝
 - **Gather CTA**：顶栏中区独立主按钮，min-height 40、min-width 132；就绪态青绿
 - **Tab**：非 active 无边框；active 琥珀边 + 底指示条
 - **Build CTA**：`btn--primary` 仅用于建造/确认类；次要用 ghost/small

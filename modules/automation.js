@@ -188,7 +188,7 @@ export function runAutomation({
       const bonusMade = Math.max(0, afterBonus - after);
       state.pokeballMade = Math.max(0, (state.pokeballMade ?? 0) + made + bonusMade);
       if (made + bonusMade > 0) bumpEraCounter(state, "pokeball_earned", made + bonusMade);
-      if (made > 0) addLog(`自动制作：精灵球 +${made + bonusMade}${bonusMade > 0 ? `（时代加成 +${bonusMade}）` : ""}`);
+      if (made > 0) addLog(`自动制作：灵球 +${made + bonusMade}${bonusMade > 0 ? `（时代加成 +${bonusMade}）` : ""}`);
 
       ui.captureDirty = true;
     }

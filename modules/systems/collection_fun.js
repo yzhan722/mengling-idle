@@ -79,8 +79,8 @@ export function noteShinySpecies(state, species, { silent = false } = {}) {
   }
   const ms = state.meta.shinyMilestones;
   const thresholds = [
-    { n: 1, id: "s1", item: "rareCandy", label: "首枚闪光图鉴：神奇糖果 ×1" },
-    { n: 3, id: "s3", item: "expCandy", label: "闪光图鉴×3：经验糖果 ×1" },
+    { n: 1, id: "s1", item: "rareCandy", label: "首枚闪光图鉴：跃级糖丸 ×1" },
+    { n: 3, id: "s3", item: "expCandy", label: "闪光图鉴×3：历练糖丸 ×1" },
     { n: 5, id: "s5", item: "affectionTreat", label: "闪光图鉴×5：亲密点心 ×1" },
   ];
   for (const t of thresholds) {
@@ -135,7 +135,7 @@ export function buildShinyShareText(state, limit = 6) {
     .map((e) => e.name)
     .filter(Boolean);
   if (!names.length || unique <= 0) return "";
-  return `我的闪光馆（${unique}）：${names.join("、")}${gallery.length > 6 ? "…" : ""} — 宝可梦放置冒险`;
+  return `我的闪光馆（${unique}）：${names.join("、")}${gallery.length > 6 ? "…" : ""} — 萌灵放置冒险`;
 }
 
 /** Structured payload for a share card / canvas. */
@@ -146,5 +146,5 @@ export function shinyShareCardPayload(state) {
     dex: e.dex,
     name: e.name,
   }));
-  return { unique, entries, title: "闪光馆", game: "宝可梦放置冒险" };
+  return { unique, entries, title: "闪光馆", game: "萌灵放置冒险" };
 }

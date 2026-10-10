@@ -8,10 +8,10 @@ import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS } fro
 
 // ponytail: blurbs live here — pve_defs is data-only, no chapter copy field yet
 const PVE_CHAPTER_BLURBS = {
-  "1": "关都八大道馆试炼：从森林虫系到地面系，循序渐进熟悉属性克制。",
-  "2": "城都进阶挑战：幽灵、格斗、钢系轮番上阵，终盘龙系需要克制与练度。",
-  "3": "丰缘试炼：草火水起步，中段格斗/水系加压，终盘幽灵需特防与克制。",
-  "4": "神奥试炼：岩石→草→冰加压，终盘陆地鲨龙系需冰/龙克制与高练度。",
+  "1": "原野巡礼八连试炼：从林道虫系到大地圣殿，循序渐进熟悉属性克制。",
+  "2": "林野进阶挑战：幽灵、格斗、钢系轮番上阵，终盘龙系需要克制与练度。",
+  "3": "沙海巡礼：草火水起步，中段格斗/水系加压，终盘幽灵需特防与克制。",
+  "4": "峰顶巡礼：岩石→草→冰加压，终盘龙系需冰/龙克制与高练度。",
 };
 
 const PVE_STAR_NARRATIVE = {
@@ -36,9 +36,9 @@ export function createRenderPve({
   clamp,
   escapeHtml,
   monPower,
-  renderPokemonIcon,
+  renderBeastIcon,
   getMonCurrentStats,
-  getPokeApiDataByDex,
+  getBeastDataByDex,
   markPveDirty,
   addLog,
   addRes,
@@ -70,13 +70,13 @@ export function createRenderPve({
 
   function getMonTypes(m) {
     // 优先从本地属性表获取（同步、可靠）
-    const localTypes = globalThis.POKEMON_TYPES;
+    const localTypes = globalThis.BEAST_TYPES;
     if (localTypes && typeof localTypes === "object") {
       const lt = localTypes[m.dex];
       if (Array.isArray(lt) && lt.length > 0) return lt;
     }
-    // fallback: 从 PokeAPI 缓存获取
-    const api = typeof getPokeApiDataByDex === "function" ? getPokeApiDataByDex(m.dex) : null;
+    // fallback: 本地萌灵属性表
+    const api = typeof getBeastDataByDex === "function" ? getBeastDataByDex(m.dex) : null;
     const types = Array.isArray(api?.types) ? api.types.slice(0, 2) : [];
     return types.filter((x) => typeof x === "string");
   }
@@ -260,9 +260,9 @@ export function createRenderPve({
       const rewardText = Object.entries(rewards).map(([k, v]) => {
         if (k === "exp") return `经验 +${v}（每只）`;
         if (k === "futurecoin") return `未来币 +${v}`;
-        if (k === "evolutionEnergy") return `进化能量 +${v}`;
-        if (k === "evolutionStone") return `进化石 +${v}`;
-        if (k === "linkRope") return `通信绳 +${v}`;
+        if (k === "evolutionEnergy") return `灵源 +${v}`;
+        if (k === "evolutionStone") return `灵晶石 +${v}`;
+        if (k === "linkRope") return `灵契绳 +${v}`;
         return `${k} +${v}`;
       }).join("、");
 
@@ -380,7 +380,7 @@ export function createRenderPve({
         return `
           <div class="row">
             <div class="row__left">
-              <div class="row__title row__titleLine">${renderPokemonIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
+              <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
               <div class="row__desc">${escapeHtml(types || "-")} · ${lean} · ${tag} · 战力 ${Math.floor(power)}</div>
             </div>
             <div class="row__right">
@@ -401,7 +401,7 @@ export function createRenderPve({
                 <button class="btn btn--small" data-pve-team-close>关闭</button>
               </div>
             </div>
-            <div class="modal__body">${candidateRows || '<div class="badge badge--muted">暂无精灵</div>'}</div>
+            <div class="modal__body">${candidateRows || '<div class="badge badge--muted">暂无萌灵</div>'}</div>
           </div>
         </div>
       `;
@@ -444,7 +444,7 @@ export function createRenderPve({
             : r.endReason === "wipe"
               ? "队伍全灭：敌人输出压过你的防线"
               : r.endReason === "empty"
-                ? "未派出精灵"
+                ? "未派出萌灵"
                 : r.superEffectiveHits === 0
                   ? "全程无克制伤害：属性不对路"
                   : "练度不足：有克制但仍打不过";
@@ -549,17 +549,17 @@ export function createRenderPve({
       if (rewards.evolutionEnergy) {
         const v = Math.floor(rewards.evolutionEnergy * mul);
         if (typeof addRes === "function") addRes("evolutionEnergy", v);
-        rewardParts.push(`进化能量 +${v}`);
+        rewardParts.push(`灵源 +${v}`);
       }
       if (rewards.evolutionStone) {
         const v = Math.floor(rewards.evolutionStone * mul);
         if (typeof addRes === "function") addRes("evolutionStone", v);
-        rewardParts.push(`进化石 +${v}`);
+        rewardParts.push(`灵晶石 +${v}`);
       }
       if (rewards.linkRope) {
         const v = Math.floor(rewards.linkRope * mul);
         if (typeof addRes === "function") addRes("linkRope", v);
-        rewardParts.push(`通信绳 +${v}`);
+        rewardParts.push(`灵契绳 +${v}`);
       }
       if (rewards.exp) {
         const v = Math.floor(rewards.exp * mul);
@@ -672,7 +672,7 @@ export function createRenderPve({
       }
       if (rw.evolutionStone && typeof addRes === "function") {
         addRes("evolutionStone", rw.evolutionStone);
-        parts.push(`进化石 +${rw.evolutionStone}`);
+        parts.push(`灵晶石 +${rw.evolutionStone}`);
       }
       if (rw.exp) {
         for (const m of selectedMons) {

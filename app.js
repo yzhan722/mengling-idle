@@ -1,10 +1,10 @@
-import { legacyIdMap, pokemon, getPokemonTier } from "./modules/pokemon_defs.js";
+import { legacyIdMap, beasts, getBeastTier, STRAY_BEAST } from "./modules/beast_defs.js";
 import { EXTRA_TECH_DEFS, EXTRA_TECH_FLAGS } from "./modules/tech_defs.js?v=0.41.8";
 import { RESOURCE_DEFS } from "./modules/defs_resources.js?v=0.41.8";
 import { BUILDING_DEFS } from "./modules/defs_buildings.js?v=0.41.8";
-import { renderPokemonIcon, installSpriteHandlers } from "./modules/sprites.js?v=0.41.8";
+import { renderBeastIcon, installSpriteHandlers } from "./modules/sprites.js?v=0.41.8";
 import { BASE_TECH_FLAGS, defaultState, serializeState, loadFromRaw, safeJsonParse, BUILDING_MAX_LEVEL } from "./modules/state.js?v=0.41.8";
-import { createPokeApiClient } from "./modules/pokeapi_client.js";
+import { createBeastDataClient } from "./modules/beast_data.js";
 import { defaultReqLvlByStage, getEvoMap, getEvoReqLevel, isAffectionEvo, isSameEvoFamily, isTradeEvo, stageIndex } from "./modules/evo_utils.js?v=0.41.8";
 import { clamp, escapeHtml, fmt, nowMs, pad3, randFloat } from "./modules/utils.js";
 import { decodeSaveText, encodeSaveText } from "./modules/save_codec.js";
@@ -71,7 +71,7 @@ import {
 } from "./modules/systems/production.js";
 import { computeDerived as computeDerivedCore } from "./modules/systems/compute_derived.js";
 import { createCaptureSystem } from "./modules/app/capture_system.js";
-import { awardCaughtPokemon as awardCaughtPokemonCore } from "./modules/app/capture_award.js";
+import { awardCaughtBeast as awardCaughtBeastCore } from "./modules/app/capture_award.js";
 import { createTickerSystem } from "./modules/app/ticker.js?v=0.41.8";
 import { createRenderPve } from "./modules/tabs/pve_tab.js";
 import { createFriendsSystem, createRenderFriends } from "./modules/friends.js?v=0.41.8";
@@ -167,25 +167,16 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
 
   const TYPE_ZH = globalThis.TYPE_ZH;
 
-  const pokeApi = createPokeApiClient({
-    onUpdate: () => {
-      if (ui.activeTab === "mons") {
-        markMonsDirty();
-        render();
-      }
-    },
-  });
-
-  const getPokeApiDataByDex = pokeApi.getPokeApiDataByDex;
+  const { getBeastDataByDex } = createBeastDataClient();
 
   const defs = {
     resources: RESOURCE_DEFS,
     legacyIdMap,
-    pokemon,
+    beasts,
     tech: {
       berryCultivation: {
-        name: "树果培育",
-        desc: "树果产量 +50%，树果上限 +25。",
+        name: "灵果培育",
+        desc: "灵果产量 +50%，灵果上限 +25。",
         cost: { catnip: 20 },
         prereq: [],
         req: () => true,
@@ -197,7 +188,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       composting: {
         name: "堆肥技术",
-        desc: "树果产量 +20%，树果上限 +30。",
+        desc: "灵果产量 +20%，灵果上限 +30。",
         cost: { catnip: 45 },
         prereq: ["berryCultivation"],
         req: () => true,
@@ -209,7 +200,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       irrigation: {
         name: "灌溉改良",
-        desc: "树果产量 +25%，树果上限 +40。",
+        desc: "灵果产量 +25%，灵果上限 +40。",
         cost: { catnip: 100 },
         prereq: ["composting"],
         req: (state) => state.buildings.field.owned >= 2,
@@ -221,7 +212,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       greenhouse: {
         name: "温室栽培",
-        desc: "树果产量 +35%，树果上限 +80。",
+        desc: "灵果产量 +35%，灵果上限 +80。",
         cost: { catnip: 240, wood: 30 },
         prereq: ["irrigation"],
         req: (state) => state.buildings.hut.owned >= 1,
@@ -233,7 +224,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       backpackWeaving: {
         name: "背包编织",
-        desc: "树果上限 +60。",
+        desc: "灵果上限 +60。",
         cost: { catnip: 70 },
         prereq: ["berryCultivation"],
         req: () => true,
@@ -244,7 +235,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       campLogistics: {
         name: "营地后勤",
-        desc: "营地建筑成本 -3%，球果上限 +30。",
+        desc: "营地建筑成本 -3%，灵木上限 +30。",
         cost: { catnip: 110, wood: 8 },
         prereq: ["backpackWeaving"],
         req: (state) => state.buildings.hut.owned > 0,
@@ -255,8 +246,8 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         },
       },
       trainerDrills: {
-        name: "训练家操练",
-        desc: "树果/球果/碎片产量 +10%。",
+        name: "育灵操练",
+        desc: "灵果/灵木/灵晶产量 +10%。",
         cost: { catnip: 130 },
         prereq: ["campLogistics"],
         req: () => true,
@@ -268,8 +259,8 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         },
       },
       pokeballBasics: {
-        name: "精灵球基础",
-        desc: "营地建筑成本 -5%，并解锁精灵球制作与捕捉。",
+        name: "灵球基础",
+        desc: "营地建筑成本 -5%，并解锁灵球制作与捕捉。",
         // After TECH researchCostMul(~2): ~30 catnip — short gather burst
         cost: { catnip: 15 },
         prereq: [],
@@ -281,7 +272,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         },
       },
       ballMolds: {
-        name: "球壳模具",
+        name: "灵球模具",
         desc: "捕捉成功率 +1%。",
         cost: { catnip: 140, wood: 30 },
         prereq: ["pokeballBasics"],
@@ -292,7 +283,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         },
       },
       apricornCrafting: {
-        name: "球果工艺",
+        name: "灵球工艺",
         desc: "捕捉成功率 +4%。",
         cost: { catnip: 250, wood: 80 },
         prereq: ["ballMolds"],
@@ -302,7 +293,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         },
       },
       reinforcedBalls: {
-        name: "加固球壳",
+        name: "灵球加固",
         desc: "捕捉成功率 +6%。",
         cost: { catnip: 400, wood: 140, minerals: 30 },
         prereq: ["apricornCrafting"],
@@ -323,7 +314,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       fieldResearch: {
         name: "野外观察",
-        desc: "球果与进化石碎片产量 +100%，并提升对应上限。",
+        desc: "灵木与灵晶碎片产量 +100%，并提升对应上限。",
         cost: { catnip: 200, wood: 30 },
         prereq: ["pokeballBasics"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -337,7 +328,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       fieldGuide: {
         name: "野外手册",
-        desc: "球果与进化石碎片产量 +25%，并提升对应上限。",
+        desc: "灵木与灵晶碎片产量 +25%，并提升对应上限。",
         cost: { catnip: 350, wood: 60 },
         prereq: ["fieldResearch"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -350,7 +341,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       mineralSurvey: {
         name: "矿脉勘测",
-        desc: "进化石碎片产量 +35%，碎片上限 +60。",
+        desc: "灵晶碎片产量 +35%，灵晶上限 +60。",
         cost: { wood: 100, minerals: 40 },
         prereq: ["fieldGuide"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -361,7 +352,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       excavationTools: {
         name: "挖掘工具",
-        desc: "进化石碎片产量 +40%，碎片上限 +80。",
+        desc: "灵晶碎片产量 +40%，灵晶上限 +80。",
         cost: { wood: 180, minerals: 90 },
         prereq: ["mineralSurvey"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -372,7 +363,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       refining: {
         name: "精炼处理",
-        desc: "进化石碎片产量 +20%，球果产量 +15%，碎片上限 +120。",
+        desc: "灵晶碎片产量 +20%，灵木产量 +15%，灵晶上限 +120。",
         cost: { wood: 260, minerals: 160 },
         prereq: ["excavationTools"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -383,8 +374,8 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         },
       },
       oreStorage: {
-        name: "储矿箱",
-        desc: "球果上限 +120，进化石碎片上限 +200。",
+        name: "灵晶仓",
+        desc: "灵木上限 +120，灵晶碎片上限 +200。",
         cost: { wood: 220, minerals: 180 },
         prereq: ["refining"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -395,7 +386,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       carpentry: {
         name: "木工训练",
-        desc: "球果产量 +30%，球果上限 +80。",
+        desc: "灵木产量 +30%，灵木上限 +80。",
         cost: { catnip: 220, wood: 60 },
         prereq: ["campLogistics"],
         req: (state) => state.buildings.hut.owned > 0,
@@ -406,7 +397,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       sawmillPlans: {
         name: "锯木坊图纸",
-        desc: "球果产量 +45%，球果上限 +160。",
+        desc: "灵木产量 +45%，灵木上限 +160。",
         cost: { catnip: 500, wood: 200, minerals: 80 },
         prereq: ["carpentry"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -417,7 +408,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       supplyLines: {
         name: "补给线",
-        desc: "树果/球果/碎片上限全面提升。",
+        desc: "灵果/灵木/灵晶上限全面提升。",
         cost: { catnip: 800, wood: 300, minerals: 200 },
         prereq: ["sawmillPlans"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -439,7 +430,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       advancedGear: {
         name: "高级装备",
-        desc: "树果产量 +25%，并提升全部上限。",
+        desc: "灵果产量 +25%，并提升全部上限。",
         cost: { catnip: 900, wood: 250, minerals: 150 },
         prereq: ["efficientConstruction"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -453,7 +444,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       },
       researchMethod: {
         name: "研究方法",
-        desc: "树果/球果/碎片产量 +15%。",
+        desc: "灵果/灵木/灵晶产量 +15%。",
         cost: { catnip: 1500, wood: 600, minerals: 400 },
         prereq: ["advancedGear"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -580,18 +571,18 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       const w = typeof eff.woodRateMul === "number" && Number.isFinite(eff.woodRateMul) ? eff.woodRateMul : null;
       const m = typeof eff.mineralsRateMul === "number" && Number.isFinite(eff.mineralsRateMul) ? eff.mineralsRateMul : null;
 
-      if (c) d = d.replace(/树果产量\s*\+\s*\d+%/g, `树果产量 +${pctFromMul(c)}%`);
-      if (w) d = d.replace(/球果产量\s*\+\s*\d+%/g, `球果产量 +${pctFromMul(w)}%`);
-      if (m) d = d.replace(/(进化石碎片|碎片)产量\s*\+\s*\d+%/g, `$1产量 +${pctFromMul(m)}%`);
+      if (c) d = d.replace(/灵果产量\s*\+\s*\d+%/g, `灵果产量 +${pctFromMul(c)}%`);
+      if (w) d = d.replace(/灵木产量\s*\+\s*\d+%/g, `灵木产量 +${pctFromMul(w)}%`);
+      if (m) d = d.replace(/(灵晶碎片|灵晶)产量\s*\+\s*\d+%/g, `$1产量 +${pctFromMul(m)}%`);
 
       if (c && w && m && pctFromMul(c) === pctFromMul(w) && pctFromMul(w) === pctFromMul(m)) {
         const p = pctFromMul(c);
-        d = d.replace(/树果\s*\/\s*球果\s*\/\s*碎片产量\s*\+\s*\d+%/g, `树果/球果/碎片产量 +${p}%`);
+        d = d.replace(/灵果\s*\/\s*灵木\s*\/\s*灵晶产量\s*\+\s*\d+%/g, `灵果/灵木/灵晶产量 +${p}%`);
       }
 
       if (w && m && pctFromMul(w) === pctFromMul(m)) {
         const p = pctFromMul(w);
-        d = d.replace(/球果与进化石碎片产量\s*\+\s*\d+%/g, `球果与进化石碎片产量 +${p}%`);
+        d = d.replace(/灵木与灵晶碎片产量\s*\+\s*\d+%/g, `灵木与灵晶碎片产量 +${p}%`);
       }
 
       const cCap = typeof eff.capCatnipMul === "number" && Number.isFinite(eff.capCatnipMul) ? eff.capCatnipMul : null;
@@ -599,10 +590,10 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       const mCap = typeof eff.capMineralsMul === "number" && Number.isFinite(eff.capMineralsMul) ? eff.capMineralsMul : null;
       const pCap = typeof eff.capPokeballMul === "number" && Number.isFinite(eff.capPokeballMul) ? eff.capPokeballMul : null;
 
-      if (cCap) d = d.replace(/树果上限\s*\+\s*\d+/g, `树果上限 +${pctFromMul(cCap)}%`);
-      if (wCap) d = d.replace(/球果上限\s*\+\s*\d+/g, `球果上限 +${pctFromMul(wCap)}%`);
-      if (mCap) d = d.replace(/(进化石碎片|碎片)上限\s*\+\s*\d+/g, `$1上限 +${pctFromMul(mCap)}%`);
-      if (pCap) d = d.replace(/精灵球上限\s*\+\s*\d+/g, `精灵球上限 +${pctFromMul(pCap)}%`);
+      if (cCap) d = d.replace(/灵果上限\s*\+\s*\d+/g, `灵果上限 +${pctFromMul(cCap)}%`);
+      if (wCap) d = d.replace(/灵木上限\s*\+\s*\d+/g, `灵木上限 +${pctFromMul(wCap)}%`);
+      if (mCap) d = d.replace(/(灵晶碎片|灵晶)上限\s*\+\s*\d+/g, `$1上限 +${pctFromMul(mCap)}%`);
+      if (pCap) d = d.replace(/灵球上限\s*\+\s*\d+/g, `灵球上限 +${pctFromMul(pCap)}%`);
 
       return d;
     };
@@ -647,13 +638,13 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
   delete defs.buildings.warehouse;
   delete defs.buildings.commandCenter;
 
-  // 迁移：根据最新 capture_rate 规则，重算所有已存在精灵实例的稀有度
+  // 迁移：根据最新 capture_rate 规则，重算所有已存在萌灵实例的稀有度
   function migrateMonTiers() {
     if (!state || !state.mons || !Array.isArray(state.mons.list)) return;
     for (const m of state.mons.list) {
       if (!m || typeof m.dex !== "number") continue;
       try {
-        m.tier = getPokemonTier(m.dex);
+        m.tier = getBeastTier(m.dex);
       } catch {
         // 保底：如果计算失败，维持原 tier
       }
@@ -718,7 +709,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
   // ===== SECTION:UI_STATE — ui状态对象定义 — 维护者窗口C =====
     dexPageSize: 50,
     dexDirty: true,
-    captureAreaId: "kanto",
+    captureAreaId: "meadow",
     captureDirty: true,
     capturePreviewHidden: false,
     makeBallQty: 1,
@@ -1250,7 +1241,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     getSpeciesByPid,
     computeTechEffects,
     baseCatchChanceByDex,
-    awardCaughtPokemon,
+    awardCaughtBeast,
     doCatch,
     pushTickerEvent,
     onPokeballCraft: (qty) => {
@@ -1326,9 +1317,14 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     }
   }
 
-  const speciesByPid = new Map(Array.isArray(defs.pokemon) ? defs.pokemon.map((x) => [x.id, x]) : []);
+  const speciesByPid = new Map(Array.isArray(defs.beasts) ? defs.beasts.map((x) => [x.id, x]) : []);
   function getSpeciesByPid(pid) {
-    return speciesByPid.get(pid) ?? null;
+    const hit = speciesByPid.get(pid);
+    if (hit) return hit;
+    // roster 外物种（旧存档捕获的被裁物种）：显示为逸散萌灵，不删数据。
+    const dex = Number(String(pid).slice(1));
+    if (!pid || !Number.isFinite(dex)) return null;
+    return { id: pid, dex, ...STRAY_BEAST };
   }
 
   function expNeedForLevel(lvl) {
@@ -1336,7 +1332,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
   }
 
   function monPower(mon) {
-    return monPower0(mon, getPokeApiDataByDex);
+    return monPower0(mon, getBeastDataByDex);
   }
 
   function maxSingleMonPower() {
@@ -1635,7 +1631,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
 
     try {
       const base = lbBaseUrl();
-      const name = typeof ui.lbName === "string" && ui.lbName.trim() ? ui.lbName.trim() : "训练家";
+      const name = typeof ui.lbName === "string" && ui.lbName.trim() ? ui.lbName.trim() : "育灵师";
       await lbFetchJson(`${base}/api/server/buffs/buy`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1885,7 +1881,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
             <div class="modal__body">
               ${expPerMon > 0 && monCount > 0 ? `<div class="badge">经验：每只 +${expPerMon}（参与 ${monCount} 只）</div>` : ""}
               ${fc > 0 ? `<div class="badge">${escapeHtml(defs.resources?.futurecoin?.name ?? "未来币")} x${fc}</div>` : ""}
-              ${mb > 0 ? `<div class="badge">${escapeHtml(defs.resources?.masterball?.name ?? "大师球")} x${mb}</div>` : ""}
+              ${mb > 0 ? `<div class="badge">${escapeHtml(defs.resources?.masterball?.name ?? "究极灵球")} x${mb}</div>` : ""}
               <div class="badge">药剂：${potText}</div>
               ${expData.eventCard?.title ? `<div class="badge badge--ok">奇遇 · ${escapeHtml(expData.eventCard.title)}：${escapeHtml(expData.eventCard.blurb || "")}</div>` : ""}
               ${expData.seasonRelic?.name ? `<div class="badge badge--ok">赛季印记 · ${escapeHtml(expData.seasonRelic.name)}（累计 ${Math.floor(expData.seasonRelic.count || 1)}）→ ${escapeHtml(defs.resources?.[expData.seasonRelic.item]?.name ?? expData.seasonRelic.item)}</div>` : ""}
@@ -2085,7 +2081,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     ui,
     escapeHtml,
     fmtDuration,
-    renderPokemonIcon,
+    renderBeastIcon,
     renderOwnerIcon,
     renderSelfAvatarPreview,
     trainerIconSrc,
@@ -2098,9 +2094,9 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     refreshLeaderboards,
   });
 
-  // ===== SECTION:MON_HELPERS — 精灵辅助函数 getMonCurrentStats等 — 维护者窗口B =====
+  // ===== SECTION:MON_HELPERS — 萌灵辅助函数 getMonCurrentStats等 — 维护者窗口B =====
   function monStatsDeps() {
-    return { state, ui, getPokeApiDataByDex, getSpeciesByPid, serverBuffMul, addLog };
+    return { state, ui, getBeastDataByDex, getSpeciesByPid, serverBuffMul, addLog };
   }
 
   function getMonCurrentStats(mon) {
@@ -2476,13 +2472,13 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     elFunctionsTraining,
     ui,
     TYPE_ZH,
-    getPokeApiDataByDex,
+    getBeastDataByDex,
     clamp,
     escapeHtml,
     fmtDuration,
     expNeedForLevel0,
     monPower,
-    renderPokemonIcon,
+    renderBeastIcon,
     markFunctionsDirty,
     markMonListDirty,
     addLog,
@@ -2496,9 +2492,9 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     clamp,
     escapeHtml,
     monPower,
-    renderPokemonIcon,
+    renderBeastIcon,
     getMonCurrentStats,
-    getPokeApiDataByDex,
+    getBeastDataByDex,
     markPveDirty,
     addLog,
     addRes,
@@ -2632,7 +2628,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     getSpeciesByPid,
     computeTechEffects,
     baseCatchChanceByDex,
-    awardCaughtPokemon,
+    awardCaughtBeast,
     doCatch,
     pushTickerEvent,
   });
@@ -2644,14 +2640,14 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     getState: () => state,
   });
 
-  // ===== SECTION:CAPTURE_AWARD — pickRandomPokemon / awardCaughtPokemon / doCatch — 维护者窗口B =====
-  function pickRandomPokemon() {
-    const pool = defs.pokemon;
+  // ===== SECTION:CAPTURE_AWARD — pickRandomBeast / awardCaughtBeast / doCatch — 维护者窗口B =====
+  function pickRandomBeast() {
+    const pool = defs.beasts;
     return pickRandomFromPool(pool);
   }
 
-  function awardCaughtPokemon(p, opts = null) {
-    awardCaughtPokemonCore(state, p, opts, {
+  function awardCaughtBeast(p, opts = null) {
+    awardCaughtBeastCore(state, p, opts, {
       createMonInstance,
       ui,
       addLog,
@@ -2659,21 +2655,21 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       bumpEraCounter,
       syncEraProgress: () => syncEraProgress(),
       afterAward: ({ species, prev, isShiny, prevCatchCount }) => {
-        if (prevCatchCount === 0) analytics.trackFirstCapture({ pokemonId: species.id, dex: species.dex });
+        if (prevCatchCount === 0) analytics.trackFirstCapture({ beastId: species.id, dex: species.dex });
         dailyTasks?.onEvent("catch");
 
         if (prev === 0 && (species.tier === "rare" || species.tier === "epic") && typeof pushTickerEvent === "function") {
           pushTickerEvent("catch", `捕捉成功 ${species.name}`);
         }
         if (prev === 0 && species.tier === "epic" && typeof pushTickerEvent === "function") {
-          pushTickerEvent("mythic", `捕捉到神兽 ${species.name}`);
+          pushTickerEvent("mythic", `捕捉到幻灵 ${species.name}`);
         }
         if (isShiny && typeof pushTickerEvent === "function") {
           pushTickerEvent("shiny", `捕捉到闪光 ${species.name}`);
         }
 
         if (!socialTab || !ui.lbUid) return;
-        const tier = getPokemonTier(species.id);
+        const tier = getBeastTier(species.dex);
         const tierNum =
           tier === "common"
             ? 5
@@ -2719,7 +2715,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
 
     const pool = getCapturePool();
     if (!pool || pool.length === 0) {
-      addLog("捕捉失败：该区域没有可捕捉的宝可梦。");
+      addLog("捕捉失败：该区域没有可捕捉的萌灵。");
       return;
     }
     const p = pickRandomFromPool(pool);
@@ -2732,7 +2728,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         ? Math.max(0, state.skills.dragonCatchBoostRemainingSec)
         : 0;
     const dragonAdd = dragonRem > 0 ? 0.1 : 0;
-    // 科技加成递减边际：前20%线性，之后逐渐衰减（避免common精灵接近100%）
+    // 科技加成递减边际：前20%线性，之后逐渐衰减（避免common萌灵接近100%）
     const addRaw = add + dragonAdd;
     const addSoft = addRaw <= 0.2 ? addRaw : 0.2 + (addRaw - 0.2) * 0.4;
     const baseWithTech = base * Math.max(1, 1 + addSoft);
@@ -2740,23 +2736,23 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     const pity = Math.min(0.02 * Math.max(0, Math.floor(fails)), 0.2);
     const capByTier = p.tier === "epic" ? 0.98 : p.tier === "rare" ? 0.92 : p.tier === "uncommon" ? 0.85 : 0.75;
     let chance = clamp(baseWithTech + pity, 0, capByTier);
-    chance = clamp(chance * luckyCatchMul(state, globalThis.POKEMON_TYPES?.[p.dex]), 0, Math.max(capByTier, 0.95));
+    chance = clamp(chance * luckyCatchMul(state, globalThis.BEAST_TYPES?.[p.dex]), 0, Math.max(capByTier, 0.95));
     if (randFloat() > chance) {
       if (!state.rng) state.rng = { catchFails: 0 };
       state.rng.catchFails = Math.max(0, (state.rng.catchFails ?? 0) + pityFailStep(state, randFloat));
       resetCatchStreak(state);
-      addLog("捕捉失败：宝可梦逃走了。");
+      addLog("捕捉失败：萌灵逃走了。");
       return;
     }
 
     if (!state.rng) state.rng = { catchFails: 0 };
     state.rng.catchFails = 0;
-    awardCaughtPokemon(p);
+    awardCaughtBeast(p);
     const { streak, reward } = bumpCatchStreak(state);
     if (streak >= 3) addLog(`连捕中：×${streak}`);
     if (reward?.berry > 0) {
       addRes("catnip", reward.berry);
-      addLog(`★ ${reward.label}：树果 +${reward.berry}`, true);
+      addLog(`★ ${reward.label}：灵果 +${reward.berry}`, true);
     }
   }
 
@@ -2772,7 +2768,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     getState: () => state,
     clamp,
     escapeHtml,
-    renderPokemonIcon,
+    renderBeastIcon,
     ensureCaptureAreaValid,
     getCaptureAreas,
     getUnlockedCaptureAreas,
@@ -2798,7 +2794,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     clamp,
     escapeHtml,
     pad3,
-    renderPokemonIcon,
+    renderBeastIcon,
     TYPE_ZH,
     TYPE_SKILLS,
     monPower,
@@ -2810,7 +2806,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     isSameEvoFamily,
     getMonCurrentStats,
     expNeedForLevel,
-    getPokeApiDataByDex,
+    getBeastDataByDex,
     getEvoMap,
     stageIndex,
     getSpeciesByPid,
@@ -2857,7 +2853,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     lbBaseUrl,
     onBossBullyMaybeReward,
     onEvolve: () => dailyTasks?.onEvent("evolve"),
-    getPokeApiDataByDex,
+    getBeastDataByDex,
   });
 
   initFunctionsTab({
@@ -2866,7 +2862,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     clamp,
     fmtDuration,
     monPower,
-    getPokeApiDataByDex,
+    getBeastDataByDex,
     markFunctionsDirty,
     markMonListDirty,
     addLog,
@@ -2917,7 +2913,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     clamp,
     pad3,
     escapeHtml,
-    renderPokemonIcon,
+    renderBeastIcon,
     dexCaughtCount,
     computeDexEffects,
     getCaptureAreas,
@@ -3175,10 +3171,10 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       const dBall = state.res.pokeball.value - before.pokeball;
 
       const parts = [];
-      if (dCat > 0) parts.push(`树果 +${fmt(dCat)}`);
-      if (dWood > 0) parts.push(`球果 +${fmt(dWood)}`);
-      if (dMin > 0) parts.push(`进化石碎片 +${fmt(dMin)}`);
-      if (dBall > 0) parts.push(`精灵球 +${fmt(dBall)}`);
+      if (dCat > 0) parts.push(`灵果 +${fmt(dCat)}`);
+      if (dWood > 0) parts.push(`灵木 +${fmt(dWood)}`);
+      if (dMin > 0) parts.push(`灵晶碎片 +${fmt(dMin)}`);
+      if (dBall > 0) parts.push(`灵球 +${fmt(dBall)}`);
       if (parts.length > 0) addLog(`离线收益：${parts.join("，")}`);
 
       const highlights = formatWelcomeBackSummary(state, before, dt);
@@ -3195,8 +3191,8 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
           addRes("evolutionStone", 1);
           const gotMb = randFloat() < 0.05;
           if (gotMb) addRes("masterball", 1);
-          addLog(gotMb ? "每日登录奖励：精灵球 +20，进化石 +1，额外 大师球 +1" : "每日登录奖励：精灵球 +20，进化石 +1", true);
-          hint(gotMb ? "今日登录奖励已发放，获得大师球！" : "今日登录奖励已发放。", 3000);
+          addLog(gotMb ? "每日登录奖励：灵球 +20，灵晶石 +1，额外 究极灵球 +1" : "每日登录奖励：灵球 +20，灵晶石 +1", true);
+          hint(gotMb ? "今日登录奖励已发放，获得究极灵球！" : "今日登录奖励已发放。", 3000);
           save();
         }
       } catch {
@@ -3255,7 +3251,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       state,
       createPvpBattle,
       getMonCurrentStats,
-      getPokeApiDataByDex,
+      getBeastDataByDex,
       pushTickerEvent,
     });
 

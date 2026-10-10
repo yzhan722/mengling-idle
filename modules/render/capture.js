@@ -21,7 +21,7 @@ import { getNatureInfo } from "../mons.js";
 import { ballCatchMult } from "../systems/ball_catch.js";
 
 const MUTATOR_LABELS = {
-  berryYield_12: "树果 +12%",
+  berryYield_12: "灵果 +12%",
   catchRate_6: "捕获 +6%",
   catchRate_3: "捕获 +3%",
   catchRate_4: "捕获 +4%",
@@ -29,7 +29,7 @@ const MUTATOR_LABELS = {
   researchTime_m10: "研究加速 10%",
   pokeballGain_10: "制球 +10%",
   encounterRefresh_fast: "遭遇恢复 +10%",
-  pokeballCap_8: "精灵球上限 +8%",
+  pokeballCap_8: "灵球上限 +8%",
   buildingYield_10: "建筑产出 +10%",
   researchCost_m8: "研究成本 -8%",
   fieldYield_10: "田地 +10%",
@@ -39,9 +39,15 @@ const MUTATOR_LABELS = {
 };
 
 const AREA_HINTS = {
-  mythic: "传说/幻之宝可梦专属。每次遭遇或高级遭遇各消耗 100 未来币。",
-  galar: "伽勒尔旷野：高编号精灵与少见个体。",
-  alola: "阿罗拉海岛：地区特色精灵。",
+  meadow: "芽芽草甸：新手友好的初遇之地，常见草/虫/一般系。",
+  woods: "蜜露林径：甜香花林，妖精与虫系萌灵出没。",
+  brook: "溪光浅滩：清澈水域，水系萌灵的家园。",
+  plateau: "风铃高原：风声呼啸，飞行/电/格斗系活跃。",
+  dunes: "星砂荒漠：月夜流沙，地面/岩石/火系栖息。",
+  garden: "月见花园：月光花圃，妖精/超能力/幽灵系徘徊。",
+  ridge: "霜晶山脊：风雪巅峰，冰/钢/岩石系驻守。",
+  hollow: "龙眠幽谷：幽邃深处，龙/恶/幽灵/毒系潜藏。",
+  sanctum: "传说/幻之萌灵专属。每次遭遇或高级遭遇各消耗 100 未来币。",
 };
 
 export function createRenderCapture({
@@ -54,7 +60,7 @@ export function createRenderCapture({
   getState,
   clamp,
   escapeHtml,
-  renderPokemonIcon,
+  renderBeastIcon,
   ensureCaptureAreaValid,
   getCaptureAreas,
   getUnlockedCaptureAreas,
@@ -114,7 +120,7 @@ export function createRenderCapture({
           <div class="helpBlock__body">
             <div class="row__desc">${
               lucky?.type ? "今日属性捕获 ×1.1。" : ""
-            }${week?.type ? " 本周主题属性遭遇更常见（×1.35）。" : ""} 野外约 0.2% 神兽乱入。</div>
+            }${week?.type ? " 本周主题属性遭遇更常见（×1.35）。" : ""} 野外约 0.2% 幻灵乱入。</div>
             ${streakBadges ? `<div class="row__desc">${streakBadges}</div>` : ""}
           </div>
         </details>`
@@ -165,7 +171,7 @@ export function createRenderCapture({
       .join("");
 
     const area = getActiveCaptureArea();
-    const pool = defs.pokemon.filter(area.pool);
+    const pool = defs.beasts.filter(area.pool);
     const counts = { common: 0, uncommon: 0, rare: 0, epic: 0 };
     for (const p of pool) counts[p.tier] = (counts[p.tier] ?? 0) + 1;
 
@@ -173,7 +179,7 @@ export function createRenderCapture({
     const preview = pool
       .map((p) => {
         const n = caughtMap && typeof caughtMap[p.id] === "number" ? caughtMap[p.id] : 0;
-        const html = renderPokemonIcon(p.dex, p.name);
+        const html = renderBeastIcon(p.dex, p.name);
         if (n > 0) return html;
         return html.replace('class="pk-icon"', 'class="pk-icon pk-icon--silhouette"');
       })
@@ -207,8 +213,8 @@ export function createRenderCapture({
     if (nextArea) {
       const needLeft = Math.max(0, nextArea.unlockReq - unique);
       const nextHint =
-        nextArea.id === "mythic"
-          ? "登记足够图鉴后解锁神兽领域，可定向遭遇传说/幻之宝可梦（每次 100 未来币）。"
+        nextArea.id === "sanctum"
+          ? "登记足够图鉴后解锁幻梦秘境，可定向遭遇传说/幻之萌灵（每次 100 未来币）。"
           : needLeft > 0
             ? `再登记 ${needLeft} 种独特图鉴即可解锁「${nextArea.name}」。`
             : "";
@@ -242,8 +248,8 @@ export function createRenderCapture({
         </div>`;
     }
 
-    const areaHint = AREA_HINTS[area.id] ?? (area.id === "mythic" ? AREA_HINTS.mythic : "");
-    const poolEmptyHint = pool.length === 0 ? "本区域暂无可遭遇精灵，请切换其他区域或推进时代。" : "";
+    const areaHint = AREA_HINTS[area.id] ?? "";
+    const poolEmptyHint = pool.length === 0 ? "本区域暂无可遭遇萌灵，请切换其他区域或推进时代。" : "";
     const tierSummary = `常见 ${counts.common} · 少见 ${counts.uncommon} · 稀有 ${counts.rare} · 史诗 ${counts.epic}`;
 
     elCaptureInfo.innerHTML = `
@@ -300,10 +306,10 @@ export function createRenderCapture({
           <div class="row">
             <div class="row__left">
               <div class="row__title">球空了</div>
-              <div class="row__desc">快捷制作 1 个精灵球（花费：${oneCostText || "-"}）。</div>
+              <div class="row__desc">快捷制作 1 个灵球（花费：${oneCostText || "-"}）。</div>
             </div>
             <div class="row__right">
-              <button class="btn btn--primary" data-capture-action="makeBall1" ${oneOk ? "" : "disabled"}>制作1个精灵球</button>
+              <button class="btn btn--primary" data-capture-action="makeBall1" ${oneOk ? "" : "disabled"}>制作1个灵球</button>
             </div>
           </div>
         `);
@@ -312,8 +318,8 @@ export function createRenderCapture({
       toolRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">制作精灵球</div>
-            <div class="row__desc">消耗资源制作精灵球（可批量）。</div>
+            <div class="row__title">制作灵球</div>
+            <div class="row__desc">消耗资源制作灵球（可批量）。</div>
           </div>
           <div class="row__right">
             <select class="input" data-capture-qty>
@@ -332,7 +338,7 @@ export function createRenderCapture({
           <div class="row">
             <div class="row__left">
               <div class="row__title">自动搓球</div>
-              <div class="row__desc">球果满时自动制作 1 个精灵球，直到精灵球满。</div>
+              <div class="row__desc">灵木满时自动制作 1 个灵球，直到灵球满。</div>
             </div>
             <div class="row__right">
               <label class="check">
@@ -359,9 +365,9 @@ export function createRenderCapture({
       if (!encEarly) {
         const startDesc = pool.length === 0
           ? "当前区域池子为空，请切换区域后再遭遇。"
-          : area.id === "mythic"
-            ? "神兽领域：遭遇/高级遭遇各消耗 100 未来币，定向传说与幻之宝可梦。"
-            : "点遭遇搜寻精灵，遇到后再选球捕捉。制球与自动化可展开。";
+          : area.id === "sanctum"
+            ? "幻梦秘境：遭遇/高级遭遇各消耗 100 未来币，定向传说与幻之萌灵。"
+            : "点遭遇搜寻萌灵，遇到后再选球捕捉。制球与自动化可展开。";
         rows.push(`
           <div class="row">
             <div class="row__left">
@@ -384,7 +390,7 @@ export function createRenderCapture({
       const encIsMythic = Boolean(enc && enc.tier === "epic");
       const autoEncOn = Boolean(ui.captureAutoEncounter);
 
-      // 遭遇精灵的性格信息
+      // 遭遇萌灵的性格信息
       const encNatureId = typeof ui.encounterNature === "string" && ui.encounterNature ? ui.encounterNature : null;
       let encNatureHtml = "";
       if (enc && encNatureId) {
@@ -429,14 +435,14 @@ export function createRenderCapture({
         <div class="row${nearMissActive ? " capture-near-miss" : ""}">
           <div class="row__left">
             <div class="row__title">遭遇</div>
-            <div class="row__desc">${enc ? `你遇到了：${escapeHtml(enc.name)}（${tierText}）` : "点击遭遇开始搜寻宝可梦。"}</div>
+            <div class="row__desc">${enc ? `你遇到了：${escapeHtml(enc.name)}（${tierText}）` : "点击遭遇开始搜寻萌灵。"}</div>
           </div>
           <div class="row__right">
             ${encFullBadge}
             ${enc ? `<div class="badge ${encSeen ? "badge--muted" : "badge--ok"}">${encSeen ? "已有" : "首次"}</div>` : ""}
             ${enc && encIsShiny ? `<div class="badge badge--ok">！！！闪光！！！</div>` : ""}
-            ${enc && encIsMythic ? `<div class="badge badge--ok">！！！神兽！！！</div>` : ""}
-            ${enc ? `<div class="badge">${renderPokemonIcon(enc.dex, enc.name, encIsShiny)} ${escapeHtml(enc.name)}</div>` : ""}
+            ${enc && encIsMythic ? `<div class="badge badge--ok">！！！幻灵！！！</div>` : ""}
+            ${enc ? `<div class="badge">${renderBeastIcon(enc.dex, enc.name, encIsShiny)} ${escapeHtml(enc.name)}</div>` : ""}
             ${encNatureHtml}
             <label class="check" style="margin-right:6px">
               <input type="checkbox" data-auto-encounter-toggle ${autoEncOn ? "checked" : ""} />
@@ -461,7 +467,7 @@ export function createRenderCapture({
       const mult2 = Math.max(0, 1 + add2 + dragonAdd2);
       const selectedBallPreview = ui.selectedBallType || "pokeball";
       const caughtN = enc && caughtMap && typeof caughtMap[enc.id] === "number" ? caughtMap[enc.id] : 0;
-      const localTypes = globalThis.POKEMON_TYPES;
+      const localTypes = globalThis.BEAST_TYPES;
       const encTypes = enc && localTypes && typeof localTypes === "object" ? localTypes[enc.dex] : null;
       const ballMult2 = ballCatchMult(selectedBallPreview, { types: encTypes, caughtCount: caughtN });
       const luckyMul2 = enc ? luckyCatchMul(state, encTypes) : 1;
@@ -480,7 +486,7 @@ export function createRenderCapture({
       const dbVal = Math.max(0, Math.floor(state.res.duskball?.value ?? 0));
       const mbVal = Math.max(0, Math.floor(state.res.masterball?.value ?? 0));
       
-      // 当前选择的精灵球类型
+      // 当前选择的灵球类型
       const selectedBall = ui.selectedBallType || "pokeball";
       
       const throwOk = Boolean(enc) && state.res[selectedBall]?.value >= 1;
@@ -491,38 +497,38 @@ export function createRenderCapture({
       rows.push(`
         <div class="row ${enc ? "" : "is-locked"}">
           <div class="row__left">
-            <div class="row__title">选择精灵球</div>
-            <div class="row__desc">不同精灵球有不同效果。</div>
+            <div class="row__title">选择灵球</div>
+            <div class="row__desc">不同灵球有不同效果。</div>
           </div>
           <div class="row__right">
             <select class="input" data-ball-selector ${enc ? "" : "disabled"}>
-              <option value="pokeball" ${selectedBall === "pokeball" ? "selected" : ""}>精灵球 (${pbVal})</option>
-              ${ubVal > 0 ? `<option value="ultraball" ${selectedBall === "ultraball" ? "selected" : ""}>高级球 (${ubVal}) - 捕获率x2</option>` : ""}
-              ${qbVal > 0 ? `<option value="quickball" ${selectedBall === "quickball" ? "selected" : ""}>先机球 (${qbVal}) - 首次遭遇x5</option>` : ""}
-              ${lbVal > 0 ? `<option value="luxuryball" ${selectedBall === "luxuryball" ? "selected" : ""}>豪华球 (${lbVal}) - 亲密度+20</option>` : ""}
-              ${nbVal > 0 ? `<option value="netball" ${selectedBall === "netball" ? "selected" : ""}>捕网球 (${nbVal}) - 虫/水/草x3</option>` : ""}
-              ${dbVal > 0 ? `<option value="duskball" ${selectedBall === "duskball" ? "selected" : ""}>黑暗球 (${dbVal}) - 夜间x3</option>` : ""}
+              <option value="pokeball" ${selectedBall === "pokeball" ? "selected" : ""}>灵球 (${pbVal})</option>
+              ${ubVal > 0 ? `<option value="ultraball" ${selectedBall === "ultraball" ? "selected" : ""}>高级灵球 (${ubVal}) - 捕获率x2</option>` : ""}
+              ${qbVal > 0 ? `<option value="quickball" ${selectedBall === "quickball" ? "selected" : ""}>迅捷灵球 (${qbVal}) - 首次遭遇x5</option>` : ""}
+              ${lbVal > 0 ? `<option value="luxuryball" ${selectedBall === "luxuryball" ? "selected" : ""}>豪华灵球 (${lbVal}) - 亲密度+20</option>` : ""}
+              ${nbVal > 0 ? `<option value="netball" ${selectedBall === "netball" ? "selected" : ""}>捕灵球 (${nbVal}) - 虫/水/草x3</option>` : ""}
+              ${dbVal > 0 ? `<option value="duskball" ${selectedBall === "duskball" ? "selected" : ""}>暗夜灵球 (${dbVal}) - 夜间x3</option>` : ""}
             </select>
           </div>
         </div>
         <div class="row ${enc ? "" : "is-locked"}">
           <div class="row__left">
-            <div class="row__title">投掷精灵球</div>
-            <div class="row__desc">${enc ? `对 ${escapeHtml(enc.name)} 进行捕捉判定。` : "先遭遇一只宝可梦。"}</div>
+            <div class="row__title">投掷灵球</div>
+            <div class="row__desc">${enc ? `对 ${escapeHtml(enc.name)} 进行捕捉判定。` : "先遭遇一只萌灵。"}</div>
           </div>
           <div class="row__right">
             ${enc ? `<div class="badge">成功率：${Math.round(effChance * 100)}%</div>` : ""}
             ${enc && ui.lastCatchNearMiss?.pid === enc.id ? `<div class="badge badge--warning capture-near-miss-badge">差一点！上次约 ${ui.lastCatchNearMiss.pct}%</div>` : ""}
             <div class="badge capture-pity-row">${fails2 > 0 ? `失败 ${Math.max(0, Math.floor(fails2))} 次 · +${Math.round(pity2 * 100)}%` : "连续失败提升捕获率"} ${pityBarHtml}</div>
-            <div class="badge">精灵球：${pbVal}/${pbCap}</div>
-            ${mbVal > 0 ? `<div class="badge">大师球：${mbVal}</div>` : ""}
+            <div class="badge">灵球：${pbVal}/${pbCap}</div>
+            ${mbVal > 0 ? `<div class="badge">究极灵球：${mbVal}</div>` : ""}
           </div>
         </div>
         <div class="row ${enc ? "" : "is-locked"}">
           <div class="row__left"></div>
           <div class="row__right">
             <button class="btn btn--primary" data-capture-action="throw" ${throwOk ? "" : "disabled"}>捕捉</button>
-            ${mbVal > 0 ? `<button class="btn btn--small" data-capture-action="masterball" ${mbOk ? "" : "disabled"}>大师球捕捉</button>` : ""}
+            ${mbVal > 0 ? `<button class="btn btn--small" data-capture-action="masterball" ${mbOk ? "" : "disabled"}>究极灵球捕捉</button>` : ""}
             <label class="check" style="margin-left:8px">
               <input type="checkbox" data-auto-throw-toggle ${autoThrowOn ? "checked" : ""} />
               <span>自动捕捉${autoThrowOn ? "（开）" : "（关）"}</span>
@@ -541,7 +547,7 @@ export function createRenderCapture({
                   <button class="btn btn--small" data-shiny-close="1">关闭</button>
                 </div>
               </div>
-              <div class="modal__desc">你遇到了闪光宝可梦：${escapeHtml(enc.name)}（快抓！！）</div>
+              <div class="modal__desc">你遇到了闪光萌灵：${escapeHtml(enc.name)}（快抓！！）</div>
               <div class="modal__body">
                 <div class="row">
                   <div class="row__left">
@@ -550,7 +556,7 @@ export function createRenderCapture({
                   </div>
                   <div class="row__right">
                     <div class="badge badge--ok">！！！</div>
-                    <div class="badge">${renderPokemonIcon(enc.dex, enc.name, true)} ${escapeHtml(enc.name)}</div>
+                    <div class="badge">${renderBeastIcon(enc.dex, enc.name, true)} ${escapeHtml(enc.name)}</div>
                   </div>
                 </div>
               </div>
@@ -564,12 +570,12 @@ export function createRenderCapture({
           <div class="modalOverlay" data-mythic-overlay="1">
             <div class="modal">
               <div class="modal__header">
-                <div class="modal__title">！！！神兽遭遇！！！</div>
+                <div class="modal__title">！！！幻灵遭遇！！！</div>
                 <div class="modal__right">
                   <button class="btn btn--small" data-mythic-close="1">关闭</button>
                 </div>
               </div>
-              <div class="modal__desc">你遇到了神兽：${escapeHtml(enc.name)}（约 0.2% 乱入，快抓！！）</div>
+              <div class="modal__desc">你遇到了幻灵：${escapeHtml(enc.name)}（约 0.2% 乱入，快抓！！）</div>
               <div class="modal__body">
                 <div class="row">
                   <div class="row__left">
@@ -578,7 +584,7 @@ export function createRenderCapture({
                   </div>
                   <div class="row__right">
                     <div class="badge badge--ok">！！！</div>
-                    <div class="badge">${renderPokemonIcon(enc.dex, enc.name, encIsShiny)} ${escapeHtml(enc.name)}</div>
+                    <div class="badge">${renderBeastIcon(enc.dex, enc.name, encIsShiny)} ${escapeHtml(enc.name)}</div>
                   </div>
                 </div>
               </div>
@@ -600,7 +606,7 @@ export function createRenderCapture({
                   <button class="btn btn--small" data-capture-fc-close="1">关闭</button>
                 </div>
               </div>
-              <div class="modal__desc">神兽领域：${action} 需要未来币 ${need}（当前 ${cur}）</div>
+              <div class="modal__desc">幻梦秘境：${action} 需要未来币 ${need}（当前 ${cur}）</div>
             </div>
           </div>
         `);
@@ -610,7 +616,7 @@ export function createRenderCapture({
         <div class="row is-locked">
           <div class="row__left">
             <div class="row__title">捕捉</div>
-            <div class="row__desc">研究“精灵球基础”后解锁。</div>
+            <div class="row__desc">研究“灵球基础”后解锁。</div>
           </div>
           <div class="row__right">
             <div class="badge badge--muted">未解锁</div>

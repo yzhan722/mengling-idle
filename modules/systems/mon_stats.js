@@ -5,10 +5,10 @@ import {
   getMonCurrentStats as getMonCurrentStats0,
 } from "../mons.js";
 
-/** @typedef {{ state: object, ui: object, getPokeApiDataByDex: Function, getSpeciesByPid: Function, serverBuffMul: Function, addLog: Function }} MonStatsDeps */
+/** @typedef {{ state: object, ui: object, getBeastDataByDex: Function, getSpeciesByPid: Function, serverBuffMul: Function, addLog: Function }} MonStatsDeps */
 
 export function getMonCurrentStatsWith(deps, mon) {
-  return getMonCurrentStats0(mon, deps.getPokeApiDataByDex);
+  return getMonCurrentStats0(mon, deps.getBeastDataByDex);
 }
 
 export function createMonInstanceWith(deps, species, idOverride = null) {

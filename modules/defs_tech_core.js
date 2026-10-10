@@ -2,8 +2,8 @@
 export const CORE_TECH_DEFS = {
 
       berryCultivation: {
-        name: "树果培育",
-        desc: "树果产量 +50%，树果上限 +25。",
+        name: "灵果培育",
+        desc: "灵果产量 +50%，灵果上限 +25。",
         cost: { catnip: 20 },
         prereq: [],
         req: () => true,
@@ -15,7 +15,7 @@ export const CORE_TECH_DEFS = {
       },
       composting: {
         name: "堆肥技术",
-        desc: "树果产量 +20%，树果上限 +30。",
+        desc: "灵果产量 +20%，灵果上限 +30。",
         cost: { catnip: 45 },
         prereq: ["berryCultivation"],
         req: () => true,
@@ -27,7 +27,7 @@ export const CORE_TECH_DEFS = {
       },
       irrigation: {
         name: "灌溉改良",
-        desc: "树果产量 +25%，树果上限 +40。",
+        desc: "灵果产量 +25%，灵果上限 +40。",
         cost: { catnip: 100 },
         prereq: ["composting"],
         req: (state) => state.buildings.field.owned >= 2,
@@ -39,7 +39,7 @@ export const CORE_TECH_DEFS = {
       },
       greenhouse: {
         name: "温室栽培",
-        desc: "树果产量 +35%，树果上限 +80。",
+        desc: "灵果产量 +35%，灵果上限 +80。",
         cost: { catnip: 240, wood: 30 },
         prereq: ["irrigation"],
         req: (state) => state.buildings.hut.owned >= 1,
@@ -51,7 +51,7 @@ export const CORE_TECH_DEFS = {
       },
       backpackWeaving: {
         name: "背包编织",
-        desc: "树果上限 +60。",
+        desc: "灵果上限 +60。",
         cost: { catnip: 70 },
         prereq: ["berryCultivation"],
         req: () => true,
@@ -62,7 +62,7 @@ export const CORE_TECH_DEFS = {
       },
       campLogistics: {
         name: "营地后勤",
-        desc: "营地建筑成本 -3%，球果上限 +30。",
+        desc: "营地建筑成本 -3%，灵木上限 +30。",
         cost: { catnip: 110, wood: 8 },
         prereq: ["backpackWeaving"],
         req: (state) => state.buildings.hut.owned > 0,
@@ -73,8 +73,8 @@ export const CORE_TECH_DEFS = {
         },
       },
       trainerDrills: {
-        name: "训练家操练",
-        desc: "树果/球果/碎片产量 +10%。",
+        name: "育灵操练",
+        desc: "灵果/灵木/灵晶产量 +10%。",
         cost: { catnip: 130 },
         prereq: ["campLogistics"],
         req: () => true,
@@ -86,8 +86,8 @@ export const CORE_TECH_DEFS = {
         },
       },
       pokeballBasics: {
-        name: "精灵球基础",
-        desc: "营地建筑成本 -5%，并解锁精灵球制作与捕捉。",
+        name: "灵球基础",
+        desc: "营地建筑成本 -5%，并解锁灵球制作与捕捉。",
         // After TECH researchCostMul(~2): ~30 catnip — short gather burst
         cost: { catnip: 15 },
         prereq: [],
@@ -99,7 +99,7 @@ export const CORE_TECH_DEFS = {
         },
       },
       ballMolds: {
-        name: "球壳模具",
+        name: "灵球模具",
         desc: "捕捉成功率 +1%。",
         cost: { catnip: 140, wood: 30 },
         prereq: ["pokeballBasics"],
@@ -110,7 +110,7 @@ export const CORE_TECH_DEFS = {
         },
       },
       apricornCrafting: {
-        name: "球果工艺",
+        name: "灵球工艺",
         desc: "捕捉成功率 +4%。",
         cost: { catnip: 250, wood: 80 },
         prereq: ["ballMolds"],
@@ -120,7 +120,7 @@ export const CORE_TECH_DEFS = {
         },
       },
       reinforcedBalls: {
-        name: "加固球壳",
+        name: "灵球加固",
         desc: "捕捉成功率 +6%。",
         cost: { catnip: 400, wood: 140, minerals: 30 },
         prereq: ["apricornCrafting"],
@@ -141,7 +141,7 @@ export const CORE_TECH_DEFS = {
       },
       fieldResearch: {
         name: "野外观察",
-        desc: "球果与进化石碎片产量 +100%，并提升对应上限。",
+        desc: "灵木与灵晶碎片产量 +100%，并提升对应上限。",
         cost: { catnip: 200, wood: 30 },
         prereq: ["pokeballBasics"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -155,7 +155,7 @@ export const CORE_TECH_DEFS = {
       },
       fieldGuide: {
         name: "野外手册",
-        desc: "球果与进化石碎片产量 +25%，并提升对应上限。",
+        desc: "灵木与灵晶碎片产量 +25%，并提升对应上限。",
         cost: { catnip: 350, wood: 60 },
         prereq: ["fieldResearch"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -168,7 +168,7 @@ export const CORE_TECH_DEFS = {
       },
       mineralSurvey: {
         name: "矿脉勘测",
-        desc: "进化石碎片产量 +35%，碎片上限 +60。",
+        desc: "灵晶碎片产量 +35%，灵晶上限 +60。",
         cost: { wood: 100, minerals: 40 },
         prereq: ["fieldGuide"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -179,7 +179,7 @@ export const CORE_TECH_DEFS = {
       },
       excavationTools: {
         name: "挖掘工具",
-        desc: "进化石碎片产量 +40%，碎片上限 +80。",
+        desc: "灵晶碎片产量 +40%，灵晶上限 +80。",
         cost: { wood: 180, minerals: 90 },
         prereq: ["mineralSurvey"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -190,7 +190,7 @@ export const CORE_TECH_DEFS = {
       },
       refining: {
         name: "精炼处理",
-        desc: "进化石碎片产量 +20%，球果产量 +15%，碎片上限 +120。",
+        desc: "灵晶碎片产量 +20%，灵木产量 +15%，灵晶上限 +120。",
         cost: { wood: 260, minerals: 160 },
         prereq: ["excavationTools"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -201,8 +201,8 @@ export const CORE_TECH_DEFS = {
         },
       },
       oreStorage: {
-        name: "储矿箱",
-        desc: "球果上限 +120，进化石碎片上限 +200。",
+        name: "灵晶仓",
+        desc: "灵木上限 +120，灵晶碎片上限 +200。",
         cost: { wood: 220, minerals: 180 },
         prereq: ["refining"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -213,7 +213,7 @@ export const CORE_TECH_DEFS = {
       },
       carpentry: {
         name: "木工训练",
-        desc: "球果产量 +30%，球果上限 +80。",
+        desc: "灵木产量 +30%，灵木上限 +80。",
         cost: { catnip: 220, wood: 60 },
         prereq: ["campLogistics"],
         req: (state) => state.buildings.hut.owned > 0,
@@ -224,7 +224,7 @@ export const CORE_TECH_DEFS = {
       },
       sawmillPlans: {
         name: "锯木坊图纸",
-        desc: "球果产量 +45%，球果上限 +160。",
+        desc: "灵木产量 +45%，灵木上限 +160。",
         cost: { catnip: 500, wood: 200, minerals: 80 },
         prereq: ["carpentry"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -235,7 +235,7 @@ export const CORE_TECH_DEFS = {
       },
       supplyLines: {
         name: "补给线",
-        desc: "树果/球果/碎片上限全面提升。",
+        desc: "灵果/灵木/灵晶上限全面提升。",
         cost: { catnip: 800, wood: 300, minerals: 200 },
         prereq: ["sawmillPlans"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -257,7 +257,7 @@ export const CORE_TECH_DEFS = {
       },
       advancedGear: {
         name: "高级装备",
-        desc: "树果产量 +25%，并提升全部上限。",
+        desc: "灵果产量 +25%，并提升全部上限。",
         cost: { catnip: 900, wood: 250, minerals: 150 },
         prereq: ["efficientConstruction"],
         req: (state) => state.buildings.workshop.owned > 0,
@@ -271,7 +271,7 @@ export const CORE_TECH_DEFS = {
       },
       researchMethod: {
         name: "研究方法",
-        desc: "树果/球果/碎片产量 +15%。",
+        desc: "灵果/灵木/灵晶产量 +15%。",
         cost: { catnip: 1500, wood: 600, minerals: 400 },
         prereq: ["advancedGear"],
         req: (state) => state.buildings.workshop.owned > 0,

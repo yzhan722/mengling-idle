@@ -18,34 +18,34 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
     const state = getState();
 
     const effectTextByRid = {
-      pokeball: "用于捕捉精灵",
+      pokeball: "用于捕捉萌灵",
       ultraball: "捕获率 x2",
       quickball: "首次遭遇捕获率 x5",
       luxuryball: "捕获后亲密度 +20",
-      masterball: "用于捕捉精灵（必定成功）",
+      masterball: "用于捕捉萌灵（必定成功）",
       netball: "对虫/水/草属性捕获率 ×3",
       duskball: "夜间捕获率 ×3，其余时段 ×1.2",
       futurecoin: "用于未来币商店兑换/升级",
       evolutionStone: "用于进化页的石之进化（消耗 x1）",
       megaStone: "超级觉醒：1小时内 PvE 能力+20%",
-      linkRope: "用于精灵页的通信进化（消耗 x1）",
-      rareCandy: "喂食精灵 +1Lv",
-      bigBerry: "使用：全体精灵饱腹度 +50",
-      hugeBerry: "使用：获得 24 小时巨大树果加成",
-      expCandyS: "使用：精灵获得 200 经验",
-      expCandy: "使用：精灵获得 1000 经验",
-      expCandyL: "使用：精灵获得 5000 经验",
-      expCandyXL: "使用：精灵获得 20000 经验",
-      affectionTreat: "使用：精灵亲密度 +5",
-      friendshipBracelet: "使用：精灵亲密度直接达到 100",
+      linkRope: "用于萌灵页的通信进化（消耗 x1）",
+      rareCandy: "喂食萌灵 +1Lv",
+      bigBerry: "使用：全体萌灵饱腹度 +50",
+      hugeBerry: "使用：获得 24 小时巨大灵果加成",
+      expCandyS: "使用：萌灵获得 200 经验",
+      expCandy: "使用：萌灵获得 1000 经验",
+      expCandyL: "使用：萌灵获得 5000 经验",
+      expCandyXL: "使用：萌灵获得 20000 经验",
+      affectionTreat: "使用：萌灵亲密度 +5",
+      friendshipBracelet: "使用：萌灵亲密度直接达到 100",
       shinyCharm: "使用：消耗1个，闪光率 x2（24小时）",
-      luckyEgg: "使用：指定精灵 1小时经验 x1.5（与商店全局双倍可叠加）",
-      bottleCap: "使用：精灵单项个体值提升至31",
-      goldBottleCap: "使用：精灵所有个体值提升至31（6V）",
+      luckyEgg: "使用：指定萌灵 1小时经验 x1.5（与商店全局双倍可叠加）",
+      bottleCap: "使用：萌灵单项个体值提升至31",
+      goldBottleCap: "使用：萌灵所有个体值提升至31（6V）",
       energyDrink: "使用：采集充能 +250",
       searchFlare: "使用：遭遇充能 +25",
       advSearchCell: "使用：高级搜索次数 +2",
-      sootheBell: "使用：全体精灵亲密度 +3",
+      sootheBell: "使用：全体萌灵亲密度 +3",
       hpPotion: "使用：HP 永久 +5（单项上限 +50）",
       atkPotion: "使用：攻击 永久 +5（单项上限 +50）",
       defPotion: "使用：防御 永久 +5（单项上限 +50）",
@@ -90,10 +90,10 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           }
           if (used > 0) {
             for (let i = 0; i < used; i++) bumpItemsCare(state);
-            if (typeof addLog === "function") addLog(`队伍 HP药剂：强化 ${used} 只`, true);
+            if (typeof addLog === "function") addLog(`队伍 疗伤药剂：强化 ${used} 只`, true);
             if (typeof markMonsDirty === "function") markMonsDirty();
           } else if (typeof addLog === "function") {
-            addLog("队伍 HP药剂：无可用目标或库存不足");
+            addLog("队伍 疗伤药剂：无可用目标或库存不足");
           }
           renderItems();
           return;
@@ -107,8 +107,8 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
             if (typeof addLog === "function") addLog(`一键补饱：${res.mon.name} 饱腹 → ${Math.floor(res.satiety)}`, true);
             if (typeof markMonsDirty === "function") markMonsDirty();
           } else if (typeof addLog === "function") {
-            if (res.reason === "no_berry") addLog("没有巨大树果");
-            else if (res.reason === "none_hungry") addLog("没有饱腹度低于 30 的精灵");
+            if (res.reason === "no_berry") addLog("没有巨大灵果");
+            else if (res.reason === "none_hungry") addLog("没有饱腹度低于 30 的萌灵");
             else addLog("一键补饱失败");
           }
           renderItems();
@@ -175,7 +175,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           const rid = useBtn.getAttribute("data-item-use");
           if (!rid) return;
 
-          // 简单道具（不需要选择精灵）
+          // 简单道具（不需要选择萌灵）
           if (rid === "bigBerry") {
             const have = state.res.bigBerry?.value ?? 0;
             if (have < 1) return;
@@ -241,7 +241,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
             return;
           }
 
-          // 需要选择精灵的道具
+          // 需要选择萌灵的道具
           const needMonSelection = [
             "expCandyS", "expCandy", "expCandyL", "expCandyXL",
             "affectionTreat", "friendshipBracelet",
@@ -269,7 +269,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           return;
         }
 
-        // 选择精灵
+        // 选择萌灵
         const monBtn = ev.target?.closest?.("button[data-select-mon]");
         if (monBtn && elItems.contains(monBtn)) {
           const monId = monBtn.getAttribute("data-select-mon");
@@ -278,7 +278,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           return;
         }
 
-        // 选择属性（银色王冠）
+        // 选择属性（银桂冠）
         const statBtn = ev.target?.closest?.("button[data-select-stat]");
         if (statBtn && elItems.contains(statBtn)) {
           const statType = statBtn.getAttribute("data-select-stat");
@@ -433,7 +433,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       }).join("");
 
       const autoFeedRow = catName === "消耗品"
-        ? `<div class="row"><div class="row__left"><div class="row__title">自动喂食大树果</div><div class="row__desc"><input class="chk" type="checkbox" data-auto-feed-big-berry ${Boolean(state.auto?.autoFeedBigBerry) ? "checked" : ""} /> 任一精灵饱腹度低于 30 时，消耗1个大树果为全体 +50</div></div></div>`
+        ? `<div class="row"><div class="row__left"><div class="row__title">自动喂食大灵果</div><div class="row__desc"><input class="chk" type="checkbox" data-auto-feed-big-berry ${Boolean(state.auto?.autoFeedBigBerry) ? "checked" : ""} /> 任一萌灵饱腹度低于 30 时，消耗1个大灵果为全体 +50</div></div></div>`
         : "";
       return `
         <div class="row">
@@ -470,7 +470,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
     const hungry = findHungryMon(state.mons?.list, 30);
     const feedOk = berryStock >= 1 && Boolean(hungry);
     const pveSel = Array.isArray(state.pve?.selectedIds) ? state.pve.selectedIds.length : 0;
-    const teamSizeHint = pveSel > 0 ? `挑战队 ${Math.min(6, pveSel)} 只` : "前 6 只精灵";
+    const teamSizeHint = pveSel > 0 ? `挑战队 ${Math.min(6, pveSel)} 只` : "前 6 只萌灵";
     const care = itemsCareProgress(state, localDateStr());
     const careDesc = care.claimed
       ? `今日护理已领 · 使用 ${Math.min(care.uses, care.goal)}/${care.goal}`
@@ -497,7 +497,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           <button class="btn btn--primary btn--small" data-item-care-claim ${care.canClaim ? "" : "disabled"}>${care.claimed ? "护理已领" : "领取护理 +8"}</button>
         </div>
       </div>
-      <div class="row"><div class="row__left"><div class="row__title">道具状态</div><div class="row__desc">全局双倍经验：${globalExpRem > 0 ? fmtRemain(globalExpRem) : "未激活"}${shinyCharmRem > 0 ? ` · 闪耀护符：${fmtRemain(shinyCharmRem)}` : ""} · 捕捉类在捕捉页用，培养类点「使用」选精灵</div></div></div>`;
+      <div class="row"><div class="row__left"><div class="row__title">道具状态</div><div class="row__desc">全局双倍经验：${globalExpRem > 0 ? fmtRemain(globalExpRem) : "未激活"}${shinyCharmRem > 0 ? ` · 虹彩护符：${fmtRemain(shinyCharmRem)}` : ""} · 捕捉类在捕捉页用，培养类点「使用」选萌灵</div></div></div>`;
     for (const [catName, rids] of Object.entries(categories)) {
       html += renderCategory(catName, rids);
     }
@@ -506,20 +506,20 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
     if (ui.itemUseModalOpen && ui.itemUseType) {
       const itemType = ui.itemUseType;
       const itemNames = {
-        expCandyS: "经验糖果S",
-        expCandy: "经验糖果",
-        expCandyL: "经验糖果L",
-        expCandyXL: "经验糖果XL",
+        expCandyS: "历练糖丸S",
+        expCandy: "历练糖丸",
+        expCandyL: "历练糖丸L",
+        expCandyXL: "历练糖丸XL",
         affectionTreat: "亲密点心",
         friendshipBracelet: "友谊手环",
-        luckyEgg: "幸运蛋",
-        bottleCap: "银色王冠",
-        goldBottleCap: "金色王冠",
-        megaStone: "MEGA进化石",
+        luckyEgg: "福缘蛋",
+        bottleCap: "银桂冠",
+        goldBottleCap: "金桂冠",
+        megaStone: "觉醒石",
       };
       const itemName = itemNames[itemType] || itemType;
 
-      // 获取精灵列表
+      // 获取萌灵列表
       const monList = state.mons?.list ?? [];
       const monsHtml = monList.map(m => {
         const selected = Number(ui.itemUseSelectedMon) === Number(m.id);
@@ -530,7 +530,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
         `;
       }).join("");
 
-      // 如果是银色王冠，显示属性选择
+      // 如果是银桂冠，显示属性选择
       let statSelectHtml = "";
       if (itemType === "bottleCap" && ui.itemUseSelectedMon) {
         const mon = monList.find(m => Number(m.id) === Number(ui.itemUseSelectedMon));
@@ -580,7 +580,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
             <div class="modal__body">
               <div class="row">
                 <div class="row__left">
-                  <div class="row__title">选择精灵</div>
+                  <div class="row__title">选择萌灵</div>
                 </div>
                 <div class="row__right" style="flex-wrap: wrap; gap: 4px;">
                   ${monsHtml}

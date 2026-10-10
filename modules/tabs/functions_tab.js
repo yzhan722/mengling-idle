@@ -13,18 +13,19 @@ import {
 import { expeditionNatureTimeMul, natureTrainExpMul, expeditionDailyProgress, markExpeditionDailyClaimed, localDateStr } from "../systems/gameplay_fun.js";
 import { seasonRelicLines } from "../systems/collection_fun.js";
 import { getAbilityInfo, monPassive } from "../abilities.js";
+import { beastZone, ZONE_IDS, ZONE_LABELS } from "../beast_defs.js";
 
 export function createRenderFunctions({
   elFunctionsTraining,
   ui,
   TYPE_ZH,
-  getPokeApiDataByDex,
+  getBeastDataByDex,
   clamp,
   escapeHtml,
   fmtDuration,
   expNeedForLevel0,
   monPower,
-  renderPokemonIcon,
+  renderBeastIcon,
   markFunctionsDirty,
   markMonListDirty,
   addLog,
@@ -121,7 +122,7 @@ export function createRenderFunctions({
       <div class="row">
         <div class="row__left">
           <div class="row__title">训练场</div>
-          <div class="row__desc">训练中的精灵：经验获取 ×10，饱腹度消耗 ×2。</div>
+          <div class="row__desc">训练中的萌灵：经验获取 ×10，饱腹度消耗 ×2。</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small btn--ghost" data-func-toggle="training">${hideTraining ? "▸" : "▾"}</button>
@@ -143,7 +144,7 @@ export function createRenderFunctions({
         rows.push(`
           <div class="row is-locked">
             <div class="row__left">
-              <div class="row__title">暂无精灵</div>
+              <div class="row__title">暂无萌灵</div>
               <div class="row__desc">先去捕捉一只吧。</div>
             </div>
           </div>
@@ -156,11 +157,11 @@ export function createRenderFunctions({
         rows.push(`
           <div class="row">
             <div class="row__left">
-              <div class="row__title">选择精灵</div>
+              <div class="row__title">选择萌灵</div>
               <div class="row__desc">槽位：${used} / ${slotSize}</div>
             </div>
             <div class="row__right">
-              <button class="btn btn--primary" data-train-open ${canTrainStart ? "" : "disabled"}>选择训练精灵</button>
+              <button class="btn btn--primary" data-train-open ${canTrainStart ? "" : "disabled"}>选择训练萌灵</button>
             </div>
           </div>
         `);
@@ -203,8 +204,8 @@ export function createRenderFunctions({
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">饲养屋</div>
-          <div class="row__desc">饲养中的精灵：经验获取 ×50，饱腹度每分钟 +1（至 100），消耗树果 10/秒。</div>
+          <div class="row__title">育灵屋</div>
+          <div class="row__desc">饲养中的萌灵：经验获取 ×50，饱腹度每分钟 +1（至 100），消耗灵果 10/秒。</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small btn--ghost" data-func-toggle="breeding">${hideBreeding ? "▸" : "▾"}</button>
@@ -224,7 +225,7 @@ export function createRenderFunctions({
           <div class="row is-locked">
             <div class="row__left">
               <div class="row__title">未解锁</div>
-              <div class="row__desc">建造“饲养屋”（功能建筑）后可用。</div>
+              <div class="row__desc">建造“育灵屋”（功能建筑）后可用。</div>
             </div>
           </div>
         `);
@@ -232,8 +233,8 @@ export function createRenderFunctions({
         rows.push(`
           <div class="row is-locked">
             <div class="row__left">
-              <div class="row__title">精灵不足</div>
-              <div class="row__desc">至少需要 2 只精灵才能开始饲养。</div>
+              <div class="row__title">萌灵不足</div>
+              <div class="row__desc">至少需要 2 只萌灵才能开始饲养。</div>
             </div>
           </div>
         `);
@@ -242,11 +243,11 @@ export function createRenderFunctions({
           rows.push(`
             <div class="row">
               <div class="row__left">
-                <div class="row__title">选择精灵</div>
-                <div class="row__desc">选择两只精灵开始饲养（同进化链或百变怪会自动生蛋）。</div>
+                <div class="row__title">选择萌灵</div>
+                <div class="row__desc">选择两只萌灵开始饲养（同进化链或百变怪会自动生蛋）。</div>
               </div>
               <div class="row__right">
-                <button class="btn btn--primary" data-breed-open>选择饲养精灵</button>
+                <button class="btn btn--primary" data-breed-open>选择饲养萌灵</button>
               </div>
             </div>
           `);
@@ -263,7 +264,7 @@ export function createRenderFunctions({
               ? Math.max(0, state.breeding.eggRemainingSec)
               : 0;
           const lvl = clamp(state.buildings?.breedingHouse?.owned ?? 0, 0, 10);
-          const eggText = rem > 0 ? `正在生蛋：剩余 ${fmtDuration(rem)}（饲养屋 Lv.${lvl}）` : "未在生蛋";
+          const eggText = rem > 0 ? `正在生蛋：剩余 ${fmtDuration(rem)}（育灵屋 Lv.${lvl}）` : "未在生蛋";
 
           rows.push(`
         <div class="row">
@@ -285,7 +286,7 @@ export function createRenderFunctions({
             rows.push(`
           <div class="row">
             <div class="row__left">
-              <div class="row__title">饲养精灵 A：${escapeHtml(aMon.name)} <span class="row__desc">Lv.${aMon.lvl} · 饱腹${satA}/100 · 经验${expTextA}</span></div>
+              <div class="row__title">饲养萌灵 A：${escapeHtml(aMon.name)} <span class="row__desc">Lv.${aMon.lvl} · 饱腹${satA}/100 · 经验${expTextA}</span></div>
             </div>
             <div class="row__right">
               <button class="btn btn--danger btn--small" data-breed-cancel="1">取消饲养</button>
@@ -301,7 +302,7 @@ export function createRenderFunctions({
             rows.push(`
           <div class="row">
             <div class="row__left">
-              <div class="row__title">饲养精灵 B：${escapeHtml(bMon.name)} <span class="row__desc">Lv.${bMon.lvl} · 饱腹${satB}/100 · 经验${expTextB}</span></div>
+              <div class="row__title">饲养萌灵 B：${escapeHtml(bMon.name)} <span class="row__desc">Lv.${bMon.lvl} · 饱腹${satB}/100 · 经验${expTextB}</span></div>
             </div>
             <div class="row__right">
               <button class="btn btn--danger btn--small" data-breed-cancel="1">取消饲养</button>
@@ -316,35 +317,17 @@ export function createRenderFunctions({
     const TYPE_ZH_MAP = TYPE_ZH && typeof TYPE_ZH === "object" ? TYPE_ZH : {};
     const TYPE_KEYS_UI = Object.keys(TYPE_ZH_MAP);
     const monRegionByDex = (dex) => {
-      const d = typeof dex === "number" && Number.isFinite(dex) ? Math.floor(dex) : 0;
-      if (d >= 1 && d <= 151) return "kanto";
-      if (d >= 152 && d <= 251) return "johto";
-      if (d >= 252 && d <= 386) return "hoenn";
-      if (d >= 387 && d <= 493) return "sinnoh";
-      if (d >= 494 && d <= 649) return "unova";
-      if (d >= 650 && d <= 721) return "kalos";
-      if (d >= 722 && d <= 809) return "alola";
-      if (d >= 810 && d <= 905) return "galar";
-      return "other";
+      const z = beastZone(dex);
+      return typeof z === "number" ? (ZONE_IDS[z] ?? "other") : "other";
     };
-    const regionLabel = (k) => {
-      if (k === "kanto") return "关都";
-      if (k === "johto") return "城都";
-      if (k === "hoenn") return "丰缘";
-      if (k === "sinnoh") return "神奥";
-      if (k === "unova") return "合众";
-      if (k === "kalos") return "卡洛斯";
-      if (k === "alola") return "阿罗拉";
-      if (k === "galar") return "伽勒尔";
-      return "其他";
-    };
+    const regionLabel = (k) => ZONE_LABELS[k] ?? "其他";
     const getMonTypesSimple = (m) => {
-      const localTypes = globalThis.POKEMON_TYPES;
+      const localTypes = globalThis.BEAST_TYPES;
       if (localTypes && typeof localTypes === "object") {
         const lt = localTypes[m.dex];
         if (Array.isArray(lt) && lt.length > 0) return lt;
       }
-      const api = getPokeApiDataByDex(m.dex);
+      const api = getBeastDataByDex(m.dex);
       const types = Array.isArray(api?.types) ? api.types.slice(0, 2) : [];
       return types.filter((x) => typeof x === "string");
     };
@@ -377,7 +360,7 @@ export function createRenderFunctions({
       const qLower = q.toLowerCase();
 
       const region0 = typeof ui.trainingModalRegion === "string" ? ui.trainingModalRegion : "all";
-      const region = ["all", "kanto", "johto", "hoenn", "sinnoh", "unova", "kalos", "alola", "galar"].includes(region0) ? region0 : "all";
+      const region = ["all", "meadow", "woods", "brook", "plateau", "dunes", "garden", "ridge", "hollow"].includes(region0) ? region0 : "all";
       const type0 = typeof ui.trainingModalType === "string" ? ui.trainingModalType : "all";
       const type = type0 === "all" || TYPE_KEYS_UI.includes(type0) ? type0 : "all";
       const sort0 = typeof ui.trainingModalSort === "string" ? ui.trainingModalSort : "power";
@@ -406,14 +389,14 @@ export function createRenderFunctions({
 
       const regionOptions = [
         { k: "all", n: "全部区域" },
-        { k: "kanto", n: "关都" },
-        { k: "johto", n: "城都" },
-        { k: "hoenn", n: "丰缘" },
-        { k: "sinnoh", n: "神奥" },
-        { k: "unova", n: "合众" },
-        { k: "kalos", n: "卡洛斯" },
-        { k: "alola", n: "阿罗拉" },
-        { k: "galar", n: "伽勒尔" },
+        { k: "meadow", n: "芽芽草甸" },
+        { k: "woods", n: "蜜露林径" },
+        { k: "brook", n: "溪光浅滩" },
+        { k: "plateau", n: "风铃高原" },
+        { k: "dunes", n: "星砂荒漠" },
+        { k: "garden", n: "月见花园" },
+        { k: "ridge", n: "霜晶山脊" },
+        { k: "hollow", n: "龙眠幽谷" },
       ]
         .map((x) => `<option value="${x.k}" ${region === x.k ? "selected" : ""}>${x.n}</option>`)
         .join("");
@@ -444,7 +427,7 @@ export function createRenderFunctions({
           return `
             <div class="row">
               <div class="row__left">
-                <div class="row__title row__titleLine">${renderPokemonIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
+                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
                 <div class="row__desc">${escapeHtml(reg)} · ${escapeHtml(typeText || "-")} · 战力 ${Math.floor(pow)}</div>
               </div>
               <div class="row__right">
@@ -455,9 +438,9 @@ export function createRenderFunctions({
         })
         .join("");
 
-      const title = `训练：选择精灵（剩余槽位 ${capLeft}）`;
+      const title = `训练：选择萌灵（剩余槽位 ${capLeft}）`;
       const sub = `支持筛选/排序与多选，点击“开始训练”后会直接加入训练。`;
-      const empty = sorted.length === 0 ? `<div class="badge badge--muted">暂无可选精灵</div>` : "";
+      const empty = sorted.length === 0 ? `<div class="badge badge--muted">暂无可选萌灵</div>` : "";
       const disabledReason = capLeft <= 0 ? `<div class="badge badge--muted">训练槽位已满</div>` : "";
       const canConfirm = capLeft > 0 && sel.length > 0;
 
@@ -508,7 +491,7 @@ export function createRenderFunctions({
       const qLower = q.toLowerCase();
 
       const region0 = typeof ui.breedingModalRegion === "string" ? ui.breedingModalRegion : "all";
-      const region = ["all", "kanto", "johto", "hoenn", "sinnoh", "unova", "kalos", "alola", "galar"].includes(region0) ? region0 : "all";
+      const region = ["all", "meadow", "woods", "brook", "plateau", "dunes", "garden", "ridge", "hollow"].includes(region0) ? region0 : "all";
       const type0 = typeof ui.breedingModalType === "string" ? ui.breedingModalType : "all";
       const type = type0 === "all" || TYPE_KEYS_UI.includes(type0) ? type0 : "all";
       const sort0 = typeof ui.breedingModalSort === "string" ? ui.breedingModalSort : "power";
@@ -537,14 +520,14 @@ export function createRenderFunctions({
 
       const regionOptions = [
         { k: "all", n: "全部区域" },
-        { k: "kanto", n: "关都" },
-        { k: "johto", n: "城都" },
-        { k: "hoenn", n: "丰缘" },
-        { k: "sinnoh", n: "神奥" },
-        { k: "unova", n: "合众" },
-        { k: "kalos", n: "卡洛斯" },
-        { k: "alola", n: "阿罗拉" },
-        { k: "galar", n: "伽勒尔" },
+        { k: "meadow", n: "芽芽草甸" },
+        { k: "woods", n: "蜜露林径" },
+        { k: "brook", n: "溪光浅滩" },
+        { k: "plateau", n: "风铃高原" },
+        { k: "dunes", n: "星砂荒漠" },
+        { k: "garden", n: "月见花园" },
+        { k: "ridge", n: "霜晶山脊" },
+        { k: "hollow", n: "龙眠幽谷" },
       ]
         .map((x) => `<option value="${x.k}" ${region === x.k ? "selected" : ""}>${x.n}</option>`)
         .join("");
@@ -575,7 +558,7 @@ export function createRenderFunctions({
           return `
             <div class="row">
               <div class="row__left">
-                <div class="row__title row__titleLine">${renderPokemonIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
+                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
                 <div class="row__desc">${escapeHtml(reg)} · ${escapeHtml(typeText || "-")} · 战力 ${Math.floor(pow)}</div>
               </div>
               <div class="row__right">
@@ -586,9 +569,9 @@ export function createRenderFunctions({
         })
         .join("");
 
-      const title = `饲养：选择精灵（需要 2 只）`;
+      const title = `饲养：选择萌灵（需要 2 只）`;
       const sub = `支持筛选/排序与多选（最多 2 只），点击“开始饲养”后会直接开始。`;
-      const empty = sorted.length === 0 ? `<div class="badge badge--muted">暂无可选精灵</div>` : "";
+      const empty = sorted.length === 0 ? `<div class="badge badge--muted">暂无可选萌灵</div>` : "";
       const canConfirm = sel.length === 2;
 
       breedingModalHtml = `
@@ -642,7 +625,7 @@ export function createRenderFunctions({
       <div class="row">
         <div class="row__left">
           <div class="row__title">远征所 <span class="muted">· ${escapeHtml(expeditionSeasonLabel)}</span></div>
-          <div class="row__desc">${escapeHtml(expeditionSeasonBlurb)}。派遣精灵下副本：完成后获得经验与未来币，并概率掉落药剂。属性克制可提高远征收益。</div>
+          <div class="row__desc">${escapeHtml(expeditionSeasonBlurb)}。派遣萌灵下副本：完成后获得经验与未来币，并概率掉落药剂。属性克制可提高远征收益。</div>
           <div class="row__desc">${escapeHtml(relicDesc)}</div>
         </div>
         <div class="row__right">
@@ -676,8 +659,8 @@ export function createRenderFunctions({
 
     const typeMap = TYPE_ZH && typeof TYPE_ZH === "object" ? TYPE_ZH : {};
     const TYPE_KEYS = Object.keys(typeMap);
-    const getMonTypes = (m) => getMonTypesForExpedition(m, getPokeApiDataByDex);
-    const typeMul = (m, dungeonType) => expeditionTypeMul(m, dungeonType, getPokeApiDataByDex);
+    const getMonTypes = (m) => getMonTypesForExpedition(m, getBeastDataByDex);
+    const typeMul = (m, dungeonType) => expeditionTypeMul(m, dungeonType, getBeastDataByDex);
     const expeditionRewardMul = (mons, dungeonType) => {
       if (!Array.isArray(mons) || mons.length === 0) return 1;
       const avg = mons.reduce((acc, m) => acc + typeMul(m, dungeonType), 0) / mons.length;
@@ -711,8 +694,8 @@ export function createRenderFunctions({
         const trainOk = (state.buildings.trainingGround?.owned ?? 0) > 0;
         const breedOk = (state.buildings.breedingHouse?.owned ?? 0) > 0;
         const chainHint = trainOk && breedOk
-          ? "训练场与饲养屋已就绪，在「建筑」页建造远征所即可解锁。"
-          : "需先建造训练场与饲养屋，再建造远征所。";
+          ? "训练场与育灵屋已就绪，在「建筑」页建造远征所即可解锁。"
+          : "需先建造训练场与育灵屋，再建造远征所。";
         rows.push(`
           <div class="row is-locked">
             <div class="row__left">
@@ -871,7 +854,7 @@ export function createRenderFunctions({
                 <button class="btn btn--small" data-exp-team-close="1">关闭</button>
               </div>
             </div>
-            <div class="modal__desc">多选请直接勾选（最多 20 只，技能冷却中的精灵不会出现在列表中）。</div>
+            <div class="modal__desc">多选请直接勾选（最多 20 只，技能冷却中的萌灵不会出现在列表中）。</div>
             <div class="modal__body">${candidateRows}</div>
           </div>
         </div>
@@ -884,7 +867,7 @@ export function createRenderFunctions({
         <div class="row">
           <div class="row__left">
             <div class="row__title">开始远征</div>
-            <div class="row__desc">奖励：经验 +${rewardExp}（每只参与精灵）· 未来币 +${rewardCoin} · 药剂掉落总数 ${lvlDef.pot} · 属性相性 x${rewardMul.toFixed(2)}</div>
+            <div class="row__desc">奖励：经验 +${rewardExp}（每只参与萌灵）· 未来币 +${rewardCoin} · 药剂掉落总数 ${lvlDef.pot} · 属性相性 x${rewardMul.toFixed(2)}</div>
             <div class="row__desc muted">急行：时长约 ×0.3，奖励约 ×0.7</div>
           </div>
           <div class="row__right">
@@ -968,7 +951,7 @@ export function initFunctionsTab({
   clamp,
   fmtDuration,
   monPower,
-  getPokeApiDataByDex,
+  getBeastDataByDex,
   markFunctionsDirty,
   markMonListDirty,
   addLog,
@@ -1298,14 +1281,14 @@ export function initFunctionsTab({
       const haveCatnip = Math.max(0, Math.floor(state.res.catnip.value ?? 0));
 
       if (haveCatnip < 100) {
-        addLog(`喂食失败：树果不足（需要 ${needCatnip}，当前 ${haveCatnip}）`, true);
+        addLog(`喂食失败：灵果不足（需要 ${needCatnip}，当前 ${haveCatnip}）`, true);
         return;
       }
 
       if (haveCatnip >= needCatnip) {
         state.res.catnip.value = Math.max(0, state.res.catnip.value - needCatnip);
         m.satiety = 100;
-        addLog(`喂食：${m.name} 饱腹度补满（消耗树果 ${needCatnip}）`, true);
+        addLog(`喂食：${m.name} 饱腹度补满（消耗灵果 ${needCatnip}）`, true);
       } else {
         const steps = Math.max(0, Math.floor(haveCatnip / 100));
         const cost = steps * 100;
@@ -1314,7 +1297,7 @@ export function initFunctionsTab({
         state.res.catnip.value = Math.max(0, state.res.catnip.value - cost);
         m.satiety = sat1;
         const miss = Math.max(0, needCatnip - cost);
-        addLog(`喂食：${m.name} 饱腹度 +${Math.floor(sat1 - sat0)}（树果不足，距离喂满还差 ${miss}）`, true);
+        addLog(`喂食：${m.name} 饱腹度 +${Math.floor(sat1 - sat0)}（灵果不足，距离喂满还差 ${miss}）`, true);
       }
 
       markMonListDirty(false);
@@ -1496,7 +1479,7 @@ export function initFunctionsTab({
       const d = dlist.find((x) => x && x.key === state.expedition.selectedDungeonKey) ?? dlist[0] ?? null;
       if (!d) return;
 
-      const typeMul = (m, dungeonType) => expeditionTypeMul(m, dungeonType, getPokeApiDataByDex);
+      const typeMul = (m, dungeonType) => expeditionTypeMul(m, dungeonType, getBeastDataByDex);
 
       const selIds = Array.isArray(state.expedition.selectedIds) ? state.expedition.selectedIds.slice(0, 20) : [];
       const mons = state.mons?.list ?? [];

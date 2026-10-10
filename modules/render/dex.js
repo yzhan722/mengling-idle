@@ -19,7 +19,7 @@ export function createRenderDex({
   clamp,
   pad3,
   escapeHtml,
-  renderPokemonIcon,
+  renderBeastIcon,
   dexCaughtCount,
   computeDexEffects,
   getCaptureAreas,
@@ -34,7 +34,7 @@ export function createRenderDex({
 
     syncShinyGalleryFromMons(state);
 
-    const totalSpecies = defs.pokemon.length;
+    const totalSpecies = defs.beasts.length;
     const { unique, total } = dexCaughtCount();
     const dexEff = computeDexEffects();
     const dexPct = totalSpecies > 0 ? Math.round((unique / totalSpecies) * 100) : 0;
@@ -52,7 +52,7 @@ export function createRenderDex({
 
     let regionGoalHtml = "";
     if (area && typeof area.pool === "function") {
-      const regionPool = defs.pokemon.filter(area.pool);
+      const regionPool = defs.beasts.filter(area.pool);
       const regionTotal = regionPool.length;
       let regionCaught = 0;
       const caughtMap = state.dex?.caught || {};
@@ -75,7 +75,7 @@ export function createRenderDex({
     let nextCatchHtml = "";
     {
       const caughtMap = state.dex?.caught || {};
-      const pool = area && typeof area.pool === "function" ? defs.pokemon.filter(area.pool) : defs.pokemon;
+      const pool = area && typeof area.pool === "function" ? defs.beasts.filter(area.pool) : defs.beasts;
       const missing = pool.find((p) => !(typeof caughtMap[p.id] === "number" && caughtMap[p.id] > 0));
       if (missing) {
         nextCatchHtml = `<div class="row__desc">下一只推荐：${escapeHtml(missing.name)} <button type="button" class="btn btn--small btn--primary" data-dex-goto-capture="1">去捕捉</button></div>`;
@@ -93,7 +93,7 @@ export function createRenderDex({
             ${gallery
               .map(
                 (e) =>
-                  `<span class="row__titleLine" title="${escapeHtml(e.name)}">${renderPokemonIcon(e.dex, e.name, true)}<span class="muted" style="font-size:11px">${escapeHtml(e.name)}</span></span>`
+                  `<span class="row__titleLine" title="${escapeHtml(e.name)}">${renderBeastIcon(e.dex, e.name, true)}<span class="muted" style="font-size:11px">${escapeHtml(e.name)}</span></span>`
               )
               .join("")}
             <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-share data-share="${escapeHtml(shareText)}">复制分享</button>
@@ -112,9 +112,9 @@ export function createRenderDex({
           <div class="dex-progress" aria-label="图鉴完成度 ${dexPct}%"><div class="dex-progress__fill" style="width:${dexPct}%"></div></div>
         </div>
         <div class="row__right">
-          <div class="badge">树果产量 x${dexEff.catnipPerSecMul.toFixed(2)}</div>
-          <div class="badge">球果产量 x${dexEff.woodRateMul.toFixed(2)}</div>
-          <div class="badge">碎片产量 x${dexEff.mineralsRateMul.toFixed(2)}</div>
+          <div class="badge">灵果产量 x${dexEff.catnipPerSecMul.toFixed(2)}</div>
+          <div class="badge">灵木产量 x${dexEff.woodRateMul.toFixed(2)}</div>
+          <div class="badge">灵晶产量 x${dexEff.mineralsRateMul.toFixed(2)}</div>
         </div>
       </div>
     `;
@@ -146,7 +146,7 @@ export function createRenderDex({
 
     const poolFn = area ? area.pool : null;
 
-    const filtered = defs.pokemon.filter((p) => {
+    const filtered = defs.beasts.filter((p) => {
       if (poolFn && !poolFn(p)) return false;
       if (onlyShiny) return Boolean(shinyMap[p.id]);
       const n = typeof caught[p.id] === "number" ? caught[p.id] : 0;
@@ -181,7 +181,7 @@ export function createRenderDex({
       const revealMissing = onlyMissing;
       const title = seen || revealMissing || isShinyEntry ? p.name : "????";
 
-      const icon = seen || revealMissing || isShinyEntry ? renderPokemonIcon(p.dex, p.name, isShinyEntry) : "";
+      const icon = seen || revealMissing || isShinyEntry ? renderBeastIcon(p.dex, p.name, isShinyEntry) : "";
       const locked = !seen && !revealMissing && !isShinyEntry;
 
       rows.push(`

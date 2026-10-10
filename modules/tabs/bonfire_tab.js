@@ -69,7 +69,7 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
         <div class="row">
           <div class="row__left">
             <div class="row__title">营地采集</div>
-            <div class="row__desc">顶栏【采集】消耗次数换树果。当前 ${charges}/1000 · ${cdText}${clicks > 0 ? ` · 累计 ${clicks} 次` : ""}</div>
+            <div class="row__desc">顶栏【采集】消耗次数换灵果。当前 ${charges}/1000 · ${cdText}${clicks > 0 ? ` · 累计 ${clicks} 次` : ""}</div>
             <div class="row__desc">${mileText}</div>
             <div class="row__desc">${dailyText}</div>
           </div>
@@ -114,7 +114,7 @@ export function initBonfireTab({ elBonfireActions, elBtnGather, ui, getPokeballM
         const comboInfo = bumpGatherCombo(state.fun, now, 1200);
         if (comboInfo.bonus) {
           addRes("catnip", 1);
-          addLog(`采集连击 x${comboInfo.combo}：树果 +1`, true);
+          addLog(`采集连击 x${comboInfo.combo}：灵果 +1`, true);
         }
       }
 
@@ -135,14 +135,14 @@ export function initBonfireTab({ elBonfireActions, elBtnGather, ui, getPokeballM
       const catBefore = state?.res?.catnip?.value ?? 0;
       addRes("catnip", cat);
       const catGained = Math.max(0, (state?.res?.catnip?.value ?? 0) - catBefore);
-      parts.push(`树果 +${cat}`);
+      parts.push(`灵果 +${cat}`);
       if (state?.unlocks?.wood) {
         addRes("wood", wood);
-        parts.push(`球果 +${wood}`);
+        parts.push(`灵木 +${wood}`);
       }
       if (state?.unlocks?.minerals) {
         addRes("minerals", min);
-        parts.push(`进化石碎片 +${min}`);
+        parts.push(`灵晶碎片 +${min}`);
       }
       addLog(`采集：${parts.join("，")}`);
       // Pass intended yield so era berry_earned isn't softlocked by full catnip cap
@@ -193,7 +193,7 @@ export function initBonfireTab({ elBonfireActions, elBtnGather, ui, getPokeballM
         state.pokeballMade = Math.max(0, (state.pokeballMade ?? 0) + made + bonusMade);
       }
       if (typeof onPokeballCraft === "function") onPokeballCraft(made + bonusMade);
-      addLog(`制作：精灵球 +${made + bonusMade}${bonusMade > 0 ? `（时代加成 +${bonusMade}）` : ""}`);
+      addLog(`制作：灵球 +${made + bonusMade}${bonusMade > 0 ? `（时代加成 +${bonusMade}）` : ""}`);
       if (ui) ui.bonfireDirty = true;
       render();
       return;

@@ -209,7 +209,7 @@ export function simulateBattle(team, enemies, stageType, opts = {}) {
       win: false,
       stars: 0,
       rounds: 0,
-      log: ["— 没有出战精灵 —"],
+      log: ["— 没有出战萌灵 —"],
       teamHpPct: 0,
       enemyHpPct: 1,
       superEffectiveHits: 0,

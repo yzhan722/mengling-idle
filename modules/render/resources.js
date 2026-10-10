@@ -11,18 +11,18 @@ function fmtRate(perSec) {
   return `${Math.floor(perSec)}/秒`;
 }
 
-// 根据图鉴数量计算训练家等级
+// 根据图鉴数量计算育灵师等级
 export function getTrainerLevel(dexUnique) {
   const n = Math.max(0, Math.floor(dexUnique || 0));
   if (n >= 600) return { level: 9, name: "精英四天王", next: null, nextReq: 600 };
-  if (n >= 450) return { level: 8, name: "神奥冠军", next: "伽勒尔旷野", nextReq: 600 };
-  if (n >= 350) return { level: 7, name: "卡洛斯冠军", next: "阿罗拉海滩", nextReq: 450 };
-  if (n >= 250) return { level: 6, name: "合众冠军", next: "神兽领域", nextReq: 350 };
-  if (n >= 150) return { level: 5, name: "神奥冠军", next: "卡洛斯花田", nextReq: 250 };
-  if (n >= 80)  return { level: 4, name: "丰缘冠军", next: "合众沙漠", nextReq: 150 };
-  if (n >= 30)  return { level: 3, name: "城都冠军", next: "神奥雪原", nextReq: 80 };
-  if (n >= 10)  return { level: 2, name: "关都冠军", next: "丰缘海岸", nextReq: 30 };
-  return         { level: 1, name: "新手训练家", next: "城都树林", nextReq: 10 };
+  if (n >= 450) return { level: 8, name: "幽谷贤者", next: "幻梦秘境", nextReq: 600 };
+  if (n >= 350) return { level: 7, name: "山脊守望者", next: "龙眠幽谷", nextReq: 450 };
+  if (n >= 250) return { level: 6, name: "花园月侍", next: "霜晶山脊", nextReq: 350 };
+  if (n >= 150) return { level: 5, name: "荒漠行者", next: "月见花园", nextReq: 250 };
+  if (n >= 80)  return { level: 4, name: "高原驭风者", next: "星砂荒漠", nextReq: 150 };
+  if (n >= 30)  return { level: 3, name: "浅滩游猎手", next: "风铃高原", nextReq: 80 };
+  if (n >= 10)  return { level: 2, name: "林径育灵员", next: "溪光浅滩", nextReq: 30 };
+  return         { level: 1, name: "新手饲养员", next: "蜜露林径", nextReq: 10 };
 }
 
 export function createRenderResources({ elResources, defs, fmt, getState }) {
@@ -87,7 +87,7 @@ export function createRenderResources({ elResources, defs, fmt, getState }) {
     elResources.append(frag);
   };
 
-  // 渲染训练家等级（默认折叠；挂在 #trainerHost，与品牌同属身份区）
+  // 渲染育灵师等级（默认折叠；挂在 #trainerHost，与品牌同属身份区）
   function renderTrainerLevel(state) {
     const host = document.getElementById("trainerHost") || elResources?.parentNode;
     if (!host) return;
@@ -123,7 +123,7 @@ export function createRenderResources({ elResources, defs, fmt, getState }) {
   return function renderResources(eff) {
     const state = getState();
 
-    // 训练家等级始终刷新（不受 signature 缓存影响）
+    // 育灵师等级始终刷新（不受 signature 缓存影响）
     renderTrainerLevel(state);
 
     const items = [];

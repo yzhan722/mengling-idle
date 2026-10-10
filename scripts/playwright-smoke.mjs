@@ -73,7 +73,7 @@ try {
   await page.waitForSelector("#btnGather", { timeout: 30000 });
   const title = await page.title();
   const status = await page.locator("#topbarStatus").innerText();
-  if (!title.includes("宝可梦")) {
+  if (!title.includes("萌灵")) {
     console.error("playwright-smoke: FAIL unexpected title:", title);
     process.exit(1);
   }
@@ -92,7 +92,7 @@ try {
     { timeout: 15000 }
   );
   const captureEncounter = await page.locator("#captureActions .row__title", { hasText: "遭遇" }).count();
-  const captureLocked = await page.locator("#captureActions", { hasText: "精灵球基础" }).count();
+  const captureLocked = await page.locator("#captureActions", { hasText: "萌灵球基础" }).count();
   if (captureEncounter < 1 && captureLocked < 1) {
     console.error("playwright-smoke: FAIL capture tab unexpected empty state");
     process.exit(1);

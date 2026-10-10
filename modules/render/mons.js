@@ -11,6 +11,7 @@ import {
   isSkillImplemented,
   listActiveSkillBuffs,
 } from "../type_skills.js";
+import { beastZone, ZONE_INDEX } from "../beast_defs.js";
 
 export function createRenderMons({
   elMonList,
@@ -25,7 +26,7 @@ export function createRenderMons({
   clamp,
   escapeHtml,
   pad3,
-  renderPokemonIcon,
+  renderBeastIcon,
   TYPE_ZH,
   TYPE_SKILLS,
   monPower,
@@ -37,7 +38,7 @@ export function createRenderMons({
   isSameEvoFamily,
   getMonCurrentStats,
   expNeedForLevel,
-  getPokeApiDataByDex,
+  getBeastDataByDex,
   getEvoMap,
   stageIndex,
   getSpeciesByPid,
@@ -98,23 +99,13 @@ export function createRenderMons({
       const regionOk = (m) => {
         if (!m || typeof m.dex !== "number") return false;
         if (region === "all") return true;
-        if (region === "mythic") return m.tier === "epic";
-        if (m.tier === "epic") return false;
-        if (region === "kanto") return m.dex >= 1 && m.dex <= 151;
-        if (region === "johto") return m.dex >= 152 && m.dex <= 251;
-        if (region === "hoenn") return m.dex >= 252 && m.dex <= 386;
-        if (region === "sinnoh") return m.dex >= 387 && m.dex <= 493;
-        if (region === "unova") return m.dex >= 494 && m.dex <= 649;
-        if (region === "kalos") return m.dex >= 650 && m.dex <= 721;
-        if (region === "alola") return m.dex >= 722 && m.dex <= 809;
-        if (region === "galar") return m.dex >= 810 && m.dex <= 905;
-        return true;
+        return beastZone(m.dex) === ZONE_INDEX[region];
       };
 
       const typeOk = (m) => {
         if (!m || typeof m.dex !== "number") return false;
         if (typeFilter === "all") return true;
-        const api = getPokeApiDataByDex(m.dex);
+        const api = getBeastDataByDex(m.dex);
         const types = Array.isArray(api?.types) ? api.types : null;
         if (!types) return true;
         return types.includes(typeFilter);
@@ -193,15 +184,15 @@ export function createRenderMons({
 
       const REGION_LABELS = {
         all: "全部地区",
-        kanto: "关都",
-        johto: "城都",
-        hoenn: "丰缘",
-        sinnoh: "神奥",
-        unova: "合众",
-        kalos: "卡洛斯",
-        alola: "阿罗拉",
-        galar: "伽勒尔",
-        mythic: "神兽",
+        meadow: "芽芽草甸",
+        woods: "蜜露林径",
+        brook: "溪光浅滩",
+        plateau: "风铃高原",
+        dunes: "星砂荒漠",
+        garden: "月见花园",
+        ridge: "霜晶山脊",
+        hollow: "龙眠幽谷",
+        sanctum: "幻梦秘境",
       };
       const TYPE_ZH_MAP = TYPE_ZH && typeof TYPE_ZH === "object" ? TYPE_ZH : {};
       const SORT_LABELS = { created: "获取时间", dex: "图鉴", lvl: "等级", power: "战力", satiety: "饱腹" };
@@ -212,7 +203,7 @@ export function createRenderMons({
       const sortLabel = SORT_LABELS[ui.monSort || "created"] ?? ui.monSort;
       filterChips.push(`排序：${sortLabel}`);
 
-      // 批量技能：统计各属性可用精灵数（18 系全开）
+      // 批量技能：统计各属性可用萌灵数（18 系全开）
       const BATCH_SKILL_TYPES = IMPLEMENTED_SKILL_TYPES;
       const batchSkillCounts = {};
       const batchSkillCooldownCounts = {}; // 冷却中的数量
@@ -225,18 +216,18 @@ export function createRenderMons({
           if (sat0 < 50) return false;
           const cd = typeof m.skillCdRemainingSec === "number" && Number.isFinite(m.skillCdRemainingSec) ? Math.max(0, m.skillCdRemainingSec) : 0;
           if (cd > 0) return false;
-          const api = getPokeApiDataByDex(m.dex);
+          const api = getBeastDataByDex(m.dex);
           const types = Array.isArray(api?.types) ? api.types : [];
           return types.includes(t);
         }).length;
         if (cnt > 0) batchSkillCounts[t] = cnt;
-        // 统计冷却中但有资格的精灵数量
+        // 统计冷却中但有资格的萌灵数量
         const cdCnt = filtered.filter((m) => {
           const sat0 = clamp(typeof m.satiety === "number" ? m.satiety : 100, 0, 100);
           if (sat0 < 50) return false;
           const cd = typeof m.skillCdRemainingSec === "number" && Number.isFinite(m.skillCdRemainingSec) ? Math.max(0, m.skillCdRemainingSec) : 0;
           if (cd <= 0) return false; // 已就绪的不算这里
-          const api = getPokeApiDataByDex(m.dex);
+          const api = getBeastDataByDex(m.dex);
           const types = Array.isArray(api?.types) ? api.types : [];
           return types.includes(t);
         }).length;
@@ -260,7 +251,7 @@ export function createRenderMons({
           <div class="row is-locked">
             <div class="row__left">
               <div class="row__title">盒子较满（${total} 只）</div>
-              <div class="row__desc">低战力精灵可放生换取神奇糖果；智能放生会保留闪光、稀有及以上、高星、忙碌精灵，以及同种/同进化系最后一只。</div>
+              <div class="row__desc">低战力萌灵可放生换取跃级糖丸；智能放生会保留闪光、稀有及以上、高星、忙碌萌灵，以及同种/同进化系最后一只。</div>
             </div>
           </div>
         `);
@@ -269,14 +260,14 @@ export function createRenderMons({
       rows.push(`
         <div class="row">
           <div class="row__left">
-            <input class="input input--search" data-mon-search type="search" placeholder="搜索精灵名称…" value="${escapeHtml(searchQ)}" />
+            <input class="input input--search" data-mon-search type="search" placeholder="搜索萌灵名称…" value="${escapeHtml(searchQ)}" />
             ${filterChips.length ? `<div class="filter-chips">${filterChips.map((c) => `<span class="filter-chip">${escapeHtml(c)}</span>`).join("")}</div>` : ""}
           </div>
         </div>
         <div class="row">
           <div class="row__left">
             <div class="row__title">快捷操作</div>
-            <div class="row__desc">饱腹不足：${feedAllCount} 只 · 饥饿(&lt;50)：${hungryCount} 只 · 树果：${Math.floor(state.res.catnip?.value ?? 0)} · 糖果：${candyHave}</div>
+            <div class="row__desc">饱腹不足：${feedAllCount} 只 · 饥饿(&lt;50)：${hungryCount} 只 · 灵果：${Math.floor(state.res.catnip?.value ?? 0)} · 糖果：${candyHave}</div>
             <div class="row__desc">技能就绪 ${skillReadyCount} 只${evoReadyCount > 0 ? ` · 可进化 ${evoReadyCount} 只` : ""}</div>
           </div>
           <div class="row__right">
@@ -333,7 +324,7 @@ export function createRenderMons({
         rows.push(`
           <div class="row is-locked">
             <div class="row__left">
-              <div class="row__title">暂无精灵</div>
+              <div class="row__title">暂无萌灵</div>
               <div class="row__desc">${escapeHtml(emptyHint)}</div>
             </div>
           </div>
@@ -348,7 +339,7 @@ export function createRenderMons({
           const starsHtml = renderStars(stars);
           const shinyBadge = Boolean(m.isShiny) ? `<span class="badge badge--ok" style="margin-left:6px">闪光</span>` : "";
 
-          const api = getPokeApiDataByDex(m.dex);
+          const api = getBeastDataByDex(m.dex);
           const types = Array.isArray(api?.types) ? api.types.slice(0, 2) : null;
           const cd = typeof m.skillCdRemainingSec === "number" && Number.isFinite(m.skillCdRemainingSec) ? Math.max(0, m.skillCdRemainingSec) : 0;
           const satOk = sat0 >= 50;
@@ -413,8 +404,8 @@ export function createRenderMons({
           rows.push(`
             <div class="row">
               <div class="row__left">
-                <div class="row__title row__titleLine">${renderPokemonIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span>${shinyBadge}<span style="margin-left:8px">${starsHtml}</span></div>
-                <div class="row__desc">Lv.${m.lvl} · 战力 ${power} · 性格 ${escapeHtml(natureName)} · 特性 ${escapeHtml(ab?.name || "—")} · 饱腹度 ${sat}/100 · 亲密度 ${aff}/100${"caughtWith" in m && m.caughtWith && m.caughtWith !== "pokeball" ? " · " + ({"pokeball":"精灵球","ultraball":"高级球","quickball":"先机球","luxuryball":"豪华球","masterball":"大师球","netball":"捕网球","duskball":"黑暗球"}[m.caughtWith] ?? m.caughtWith) : ""}</div>
+                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span>${shinyBadge}<span style="margin-left:8px">${starsHtml}</span></div>
+                <div class="row__desc">Lv.${m.lvl} · 战力 ${power} · 性格 ${escapeHtml(natureName)} · 特性 ${escapeHtml(ab?.name || "—")} · 饱腹度 ${sat}/100 · 亲密度 ${aff}/100${"caughtWith" in m && m.caughtWith && m.caughtWith !== "pokeball" ? " · " + ({"pokeball":"灵球","ultraball":"高级灵球","quickball":"迅捷灵球","luxuryball":"豪华灵球","masterball":"究极灵球","netball":"捕灵球","duskball":"暗夜灵球"}[m.caughtWith] ?? m.caughtWith) : ""}</div>
               </div>
               <div class="row__mid">${skillHtml}</div>
               <div class="row__right">
@@ -448,7 +439,7 @@ export function createRenderMons({
 
             const title = `升星：${m.name}`;
             const gateText = gate ? `需 Lv.${gate.lvl}+ 且亲密度 ${gate.aff}+` : "";
-            const sub = `选择材料精灵（下一星需要 ${need} 只同进化系材料${gateText ? `；${gateText}` : ""}）`;
+            const sub = `选择材料萌灵（下一星需要 ${need} 只同进化系材料${gateText ? `；${gateText}` : ""}）`;
             const empty = candidates.length === 0 ? `<div class="badge badge--muted">暂无可用材料</div>` : "";
             const disabledReason =
               stars >= 5
@@ -511,7 +502,7 @@ export function createRenderMons({
 
     const s = getMonCurrentStats(selected);
     const need = expNeedForLevel(selected.lvl);
-    const api = getPokeApiDataByDex(selected.dex);
+    const api = getBeastDataByDex(selected.dex);
     const types = Array.isArray(api?.types) ? api.types : null;
     const base = api?.baseStats && typeof api.baseStats === "object" ? api.baseStats : null;
 
@@ -555,12 +546,12 @@ export function createRenderMons({
         const isStoneEvo = reqLvl === 0 && !needRope && !needAff;
         const reqRid = needRope ? "linkRope" : isStoneEvo ? "evolutionStone" : "evolutionEnergy";
         const reqText = needRope
-          ? "通信绳 x1"
+          ? "灵契绳 x1"
           : needAff
-            ? "亲密度20+ · 进化能量 x1"
+            ? "亲密度20+ · 灵源 x1"
             : isStoneEvo
-              ? "进化石 x1"
-              : "进化能量 x1";
+              ? "灵晶石 x1"
+              : "灵源 x1";
         const evoOkRes = (state.res?.[reqRid]?.value ?? 0) >= 1;
         const evoOkAff = !needAff || (typeof selected.affection === "number" && selected.affection >= 20);
 
@@ -578,7 +569,7 @@ export function createRenderMons({
     elMonDetail.innerHTML = `
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderPokemonIcon(selected.dex, selected.name, Boolean(selected.isShiny))}<span>${escapeHtml(selected.name)}</span>${Boolean(selected.isShiny) ? `<span class="badge badge--ok" style="margin-left:6px">闪光</span>` : ""}<span style="margin-left:8px">${renderStars(selected.stars)}</span></div>
+          <div class="row__title row__titleLine">${renderBeastIcon(selected.dex, selected.name, Boolean(selected.isShiny))}<span>${escapeHtml(selected.name)}</span>${Boolean(selected.isShiny) ? `<span class="badge badge--ok" style="margin-left:6px">闪光</span>` : ""}<span style="margin-left:8px">${renderStars(selected.stars)}</span></div>
           <div class="row__desc">No.${pad3(selected.dex)} · ${selected.tier === "common" ? "常见" : selected.tier === "uncommon" ? "少见" : selected.tier === "rare" ? "稀有" : "史诗"}</div>
         </div>
         <div class="row__right">
@@ -625,7 +616,7 @@ export function createRenderMons({
           <div class="row__desc">消耗药剂：对应属性永久 +5（无上限）</div>
         </div>
         <div class="row__right">
-          <button class="btn btn--small" data-mon-potion="hpPotion" data-mon-potion-mon="${selected.id}" ${(state.res.hpPotion?.value ?? 0) >= 1 ? "" : "disabled"}>HP药剂</button>
+          <button class="btn btn--small" data-mon-potion="hpPotion" data-mon-potion-mon="${selected.id}" ${(state.res.hpPotion?.value ?? 0) >= 1 ? "" : "disabled"}>疗伤药剂</button>
           <button class="btn btn--small" data-mon-potion="atkPotion" data-mon-potion-mon="${selected.id}" ${(state.res.atkPotion?.value ?? 0) >= 1 ? "" : "disabled"}>攻击药剂</button>
           <button class="btn btn--small" data-mon-potion="defPotion" data-mon-potion-mon="${selected.id}" ${(state.res.defPotion?.value ?? 0) >= 1 ? "" : "disabled"}>防御药剂</button>
           <button class="btn btn--small" data-mon-potion="spaPotion" data-mon-potion-mon="${selected.id}" ${(state.res.spaPotion?.value ?? 0) >= 1 ? "" : "disabled"}>特攻药剂</button>
@@ -657,12 +648,12 @@ export function createRenderMons({
       <div class="row">
         <div class="row__left">
           <div class="row__title">升级</div>
-          <div class="row__desc">神奇糖果可提升等级，经验糖果可增加经验值。</div>
+          <div class="row__desc">跃级糖丸可提升等级，历练糖丸可增加经验值。</div>
         </div>
         <div class="row__right">
-          <button class="btn btn--small" data-mon-feed="${selected.id}" data-feed="rareCandy" ${canFeedCandy ? "" : "disabled"}>神奇糖果(1)+1Lv</button>
+          <button class="btn btn--small" data-mon-feed="${selected.id}" data-feed="rareCandy" ${canFeedCandy ? "" : "disabled"}>跃级糖丸(1)+1Lv</button>
           <div class="badge badge--muted">x${candyHave}</div>
-          <button class="btn btn--small" data-mon-exp="${selected.id}" data-exp="expCandy" ${(state.res.expCandy?.value ?? 0) >= 1 ? "" : "disabled"}>经验糖果+1000</button>
+          <button class="btn btn--small" data-mon-exp="${selected.id}" data-exp="expCandy" ${(state.res.expCandy?.value ?? 0) >= 1 ? "" : "disabled"}>历练糖丸+1000</button>
           <div class="badge badge--muted">x${state.res.expCandy?.value ?? 0}</div>
           <button class="btn btn--small" data-mon-exp="${selected.id}" data-exp="expCandyL" ${(state.res.expCandyL?.value ?? 0) >= 1 ? "" : "disabled"}>L+5000</button>
           <div class="badge badge--muted">x${state.res.expCandyL?.value ?? 0}</div>
@@ -674,7 +665,7 @@ export function createRenderMons({
       <div class="row">
         <div class="row__left">
           <div class="row__title">进化</div>
-          <div class="row__desc">需求：达到对应分支等级（见按钮）且 消耗进化石 x1</div>
+          <div class="row__desc">需求：达到对应分支等级（见按钮）且 消耗灵晶石 x1</div>
         </div>
         <div class="row__right">
           ${evoRows.join("")}

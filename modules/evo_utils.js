@@ -1,5 +1,5 @@
 export function getEvoMap() {
-  const m = globalThis.POKEMON_EVO;
+  const m = globalThis.BEAST_EVO;
   return m && typeof m === "object" ? m : {};
 }
 
@@ -58,11 +58,11 @@ export function isSameEvoFamily(pidA, pidB) {
 }
 
 function getEvoReqMap() {
-  const m = globalThis.POKEMON_EVO_REQ;
+  const m = globalThis.BEAST_EVO_REQ;
   return m && typeof m === "object" ? m : {};
 }
 
-/** ponytail: test-only reset when POKEMON_EVO is injected after first import */
+/** ponytail: test-only reset when BEAST_EVO is injected after first import */
 export function resetEvoFamilyCacheForTest() {
   EVO_FAMILY_ID_BY_PID = null;
 }

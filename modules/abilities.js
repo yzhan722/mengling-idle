@@ -2,7 +2,7 @@ import { randFloat } from "./utils.js";
 
 /**
  * Idle-game 特性（非官方图鉴 Ability 复刻）。
- * 效果挂在队伍「最佳值」或单只精灵上，由 gameplay_fun 统一读取。
+ * 效果挂在队伍「最佳值」或单只萌灵上，由 gameplay_fun 统一读取。
  */
 export const ABILITIES = Object.freeze({
   earlyBird: { name: "早起", desc: "训练经验 +5%", key: "trainExpBonus", val: 0.05 },

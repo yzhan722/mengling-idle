@@ -233,13 +233,13 @@ export function deriveEraIndex(state) {
   const researchDone = researchDoneCount(state);
   const bsum = buildingLevelsSum(state);
   const gates = [
-    { index: 2, dex: 25 },
-    { index: 3, dex: 45, research: 5 },
-    { index: 4, dex: 55, research: 5, bsum: 18 },
-    { index: 5, dex: 90, research: 8 },
-    { index: 6, dex: 130, research: 11 },
-    { index: 7, dex: 110, research: 11 },
-    { index: 8, dex: 200, research: 14, bsum: 55 },
+    { index: 2, dex: 15 },
+    { index: 3, dex: 30, research: 5 },
+    { index: 4, dex: 45, research: 5, bsum: 18 },
+    { index: 5, dex: 60, research: 8 },
+    { index: 6, dex: 85, research: 11 },
+    { index: 7, dex: 100, research: 11 },
+    { index: 8, dex: 120, research: 14, bsum: 55 },
   ];
   let best = 0;
   for (const gate of gates) {
@@ -271,7 +271,10 @@ export function isAreaUnlocked(state, areaId, getCaptureAreas) {
   }
 
   const { unique } = dexCaughtCount(state);
-  const fallbackReq = { kanto: 0, johto: 25, hoenn: 70, sinnoh: 140 };
+  const fallbackReq = {
+    meadow: 0, woods: 6, brook: 16, plateau: 32, dunes: 48,
+    garden: 64, ridge: 80, hollow: 96, sanctum: 120,
+  };
   return typeof fallbackReq[areaId] === "number" ? unique >= fallbackReq[areaId] : false;
 }
 
@@ -411,7 +414,7 @@ export function applyEncounterBias(weight, mon, state, getMonTypes) {
   if (typeBoost && typeof typeBoost === "object") {
     let types = typeof getMonTypes === "function" ? getMonTypes(mon) : null;
     if (!Array.isArray(types)) {
-      const localTypes = globalThis.POKEMON_TYPES;
+      const localTypes = globalThis.BEAST_TYPES;
       types = localTypes && typeof localTypes === "object" ? localTypes[mon?.dex] : null;
     }
     for (const t of Array.isArray(types) ? types : []) {
@@ -427,8 +430,8 @@ export function questLabel(q) {
   const labels = {
     gather_total: "采集",
     catch_count: "捕捉",
-    berry_earned: "树果获得",
-    pokeball_earned: "球果/球获得",
+    berry_earned: "灵果获得",
+    pokeball_earned: "灵木/球获得",
     dex_unique: "图鉴",
     research_done: "研究完成",
     building_level: "建筑等级",

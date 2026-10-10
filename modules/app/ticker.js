@@ -58,9 +58,9 @@ export function createTickerSystem({
   function shouldSuppressTickerMsg(msg) {
     const s = String(msg || "");
     if (!s) return false;
-    if (s.includes("遭遇神兽") || s.includes("高级遭遇神兽")) return true;
+    if (s.includes("遭遇幻灵") || s.includes("高级遭遇幻灵")) return true;
     if (
-      (s.includes("神兽") || s.includes("传说") || s.includes("幻")) &&
+      (s.includes("幻灵") || s.includes("传说") || s.includes("幻")) &&
       (s.includes("区域") || s.includes("领域")) &&
       (s.includes("遭遇") || s.includes("遇到"))
     ) {
@@ -268,7 +268,7 @@ export function createTickerSystem({
   function pushTickerEvent(type, msg) {
     const ui = typeof getUi === "function" ? getUi() : null;
     const base = lbBaseUrl();
-    const name = typeof ui?.lbName === "string" && ui.lbName.trim() ? ui.lbName.trim() : "训练家";
+    const name = typeof ui?.lbName === "string" && ui.lbName.trim() ? ui.lbName.trim() : "育灵师";
     if (shouldSuppressTickerMsg(msg)) return;
     const full = String(`${name}：${String(msg || "")}`).slice(0, 200);
     // 本地立刻可见（不等服务端 pull / 不依赖登录）

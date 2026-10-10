@@ -66,7 +66,7 @@ assert(parseRewards(null, "rareCandy", 3).rareCandy === 3, "parse legacy");
 
 assert(clampUid("  abc  ") === "abc", "uid");
 assert(clampUid("") === null, "uid empty");
-assert(clampName("") === "训练家", "name default");
+assert(clampName("") === "育灵师", "name default");
 assert(clampUsername("ab") === "ab", "username");
 assert(clampUsername("x") === null, "username short");
 

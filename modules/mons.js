@@ -104,7 +104,7 @@ function createBaseStats(species) {
   return s;
 }
 
-export function getMonCurrentStats(mon, getPokeApiDataByDex) {
+export function getMonCurrentStats(mon, getBeastDataByDex) {
   const lvl = clamp(mon.lvl, 1, 100);
   const aff = clamp(typeof mon.affection === "number" && Number.isFinite(mon.affection) ? mon.affection : 0, 0, 100);
   const affMul = 1 + Math.floor(aff) * 0.01;
@@ -121,7 +121,7 @@ export function getMonCurrentStats(mon, getPokeApiDataByDex) {
   const bSpd = typeof bonus.spd === "number" && Number.isFinite(bonus.spd) ? bonus.spd : 0;
   const bSpe = typeof bonus.spe === "number" && Number.isFinite(bonus.spe) ? bonus.spe : 0;
 
-  const api = typeof getPokeApiDataByDex === "function" ? getPokeApiDataByDex(mon.dex) : null;
+  const api = typeof getBeastDataByDex === "function" ? getBeastDataByDex(mon.dex) : null;
   const base = api?.baseStats;
   if (base && typeof base === "object") {
     const iv = mon.iv && typeof mon.iv === "object" ? mon.iv : {};
@@ -153,8 +153,8 @@ export function getMonCurrentStats(mon, getPokeApiDataByDex) {
   };
 }
 
-export function monPower(mon, getPokeApiDataByDex) {
-  const s = getMonCurrentStats(mon, getPokeApiDataByDex);
+export function monPower(mon, getBeastDataByDex) {
+  const s = getMonCurrentStats(mon, getBeastDataByDex);
   let p = s.hp + s.atk + s.def + s.spa + s.spd + s.spe;
   const pass = monPassive(mon);
   if (pass?.key === "pvePowerBonus" && typeof pass.val === "number") {

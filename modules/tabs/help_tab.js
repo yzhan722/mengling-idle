@@ -59,7 +59,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
             }
           }
         }
-        const totalSpecies = Array.isArray(defs?.pokemon) ? defs.pokemon.length : 0;
+        const totalSpecies = Array.isArray(defs?.beasts) ? defs.beasts.length : 0;
         let unique = 0;
         const caught = state.dex?.caught || {};
         for (const v of Object.values(caught)) if (typeof v === "number" && v > 0) unique += 1;
@@ -78,8 +78,8 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
 
     rows.push(block("前30分钟路线", `
       <div style="line-height:1.9">
-        <b>1. 采集</b>：顶栏【采集】换树果${br}
-        <b>2. 研究</b>：研究页点${h('精灵球基础')}（完成后送球×5）${br}
+        <b>1. 采集</b>：顶栏【采集】换灵果${br}
+        <b>2. 研究</b>：研究页点${h('灵球基础')}（完成后送球×5）${br}
         <b>3. 捕捉</b>：打开「捕捉」抓第一只${br}
         <b>4. 看世界</b>：「更多」→「排行榜」看真实分数（空榜也正常）${br}
         <b>5. 可选云账号</b>：「设置」注册 → 换机不丢档，还能加好友约战
@@ -99,14 +99,14 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
 
     rows.push(block("快速开始", `
       <div style="line-height:1.9">
-        <b>① 营地（篝火）</b>：点【采集】获取树果 → 尽快研究${h('精灵球基础')}（完成赠送精灵球×5）→ 去捕捉${br}
-        <b>② 扩产</b>：建造${h('树果田')}和${h('球果营地')}，资源自动产出后再研究扩产科技${br}
-        <b>③ 捕捉</b>：有球就抓精灵，组建队伍；图鉴有记录后开放「任务」页玩法${br}
-        <b>④ 功能</b>：训练精灵提升等级，送精灵远征赚未来币（入口在「更多」）${br}
+        <b>① 营地（篝火）</b>：点【采集】获取灵果 → 尽快研究${h('灵球基础')}（完成赠送灵球×5）→ 去捕捉${br}
+        <b>② 扩产</b>：建造${h('灵果园')}和${h('灵木营')}，资源自动产出后再研究扩产科技${br}
+        <b>③ 捕捉</b>：有球就抓萌灵，组建队伍；图鉴有记录后开放「任务」页玩法${br}
+        <b>④ 功能</b>：训练萌灵提升等级，送萌灵远征赚未来币（入口在「更多」）${br}
         <b>⑤ 循环</b>：用未来币购买全服Buff → 资源更多 → 建筑更强 → 继续收集${br}
-        <b>⑥ 挑战</b>：图鉴≥5解锁道馆关卡；按推荐属性组队（能打又抗），失败也耗次数
+        <b>⑥ 挑战</b>：图鉴≥5解锁试炼关卡；按推荐属性组队（能打又抗），失败也耗次数
       </div>
-      ${tip('精灵球不够？建球果营地产球果，或研究「精灵球容量」科技。')}
+      ${tip('灵球不够？建灵木营产灵木，或研究「灵球容量」科技。')}
     `, false));
 
     rows.push(block("营地（篝火页）", `
@@ -117,23 +117,23 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
       ${gap}
       <table style="width:100%;border-collapse:collapse;font-size:12px">
         <tr style="opacity:0.6"><td>建筑</td><td>主要效果</td></tr>
-        <tr><td>树果田</td><td>每秒产出树果（基础资源）</td></tr>
-        <tr><td>球果营地</td><td>产出球果，提升精灵球上限</td></tr>
-        <tr><td>工坊</td><td>解锁并加速精灵球制作</td></tr>
+        <tr><td>灵果园</td><td>每秒产出灵果（基础资源）</td></tr>
+        <tr><td>灵木营</td><td>产出灵木，提升灵球上限</td></tr>
+        <tr><td>工坊</td><td>解锁并加速灵球制作</td></tr>
         <tr><td>训练场</td><td>每级 +1 训练槽，上限 10 只</td></tr>
-        <tr><td>🥚 饲养屋</td><td>解锁生蛋，支持孵化</td></tr>
+        <tr><td>🥚 育灵屋</td><td>解锁生蛋，支持孵化</td></tr>
         <tr><td>🗺️ 远征所</td><td>解锁远征，完成任务获经验+未来币</td></tr>
-        <tr><td>💎 碎片矿场</td><td>持续产出进化石碎片</td></tr>
+        <tr><td>💎 灵晶矿场</td><td>持续产出灵晶碎片</td></tr>
       </table>
-      ${tip('资源不够用？先升级树果田和球果营地，再研究提升上限的科技。')}
+      ${tip('资源不够用？先升级灵果园和灵木营，再研究提升上限的科技。')}
     `));
 
     rows.push(block("研究（科技页）", `
       <div style="line-height:1.8">
         ${h('前置条件')}：部分科技需要先完成其他科技或建造特定建筑。灰色=未解锁，蓝色=可研究。${br}
         ${h('研究进度')}：每次只能研究一项，显示进度条和剩余时间。${br}
-        ${h('研究速度')}：全服科研Buff、电系精灵技能可临时加速。${br}
-        ${h('推荐顺序')}：精灵球上限 → 捕获率 → 资源产量 → 进化相关 → 高级科技
+        ${h('研究速度')}：全服科研Buff、电系萌灵技能可临时加速。${br}
+        ${h('推荐顺序')}：灵球上限 → 捕获率 → 资源产量 → 进化相关 → 高级科技
       </div>
       ${tip('有多余资源时可以点击「优先研究成本低」排序，效率更高。')}
     `));
@@ -141,47 +141,48 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
     rows.push(block("捕捉系统", `
       <div style="line-height:1.8">
         ${h('稀有度')}：普通(80%) · 少见(15%) · 稀有(4%) · 史诗(1%)${br}
-        ${h('闪光精灵')}：极小概率，出现时有全屏特效提示${br}
-        ${h('神兽/传说')}：特殊区域，捕获率极低，建议配合龙系技能和捕获Buff${br}
-        捕捉页有「时代」主线任务；完成条件后可迈入下一时代，规则加成会叠加，存档资源/精灵不重置。
+        ${h('闪光萌灵')}：极小概率，出现时有全屏特效提示${br}
+        ${h('幻灵/传说')}：特殊区域，捕获率极低，建议配合龙系技能和捕获Buff${br}
+        捕捉页有「时代」主线任务；完成条件后可迈入下一时代，规则加成会叠加，存档资源/萌灵不重置。
       </div>
       ${gap}
       <table style="width:100%;border-collapse:collapse;font-size:12px">
-        <tr style="opacity:0.6"><td>区域</td><td>解锁图鉴数</td><td>编号</td></tr>
-        <tr><td>关都草丛</td><td>0种</td><td>001-151</td></tr>
-        <tr><td>城都树林</td><td>25种</td><td>152-251</td></tr>
-        <tr><td>丰缘海岸</td><td>70种</td><td>252-386</td></tr>
-        <tr><td>神奥雪原</td><td>140种</td><td>387-493</td></tr>
-        <tr><td>合众沙漠</td><td>210种</td><td>494-649</td></tr>
-        <tr><td>卡洛斯花田</td><td>280种</td><td>650-721</td></tr>
-        <tr><td>阿罗拉海岛</td><td>350种</td><td>722-809</td></tr>
-        <tr><td>伽勒尔旷野</td><td>430种</td><td>810-905</td></tr>
+        <tr style="opacity:0.6"><td>区域</td><td>解锁图鉴数</td><td>生态</td></tr>
+        <tr><td>芽芽草甸</td><td>0种</td><td>草/虫/一般</td></tr>
+        <tr><td>蜜露林径</td><td>25种</td><td>草/虫/妖精</td></tr>
+        <tr><td>溪光浅滩</td><td>70种</td><td>水</td></tr>
+        <tr><td>风铃高原</td><td>140种</td><td>飞行/电/格斗</td></tr>
+        <tr><td>星砂荒漠</td><td>210种</td><td>地面/岩石/火</td></tr>
+        <tr><td>月见花园</td><td>280种</td><td>妖精/超能力/幽灵</td></tr>
+        <tr><td>霜晶山脊</td><td>350种</td><td>冰/钢/岩石</td></tr>
+        <tr><td>龙眠幽谷</td><td>430种</td><td>龙/恶/幽灵/毒</td></tr>
+        <tr><td>幻梦秘境</td><td>520种</td><td>传说/幻之</td></tr>
       </table>
-      ${tip('龙系精灵技能可临时提升捕获率，抓神兽前先用！')}
+      ${tip('龙系萌灵技能可临时提升捕获率，抓幻灵前先用！')}
     `));
 
-    rows.push(block("精灵培育", `
+    rows.push(block("萌灵培育", `
       <div style="line-height:1.9">
         ${h('训练')}：放入训练场自动升级。训练场等级 = 同时训练数量（最多10只）。${br}
-        ${h('生蛋')}：选两只精灵放入饲养屋，亲密度越高越快生蛋，火系技能可加速。${br}
-        ${h('进化')}：消耗进化石碎片 → 进化石 → 稀有糖果，逐步进化精灵。${br}
+        ${h('生蛋')}：选两只萌灵放入育灵屋，亲密度越高越快生蛋，火系技能可加速。${br}
+        ${h('进化')}：消耗灵晶碎片 → 灵晶石 → 跃级糖丸，逐步进化萌灵。${br}
         ${h('远征')}：派队去任务，完成后获得经验+未来币，概率掉落药剂道具。${br}
         ${h('亲密度')}：喂食/训练/技能互动都能提升，影响生蛋速度和部分技能效果。
       </div>
       ${tip('远征是最稳定的未来币来源，建议全天候保持远征队在线。')}
     `));
 
-    rows.push(block("精灵技能一览", `
+    rows.push(block("萌灵技能一览", `
       <div class="muted" style="margin-bottom:8px">技能消耗饱腹度，低于阈值会失败。技能有冷却时间，部分技能有前置状态要求。</div>
       <table style="width:100%;border-collapse:collapse;font-size:12px">
         
         <tr style='opacity:0.6'><td>属性</td><td>技能效果</td><td>前置条件</td></tr>
-        <tr><td>格斗</td><td>训练叠加+1（加速升级）</td><td>有精灵在训练</td></tr>
-        <tr><td>草</td><td>种植果树（产大树果）</td><td>有树果</td></tr>
+        <tr><td>格斗</td><td>训练叠加+1（加速升级）</td><td>有萌灵在训练</td></tr>
+        <tr><td>草</td><td>种植果树（产大灵果）</td><td>有灵果</td></tr>
         <tr><td>水</td><td>给果树浇水加速成熟</td><td>有果树生长中</td></tr>
-        <tr><td>火</td><td>生蛋加速</td><td>饲养屋生蛋中</td></tr>
+        <tr><td>火</td><td>生蛋加速</td><td>育灵屋生蛋中</td></tr>
         <tr><td>电</td><td>当前研究减少冷却时间</td><td>有科技研究中</td></tr>
-        <tr><td>地面</td><td>进入挖矿状态（产进化能量）</td><td>无</td></tr>
+        <tr><td>地面</td><td>进入挖矿状态（产灵源）</td><td>无</td></tr>
         <tr><td>毒</td><td>资源消耗减少20%（60分钟）</td><td>无</td></tr>
         <tr><td>飞行</td><td>探险剩余时间 -30分钟</td><td>有探险任务</td></tr>
         <tr><td>超能力</td><td>合成时间 -20%（下10次）</td><td>无</td></tr>
@@ -189,10 +190,10 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <tr><td>冰</td><td>饱腹度下降减慢60分钟</td><td>无</td></tr>
         <tr><td>龙</td><td>捕获率提升10分钟</td><td>无</td></tr>
         <tr><td>恶</td><td>PVE伤害+50% 10分钟</td><td>无</td></tr>
-        <tr><td>钢</td><td>精灵球制作成本-10%（100次）</td><td>无</td></tr>
+        <tr><td>钢</td><td>灵球制作成本-10%（100次）</td><td>无</td></tr>
         <tr><td>妖精</td><td>亲密度增长加速60分钟</td><td>无</td></tr>
         <tr><td>一般</td><td>全队资源产量提升（可叠加）</td><td>无</td></tr>
-        <tr><td>幽灵</td><td>随机一只精灵技能冷却减半</td><td>无</td></tr>
+        <tr><td>幽灵</td><td>随机一只萌灵技能冷却减半</td><td>无</td></tr>
         <tr><td>虫</td><td>恐吓林佬（需服务器连接）</td><td>林佬存活</td></tr>
       </table>
     `));
@@ -221,24 +222,24 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
       </div>
       <table style='width:100%;border-collapse:collapse;font-size:12px'>
         <tr style='opacity:0.6'><td>连续天数</td><td>登录奖励</td></tr>
-        <tr><td>第1天</td><td>未来币x5 + 树果x500</td></tr>
-        <tr><td>第2天</td><td>未来币x5 + 球果x200</td></tr>
-        <tr><td>第3天</td><td>未来币x10 + 进化石碎片x100</td></tr>
-        <tr><td>第4天</td><td>未来币x10 + 精灵球x50</td></tr>
-        <tr><td>第5天</td><td>未来币x15 + 稀有糖果x1</td></tr>
-        <tr><td>第6天</td><td>未来币x20 + 进化能量x2</td></tr>
-        <tr><td>第7天</td><td>未来币x50 + 进化石x1 + 稀有糖果x3</td></tr>
+        <tr><td>第1天</td><td>未来币x5 + 灵果x500</td></tr>
+        <tr><td>第2天</td><td>未来币x5 + 灵木x200</td></tr>
+        <tr><td>第3天</td><td>未来币x10 + 灵晶碎片x100</td></tr>
+        <tr><td>第4天</td><td>未来币x10 + 灵球x50</td></tr>
+        <tr><td>第5天</td><td>未来币x15 + 跃级糖丸x1</td></tr>
+        <tr><td>第6天</td><td>未来币x20 + 灵源x2</td></tr>
+        <tr><td>第7天</td><td>未来币x50 + 灵晶石x1 + 跃级糖丸x3</td></tr>
       </table>
       <div class='muted' style='font-size:11px;margin-top:6px'>提示：月卡每日领取仍在未来币商店，与任务独立。</div>
     `));
 
     rows.push(block("图鉴与排行榜", `
       <div style='line-height:1.8'>
-        <strong>图鉴加成</strong>：每登记一种新精灵，全局资源产量永久提升。<br/>
-        <strong>排行榜</strong>：展示全服玩家精灵战斗力排名，需在设置页注册昵称才能上榜。<br/>
+        <strong>图鉴加成</strong>：每登记一种新萌灵，全局资源产量永久提升。<br/>
+        <strong>排行榜</strong>：展示全服玩家萌灵战斗力排名，需在设置页注册昵称才能上榜。<br/>
         <strong>筛选功能</strong>：图鉴页支持按地区/属性/稀有度筛选。
       </div>
-      <div class='muted' style='font-size:11px;margin-top:6px'>提示：同种精灵重复收集不增加图鉴加成，但可用于进化和远征。</div>
+      <div class='muted' style='font-size:11px;margin-top:6px'>提示：同种萌灵重复收集不增加图鉴加成，但可用于进化和远征。</div>
     `));
 
     rows.push(block("云存档与设置", `
@@ -258,8 +259,8 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <b>Q: 按钮点了没反应？</b><br/>
         A: 检查：①资源是否足够 ②是否在冷却中 ③前置条件是否满足<br/>
         <div style='margin-top:6px'></div>
-        <b>Q: 精灵球不够用？</b><br/>
-        A: 升级球果营地 + 研究精灵球容量科技 + 购买全服捕获Buff<br/>
+        <b>Q: 灵球不够用？</b><br/>
+        A: 升级灵木营 + 研究灵球容量科技 + 购买全服捕获Buff<br/>
         <div style='margin-top:6px'></div>
         <b>Q: 游戏加载失败？</b><br/>
         A: 强制刷新（Ctrl+Shift+R），仍失败请清除浏览器缓存<br/>

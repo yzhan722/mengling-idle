@@ -4,20 +4,20 @@ export function createDailyTasks({ state, addRes, addLog, dailySignin, apiFetch,
 
   // 任务类型定义（仅保留已接线进度事件）
   const TASK_TYPES = {
-    gatherCatnip: { id: "gatherCatnip", label: "采集树果", target: 100, reward: { catnip: 50 }, icon: "catnip" },
-    catchPokemon: { id: "catchPokemon", label: "捕捉精灵", target: 3, reward: { pokeball: 5 }, icon: "catch" },
-    evolvePokemon: { id: "evolvePokemon", label: "进化精灵", target: 1, reward: { evolutionStone: 2 }, icon: "evo" },
+    gatherCatnip: { id: "gatherCatnip", label: "采集灵果", target: 100, reward: { catnip: 50 }, icon: "catnip" },
+    catchBeast: { id: "catchBeast", label: "捕捉萌灵", target: 3, reward: { pokeball: 5 }, icon: "catch" },
+    evolveBeast: { id: "evolveBeast", label: "进化萌灵", target: 1, reward: { evolutionStone: 2 }, icon: "evo" },
     pveWin: { id: "pveWin", label: "PvE 获胜", target: 2, reward: { futurecoin: 10 }, icon: "sword" },
     pveAttempts: { id: "pveAttempts", label: "PvE 挑战", target: 5, reward: { futurecoin: 5 }, icon: "target" },
-    craftPokeball: { id: "craftPokeball", label: "制作精灵球", target: 3, reward: { pokeball: 3 }, icon: "ball" },
-    craftBerry: { id: "craftBerry", label: "制作大树果", target: 5, reward: { bigBerry: 5 }, icon: "berry" },
+    craftPokeball: { id: "craftPokeball", label: "制作灵球", target: 3, reward: { pokeball: 3 }, icon: "ball" },
+    craftBerry: { id: "craftBerry", label: "制作大灵果", target: 5, reward: { bigBerry: 5 }, icon: "berry" },
     clickGather: { id: "clickGather", label: "手动采集", target: 20, reward: { catnip: 30 }, icon: "hand" },
     login: { id: "login", label: "每日登录", target: 1, reward: { futurecoin: 5 }, icon: "cal" },
   };
 
   const DAILY_POOL = [
     "gatherCatnip",
-    "catchPokemon", "evolvePokemon",
+    "catchBeast", "evolveBeast",
     "pveWin", "pveAttempts",
     "craftPokeball", "craftBerry",
     "clickGather", "login"
@@ -234,10 +234,10 @@ export function createDailyTasks({ state, addRes, addLog, dailySignin, apiFetch,
         if (data.resource === "catnip") updateTaskProgress("gatherCatnip", data.amount || 1);
         break;
       case "catch":
-        updateTaskProgress("catchPokemon");
+        updateTaskProgress("catchBeast");
         break;
       case "evolve":
-        updateTaskProgress("evolvePokemon");
+        updateTaskProgress("evolveBeast");
         break;
       case "pveWin":
         updateTaskProgress("pveWin");

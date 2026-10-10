@@ -1,30 +1,30 @@
 export const RESOURCE_DEFS = {
   catnip: {
-    name: "树果",
+    name: "灵果",
     baseCap: 80,
   },
   wood: {
-    name: "球果",
+    name: "灵木",
     baseCap: 40,
   },
   minerals: {
-    name: "进化石碎片",
+    name: "灵晶碎片",
     baseCap: 30,
   },
   pokeball: {
-    name: "精灵球",
+    name: "灵球",
     baseCap: 10,
   },
   bigBerry: {
-    name: "大树果",
+    name: "大灵果",
     baseCap: 999,
   },
   hugeBerry: {
-    name: "巨大树果",
+    name: "巨大灵果",
     baseCap: 999,
   },
   rareCandy: {
-    name: "神奇糖果",
+    name: "跃级糖丸",
     baseCap: 999,
   },
   futurecoin: {
@@ -32,47 +32,47 @@ export const RESOURCE_DEFS = {
     baseCap: 999999,
   },
   evolutionEnergy: {
-    name: "进化能量",
+    name: "灵源",
     baseCap: 999,
   },
   evolutionStone: {
-    name: "进化石",
+    name: "灵晶石",
     baseCap: 999,
   },
   linkRope: {
-    name: "通信绳",
+    name: "灵契绳",
     baseCap: 999,
   },
   megaStone: {
-    name: "MEGA进化石",
+    name: "觉醒石",
     baseCap: 999,
   },
   masterball: {
-    name: "大师球",
+    name: "究极灵球",
     baseCap: 999,
   },
   ultraball: {
-    name: "高级球",
+    name: "高级灵球",
     baseCap: 999,
   },
   quickball: {
-    name: "先机球",
+    name: "迅捷灵球",
     baseCap: 999,
   },
   luxuryball: {
-    name: "豪华球",
+    name: "豪华灵球",
     baseCap: 999,
   },
   expCandy: {
-    name: "经验糖果",
+    name: "历练糖丸",
     baseCap: 999,
   },
   expCandyL: {
-    name: "经验糖果L",
+    name: "历练糖丸L",
     baseCap: 999,
   },
   expCandyXL: {
-    name: "经验糖果XL",
+    name: "历练糖丸XL",
     baseCap: 999,
   },
   affectionTreat: {
@@ -84,7 +84,7 @@ export const RESOURCE_DEFS = {
     baseCap: 999,
   },
   hpPotion: {
-    name: "HP药剂",
+    name: "疗伤药剂",
     baseCap: 999,
   },
   atkPotion: {
@@ -108,27 +108,27 @@ export const RESOURCE_DEFS = {
     baseCap: 999,
   },
   shinyCharm: {
-    name: "闪耀护符",
+    name: "虹彩护符",
     baseCap: 99,
   },
   luckyEgg: {
-    name: "幸运蛋",
+    name: "福缘蛋",
     baseCap: 99,
   },
   bottleCap: {
-    name: "银色王冠",
+    name: "银桂冠",
     baseCap: 999,
   },
   goldBottleCap: {
-    name: "金色王冠",
+    name: "金桂冠",
     baseCap: 99,
   },
   netball: {
-    name: "捕网球",
+    name: "捕灵球",
     baseCap: 999,
   },
   duskball: {
-    name: "黑暗球",
+    name: "暗夜灵球",
     baseCap: 999,
   },
   energyDrink: {
@@ -144,11 +144,11 @@ export const RESOURCE_DEFS = {
     baseCap: 99,
   },
   sootheBell: {
-    name: "安抚之铃",
+    name: "暖心铃",
     baseCap: 99,
   },
   expCandyS: {
-    name: "经验糖果S",
+    name: "历练糖丸S",
     baseCap: 999,
   },
 };

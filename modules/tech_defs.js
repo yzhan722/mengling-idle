@@ -56,37 +56,37 @@ export function buildExtraTechDefs() {
 
   chain(
     "agroBoost",
-    "农业飞跃",
+    "灵果飞跃",
     "greenhouse",
     (state) => state.buildings.field.owned >= 3,
     12,
     (i) => ({ catnip: Math.ceil(1400 * Math.pow(1.8, i - 1)), wood: Math.ceil(180 * Math.pow(1.7, i - 1)) }),
     (i) => ({ catnipPerSecMul: 1 + 0.18 + 0.02 * i }),
-    (i) => `树果产量提升，阶段越高提升越明显。`,
+    (i) => `灵果产量提升，阶段越高提升越明显。`,
     10
   );
 
   chain(
     "forestryBoost",
-    "林业飞跃",
+    "灵木飞跃",
     "carpentry",
     (state) => (state.buildings.lumberYard?.owned ?? 0) >= 2,
     12,
     (i) => ({ catnip: Math.ceil(1000 * Math.pow(1.65, i - 1)), wood: Math.ceil(1800 * Math.pow(1.85, i - 1)) }),
     (i) => ({ woodRateMul: 1 + 0.20 + 0.02 * i }),
-    (i) => `球果产量提升，逐步进入指数增长。`,
+    (i) => `灵木产量提升，逐步进入指数增长。`,
     10
   );
 
   chain(
     "miningBoost",
-    "矿业飞跃",
+    "灵晶飞跃",
     "excavationTools",
     (state) => (state.buildings.quarry?.owned ?? 0) >= 2,
     12,
     (i) => ({ wood: Math.ceil(1300 * Math.pow(1.75, i - 1)), minerals: Math.ceil(1500 * Math.pow(1.9, i - 1)) }),
     (i) => ({ mineralsRateMul: 1 + 0.22 + 0.02 * i }),
-    (i) => `碎片产量提升，后期增长更陡峭。`,
+    (i) => `灵晶产量提升，后期增长更陡峭。`,
     10
   );
 
@@ -94,14 +94,14 @@ export function buildExtraTechDefs() {
     const tid = `catnipStorageBoost${i}`;
     const r = i <= 4 ? 0.75 : 2 / 3;
     tech[tid] = {
-      name: `仓储飞跃·树果 ${roman(i)}`,
-      desc: i <= 4 ? "树果上限 ×1.5。" : "树果上限 ×2。",
+      name: `仓储飞跃·灵果 ${roman(i)}`,
+      desc: i <= 4 ? "灵果上限 ×1.5。" : "灵果上限 ×2。",
       cost: {
         catnip: Math.ceil(2200 * r * Math.pow(2.2, i - 1)),
         wood: Math.ceil(600 * r * Math.pow(2.05, i - 1)),
         minerals: Math.ceil(320 * r * Math.pow(2.1, i - 1)),
       },
-      prereq: i === 1 ? [] : [`catnipStorageBoost${i - 1}`],
+      prereq: i === 1 ? ["ultraStorage"] : [`catnipStorageBoost${i - 1}`],
       req: () => true,
       effects: { capCatnipMul: i <= 4 ? 1.5 : 2 },
       timeMul: 12,
@@ -111,14 +111,14 @@ export function buildExtraTechDefs() {
   for (let i = 1; i <= 3; i += 1) {
     const tid = `woodStorageBoost${i}`;
     tech[tid] = {
-      name: `仓储飞跃·球果 ${roman(i)}`,
-      desc: "球果上限 ×1.5。",
+      name: `仓储飞跃·灵木 ${roman(i)}`,
+      desc: "灵木上限 ×1.5。",
       cost: {
         catnip: Math.ceil(1800 * 0.75 * Math.pow(2.2, i - 1)),
         wood: Math.ceil(2200 * 0.75 * Math.pow(2.2, i - 1)),
         minerals: Math.ceil(420 * 0.75 * Math.pow(2.1, i - 1)),
       },
-      prereq: i === 1 ? [] : [`woodStorageBoost${i - 1}`],
+      prereq: i === 1 ? ["ultraStorage"] : [`woodStorageBoost${i - 1}`],
       req: () => true,
       effects: { capWoodMul: 1.5 },
       timeMul: 12,
@@ -128,14 +128,14 @@ export function buildExtraTechDefs() {
   for (let i = 1; i <= 3; i += 1) {
     const tid = `mineralsStorageBoost${i}`;
     tech[tid] = {
-      name: `仓储飞跃·碎片 ${roman(i)}`,
-      desc: "碎片上限 ×1.5。",
+      name: `仓储飞跃·灵晶 ${roman(i)}`,
+      desc: "灵晶上限 ×1.5。",
       cost: {
         catnip: Math.ceil(1600 * 0.75 * Math.pow(2.25, i - 1)),
         wood: Math.ceil(1600 * 0.75 * Math.pow(2.2, i - 1)),
         minerals: Math.ceil(2200 * 0.75 * Math.pow(2.25, i - 1)),
       },
-      prereq: i === 1 ? [] : [`mineralsStorageBoost${i - 1}`],
+      prereq: i === 1 ? ["ultraStorage"] : [`mineralsStorageBoost${i - 1}`],
       req: () => true,
       effects: { capMineralsMul: 1.5 },
       timeMul: 12,

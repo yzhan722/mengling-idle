@@ -9,6 +9,7 @@ import {
   skillCdSec,
   TYPE_SKILL_DESC,
 } from "../type_skills.js";
+import { beastZone, ZONE_INDEX } from "../beast_defs.js";
 
 export function initMonsTab({
   elMonBack,
@@ -46,7 +47,7 @@ export function initMonsTab({
   lbBaseUrl,
   onBossBullyMaybeReward,
   onEvolve,
-  getPokeApiDataByDex,
+  getBeastDataByDex,
 }) {
   if (elMonRegion) {
     elMonRegion.value = ui.monRegion;
@@ -192,7 +193,7 @@ export function initMonsTab({
       if (typeId === "grass") {
         const have = state.res.catnip?.value ?? 0;
         if (have < 10000) {
-          addLog(`技能失败：树果不足（需要 10000，当前 ${Math.floor(have)}）`, true);
+          addLog(`技能失败：灵果不足（需要 10000，当前 ${Math.floor(have)}）`, true);
           return true;
         }
       }
@@ -230,7 +231,7 @@ export function initMonsTab({
           (x) => x && x.id !== mon.id && typeof x.skillCdRemainingSec === "number" && x.skillCdRemainingSec > 0
         );
         if (!cooling) {
-          addLog("技能失败：没有其他冷却中的精灵", true);
+          addLog("技能失败：没有其他冷却中的萌灵", true);
           return true;
         }
       }
@@ -272,7 +273,7 @@ export function initMonsTab({
               }
             }
 
-            const name0 = typeof ui.lbName === "string" && ui.lbName.trim() ? ui.lbName.trim() : "训练家";
+            const name0 = typeof ui.lbName === "string" && ui.lbName.trim() ? ui.lbName.trim() : "育灵师";
             const name = String(name0).slice(0, 32);
             const res = await lbFetchJson(`${base}/api/server/boss/bully/attack`, {
               method: "POST",
@@ -346,7 +347,7 @@ export function initMonsTab({
           (x) => x && x.id !== mon.id && typeof x.skillCdRemainingSec === "number" && x.skillCdRemainingSec > 0
         );
         if (targets.length === 0) {
-          addLog(`技能：${skillName}（${typeZh}）→ 没有其他冷却中的精灵`, true);
+          addLog(`技能：${skillName}（${typeZh}）→ 没有其他冷却中的萌灵`, true);
         } else {
           const t = targets[Math.floor(Math.random() * targets.length)];
           t.skillCdRemainingSec = Math.ceil((t.skillCdRemainingSec ?? 0) / 2);
@@ -359,7 +360,7 @@ export function initMonsTab({
             : 0;
         const c1 = Math.min(1000000, c0 + 100);
         state.skills.steelBallDiscountCharges = c1;
-        addLog(`技能：${skillName}（${typeZh}）→ 精灵球成本 -10%（下 ${c1} 次制作）`, true);
+        addLog(`技能：${skillName}（${typeZh}）→ 灵球成本 -10%（下 ${c1} 次制作）`, true);
       } else if (typeId === "ice") {
         const rem0 =
           typeof state.skills.iceSatietySlowRemainingSec === "number" && Number.isFinite(state.skills.iceSatietySlowRemainingSec)
@@ -495,7 +496,7 @@ export function initMonsTab({
             haveCatnip -= needCatnip;
             state.res.catnip.value = Math.max(0, state.res.catnip.value - needCatnip);
             m.satiety = 100;
-            addLog(`一键喂食：${m.name} 饱腹度补满（消耗树果 ${needCatnip}）`, true);
+            addLog(`一键喂食：${m.name} 饱腹度补满（消耗灵果 ${needCatnip}）`, true);
             fedCount += 1;
           } else {
             const steps = Math.max(0, Math.floor(haveCatnip / 100));
@@ -506,14 +507,14 @@ export function initMonsTab({
             state.res.catnip.value = Math.max(0, state.res.catnip.value - cost);
             m.satiety = sat1;
             const miss = Math.max(0, needCatnip - cost);
-            addLog(`一键喂食：${m.name} 饱腹度 +${Math.floor(sat1 - sat0)}（树果不足，距离喂满还差 ${miss}）`, true);
+            addLog(`一键喂食：${m.name} 饱腹度 +${Math.floor(sat1 - sat0)}（灵果不足，距离喂满还差 ${miss}）`, true);
             fedCount += 1;
             break;
           }
         }
 
         if (fedCount <= 0) {
-          addLog("一键喂食：所有精灵饱腹度已满或树果不足", true);
+          addLog("一键喂食：所有萌灵饱腹度已满或灵果不足", true);
         }
         markMonListDirty(false);
         render();
@@ -546,7 +547,7 @@ export function initMonsTab({
             haveCatnip -= needCatnip;
             state.res.catnip.value = Math.max(0, state.res.catnip.value - needCatnip);
             m.satiety = Math.max(sat0, 50);
-            addLog(`喂食饥饿：${m.name} 饱腹→${Math.floor(m.satiety)}（树果 ${needCatnip}）`, true);
+            addLog(`喂食饥饿：${m.name} 饱腹→${Math.floor(m.satiety)}（灵果 ${needCatnip}）`, true);
             fedCount += 1;
           } else {
             const steps = Math.max(0, Math.floor(haveCatnip / 100));
@@ -556,12 +557,12 @@ export function initMonsTab({
             haveCatnip -= cost;
             state.res.catnip.value = Math.max(0, state.res.catnip.value - cost);
             m.satiety = sat1;
-            addLog(`喂食饥饿：${m.name} 饱腹 +${Math.floor(sat1 - sat0)}（树果不足）`, true);
+            addLog(`喂食饥饿：${m.name} 饱腹 +${Math.floor(sat1 - sat0)}（灵果不足）`, true);
             fedCount += 1;
             break;
           }
         }
-        if (fedCount <= 0) addLog("喂食饥饿：无目标或树果不足", true);
+        if (fedCount <= 0) addLog("喂食饥饿：无目标或灵果不足", true);
         markMonListDirty(false);
         render();
         return;
@@ -572,12 +573,12 @@ export function initMonsTab({
         if (focusEvoBtn.disabled) return;
         const id = ui._monsFirstEvoId;
         if (id == null) {
-          addLog("当前筛选下没有可进化精灵");
+          addLog("当前筛选下没有可进化萌灵");
           return;
         }
         ui.monSelectedId = id;
         markMonListDirty(false);
-        addLog("已定位可进化精灵，查看右侧详情进化", true);
+        addLog("已定位可进化萌灵，查看右侧详情进化", true);
         render();
         return;
       }
@@ -592,22 +593,12 @@ export function initMonsTab({
         const regionOk = (m) => {
           if (!m || typeof m.dex !== "number") return false;
           if (region === "all") return true;
-          if (region === "mythic") return m.tier === "epic";
-          if (m.tier === "epic") return false;
-          if (region === "kanto") return m.dex >= 1 && m.dex <= 151;
-          if (region === "johto") return m.dex >= 152 && m.dex <= 251;
-          if (region === "hoenn") return m.dex >= 252 && m.dex <= 386;
-          if (region === "sinnoh") return m.dex >= 387 && m.dex <= 493;
-          if (region === "unova") return m.dex >= 494 && m.dex <= 649;
-          if (region === "kalos") return m.dex >= 650 && m.dex <= 721;
-          if (region === "alola") return m.dex >= 722 && m.dex <= 809;
-          if (region === "galar") return m.dex >= 810 && m.dex <= 905;
-          return true;
+          return beastZone(m.dex) === ZONE_INDEX[region];
         };
         const typeOk = (m) => {
           if (!m || typeof m.dex !== "number") return false;
           if (typeFilter === "all") return true;
-          const api = typeof getPokeApiDataByDex === "function" ? getPokeApiDataByDex(m.dex) : null;
+          const api = typeof getBeastDataByDex === "function" ? getBeastDataByDex(m.dex) : null;
           const types = Array.isArray(api?.types) ? api.types : null;
           if (!types) return true;
           return types.includes(typeFilter);
@@ -629,9 +620,9 @@ export function initMonsTab({
           fed += 1;
         }
         if (fed > 0) {
-          addLog(`批量喂糖：${fed} 只各 +1Lv（消耗神奇糖果 ${fed}）`, true);
+          addLog(`批量喂糖：${fed} 只各 +1Lv（消耗跃级糖丸 ${fed}）`, true);
         } else {
-          addLog("批量喂糖：无可用精灵或糖果不足", true);
+          addLog("批量喂糖：无可用萌灵或糖果不足", true);
         }
         markMonListDirty(false);
         render();
@@ -654,7 +645,7 @@ export function initMonsTab({
         const names = sampleNames.join("、");
         const suffix = removed > sampleNames.length ? ` 等 ${removed} 只` : "";
         if (candy > 0) {
-          addLog(`批量放生：${names}${suffix} → 神奇糖果 +${candy}`, true);
+          addLog(`批量放生：${names}${suffix} → 跃级糖丸 +${candy}`, true);
         } else {
           addLog(`批量放生：${names}${suffix}`, true);
         }
@@ -673,7 +664,7 @@ export function initMonsTab({
         let batchCount = 0;
         for (const mon of list) {
           if (!mon) continue;
-          const api = getPokeApiDataByDex(mon.dex);
+          const api = getBeastDataByDex(mon.dex);
           const types = Array.isArray(api?.types) ? api.types : [];
           if (!types.includes(batchType)) continue;
           const sat0 = clamp(typeof mon.satiety === "number" && Number.isFinite(mon.satiety) ? mon.satiety : 100, 0, 100);
@@ -694,7 +685,7 @@ export function initMonsTab({
             true
           );
         } else {
-          addLog(`批量技能：没有可用的 ${typeZh} 属性精灵`, true);
+          addLog(`批量技能：没有可用的 ${typeZh} 属性萌灵`, true);
         }
         markMonListDirty(false);
         render();
@@ -777,14 +768,14 @@ export function initMonsTab({
         const haveCatnip = Math.max(0, Math.floor(state.res.catnip.value ?? 0));
 
         if (haveCatnip < 100) {
-          addLog(`喂食失败：树果不足（需要 ${needCatnip}，当前 ${haveCatnip}）`, true);
+          addLog(`喂食失败：灵果不足（需要 ${needCatnip}，当前 ${haveCatnip}）`, true);
           return;
         }
 
         if (haveCatnip >= needCatnip) {
           state.res.catnip.value = Math.max(0, state.res.catnip.value - needCatnip);
           m.satiety = 100;
-          addLog(`喂食：${m.name} 饱腹度补满（消耗树果 ${needCatnip}）`, true);
+          addLog(`喂食：${m.name} 饱腹度补满（消耗灵果 ${needCatnip}）`, true);
         } else {
           const steps = Math.max(0, Math.floor(haveCatnip / 100));
           const cost = steps * 100;
@@ -793,7 +784,7 @@ export function initMonsTab({
           state.res.catnip.value = Math.max(0, state.res.catnip.value - cost);
           m.satiety = sat1;
           const miss = Math.max(0, needCatnip - cost);
-          addLog(`喂食：${m.name} 饱腹度 +${Math.floor(sat1 - sat0)}（树果不足，距离喂满还差 ${miss}）`, true);
+          addLog(`喂食：${m.name} 饱腹度 +${Math.floor(sat1 - sat0)}（灵果不足，距离喂满还差 ${miss}）`, true);
         }
 
         markMonListDirty(false);
@@ -883,9 +874,9 @@ export function initMonsTab({
         state.mons.list.splice(mIdx, 1);
         if (refund > 0) {
           addRes("rareCandy", refund);
-          addLog(`放生：${m?.name ? m.name : "未知精灵"}（战力${power}）→ 神奇糖果 +${refund}`, true);
+          addLog(`放生：${m?.name ? m.name : "未知萌灵"}（战力${power}）→ 跃级糖丸 +${refund}`, true);
         } else {
-          addLog(`放生：${m?.name ? m.name : "未知精灵"}（战力${power}）`, true);
+          addLog(`放生：${m?.name ? m.name : "未知萌灵"}（战力${power}）`, true);
         }
         markMonListDirty(false);
         render();
@@ -999,7 +990,7 @@ export function initMonsTab({
             m.lvl = clamp(m.lvl + 1, 1, 100);
             m.exp = 0;
           }
-          addLog(`喂食：${m.name} 神奇糖果 +1Lv`);
+          addLog(`喂食：${m.name} 跃级糖丸 +1Lv`);
         }
 
         markMonsDirty();
@@ -1014,7 +1005,7 @@ export function initMonsTab({
         const m = (state.mons?.list ?? []).find((x) => x.id === id);
         if (!m) return;
 
-        // 使用经验糖果
+        // 使用历练糖丸
         if (typeof window.itemUsage !== "undefined" && window.itemUsage.useExpCandy) {
           const result = window.itemUsage.useExpCandy(id, expType);
           if (result.success) {

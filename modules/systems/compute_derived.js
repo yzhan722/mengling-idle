@@ -58,7 +58,7 @@ export function computeDerived(state, ctx) {
         state.res.wood.value = Math.max(Number(state.res.wood.value) || 0, 24);
         if (typeof addLog === "function") {
           try {
-            addLog("精灵球基础生效：赠送精灵球×5与球果×24，可直接去捕捉。", true);
+            addLog("灵球基础生效：赠送灵球×5与灵木×24，可直接去捕捉。", true);
           } catch {
             // ignore
           }

@@ -27,13 +27,13 @@ import {
 
 {
   const state = { dex: { caught: {} }, meta: {} };
-  const mile1 = noteShinySpecies(state, { id: "bulba", dex: 1, name: "妙蛙种子" });
+  const mile1 = noteShinySpecies(state, { id: "p001b", dex: 1, name: "芽苞苞" });
   assert.equal(mile1?.item, "rareCandy", "first shiny milestone");
   assert.equal(shinyUniqueCount(state), 1, "unique 1");
-  const again = noteShinySpecies(state, { id: "bulba", dex: 1, name: "妙蛙种子" });
+  const again = noteShinySpecies(state, { id: "p001b", dex: 1, name: "芽苞苞" });
   assert.equal(again, null, "dup no mile");
-  noteShinySpecies(state, { id: "ivy", dex: 2, name: "妙蛙草" });
-  const mile3 = noteShinySpecies(state, { id: "venu", dex: 3, name: "妙蛙花" });
+  noteShinySpecies(state, { id: "p002x", dex: 2, name: "叶团团" });
+  const mile3 = noteShinySpecies(state, { id: "p003x", dex: 3, name: "花蓬蓬" });
   assert.equal(mile3?.item, "expCandy", "third shiny milestone");
   assert.equal(shinyGalleryEntries(state, 2).length, 2, "gallery limit");
 }
@@ -41,7 +41,7 @@ import {
 {
   const state = {
     dex: { caught: {}, shiny: {} },
-    mons: { list: [{ pid: "pika", dex: 25, name: "皮卡丘", isShiny: true }] },
+    mons: { list: [{ pid: "p25", dex: 25, name: "电毛球", isShiny: true }] },
   };
   const n = syncShinyGalleryFromMons(state);
   assert.equal(n, 1, "sync added");
@@ -53,13 +53,13 @@ import {
   const state = {
     dex: {
       shiny: {
-        pika: { dex: 25, name: "皮卡丘", at: 3 },
-        bulba: { dex: 1, name: "妙蛙种子", at: 2 },
+        p25: { dex: 25, name: "电毛球", at: 3 },
+        p001b: { dex: 1, name: "芽苞苞", at: 2 },
       },
     },
   };
   const text = buildShinyShareText(state);
-  assert.ok(text.includes("皮卡丘") && text.includes("闪光馆"), "share text");
+  assert.ok(text.includes("电毛球") && text.includes("闪光馆"), "share text");
   assert.equal(shinyShareCardPayload(state).unique, 2, "share card unique");
 }
 

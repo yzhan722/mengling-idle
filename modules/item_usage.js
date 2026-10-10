@@ -1,11 +1,11 @@
 // 道具使用系统
 export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) {
   
-  // 使用经验糖果
+  // 使用历练糖丸
   function useExpCandy(monId, itemType) {
     const id = Number(monId);
     const mon = state.mons.list.find(m => m.id === id);
-    if (!mon) return { success: false, message: "精灵不存在" };
+    if (!mon) return { success: false, message: "萌灵不存在" };
 
     const expValues = {
       expCandyS: 200,
@@ -24,10 +24,10 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
     addExpToMon(mon, expGain);
     
     const itemNames = {
-      expCandyS: "经验糖果S",
-      expCandy: "经验糖果",
-      expCandyL: "经验糖果L",
-      expCandyXL: "经验糖果XL",
+      expCandyS: "历练糖丸S",
+      expCandy: "历练糖丸",
+      expCandyL: "历练糖丸L",
+      expCandyXL: "历练糖丸XL",
     };
 
     addLog(`使用${itemNames[itemType]}：${mon.name} 获得 ${expGain} 经验`);
@@ -38,7 +38,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
   function useAffectionItem(monId, itemType) {
     const id = Number(monId);
     const mon = state.mons.list.find(m => m.id === id);
-    if (!mon) return { success: false, message: "精灵不存在" };
+    if (!mon) return { success: false, message: "萌灵不存在" };
 
     const affectionValues = {
       affectionTreat: 5,
@@ -79,24 +79,24 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
   function useBottleCap(monId, itemType, statType) {
     const id = Number(monId);
     const mon = state.mons.list.find(m => m.id === id);
-    if (!mon) return { success: false, message: "精灵不存在" };
+    if (!mon) return { success: false, message: "萌灵不存在" };
 
     const itemCount = state.res[itemType]?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
 
-    // 修复：精灵实例使用 iv 而不是 ivs
+    // 修复：萌灵实例使用 iv 而不是 ivs
     if (!mon.iv || typeof mon.iv !== "object") {
       mon.iv = { hp: 15, atk: 15, def: 15, spa: 15, spd: 15, spe: 15 };
     }
 
     if (itemType === "goldBottleCap") {
-      // 金色王冠：全部个体值提升到31
+      // 金桂冠：全部个体值提升到31
       mon.iv = { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 };
       state.res[itemType].value = Math.max(0, itemCount - 1);
-      addLog(`使用金色王冠：${mon.name} 所有个体值提升至31（6V）`);
+      addLog(`使用金桂冠：${mon.name} 所有个体值提升至31（6V）`);
       return { success: true, message: `${mon.name} 的所有个体值已达到完美！` };
     } else if (itemType === "bottleCap") {
-      // 银色王冠：单项个体值提升到31
+      // 银桂冠：单项个体值提升到31
       if (!statType) return { success: false, message: "请选择要提升的属性" };
       
       const statNames = {
@@ -113,18 +113,18 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
 
       mon.iv[statType] = 31;
       state.res[itemType].value = Math.max(0, itemCount - 1);
-      addLog(`使用银色王冠：${mon.name} ${statNames[statType]}个体值提升至31`);
+      addLog(`使用银桂冠：${mon.name} ${statNames[statType]}个体值提升至31`);
       return { success: true, message: `${mon.name} 的${statNames[statType]}个体值已达到完美！` };
     }
 
     return { success: false, message: "无效的道具类型" };
   }
 
-  // 使用幸运蛋（经验加成）
+  // 使用福缘蛋（经验加成）
   function useLuckyEgg(monId) {
     const id = Number(monId);
     const mon = state.mons.list.find(m => m.id === id);
-    if (!mon) return { success: false, message: "精灵不存在" };
+    if (!mon) return { success: false, message: "萌灵不存在" };
 
     const itemCount = state.res.luckyEgg?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
@@ -137,14 +137,14 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
     const duration = 3600000; // 1小时
     mon.buffs.luckyEgg = currentTime + duration;
 
-    addLog(`使用幸运蛋：${mon.name} 获得1小时经验加成（1.5倍）`);
+    addLog(`使用福缘蛋：${mon.name} 获得1小时经验加成（1.5倍）`);
     return { success: true, message: `${mon.name} 获得了经验加成效果！` };
   }
 
   function useMegaStone(monId) {
     const id = Number(monId);
     const mon = state.mons.list.find(m => m && m.id === id);
-    if (!mon) return { success: false, message: "精灵不存在" };
+    if (!mon) return { success: false, message: "萌灵不存在" };
 
     const itemCount = state.res.megaStone?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
@@ -169,8 +169,8 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
         ? Math.max(0, state.shinyCharmRemainingSec)
         : 0;
     state.shinyCharmRemainingSec = remaining + 86400;
-    addLog("使用闪耀护符：闪光率 x2（24小时）");
-    return { success: true, message: "闪耀护符已激活！" };
+    addLog("使用虹彩护符：闪光率 x2（24小时）");
+    return { success: true, message: "虹彩护符已激活！" };
   }
 
   /** 能量饮料：回复采集充能 */
@@ -220,12 +220,12 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
     return { success: true, message: "高级搜索次数已回复！" };
   }
 
-  /** 安抚之铃：全队亲密度 +3 */
+  /** 暖心铃：全队亲密度 +3 */
   function useSootheBell() {
     const itemCount = state.res.sootheBell?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
     const list = Array.isArray(state.mons?.list) ? state.mons.list : [];
-    if (list.length === 0) return { success: false, message: "没有精灵" };
+    if (list.length === 0) return { success: false, message: "没有萌灵" };
     let raised = 0;
     for (const mon of list) {
       if (!mon) continue;
@@ -236,8 +236,8 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
     }
     if (raised === 0) return { success: false, message: "全体亲密度已满" };
     state.res.sootheBell.value = Math.max(0, itemCount - 1);
-    addLog(`使用安抚之铃：${raised} 只精灵亲密度 +3`);
-    return { success: true, message: `${raised} 只精灵亲密度提升了！` };
+    addLog(`使用暖心铃：${raised} 只萌灵亲密度 +3`);
+    return { success: true, message: `${raised} 只萌灵亲密度提升了！` };
   }
 
   return {

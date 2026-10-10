@@ -1,10 +1,10 @@
 /**
- * Award a caught Pokémon — shared by app.js and headless player-sim.
+ * Award a caught beast — shared by app.js and headless player-sim.
  */
 import { bumpSessionCatch } from "../systems/gameplay_fun.js";
 import { noteShinySpecies } from "../systems/collection_fun.js";
 
-export function awardCaughtPokemon(state, species, opts, ctx) {
+export function awardCaughtBeast(state, species, opts, ctx) {
   const p = species;
   if (!p?.id) return null;
 

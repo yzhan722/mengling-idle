@@ -83,7 +83,7 @@ export function createBossBullySystem({
 
     try {
       const base = lbBaseUrl();
-      const name = typeof ui.lbName === "string" && ui.lbName.trim() ? ui.lbName.trim() : "训练家";
+      const name = typeof ui.lbName === "string" && ui.lbName.trim() ? ui.lbName.trim() : "育灵师";
       const res = await lbFetchJson(`${base}/api/server/boss/bully/claim`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

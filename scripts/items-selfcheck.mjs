@@ -9,7 +9,7 @@ function makeHarness(overrides = {}) {
       list: [
         {
           id: 7,
-          name: "测试精灵",
+          name: "测试萌灵",
           iv: { hp: 1, atk: 1, def: 1, spa: 1, spd: 1, spe: 1 },
           affection: 0,
         },

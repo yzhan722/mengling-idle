@@ -17,7 +17,7 @@ export function drawShinyShareCard(payload) {
   ctx.fillText("闪光馆", 32, 56);
   ctx.fillStyle = "rgba(255,255,255,0.92)";
   ctx.font = "16px sans-serif";
-  ctx.fillText(`${unique} 只独特闪光 — 宝可梦放置冒险`, 32, 92);
+  ctx.fillText(`${unique} 只独特闪光 — 萌灵放置冒险`, 32, 92);
   ctx.font = "18px sans-serif";
   entries.slice(0, 8).forEach((e, i) => {
     ctx.fillStyle = i % 2 === 0 ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.7)";

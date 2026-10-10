@@ -10,7 +10,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
     }
 
     const groups = new Map();
-    const groupOrder = ["树果", "球果", "碎片", "研究", "精灵球", "功能建筑", "存储"];
+    const groupOrder = ["灵果", "灵木", "灵晶", "研究", "灵球", "功能建筑", "存储"];
     for (const k of groupOrder) groups.set(k, []);
 
     const auto = state.auto && typeof state.auto === "object" ? state.auto : null;

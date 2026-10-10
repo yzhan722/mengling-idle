@@ -19,20 +19,20 @@ export function createTabBadgeSystem({ elTabs, getState, defs }) {
       if (canResearch) badges["science"] = true;
     } catch {}
 
-    // 捕捉Tab：有精灵球且已解锁捕捉
+    // 捕捉Tab：有灵球且已解锁捕捉
     try {
       if (state.unlocks?.pokeball && (state.res?.pokeball?.value ?? 0) > 0) {
         badges["capture"] = true;
       }
     } catch {}
 
-    // 功能Tab：有训练槽空位且有精灵
+    // 功能Tab：有训练槽空位且有萌灵
     try {
       const monCount = state.mons?.list?.length ?? 0;
       if (monCount > 0) badges["functions"] = true;
     } catch {}
 
-    // 精灵Tab：有精灵
+    // 萌灵Tab：有萌灵
     try {
       if ((state.mons?.list?.length ?? 0) > 0) badges["mons"] = true;
     } catch {}

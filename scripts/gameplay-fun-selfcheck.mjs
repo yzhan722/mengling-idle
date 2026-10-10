@@ -376,10 +376,10 @@ import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS, isoW
 
 {
   const meta = {};
-  assert.equal(canClaimDexRegion(meta, "kanto"), true, "dex region claimable");
-  assert.equal(markDexRegionClaimed(meta, "kanto"), true, "dex claim once");
-  assert.equal(canClaimDexRegion(meta, "kanto"), false, "dex claimed");
-  assert.equal(markDexRegionClaimed(meta, "kanto"), false, "no double claim");
+  assert.equal(canClaimDexRegion(meta, "meadow"), true, "dex region claimable");
+  assert.equal(markDexRegionClaimed(meta, "meadow"), true, "dex claim once");
+  assert.equal(canClaimDexRegion(meta, "meadow"), false, "dex claimed");
+  assert.equal(markDexRegionClaimed(meta, "meadow"), false, "no double claim");
 }
 
 {

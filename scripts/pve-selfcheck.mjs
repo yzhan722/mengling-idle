@@ -130,7 +130,7 @@ try {
   const ch4 = PVE_CHAPTERS.find((c) => c.id === "4");
   assert(ch4 && ch4.unlockDex === 90 && ch4.stages.length >= 4, "chapter 4 has 4+ stages @ dex 90");
   assert(ch4.stages[0].id === "4-1" && ch4.stages[0].unlockReq === null, "4-1 first stage open");
-  assert(ch4.name.includes("神奥"), "chapter 4 sinnoh name");
+  assert(ch4.name.includes("峰顶"), "chapter 4 peak name");
 } finally {
   Math.random = realRandom;
 }

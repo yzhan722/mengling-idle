@@ -15,14 +15,10 @@ const PRECACHE_URLS = [
   './assets/donate_qr.jpg',
 ];
 
-// 数据文件（pokemon data）单独缓存，版本更新时一并清除
+// 萌灵数据文件单独缓存，版本更新时一并清除
 const DATA_URLS = [
-  './data/pokemon_zh.js',
-  './data/pokemon_tier.js',
-  './data/pokemon_catch_rate.js',
-  './data/pokemon_evo.js',
-  './data/pokemon_evo_req.js',
-  './data/pokemon_types.js',
+  './data/beasts_zh.js',
+  './data/beasts.js',
 ];
 
 self.addEventListener('install', (event) => {
@@ -66,7 +62,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // pokemon data 文件：Cache First（数据量大，版本号变化时自动miss）
+  // 萌灵 data 文件：Cache First（数据量大，版本号变化时自动miss）
   if (url.pathname.startsWith('/data/')) {
     event.respondWith(
       caches.open(DATA_CACHE).then((cache) =>

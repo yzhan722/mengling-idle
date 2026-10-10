@@ -86,7 +86,7 @@ export function releaseMonIds(state, ids, ctx = {}) {
   state.mons.list = state.mons.list.filter((m) => {
     if (!m || !idSet.has(m.id)) return true;
     candy += releaseCandyRefund(monPower(m));
-    if (sampleNames.length < 3) sampleNames.push(m.name || "未知精灵");
+    if (sampleNames.length < 3) sampleNames.push(m.name || "未知萌灵");
     removed += 1;
     return false;
   });
