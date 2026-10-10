@@ -36,7 +36,7 @@ body {
 
 body {
   margin: 0;
-  padding-top: calc(var(--ticker-h) + var(--world-pulse-h));
+  padding-top: var(--ticker-h);
   font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
   color: var(--text);
   background: radial-gradient(1200px 600px at 20% -10%, rgba(239, 68, 68, 0.20), transparent 60%),
@@ -109,22 +109,13 @@ body {
    }
  }
 
+/* 世界脉搏：并入顶栏底部，随顶栏 sticky 一整条 */
 .worldPulse {
-  position: fixed;
-  top: var(--ticker-h);
-  left: 0;
-  right: 0;
-  z-index: 49;
-  height: var(--world-pulse-h);
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
   font-size: 11px;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.62);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(11, 15, 23, 0.72);
-  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.60);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px max(14px, calc((100vw - 1200px) / 2 + 18px)) 5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,19 +123,27 @@ body {
 
 .topbar {
   position: sticky;
-  top: calc(var(--ticker-h) + var(--world-pulse-h));
+  top: var(--ticker-h);
   z-index: 20;
+  border-bottom: 1px solid var(--border);
+  background: rgba(11, 15, 23, 0.82);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* 内容列对齐 .shell（1200 居中），顶栏背景保持全宽 */
+.topbar__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px 20px;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(11, 15, 23, 0.78);
-  backdrop-filter: blur(14px);
+  gap: 8px 16px;
+  flex-wrap: wrap;
 }
 
-/* 左簇：品牌 + 训练家横排 */
+/* 左簇：品牌 + 育灵师横排 */
 .topbar__identity {
   display: flex;
   flex-direction: row;
@@ -175,12 +174,13 @@ body {
   flex: 0 0 auto;
 }
 
-.resources--top {
+/* ponytail: 特异性必须盖过后面定义的通用 .resources(column)，否则筹码变竖排巨卡 */
+.resources.resources--top {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 6px;
-  align-items: stretch;
+  align-items: center;
   justify-content: flex-end;
   margin-left: 0;
   width: max-content;
@@ -191,16 +191,16 @@ body {
 .resources--top .resrow {
   position: relative;
   overflow: hidden;
-  flex: 0 1 128px;
-  width: 128px;
-  min-width: 108px;
+  flex: 0 0 auto;
+  width: 122px;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto auto;
+  align-content: center;
   align-items: center;
   gap: 1px 8px;
-  padding: 6px 10px 8px;
-  border-radius: 12px;
+  padding: 5px 10px 7px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 220, 160, 0.14);
   background: rgba(255, 236, 200, 0.045);
 }
@@ -275,7 +275,7 @@ body {
 
 /* 中宽屏：右簇可换行，避免挤压身份 */
 @media (max-width: 1100px) {
-  .topbar {
+  .topbar__inner {
     flex-wrap: wrap;
   }
   .topbar__ops {
@@ -283,7 +283,7 @@ body {
     flex-wrap: wrap;
     justify-content: flex-end;
   }
-  .resources--top {
+  .resources.resources--top {
     flex-wrap: wrap;
     max-width: 100%;
   }
@@ -1577,7 +1577,8 @@ body {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 10px;
-  flex: 1;
+  /* ponytail: flex:1 的 basis:0 会让 height 失效，resize 拖不动；改 auto 由 height 撑开 */
+  flex: 0 0 auto;
   min-height: 220px;
   overflow: auto;
   background: rgba(0, 0, 0, 0.18);
@@ -1587,6 +1588,7 @@ body {
   min-height: 0;
   max-height: 120px;
   overflow: hidden;
+  resize: none;
 }
 
 .bottomLog {
@@ -1670,7 +1672,7 @@ body {
   animation: captureFail 0.5s ease-in-out;
 }
 
-/* 精灵进化动画 */
+/* 萌灵进化动画 */
 @keyframes evolutionStart {
   0% { opacity: 1; transform: scale(1); }
   100% { opacity: 0; transform: scale(0.5) rotate(180deg); }
@@ -1689,7 +1691,7 @@ body {
   animation: evolutionEnd 1s ease-in-out;
 }
 
-/* 闪光精灵特效 */
+/* 闪光萌灵特效 */
 @keyframes shinySparkle {
   0%, 100% { filter: brightness(1) drop-shadow(0 0 0 rgba(255, 215, 0, 0)); }
   50% { filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 215, 0, 0.8)); }
@@ -1742,7 +1744,7 @@ body {
   filter: brightness(1.3);
 }
 
-/* 闪光精灵跑马灯效果 */
+/* 闪光萌灵跑马灯效果 */
 @keyframes shinyMarquee {
   0% { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }
@@ -1773,7 +1775,7 @@ body {
   pointer-events: none;
 }
 
-/* 星星闪烁效果（闪光精灵） */
+/* 星星闪烁效果（闪光萌灵） */
 @keyframes starTwinkle {
   0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
   50% { opacity: 1; transform: scale(1) rotate(180deg); }
@@ -2153,7 +2155,7 @@ body {
   background: #2196f3;
 }
 
-/* ========== 训练家等级条 ========== */
+/* ========== 育灵师等级条 ========== */
 .trainerLevel {
   padding: 4px 8px 6px;
   margin-bottom: 4px;
@@ -2342,12 +2344,11 @@ body {
 @media (max-width: 768px) {
 
   /* Safe area + topbar：身份一行，操作簇整行 */
-  .topbar {
+  .topbar__inner {
     padding: 10px 14px;
     padding-top: calc(10px + env(safe-area-inset-top, 0px));
     padding-left:  max(14px, env(safe-area-inset-left, 0px));
     padding-right: max(14px, env(safe-area-inset-right, 0px));
-    flex-wrap: wrap;
     gap: 10px 12px;
   }
   .topbar__identity {
@@ -2361,7 +2362,7 @@ body {
     flex-wrap: wrap;
     justify-content: flex-start;
   }
-  .resources--top {
+  .resources.resources--top {
     margin-left: 0;
     width: 100%;
     max-width: none;
@@ -2371,7 +2372,7 @@ body {
   .resources--top .resrow {
     width: auto;
     flex: 1 1 calc(33.33% - 6px);
-    min-width: 100px;
+    min-width: 104px;
     max-width: 180px;
   }
   .brand__title {
@@ -2443,6 +2444,12 @@ body {
   }
   .actions > * {
     width: 100%;
+  }
+  /* 小按钮/分页按钮行内排列，不再独占整行 */
+  .actions > .btn--small,
+  .actions > .muted {
+    width: auto;
+    flex: 0 1 auto;
   }
   .input {
     min-width: 0;
@@ -2563,7 +2570,7 @@ body {
 /* ---- 480px 断点 ------------------------------------------ */
 @media (max-width: 480px) {
 
-  .topbar {
+  .topbar__inner {
     padding: 8px 12px;
     padding-top: calc(8px + env(safe-area-inset-top, 0px));
   }
@@ -3011,7 +3018,8 @@ body::before {
   0%   { opacity: 0.6; transform: scale(1) translateY(0); }
   100% { opacity: 1;   transform: scale(1.04) translateY(-8px); }
 }
-.topbar, .shell, .bottomLog, .footer, #overlays { position: relative; z-index: 1; }
+/* ponytail: .topbar 不能进这个组——relative 会覆盖它的 sticky，顶栏失效 */
+.shell, .bottomLog, .footer, #overlays { position: relative; z-index: 1; }
 
 /* 2. 面板边框发光 */
 .sidebar {
@@ -3208,11 +3216,11 @@ body::before {
 }
 .log-line--system { color: var(--muted); font-style: italic; }
 
-/* 8. 精灵行视觉升级 */
+/* 8. 萌灵行视觉升级 */
 #monList .row {
   transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
-/* shiny 精灵行 — 金色边框 */
+/* shiny 萌灵行 — 金色边框 */
 .row--shiny-mon {
   border-color: rgba(250,204,21,0.35) !important;
   background: rgba(250,204,21,0.04) !important;
@@ -3221,7 +3229,7 @@ body::before {
   color: var(--primary);
   text-shadow: 0 0 10px rgba(250,204,21,0.3);
 }
-/* 神兽行 */
+/* 幻灵行 */
 .row--mythic-mon {
   border-color: rgba(239,68,68,0.35) !important;
   background: rgba(239,68,68,0.04) !important;
@@ -3230,7 +3238,7 @@ body::before {
   color: rgba(239,68,68,0.95);
   text-shadow: 0 0 10px rgba(239,68,68,0.25);
 }
-/* 精灵战力数字 */
+/* 萌灵战力数字 */
 .mon-power-badge {
   font-family: 'Rajdhani', monospace;
   font-weight: 700;
@@ -3238,7 +3246,7 @@ body::before {
   color: rgba(250,204,21,0.9);
   letter-spacing: 0.5px;
 }
-/* 精灵等级徽章 */
+/* 萌灵等级徽章 */
 .mon-level-badge {
   display: inline-flex;
   align-items: center;
@@ -3626,6 +3634,9 @@ body::before {
   .log {
     min-height: 72px;
     max-height: 140px;
+    height: auto;
+    /* ponytail: 移动端 resize 手柄不支持触摸，折叠/展开走 logToggle 按钮 */
+    resize: none;
   }
 
   .sidebar--log {
@@ -3757,12 +3768,16 @@ body {
   background:
     linear-gradient(180deg, rgba(255, 236, 200, 0.04) 0%, rgba(0, 0, 0, 0.12) 100%);
   align-self: start;
-  max-height: min(72vh, 720px);
+  /* ponytail: 上限要容下「公告展开 + 日志拖满 480」，否则 aside 的 overflow:hidden 会裁掉日志底边和拖拽手柄 */
+  max-height: min(88vh, 900px);
   overflow: hidden;
 }
 
 .log {
   min-height: 64px;
+  /* ponytail: 默认高度；用户拖拽后浏览器写内联 height 覆盖 */
+  height: clamp(160px, 34vh, 300px);
+  /* 上限：拖拽被 max-height 夹住 */
   max-height: min(52vh, 480px);
   border-color: rgba(255, 220, 160, 0.10);
   background:
@@ -3777,6 +3792,19 @@ body {
   background:
     radial-gradient(120px 60px at 50% 30%, rgba(250, 204, 21, 0.08), transparent 70%),
     rgba(30, 20, 8, 0.28);
+}
+
+/* ponytail: 空日志时回到内容高度，不占默认 300px */
+.log:has(> .log__empty) {
+  height: auto;
+  resize: none;
+}
+
+/* ponytail: 拖拽仅桌面端——媒体查询写在本规则之后才不会被上面的 .log 抛光规则压掉；移动端走 logToggle 展开/收起 */
+@media (min-width: 769px) {
+  .log {
+    resize: vertical;
+  }
 }
 
 .resrow {
