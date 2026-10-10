@@ -121,12 +121,12 @@ for (const id of roster) {
 }
 
 // 找出未覆盖类型
-const ALL_TYPES = ["normal","fire","water","grass","electric","ice","fighting","poison","ground","flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy"];
+const ALL_TYPES = ["fire","water","grass","electric","wind","stone","light","dark","mystic"];
 const missing = ALL_TYPES.filter((t) => !types.has(t));
 
 console.log(`roster size: ${roster.length}`);
 console.log(`tiers: ${JSON.stringify(tiers)}`);
-console.log(`types (${types.size}/18):`);
+console.log(`types (${types.size}/9):`);
 for (const t of ALL_TYPES) console.log(`  ${t.padEnd(9)} ${types.get(t) ?? 0}`);
 if (missing.length) console.log(`MISSING TYPES: ${missing.join(", ")}`);
 console.log("\ndex list:", roster.map((id) => id.slice(1)).join(","));

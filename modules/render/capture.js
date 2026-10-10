@@ -1,7 +1,7 @@
 import { getEraDefById } from "../defs_eras.js";
 import {
   canAdvanceEra,
-  canPrestige,
+  previewPrestige,
   DISTORTION_OPENER_BLURB,
   ensureEra,
   questLabel,
@@ -84,7 +84,8 @@ export function createRenderCapture({
     const eraMainQuests = (era.quests || []).filter((q) => q.kind === "main");
     const eraAllDone = eraMainQuests.every((q) => q.done);
     const eraCanAdvance = canAdvanceEra(state, getCaptureAreas);
-    const eraCanPrestige = canPrestige(state, getCaptureAreas);
+    const eraPreview = previewPrestige(state, getCaptureAreas);
+    const eraCanPrestige = eraPreview.ok;
     const eraQuestHtml = eraMainQuests
       .map((q) => `<div class="era-panel__quest ${q.done ? "is-done" : ""}">${escapeHtml(questLabel(q))}</div>`)
       .join("");
@@ -96,10 +97,10 @@ export function createRenderCapture({
     const eraActionHtml =
       eraCanPrestige
         ? `<button type="button" class="btn btn--ghost btn--small" data-era-prestige>时空歪曲挑战</button>
-           <div class="muted" style="font-size:11px;margin-top:4px">终局软开：保留图鉴与永久加成，重置资源循环。</div>`
+           <div class="muted" style="font-size:11px;margin-top:4px">重置资源循环 · 图鉴与永久加成保留 · 可得灵珀 +${eraPreview.essence}</div>`
         : era.index >= 8
           ? eraAllDone
-            ? `<div class="era-panel__done">已抵达悖论时空${era.prestigeUnlocked ? "" : " · 完成主线可开扭曲"}</div>`
+            ? `<div class="era-panel__done">已抵达悖论时空${eraPreview.reason === "need_shiny" ? " · 需要 1 只闪光萌灵方可转生" : era.prestigeUnlocked ? "" : " · 完成主线可开扭曲"}</div>`
             : ""
           : `<button type="button" class="btn btn--primary btn--small" data-era-advance ${eraCanAdvance ? "" : "disabled"}>迈入下一时代</button>`;
     const lucky = ensureLuckyDay(state);
@@ -459,12 +460,7 @@ export function createRenderCapture({
       const add2 = (typeof techEff2.catchChanceAdd === "number" ? techEff2.catchChanceAdd : 0) + abilityCatchRateAdd(state);
       const fails2 = typeof state.rng?.catchFails === "number" ? state.rng.catchFails : 0;
       const pity2 = Math.min(0.02 * Math.max(0, Math.floor(fails2)), 0.2);
-      const dragonRem2 =
-        typeof state.skills?.dragonCatchBoostRemainingSec === "number" && Number.isFinite(state.skills.dragonCatchBoostRemainingSec)
-          ? Math.max(0, state.skills.dragonCatchBoostRemainingSec)
-          : 0;
-      const dragonAdd2 = dragonRem2 > 0 ? 0.1 : 0;
-      const mult2 = Math.max(0, 1 + add2 + dragonAdd2);
+      const mult2 = Math.max(0, 1 + add2);
       const selectedBallPreview = ui.selectedBallType || "pokeball";
       const caughtN = enc && caughtMap && typeof caughtMap[enc.id] === "number" ? caughtMap[enc.id] : 0;
       const localTypes = globalThis.BEAST_TYPES;

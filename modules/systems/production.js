@@ -3,6 +3,7 @@
 // 纯函数不写 state；apply*/ensure* 显式写回
 
 import { natureResProdMul } from "./gameplay_fun.js";
+import { legacyProdMul } from "./rebirth.js";
 
 /**
  * 建筑 effects 汇总为产量/上限/解锁字段
@@ -229,12 +230,6 @@ export function computeUnlockedResourceRates(state, techEff) {
 export function finalizeProductionRates(eff, state, serverProdMul) {
   if (!eff) return eff;
 
-  const normalStacks = Array.isArray(state?.skills?.normalBoostStacks) ? state.skills.normalBoostStacks.length : 0;
-  const normalMul = Math.max(1, 1 + normalStacks);
-  eff.catnipPerSec *= normalMul;
-  eff.woodPerSec *= normalMul;
-  eff.mineralsPerSec *= normalMul;
-
   eff.catnipPerSec *= 0.5;
   eff.woodPerSec *= 0.5;
   eff.mineralsPerSec *= 0.5;
@@ -244,7 +239,7 @@ export function finalizeProductionRates(eff, state, serverProdMul) {
   eff.woodPerSec *= sb;
   eff.mineralsPerSec *= sb;
 
-  const permProdMul = permanentBoostMul(state?.permanentBoosts?.production);
+  const permProdMul = permanentBoostMul(state?.permanentBoosts?.production) * legacyProdMul(state);
   if (permProdMul > 1) {
     eff.catnipPerSec *= permProdMul;
     eff.woodPerSec *= permProdMul;

@@ -11,7 +11,7 @@ export const PVE_CHAPTERS = [
     stages: [
       {
         id: "1-1", name: "萌芽林道",
-        type: "bug",
+        type: "grass",
         enemies: [
           { dex: 10, name: "毛茸茸", lvl: 3, stars: 0 },
           { dex: 13, name: "角尖尖", lvl: 3, stars: 0 },
@@ -22,7 +22,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "1-2", name: "碎石岩场",
-        type: "rock",
+        type: "stone",
         enemies: [
           { dex: 74, name: "石蛋蛋", lvl: 12, stars: 0 },
           { dex: 95, name: "石长长", lvl: 14, stars: 1 },
@@ -67,7 +67,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "1-6", name: "瘴雾湿地",
-        type: "poison",
+        type: "dark",
         enemies: [
           { dex: 41, name: "嗡蝠蝠", lvl: 37, stars: 0 },
           { dex: 42, name: "呲牙蝠", lvl: 39, stars: 0 },
@@ -91,7 +91,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "1-8", name: "大地圣殿",
-        type: "ground",
+        type: "stone",
         enemies: [
           { dex: 28, name: "披甲滚", lvl: 42, stars: 1 },
           { dex: 31, name: "荆棘后", lvl: 44, stars: 1 },
@@ -110,7 +110,7 @@ export const PVE_CHAPTERS = [
     stages: [
       {
         id: "2-1", name: "风语高台",
-        type: "flying",
+        type: "wind",
         enemies: [
           { dex: 16, name: "啾啾", lvl: 7, stars: 0 },
           { dex: 17, name: "咕啾", lvl: 9, stars: 0 },
@@ -121,7 +121,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "2-2", name: "虫鸣竹林",
-        type: "bug",
+        type: "grass",
         enemies: [
           { dex: 11, name: "茧团团", lvl: 14, stars: 0 },
           { dex: 212, name: "钢钳侠", lvl: 16, stars: 1 },
@@ -132,7 +132,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "2-3", name: "金穗牧场",
-        type: "normal",
+        type: "wind",
         enemies: [
           { dex: 35, name: "月团团", lvl: 18, stars: 0 },
           { dex: 242, name: "天使蛋", lvl: 20, stars: 1 },
@@ -143,7 +143,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "2-4", name: "幽影古塔",
-        type: "ghost",
+        type: "dark",
         enemies: [
           { dex: 92, name: "雾团子", lvl: 21, stars: 0 },
           { dex: 93, name: "影爪爪", lvl: 23, stars: 0 },
@@ -155,7 +155,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "2-5", name: "浪击拳馆",
-        type: "fighting",
+        type: "stone",
         enemies: [
           { dex: 66, name: "拳头崽", lvl: 25, stars: 0 },
           { dex: 67, name: "壮壮臂", lvl: 28, stars: 1 },
@@ -167,7 +167,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "2-6", name: "钢脊矿洞",
-        type: "steel",
+        type: "stone",
         enemies: [
           { dex: 81, name: "磁豆豆", lvl: 30, stars: 0 },
           { dex: 82, name: "磁三连", lvl: 35, stars: 1 },
@@ -179,7 +179,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "2-7", name: "霜晶冰湖",
-        type: "ice",
+        type: "wind",
         enemies: [
           { dex: 131, name: "浪歌鲸", lvl: 27, stars: 0 },
           { dex: 583, name: "双球冰", lvl: 31, stars: 1 },
@@ -191,7 +191,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "2-8", name: "龙眠深窟",
-        type: "dragon",
+        type: "mystic",
         enemies: [
           { dex: 148, name: "丝带龙", lvl: 37, stars: 1 },
           { dex: 148, name: "丝带龙", lvl: 37, stars: 1 },
@@ -222,7 +222,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "3-2", name: "岩拳道场",
-        type: "fighting",
+        type: "stone",
         enemies: [
           { dex: 66, name: "拳头崽", lvl: 30, stars: 0 },
           { dex: 67, name: "壮壮臂", lvl: 34, stars: 1 },
@@ -255,7 +255,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "3-5", name: "幽灯庭院",
-        type: "ghost",
+        type: "dark",
         enemies: [
           { dex: 92, name: "雾团子", lvl: 36, stars: 1 },
           { dex: 93, name: "影爪爪", lvl: 42, stars: 2 },
@@ -274,7 +274,7 @@ export const PVE_CHAPTERS = [
     stages: [
       {
         id: "4-1", name: "黑石矿坑",
-        type: "rock",
+        type: "stone",
         enemies: [
           { dex: 111, name: "犀角墩", lvl: 38, stars: 0 },
           { dex: 112, name: "钻角犀", lvl: 44, stars: 1 },
@@ -296,7 +296,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "4-3", name: "雪岭营地",
-        type: "ice",
+        type: "wind",
         enemies: [
           { dex: 613, name: "鼻涕熊", lvl: 42, stars: 1 },
           { dex: 614, name: "冰川熊", lvl: 48, stars: 2 },
@@ -307,7 +307,7 @@ export const PVE_CHAPTERS = [
       },
       {
         id: "4-4", name: "巅峰之路",
-        type: "dragon",
+        type: "mystic",
         enemies: [
           { dex: 147, name: "迷你蛟", lvl: 44, stars: 1 },
           { dex: 148, name: "丝带龙", lvl: 50, stars: 2 },

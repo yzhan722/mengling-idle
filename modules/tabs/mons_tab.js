@@ -148,16 +148,9 @@ export function initMonsTab({
 
       if (!state.skills || typeof state.skills !== "object") {
         state.skills = {
-          trainingStacks: [],
-          normalBoostStacks: [],
           hugeBerryBuffRemainingSec: 0,
-          steelBallDiscountCharges: 0,
-          psychicCraftBoostCharges: 0,
-          iceSatietySlowRemainingSec: 0,
           fairyAffGainRemainingSec: 0,
-          dragonCatchBoostRemainingSec: 0,
           rockBuildBoostRemainingSec: 0,
-          poisonResourceSaveRemainingSec: 0,
           darkPveDamageBoostRemainingSec: 0,
         };
       }
@@ -216,22 +209,13 @@ export function initMonsTab({
           return true;
         }
       }
-      if (typeId === "flying") {
+      if (typeId === "wind") {
         const rem0 =
           typeof state.expedition?.remainingSec === "number" && Number.isFinite(state.expedition.remainingSec)
             ? state.expedition.remainingSec
             : 0;
         if (!(Boolean(state.expedition?.on) && rem0 > 0)) {
           addLog("技能失败：当前没有探险任务", true);
-          return true;
-        }
-      }
-      if (typeId === "ghost") {
-        const cooling = (state.mons?.list ?? []).some(
-          (x) => x && x.id !== mon.id && typeof x.skillCdRemainingSec === "number" && x.skillCdRemainingSec > 0
-        );
-        if (!cooling) {
-          addLog("技能失败：没有其他冷却中的萌灵", true);
           return true;
         }
       }
@@ -243,13 +227,8 @@ export function initMonsTab({
       const skillName = TYPE_SKILLS?.[typeId] ?? "技能";
       const typeZh = TYPE_ZH?.[typeId] ?? typeId;
 
-      if (typeId === "fighting") {
-        if (!Array.isArray(state.skills.trainingStacks)) state.skills.trainingStacks = [];
-        state.skills.trainingStacks.push(3600);
-        const n = state.skills.trainingStacks.length;
-        addLog(`技能：${skillName}（${typeZh}）→ 训练场叠加 +1（当前 ${n} 层）`, true);
-      } else if (typeId === "bug") {
-        const jokes = ["林佬：不准卷了！", "林佬：我血条呢？", "林佬：这也太虫了…", "林佬：已被精神污染", "林佬：你礼貌吗？"];
+      if (typeId === "mystic") {
+        const jokes = ["林佬：不准卷了！", "林佬：我血条呢？", "林佬：这也太狠了…", "林佬：已被精神污染", "林佬：你礼貌吗？"];
         const msg = jokes[Math.floor(Math.random() * jokes.length)];
 
         if (typeof lbFetchJson !== "function" || typeof lbBaseUrl !== "function") {
@@ -303,10 +282,6 @@ export function initMonsTab({
           }
         })();
         return true;
-      } else if (typeId === "ground") {
-        mon.skillActiveType = "ground";
-        mon.skillActiveRemainingSec = 600;
-        addLog(`技能：${skillName}（${typeZh}）→ 进入挖矿状态（10分钟）`, true);
       } else if (typeId === "electric") {
         const before = typeof state.research.remainingSec === "number" && Number.isFinite(state.research.remainingSec) ? state.research.remainingSec : 0;
         const after = Math.max(0, before - 600);
@@ -336,80 +311,26 @@ export function initMonsTab({
           best.m.skillActiveRemainingSec = next;
           addLog(`技能：${skillName}（${typeZh}）→ 果树加速 -10分钟`, true);
         }
-      } else if (typeId === "normal") {
-        if (!Array.isArray(state.skills.normalBoostStacks)) state.skills.normalBoostStacks = [];
-        state.skills.normalBoostStacks.push(60);
-        const n = state.skills.normalBoostStacks.length;
-        addLog(`技能：${skillName}（${typeZh}）→ 资源产量提升（当前叠加 ${n} 层）`, true);
-      } else if (typeId === "ghost") {
-        // 施放后自己已进 CD；折磨目标排除自己，真正帮到队友
-        const targets = (state.mons?.list ?? []).filter(
-          (x) => x && x.id !== mon.id && typeof x.skillCdRemainingSec === "number" && x.skillCdRemainingSec > 0
-        );
-        if (targets.length === 0) {
-          addLog(`技能：${skillName}（${typeZh}）→ 没有其他冷却中的萌灵`, true);
-        } else {
-          const t = targets[Math.floor(Math.random() * targets.length)];
-          t.skillCdRemainingSec = Math.ceil((t.skillCdRemainingSec ?? 0) / 2);
-          addLog(`技能：${skillName}（${typeZh}）→ ${t.name} 的冷却时间减半`, true);
-        }
-      } else if (typeId === "steel") {
-        const c0 =
-          typeof state.skills.steelBallDiscountCharges === "number" && Number.isFinite(state.skills.steelBallDiscountCharges)
-            ? Math.max(0, Math.floor(state.skills.steelBallDiscountCharges))
-            : 0;
-        const c1 = Math.min(1000000, c0 + 100);
-        state.skills.steelBallDiscountCharges = c1;
-        addLog(`技能：${skillName}（${typeZh}）→ 灵球成本 -10%（下 ${c1} 次制作）`, true);
-      } else if (typeId === "ice") {
-        const rem0 =
-          typeof state.skills.iceSatietySlowRemainingSec === "number" && Number.isFinite(state.skills.iceSatietySlowRemainingSec)
-            ? Math.max(0, state.skills.iceSatietySlowRemainingSec)
-            : 0;
-        state.skills.iceSatietySlowRemainingSec = rem0 + 3600;
-        addLog(`技能：${skillName}（${typeZh}）→ 饱腹自然下降减慢（60分钟）`, true);
-      } else if (typeId === "fairy") {
+      } else if (typeId === "light") {
         const rem0 =
           typeof state.skills.fairyAffGainRemainingSec === "number" && Number.isFinite(state.skills.fairyAffGainRemainingSec)
             ? Math.max(0, state.skills.fairyAffGainRemainingSec)
             : 0;
         state.skills.fairyAffGainRemainingSec = rem0 + 3600;
         addLog(`技能：${skillName}（${typeZh}）→ 亲密度增长加速（60分钟）`, true);
-      } else if (typeId === "dragon") {
-        const rem0 =
-          typeof state.skills.dragonCatchBoostRemainingSec === "number" && Number.isFinite(state.skills.dragonCatchBoostRemainingSec)
-            ? Math.max(0, state.skills.dragonCatchBoostRemainingSec)
-            : 0;
-        state.skills.dragonCatchBoostRemainingSec = rem0 + 600;
-        addLog(`技能：${skillName}（${typeZh}）→ 捕获率提升（10分钟）`, true);
-      } else if (typeId === "psychic") {
-        const c0 =
-          typeof state.skills.psychicCraftBoostCharges === "number" && Number.isFinite(state.skills.psychicCraftBoostCharges)
-            ? Math.max(0, Math.floor(state.skills.psychicCraftBoostCharges))
-            : 0;
-        const c1 = Math.min(1000000, c0 + 10);
-        state.skills.psychicCraftBoostCharges = c1;
-        addLog(`技能：${skillName}（${typeZh}）→ 合成效率提升（下 ${c1} 次）`, true);
-      } else if (typeId === "flying") {
+      } else if (typeId === "wind") {
         const rem0 =
           typeof state.expedition?.remainingSec === "number" && Number.isFinite(state.expedition.remainingSec) ? state.expedition.remainingSec : 0;
         const after = Math.max(0, rem0 - 1800);
         state.expedition.remainingSec = after;
         addLog(`技能：${skillName}（${typeZh}）→ 探险剩余时间 -30分钟`, true);
-      } else if (typeId === "rock") {
+      } else if (typeId === "stone") {
         const rem0 =
           typeof state.skills.rockBuildBoostRemainingSec === "number" && Number.isFinite(state.skills.rockBuildBoostRemainingSec)
             ? Math.max(0, state.skills.rockBuildBoostRemainingSec)
             : 0;
         state.skills.rockBuildBoostRemainingSec = rem0 + 3600;
         addLog(`技能：${skillName}（${typeZh}）→ 建筑成本降低 20%（60分钟）`, true);
-      } else if (typeId === "poison") {
-        const rem0 =
-          typeof state.skills.poisonResourceSaveRemainingSec === "number" && Number.isFinite(state.skills.poisonResourceSaveRemainingSec)
-            ? Math.max(0, state.skills.poisonResourceSaveRemainingSec)
-            : 0;
-        state.skills.poisonResourceSaveRemainingSec = rem0 + 3600;
-        addLog(`技能：${skillName}（${typeZh}）→ 资源消耗减少 20%（60分钟）`, true);
       } else if (typeId === "dark") {
         const rem0 =
           typeof state.skills.darkPveDamageBoostRemainingSec === "number" && Number.isFinite(state.skills.darkPveDamageBoostRemainingSec)

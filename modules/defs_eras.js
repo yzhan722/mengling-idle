@@ -20,7 +20,7 @@ export const ERA_DEFS = [
     name: "秘传乡里",
     blurb: "秘传乡里的灵果香气招来草系与普通系。",
     pveHint: "秘传乡里：带上草系伙伴，挑战前先看推荐属性。",
-    encounterBias: { typeBoost: { grass: 1.35, normal: 1.35 } },
+    encounterBias: { typeBoost: { grass: 1.35, wind: 1.35 } },
     logOnEnter: "迈入了「秘传乡里」——灵果的香气弥漫开来。",
     mutators: ["berryYield_12"],
     quests: [
@@ -35,7 +35,7 @@ export const ERA_DEFS = [
     name: "化石苏醒",
     blurb: "化石馆的尘土飞扬——岩石与地面更常见。",
     pveHint: "化石苏醒：岩石与地面伙伴适合打持久挑战。",
-    encounterBias: { typeBoost: { rock: 1.4, ground: 1.4 } },
+    encounterBias: { typeBoost: { stone: 1.4 } },
     logOnEnter: "迈入了「化石苏醒」——化石萌灵的气息变浓了。",
     mutators: ["catchRate_6", "researchTime_m8"],
     quests: [
@@ -50,7 +50,7 @@ export const ERA_DEFS = [
     name: "巡礼试炼纪",
     blurb: "试炼场的气息：战斗型更活跃。",
     pveHint: "巡礼试炼纪：优先用推荐属性打挑战页。",
-    encounterBias: { typeBoost: { fighting: 1.25, electric: 1.15, water: 1.15 }, tierBoost: { rare: 1.15 } },
+    encounterBias: { typeBoost: { stone: 1.25, electric: 1.15, water: 1.15 }, tierBoost: { rare: 1.15 } },
     logOnEnter: "迈入了「巡礼试炼纪」——挑战试炼的时代开始了。",
     mutators: ["pokeballGain_10", "encounterRefresh_fast"],
     quests: [

@@ -30,7 +30,6 @@ const criticalFiles = [
   "functions/api/iap/grant.js",
   "modules/app/capture_award.js",
   "modules/analytics.js",
-  "modules/daily_tasks.js",
   "modules/systems/era.js",
   "functions/api/health.js",
   "migrations/007_daily_tasks_progress.sql",
@@ -49,7 +48,6 @@ assert(donateQrPath().includes("donate_qr"), "donate qr path");
 
 const childChecks = [
   "analytics-selfcheck.mjs",
-  "daily_tasks-selfcheck.mjs",
   "era-selfcheck.mjs",
   "migrations-selfcheck.mjs",
   "save-stress-selfcheck.mjs",

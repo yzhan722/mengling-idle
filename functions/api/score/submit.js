@@ -32,6 +32,7 @@ export async function onRequest(context) {
   const gatherClicks = Math.max(0, intOr(body.gatherClicks, 0));
   const resourceProduced = Math.max(0, intOr(body.resourceProduced, 0));
   const catchCount = Math.max(0, intOr(body.catchCount, 0));
+  const rebirthCount = Math.max(0, intOr(body.rebirthCount, 0));
   const gameVersion = clampStr(body.gameVersion, 32);
   const topMons = Array.isArray(body.topMons) ? body.topMons.slice(0, 6) : [];
   const topMonsJson = JSON.stringify(topMons);
@@ -48,12 +49,13 @@ export async function onRequest(context) {
     db,
     `INSERT INTO scores(
       uid, name, dexCount, power, totalPower, hatchCount, shinyCount,
-      gatherClicks, resourceProduced, catchCount, updatedAt, gameVersion, topMonsJson, avatarDataUrl, profile_json
-    ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      gatherClicks, resourceProduced, catchCount, rebirthCount, updatedAt, gameVersion, topMonsJson, avatarDataUrl, profile_json
+    ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     ON CONFLICT(uid) DO UPDATE SET
       name=excluded.name, dexCount=excluded.dexCount, power=excluded.power, totalPower=excluded.totalPower,
       hatchCount=excluded.hatchCount, shinyCount=excluded.shinyCount, gatherClicks=excluded.gatherClicks,
-      resourceProduced=excluded.resourceProduced, catchCount=excluded.catchCount, updatedAt=excluded.updatedAt,
+      resourceProduced=excluded.resourceProduced, catchCount=excluded.catchCount, rebirthCount=excluded.rebirthCount,
+      updatedAt=excluded.updatedAt,
       gameVersion=excluded.gameVersion, topMonsJson=excluded.topMonsJson, avatarDataUrl=excluded.avatarDataUrl,
       profile_json=excluded.profile_json`,
     [
@@ -67,6 +69,7 @@ export async function onRequest(context) {
       gatherClicks,
       resourceProduced,
       catchCount,
+      rebirthCount,
       updatedAt,
       gameVersion,
       topMonsJson,

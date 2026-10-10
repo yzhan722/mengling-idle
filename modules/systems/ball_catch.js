@@ -7,7 +7,7 @@ export function ballCatchMult(ballType, { types = null, caughtCount = 0, hour = 
     const list = Array.isArray(types) ? types : [];
     for (const t of list) {
       const x = String(t || "").toLowerCase();
-      if (x === "bug" || x === "water" || x === "grass") return 3;
+      if (x === "water" || x === "grass") return 3;
     }
     return 1;
   }

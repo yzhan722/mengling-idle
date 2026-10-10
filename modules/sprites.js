@@ -3,58 +3,40 @@
 import { escapeHtml } from "./utils.js";
 
 const TYPE_PALETTE = {
-  normal:   { main: "#c9b8a6", belly: "#efe6da", accent: "#a08b76" },
+  wind:     { main: "#a9bfe8", belly: "#e4ecfa", accent: "#7d95c4" },
   fire:     { main: "#f08a5a", belly: "#ffd9b3", accent: "#c75b39" },
   water:    { main: "#6ea8e0", belly: "#cfe6fb", accent: "#4a7fb5" },
   grass:    { main: "#8fc16e", belly: "#dff0c8", accent: "#5e8f4a" },
   electric: { main: "#f5cd4f", belly: "#fdf0c0", accent: "#c9a227" },
-  ice:      { main: "#9fd8e8", belly: "#e8f7fb", accent: "#6aa8bd" },
-  fighting: { main: "#d08a6e", belly: "#f2d5c4", accent: "#a05e44" },
-  poison:   { main: "#b58ed6", belly: "#e9daf5", accent: "#8a5fb0" },
-  ground:   { main: "#d9b877", belly: "#f3e5c4", accent: "#a8845a" },
-  flying:   { main: "#a9bfe8", belly: "#e4ecfa", accent: "#7d95c4" },
-  psychic:  { main: "#f08fb8", belly: "#fdd9ea", accent: "#c25f8c" },
-  bug:      { main: "#b8c46a", belly: "#ecf0c8", accent: "#8a9648" },
-  rock:     { main: "#bfae92", belly: "#ece2d0", accent: "#8f7f63" },
-  ghost:    { main: "#a08cc8", belly: "#ddd4f0", accent: "#7362a0" },
-  dragon:   { main: "#8a7de0", belly: "#d8d3f8", accent: "#6156b0" },
+  stone:    { main: "#bfae92", belly: "#ece2d0", accent: "#8f7f63" },
+  light:    { main: "#f2c86a", belly: "#fceccc", accent: "#c89a3e" },
   dark:     { main: "#8a8aa0", belly: "#c9c9d8", accent: "#5a5a72" },
-  steel:    { main: "#a8b4bc", belly: "#dde4e8", accent: "#7a8a94" },
-  fairy:    { main: "#f2a8c8", belly: "#fce0ee", accent: "#c878a0" },
+  mystic:   { main: "#a08ce0", belly: "#ddd4f8", accent: "#6a5ab8" },
 };
 
 // 闪光配色 = 主色对换冷色域（确定性，无需 HSL 转换）
 const SHINY_PALETTE = {
-  normal:   { main: "#9fd8e8", belly: "#e8f7fb", accent: "#6aa8bd" },
+  wind:     { main: "#e8b4a9", belly: "#fae4e0", accent: "#c4897d" },
   fire:     { main: "#f0a85a", belly: "#ffe8b3", accent: "#c77b39" },
   water:    { main: "#6ee0c8", belly: "#cffbee", accent: "#4ab598" },
   grass:    { main: "#c1a86e", belly: "#f0e4c8", accent: "#8f7a4a" },
   electric: { main: "#f5984f", belly: "#fddfc0", accent: "#c96f27" },
-  ice:      { main: "#c8a8e8", belly: "#f0e8fb", accent: "#9678bd" },
-  fighting: { main: "#6ea0d0", belly: "#c4dcf2", accent: "#446ea0" },
-  poison:   { main: "#8ed6b5", belly: "#daf5e9", accent: "#5fb08a" },
-  ground:   { main: "#a8d977", belly: "#e4f3c4", accent: "#7aa85a" },
-  flying:   { main: "#e8b4a9", belly: "#fae4e0", accent: "#c4897d" },
-  psychic:  { main: "#8fb8f0", belly: "#d9e6fd", accent: "#5f88c2" },
-  bug:      { main: "#c46ab8", belly: "#f0c8ec", accent: "#96488a" },
-  rock:     { main: "#92bfae", belly: "#d0ece2", accent: "#638f7f" },
-  ghost:    { main: "#8cc8b8", belly: "#d4f0ea", accent: "#62a08f" },
-  dragon:   { main: "#e08a7d", belly: "#f8d8d3", accent: "#b05e56" },
+  stone:    { main: "#92bfae", belly: "#d0ece2", accent: "#638f7f" },
+  light:    { main: "#a8c8f2", belly: "#e0eafc", accent: "#7896c8" },
   dark:     { main: "#c8a86a", belly: "#e8dcc0", accent: "#967a4a" },
-  steel:    { main: "#bca8a8", belly: "#e8dede", accent: "#8a7272" },
-  fairy:    { main: "#a8c8f2", belly: "#e0eafc", accent: "#7896c8" },
+  mystic:   { main: "#e08a7d", belly: "#f8d8d3", accent: "#b05e56" },
 };
 
 const primaryTypeOf = (dex) => {
   const t = globalThis.BEAST_TYPES?.[String(dex)];
-  return Array.isArray(t) && t.length ? t[0] : "normal";
+  return Array.isArray(t) && t.length ? t[0] : "wind";
 };
 
 // 确定性 hash → 形态参数
 const h = (dex, salt) => ((dex * 2654435761 + salt * 40503) >>> 0) % 100;
 
 function beastSpriteSvg(dex, isShiny) {
-  const pal = (isShiny ? SHINY_PALETTE : TYPE_PALETTE)[primaryTypeOf(dex)] ?? TYPE_PALETTE.normal;
+  const pal = (isShiny ? SHINY_PALETTE : TYPE_PALETTE)[primaryTypeOf(dex)] ?? TYPE_PALETTE.wind;
   const earStyle = h(dex, 1) % 4;      // 0 尖耳 1 圆耳 2 垂耳 3 无耳小角
   const bodySquash = 0.9 + (h(dex, 2) % 20) / 100; // 0.9~1.09 宽高比
   const eyeStyle = h(dex, 3) % 3;      // 0 圆眼 1 眯眯眼 2 豆豆眼

@@ -1,6 +1,6 @@
 // branding-selfcheck.mjs — 去 IP 化红线检查：运行时文件不得再出现宝可梦 IP 词汇。
 // 用法：node scripts/branding-selfcheck.mjs
-// 白名单仅允许：构建期源数据快照 / 生成器 / 存档兼容映射（LEGACY_DEX）。
+// 白名单仅允许：构建期源数据快照 / 生成器 / 本检查脚本自身 / 历史文档。
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -27,7 +27,6 @@ const WHITELIST = [
   /scripts[\/\\]_srcdata[\/\\]/,
   /scripts[\/\\]build-beast-/,
   /scripts[\/\\]branding-selfcheck\.mjs/,
-  /modules[\/\\]beast_defs\.js/, // LEGACY_DEX 存档迁移映射（英文旧键）
   /docs[\/\\]/,                  // 历史文档
   /CHANGELOG|README/i,
 ];

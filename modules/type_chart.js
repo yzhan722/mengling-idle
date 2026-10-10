@@ -1,35 +1,28 @@
 /**
- * 统一属性克制表
- * 所有战斗系统（PvE、PvP）都应使用此模块，避免重复定义和不一致
- * 效果拔群：2x | 无效：0x | 效果不佳：0.5x
+ * 统一属性克制表（9 系 · 原创环克制）
+ * 所有战斗系统（PvE、PvP）都应使用此模块，避免重复定义和不一致。
+ * 效果拔群：2x | 正常：1x —— 不设免疫/减半，每系恰好一个弱点。
+ *
+ * 克制环：火>草>水>火 / 电>风>岩>电 / 光⇄暗 / 幻自克。
  */
 
-// 属性克制表（防御方视角）
+// 属性克制表（防御方视角）：被哪些属性克制
 export const typeChart = {
-  normal:   { weakTo: ["fighting"],                           immuneTo: ["ghost"] },
-  fire:     { weakTo: ["water", "ground", "rock"],            immuneTo: [] },
-  water:    { weakTo: ["electric", "grass"],                  immuneTo: [] },
-  electric: { weakTo: ["ground"],                             immuneTo: [] },
-  grass:    { weakTo: ["fire", "ice", "poison", "flying", "bug"], immuneTo: [] },
-  ice:      { weakTo: ["fire", "fighting", "rock", "steel"],  immuneTo: [] },
-  fighting: { weakTo: ["flying", "psychic", "fairy"],        immuneTo: [] },
-  poison:   { weakTo: ["ground", "psychic"],                 immuneTo: [] },
-  ground:   { weakTo: ["water", "grass", "ice"],              immuneTo: ["electric"] },
-  flying:   { weakTo: ["electric", "ice", "rock"],            immuneTo: ["ground"] },
-  psychic:  { weakTo: ["bug", "ghost", "dark"],               immuneTo: [] },
-  bug:      { weakTo: ["fire", "flying", "rock"],             immuneTo: [] },
-  rock:     { weakTo: ["water", "grass", "fighting", "ground", "steel"], immuneTo: [] },
-  ghost:    { weakTo: ["ghost", "dark"],                      immuneTo: ["normal", "fighting"] },
-  dragon:   { weakTo: ["ice", "dragon", "fairy"],              immuneTo: [] },
-  dark:     { weakTo: ["fighting", "bug", "fairy"],           immuneTo: ["psychic"] },
-  steel:    { weakTo: ["fire", "fighting", "ground"],          immuneTo: ["poison"] },
-  fairy:    { weakTo: ["poison", "steel"],                     immuneTo: ["dragon"] },
+  fire:     { weakTo: ["water"],    immuneTo: [] },
+  water:    { weakTo: ["grass"],    immuneTo: [] },
+  grass:    { weakTo: ["fire"],     immuneTo: [] },
+  electric: { weakTo: ["stone"],    immuneTo: [] },
+  wind:     { weakTo: ["electric"], immuneTo: [] },
+  stone:    { weakTo: ["wind"],     immuneTo: [] },
+  light:    { weakTo: ["dark"],     immuneTo: [] },
+  dark:     { weakTo: ["light"],    immuneTo: [] },
+  mystic:   { weakTo: ["mystic"],   immuneTo: [] },
 };
 
 // 属性克制倍率常量
 export const TYPE_MUL = {
   SUPER_EFFECTIVE: 2,   // 效果拔群
-  NOT_EFFECTIVE: 0,      // 无效
+  NOT_EFFECTIVE: 0,      // 无效（当前克制表无免疫，预留）
   WEAK: 0.5,            // 效果不佳（预留）
   NORMAL: 1,            // 正常
 };

@@ -7,6 +7,7 @@
 
 import { clamp } from "../utils.js";
 import { applyMutatorsToEff } from "./era.js";
+import { legacyCatchAdd } from "./rebirth.js";
 import { natureDexBonusMul } from "./gameplay_fun.js";
 import { serverBuffPct, serverBuffResearchTimeMul as _serverBuffResearchTimeMul } from "./server_buffs.js";
 
@@ -118,6 +119,7 @@ export function computeTechEffects(state, defs, ui) {
   if (permCaptureLvl > 0) {
     eff.catchChanceAdd += permCaptureLvl * 0.05;
   }
+  eff.catchChanceAdd += legacyCatchAdd(state);
 
   // 限时捕获率提升（未来币商店）
   const captureBoostRem =
@@ -173,7 +175,6 @@ export function getBuildingCost(id, state, defs, ui) {
   }
 
   if (hasSkillTimer(state, "rockBuildBoostRemainingSec")) applyCostMultiplier(cost, 0.8);
-  if (hasSkillTimer(state, "poisonResourceSaveRemainingSec")) applyCostMultiplier(cost, 0.8);
 
   for (const [rid, v] of Object.entries(cost)) {
     if (typeof v !== "number" || !Number.isFinite(v)) continue;
@@ -202,7 +203,6 @@ export function getResearchCost(tdef, state) {
     if (typeof v !== "number" || !Number.isFinite(v)) continue;
     cost[rid] = Math.max(1, Math.ceil(v * mul));
   }
-  if (hasSkillTimer(state, "poisonResourceSaveRemainingSec")) applyCostMultiplier(cost, 0.8);
   return cost;
 }
 
@@ -258,17 +258,12 @@ export function getResearchEfficiency(state) {
  * @param {number} qty
  * @param {object} state
  * @param {object} ui
- * @param {{ consume?: boolean } | null} opts
+ * @param {object | null} opts
  * @param {{ tech?: object } | null} defs  — 需传入以应用 pokeballMakeCostMul 科技
  */
 export function getPokeballMakeCost(qty = 1, state, ui, opts = null, defs = null) {
   const techEff = computeTechEffects(state, defs, ui);
   const mul = typeof techEff.pokeballMakeCostMul === "number" ? techEff.pokeballMakeCostMul : 1;
-
-  const consume = Boolean(opts && typeof opts === "object" && opts.consume);
-  const steelCharges0 =
-    typeof state.skills?.steelBallDiscountCharges === "number" && Number.isFinite(state.skills.steelBallDiscountCharges)
-      ? Math.max(0, Math.floor(state.skills.steelBallDiscountCharges)) : 0;
 
   const base0 = 6;
   const step = 1;
@@ -278,19 +273,11 @@ export function getPokeballMakeCost(qty = 1, state, ui, opts = null, defs = null
   const n = Math.max(0, Math.floor(qty));
 
   let wood = 0;
-  let steelUsed = 0;
   for (let i = 0; i < n; i++) {
     const base = Math.min(baseMax, base0 + step * (made0 + i));
-    const discounted = i < steelCharges0;
-    const mul2 = discounted ? mul * 0.9 : mul;
-    wood += Math.max(1, Math.ceil(base * mul2));
-    if (discounted) steelUsed++;
+    wood += Math.max(1, Math.ceil(base * mul));
   }
 
-  if (consume && steelUsed > 0 && state.skills && typeof state.skills === "object") {
-    state.skills.steelBallDiscountCharges = Math.max(0, steelCharges0 - steelUsed);
-  }
   const cost = { wood };
-  if (hasSkillTimer(state, "poisonResourceSaveRemainingSec")) applyCostMultiplier(cost, 0.8);
   return cost;
 }

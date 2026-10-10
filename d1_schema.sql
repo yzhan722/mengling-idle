@@ -61,6 +61,7 @@ CREATE TABLE scores (
   gatherClicks INTEGER NOT NULL DEFAULT 0,
   resourceProduced INTEGER NOT NULL DEFAULT 0,
   catchCount INTEGER NOT NULL DEFAULT 0,
+  rebirthCount INTEGER NOT NULL DEFAULT 0,
   updatedAt INTEGER NOT NULL,
   gameVersion TEXT,
   topMonsJson TEXT,
@@ -73,6 +74,7 @@ CREATE INDEX idx_scores_total_power ON scores(totalPower DESC);
 CREATE INDEX idx_scores_dex ON scores(dexCount DESC);
 CREATE INDEX idx_scores_catch ON scores(catchCount DESC);
 CREATE INDEX idx_scores_hatch ON scores(hatchCount DESC);
+CREATE INDEX idx_scores_rebirth ON scores(rebirthCount DESC);
 CREATE INDEX idx_scores_shiny ON scores(shinyCount DESC);
 CREATE INDEX idx_scores_gather ON scores(gatherClicks DESC);
 CREATE INDEX idx_scores_resource ON scores(resourceProduced DESC);

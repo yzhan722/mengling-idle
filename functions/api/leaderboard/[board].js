@@ -11,6 +11,7 @@ const BOARD_COL = {
   gather: "gatherClicks",
   resource: "resourceProduced",
   catch: "catchCount",
+  rebirths: "rebirthCount",
 };
 
 export async function onRequest(context) {

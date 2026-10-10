@@ -9,13 +9,11 @@ const DEFAULT_CONFIG = {
     boost: true,
     permanent: true,
     item: true,
-    package: true,
     auto: true,
     craft: true,
   },
   featureFlags: {
     analytics: true,
-    dailyTasksApi: true,
     atmosphereFakes: false,
   },
 };

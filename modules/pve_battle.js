@@ -51,7 +51,7 @@ function makeEnemyStats(enemy, stageType) {
   const lvl = clamp(enemy.lvl ?? 1, 1, 100);
   const tierBonus = enemy.stars >= 3 ? 42 : enemy.stars >= 2 ? 26 : enemy.stars >= 1 ? 12 : 0;
   const dexBase = enemy.dex ?? 1;
-  const specialTypes = new Set(["fire", "water", "electric", "grass", "ice", "psychic", "dragon", "fairy"]);
+  const specialTypes = new Set(["fire", "water", "electric", "grass", "wind", "mystic", "light"]);
   const specialLean = specialTypes.has(stageType);
   const baseHp = 50 + (dexBase % 45) + tierBonus;
   const baseAtk = 45 + (dexBase % 40) + tierBonus;
@@ -75,7 +75,7 @@ function makeEnemyStats(enemy, stageType) {
 /** Sum of combat stats for stage enemies — used for PvE power hints. */
 export function estimateStageEnemyPower(stage) {
   if (!stage || !Array.isArray(stage.enemies)) return 0;
-  const stype = stage.type || "normal";
+  const stype = stage.type || "wind";
   return stage.enemies.reduce((sum, e) => {
     const s = makeEnemyStats(e, stype);
     return sum + s.hp + s.atk + s.def + s.spa + s.spd + s.spe;
@@ -182,7 +182,7 @@ export function simulateBattle(team, enemies, stageType, opts = {}) {
     const eTypes =
       Array.isArray(e.types) && e.types.length
         ? e.types.filter((t) => typeof t === "string").slice(0, 2)
-        : [stageType || "normal"];
+        : [stageType || "wind"];
     return {
       side: "enemy",
       idx: i,

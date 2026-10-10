@@ -23,77 +23,80 @@ Math.random = () => 0.5;
 
 try {
   const enemy = { side: "enemy", name: "雷压", types: ["electric"], atk: 90, spa: 90, def: 40, spd: 40, spe: 30 };
-  const wrongDef = { side: "player", name: "高战水队", types: ["water"], atk: 80, spa: 80, def: 50, spd: 50 };
-  const seDef = { side: "player", name: "地面克制队", types: ["ground"], atk: 60, spa: 60, def: 50, spd: 50 };
+  const wrongDef = { side: "player", name: "高战风队", types: ["wind"], atk: 80, spa: 80, def: 50, spd: 50 };
+  const seDef = { side: "player", name: "岩系克制队", types: ["stone"], atk: 60, spa: 60, def: 50, spd: 50 };
   const wrongHit = calcDamage(enemy, wrongDef, "electric");
   const seHit = calcDamage(enemy, seDef, "electric");
   assert(wrongHit.damage > seHit.damage, "wrong-type team takes more stage pressure damage");
 
   const wrongTeam = [{
-    name: "高战水队",
-    types: ["water"],
-    stats: { hp: 280, atk: 70, def: 50, spa: 70, spd: 50, spe: 45 },
+    name: "高战风队",
+    types: ["wind"],
+    stats: { hp: 340, atk: 160, def: 90, spa: 160, spd: 90, spe: 45 },
   }];
   const seTeam = [{
-    name: "地面克制队",
-    types: ["ground"],
-    stats: { hp: 240, atk: 55, def: 50, spa: 55, spd: 50, spe: 45 },
+    name: "岩系克制队",
+    types: ["stone"],
+    stats: { hp: 306, atk: 136, def: 90, spa: 136, spd: 90, spe: 45 },
   }];
-  const enemies = [{ dex: 26, name: "雷丘", lvl: 35, stars: 1 }];
+  const enemies = [{ dex: 26, name: "雷鼓将", lvl: 10, stars: 1 }];
   const wrongResult = simulateBattle(wrongTeam, enemies, "electric");
   const seResult = simulateBattle(seTeam, enemies, "electric");
   assert(seResult.teamHpPct > wrongResult.teamHpPct, "SE team preserves more HP than higher-power wrong type");
   assert(seResult.superEffectiveHits > wrongResult.superEffectiveHits, "SE team lands more super-effective hits");
 
   const specialAttacker = { side: "player", name: "特攻手", types: ["water"], atk: 40, spa: 100 };
-  const physicalAttacker = { side: "player", name: "物攻手", types: ["normal"], atk: 100, spa: 40 };
-  const physWall = { side: "enemy", name: "物防墙", types: ["normal"], def: 120, spd: 40 };
-  const specWall = { side: "enemy", name: "特防墙", types: ["normal"], def: 40, spd: 120 };
+  const physicalAttacker = { side: "player", name: "物攻手", types: ["wind"], atk: 100, spa: 40 };
+  const physWall = { side: "enemy", name: "物防墙", types: ["wind"], def: 120, spd: 40 };
+  const specWall = { side: "enemy", name: "特防墙", types: ["wind"], def: 40, spd: 120 };
   assert(calcDamage(specialAttacker, physWall).damage > calcDamage(specialAttacker, specWall).damage, "special attacker checks spd");
   assert(calcDamage(physicalAttacker, specWall).damage > calcDamage(physicalAttacker, physWall).damage, "physical attacker checks def");
 
-  // Recommend dual-role: ghost stage should prefer dark over ghost
-  const ghostRec = recommendedTypes("ghost", 3);
-  assert(ghostRec[0] === "dark", `ghost stage top recommend is dark, got ${ghostRec[0]}`);
-  assert(typeMatchScore(["dark"], "ghost").score > typeMatchScore(["ghost"], "ghost").score, "dark scores above ghost vs ghost stage");
+  // Recommend: dark stage should prefer light (唯一克制项，互克仍优先)
+  const darkRec = recommendedTypes("dark", 3);
+  assert(darkRec[0] === "light", `dark stage top recommend is light, got ${darkRec[0]}`);
+  assert(typeMatchScore(["light"], "dark").score > typeMatchScore(["dark"], "dark").score, "light scores above dark vs dark stage");
 
   // Progress damage: high atk should exceed low atk vs same wall
   const high = calcDamage(
-    { side: "player", types: ["ground"], atk: 120, spa: 40, def: 50, spd: 50 },
+    { side: "player", types: ["stone"], atk: 120, spa: 40, def: 50, spd: 50 },
     { side: "enemy", types: ["electric"], atk: 50, spa: 50, def: 50, spd: 50 },
     "electric"
   );
   const low = calcDamage(
-    { side: "player", types: ["ground"], atk: 40, spa: 20, def: 50, spd: 50 },
+    { side: "player", types: ["stone"], atk: 40, spa: 20, def: 50, spd: 50 },
     { side: "enemy", types: ["electric"], atk: 50, spa: 50, def: 50, spd: 50 },
     "electric"
   );
   assert(high.damage > low.damage, "higher atk deals more damage");
 
   const baselineHit = calcDamage(
-    { side: "player", types: ["normal"], atk: 80, spa: 40 },
-    { side: "enemy", types: ["normal"], def: 60, spd: 60 },
-    "normal"
+    { side: "player", types: ["wind"], atk: 80, spa: 40 },
+    { side: "enemy", types: ["wind"], def: 60, spd: 60 },
+    "wind"
   );
   const boostedHit = calcDamage(
-    { side: "player", types: ["normal"], atk: 80, spa: 40 },
-    { side: "enemy", types: ["normal"], def: 60, spd: 60 },
-    "normal",
+    { side: "player", types: ["wind"], atk: 80, spa: 40 },
+    { side: "enemy", types: ["wind"], def: 60, spd: 60 },
+    "wind",
     { playerDamageMul: 1.5 }
   );
   assert(boostedHit.damage > baselineHit.damage, "playerDamageMul increases player damage");
 
   // Timeout decision: fat enemies + strong remaining HP → decision win not false loss
-  const stallTeam = Array.from({ length: 6 }, (_, i) => ({
-    name: `stall${i}`,
-    types: ["fairy"],
-    stats: { hp: 800, atk: 8, def: 80, spa: 8, spd: 80, spe: 40 },
-  }));
+  // 注：保底伤害（atk/20）绕过防御，需用 HP 池顶住 500 回合磨血
+  const stallTeam = [{
+    name: "铁壁",
+    types: ["light"],
+    stats: { hp: 60000, atk: 8, def: 999, spa: 8, spd: 999, spe: 40 },
+  }];
   const fatEnemies = [
-    { dex: 149, name: "快龙", lvl: 50, stars: 2 },
-    { dex: 148, name: "哈克龙", lvl: 40, stars: 1 },
+    { dex: 149, name: "胖胖龙", lvl: 55, stars: 2 },
+    { dex: 148, name: "丝带龙", lvl: 50, stars: 2 },
+    { dex: 230, name: "海龙王", lvl: 50, stars: 2 },
+    { dex: 149, name: "胖胖龙2", lvl: 45, stars: 2 },
   ];
-  const stall = simulateBattle(stallTeam, fatEnemies, "dragon");
+  const stall = simulateBattle(stallTeam, fatEnemies, "mystic");
   assert(stall.rounds >= PVE_MAX_ROUNDS || stall.win, "stall fight hits cap or finishes");
   if (stall.rounds >= PVE_MAX_ROUNDS) {
     assert(stall.endReason === "decision" || stall.endReason === "timeout", "timeout sets endReason");

@@ -47,6 +47,7 @@ export function initCaptureTab({
   onPokeballCraft,
   onEraAdvance,
   getCaptureAreas,
+  starterMonFactory,
 }) {
   const CAPTURE_PREVIEW_KEY = "kittens_mvp_capture_preview_hidden_v1";
   const rareWeight = (p, base, rareWeightMul) =>
@@ -98,7 +99,7 @@ export function initCaptureTab({
       const eraPrestigeBtn = ev.target?.closest?.("button[data-era-prestige]");
       if (eraPrestigeBtn && elCaptureInfo.contains(eraPrestigeBtn)) {
         const state = getState();
-        const result = confirmPrestige(state, { addLog, getCaptureAreas });
+        const result = confirmPrestige(state, { addLog, getCaptureAreas, starterMonFactory });
         if (result.ok) {
           markCaptureDirty();
           render();
@@ -354,9 +355,7 @@ export function initCaptureTab({
         refundBallIfSaved(state, ballType);
         const techEff = computeTechEffects();
         const add = (typeof techEff.catchChanceAdd === "number" ? techEff.catchChanceAdd : 0) + abilityCatchRateAdd(state);
-        const dragonRem = typeof state.skills?.dragonCatchBoostRemainingSec === "number" && Number.isFinite(state.skills.dragonCatchBoostRemainingSec) ? Math.max(0, state.skills.dragonCatchBoostRemainingSec) : 0;
-        const dragonAdd = dragonRem > 0 ? 0.1 : 0;
-        const mult = Math.max(0, 1 + add + dragonAdd);
+        const mult = Math.max(0, 1 + add);
         const base = baseCatchChanceByDex(p.dex);
         const fails = typeof state.rng?.catchFails === "number" ? state.rng.catchFails : 0;
         const pity = Math.min(0.02 * Math.max(0, Math.floor(fails)), 0.2);
@@ -609,12 +608,7 @@ export function initCaptureTab({
 
         const techEff = computeTechEffects();
         const add = (typeof techEff.catchChanceAdd === "number" ? techEff.catchChanceAdd : 0) + abilityCatchRateAdd(state);
-        const dragonRem =
-          typeof state.skills?.dragonCatchBoostRemainingSec === "number" && Number.isFinite(state.skills.dragonCatchBoostRemainingSec)
-            ? Math.max(0, state.skills.dragonCatchBoostRemainingSec)
-            : 0;
-        const dragonAdd = dragonRem > 0 ? 0.1 : 0;
-        const mult = Math.max(0, 1 + add + dragonAdd);
+        const mult = Math.max(0, 1 + add);
         const base = baseCatchChanceByDex(p.dex);
         const fails = typeof state.rng?.catchFails === "number" ? state.rng.catchFails : 0;
         const pity = Math.min(0.02 * Math.max(0, Math.floor(fails)), 0.2);

@@ -3,6 +3,7 @@ import { ERA_DEFS, ERA_MUTATORS, getEraDefById, getEraDefByIndex } from "../defs
 export const DISTORTION_OPENER_BLURB =
   "时空已扭曲：遭遇更不可预测，图鉴与永久加成是你的锚点。完成时代主线可再次扭曲，每层扭曲保留图鉴与永久科技。";
 import { dexCaughtCount } from "./effects.js";
+import { computeEssence, ensureLegacy, perkLevel, REBIRTH_SHINY_REQ } from "./rebirth.js";
 
 const ERA_COUNTER_DEFAULTS = {
   catch_count: 0,
@@ -36,7 +37,6 @@ export const PRESTIGE_KEEP_FIELDS = Object.freeze([
   "hatchCount",
   "gatherClicks",
   "resourceProduced",
-  "dailySignin",
   "monthlyCard",
   "pve",
   "futurecoinSpent",
@@ -54,30 +54,32 @@ function eraIndexForId(id) {
   return index >= 0 ? index : 0;
 }
 
-export function emptyEraState(index = 0) {
+export function emptyEraState(index = 0, prestigeCount = 0) {
   const def = getEraDefByIndex(index);
   const safeIndex = eraIndexForId(def.id);
   return {
     id: def.id,
     index: safeIndex,
     mode: "chronicle",
-    quests: instantiateQuests(def),
+    quests: instantiateQuests(def, prestigeCount),
     questCounters: { ...ERA_COUNTER_DEFAULTS },
     completedEraIds: safeIndex > 0 ? ERA_DEFS.slice(0, safeIndex).map((e) => e.id) : [],
     mutatorsActive: collectMutatorsUpTo(safeIndex),
     prestigeUnlocked: false,
-    prestigeCount: 0,
+    prestigeCount: Math.max(0, Math.floor(prestigeCount)),
+    cycleStartMs: Date.now(),
   };
 }
 
-export function instantiateQuests(def) {
+export function instantiateQuests(def, prestigeCount = 0) {
+  const scale = Math.pow(1.5, Math.max(0, Math.floor(prestigeCount)));
   return (def?.quests || [])
     .filter((q) => q.kind === "main")
     .map((q) => ({
       id: q.id,
       kind: q.kind,
       type: q.type,
-      target: q.target,
+      target: q.scope === "era" ? Math.ceil(q.target * scale) : q.target,
       progress: 0,
       done: false,
       scope: q.scope || "era",
@@ -133,14 +135,19 @@ export function ensureEraState(state) {
   era.index = eraIndexForId(def.id);
   if (era.mode !== "chronicle" && era.mode !== "distortion") era.mode = "chronicle";
   reconcileCompletedEraIds(era);
-  if (!Array.isArray(era.quests) || era.quests.length === 0) era.quests = instantiateQuests(def);
-  if (!era.questCounters || typeof era.questCounters !== "object") era.questCounters = {};
-  era.questCounters = { ...ERA_COUNTER_DEFAULTS, ...era.questCounters };
-  reconcileMutatorsActive(era);
   if (typeof era.prestigeUnlocked !== "boolean") era.prestigeUnlocked = false;
   if (typeof era.prestigeCount !== "number" || !Number.isFinite(era.prestigeCount)) {
     era.prestigeCount = Math.max(0, Math.floor(era.prestigeCount || 0));
   }
+  if (typeof era.cycleStartMs !== "number" || !Number.isFinite(era.cycleStartMs) || era.cycleStartMs <= 0) {
+    era.cycleStartMs = state.meta?.createdAt || Date.now();
+  }
+  if (!Array.isArray(era.quests) || era.quests.length === 0) {
+    era.quests = instantiateQuests(def, era.prestigeCount);
+  }
+  if (!era.questCounters || typeof era.questCounters !== "object") era.questCounters = {};
+  era.questCounters = { ...ERA_COUNTER_DEFAULTS, ...era.questCounters };
+  reconcileMutatorsActive(era);
   return era;
 }
 
@@ -149,30 +156,29 @@ export function ensureEra(state) {
 }
 
 export function canPrestige(state, getCaptureAreas) {
-  if (!isPrestigeGateOpen(state)) return false;
-  const era = syncEraQuests(state, getCaptureAreas);
-  if (era.mode !== "chronicle") return false;
-  if (era.index < ERA_DEFS.length - 1) return false;
-  return era.quests.filter((q) => q.kind === "main").every((q) => q.done);
+  return previewPrestige(state, getCaptureAreas).ok;
 }
 
-export function previewPrestige(state, getCaptureAreas) {
+export function previewPrestige(state, getCaptureAreas, nowMs = Date.now()) {
   const gateOpen = isPrestigeGateOpen(state);
   const era = syncEraQuests(state, getCaptureAreas);
   const atEnd = era.index >= ERA_DEFS.length - 1;
   const mainsDone = (era.quests || []).filter((q) => q.kind === "main").every((q) => q.done);
-  const chronicle = era.mode === "chronicle";
+  const shinyNow = Math.max(0, Math.floor(state?.shinyCount || 0));
+  const shinyOk = shinyNow >= REBIRTH_SHINY_REQ;
 
   let reason = "";
   if (!gateOpen) reason = "prestige_locked";
-  else if (!chronicle) reason = "already_distortion";
   else if (!atEnd) reason = "chronicle_incomplete";
   else if (!mainsDone) reason = "era_quests_incomplete";
+  else if (!shinyOk) reason = "need_shiny";
 
   return {
-    ok: gateOpen && chronicle && atEnd && mainsDone,
+    ok: gateOpen && atEnd && mainsDone && shinyOk,
     reason,
     modeAfter: "distortion",
+    essence: computeEssence(state, nowMs),
+    shinyNow,
     resets: [...PRESTIGE_RESET_FIELDS],
     keeps: [...PRESTIGE_KEEP_FIELDS],
     eraAfter: { id: "dawn", index: 0, mode: "distortion" },
@@ -180,7 +186,8 @@ export function previewPrestige(state, getCaptureAreas) {
   };
 }
 
-export function confirmPrestige(state, { addLog, getCaptureAreas } = {}) {
+export function confirmPrestige(state, { addLog, getCaptureAreas, starterMonFactory } = {}) {
+  const opts = { addLog, getCaptureAreas, starterMonFactory };
   const preview = previewPrestige(state, getCaptureAreas);
   if (!preview.ok) return { ok: false, reason: preview.reason };
 
@@ -212,16 +219,30 @@ export function confirmPrestige(state, { addLog, getCaptureAreas } = {}) {
   state.encounterPlusCdSec = 0;
 
   const priorUnlocked = Boolean(state.era?.prestigeUnlocked);
-  const nextEra = emptyEraState(0);
+  const nextEra = emptyEraState(0, preview.prestigeCountAfter);
   nextEra.mode = "distortion";
   nextEra.prestigeUnlocked = priorUnlocked;
-  nextEra.prestigeCount = preview.prestigeCountAfter;
   state.era = nextEra;
 
   for (const [key, val] of Object.entries(kept)) state[key] = val;
 
+  const legacy = ensureLegacy(state);
+  legacy.essence += preview.essence;
+  legacy.essenceEarned += preview.essence;
+
+  if (perkLevel(state, "startTech") > 0) {
+    if (state.tech && typeof state.tech === "object") {
+      state.tech.berryCultivation = true;
+      state.tech.pokeballBasics = true;
+    }
+  }
+  if (perkLevel(state, "starterMon") > 0 && typeof opts.starterMonFactory === "function") {
+    const mon = opts.starterMonFactory();
+    if (mon && Array.isArray(state.mons)) state.mons.push(mon);
+  }
+
   if (typeof addLog === "function") {
-    addLog(`时空歪曲：第 ${preview.prestigeCountAfter} 次扭曲开始（图鉴与永久加成保留）`, true);
+    addLog(`时空歪曲：第 ${preview.prestigeCountAfter} 次扭曲开始（图鉴与永久加成保留，灵珀 +${preview.essence}）`, true);
   }
   syncEraQuests(state, getCaptureAreas);
   return { ok: true, preview };
@@ -355,7 +376,7 @@ export function advanceEra(state, { addLog, getCaptureAreas } = {}) {
   era.id = nextDef.id;
   era.index = nextIndex;
   era.questCounters = { ...ERA_COUNTER_DEFAULTS };
-  era.quests = instantiateQuests(nextDef);
+  era.quests = instantiateQuests(nextDef, era.prestigeCount);
   era.mutatorsActive = collectMutatorsUpTo(nextIndex);
   if (era.mode !== "distortion") era.mode = "chronicle";
 

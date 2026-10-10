@@ -75,6 +75,7 @@ export function initLeaderboardTab({
       if (k === "gather") ui.lbGatherFolded = !ui.lbGatherFolded;
       if (k === "resource") ui.lbResourceFolded = !ui.lbResourceFolded;
       if (k === "catch") ui.lbCatchFolded = !ui.lbCatchFolded;
+      if (k === "rebirths") ui.lbRebirthFolded = !ui.lbRebirthFolded;
       markLeaderboardDirty();
       render();
       return;

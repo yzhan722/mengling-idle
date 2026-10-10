@@ -64,10 +64,9 @@ export function getNatureInfo(natureId) {
   return NATURES.find((n) => n.id === natureId) ?? NATURES[0];
 }
 
-export function getNatureMul(natureId, stat) {
-  const n = getNatureInfo(natureId);
-  if (n.up === stat) return 1.1;
-  if (n.down === stat) return 0.9;
+// 性格改为纯风味标签，不再影响数值（修正并入特性池）；
+// up/down 字段保留供 UI 展示「倾向」，不参与计算。
+export function getNatureMul() {
   return 1;
 }
 // ============================

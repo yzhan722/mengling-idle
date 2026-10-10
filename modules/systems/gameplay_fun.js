@@ -4,14 +4,12 @@ import { formatPvpSeasonStats } from "./pvp_narrative.js";
 import { seasonGhostsForDay } from "./world_presence.js";
 
 const TYPE_POOL = [
-  "normal", "fire", "water", "grass", "electric", "ice", "fighting", "poison",
-  "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy",
+  "fire", "water", "grass", "electric", "wind", "stone", "light", "dark", "mystic",
 ];
 
 const TYPE_ZH = {
-  normal: "一般", fire: "火", water: "水", grass: "草", electric: "电", ice: "冰",
-  fighting: "格斗", poison: "毒", ground: "地面", flying: "飞行", psychic: "超能力",
-  bug: "虫", rock: "岩石", ghost: "幽灵", dragon: "龙", dark: "恶", steel: "钢", fairy: "妖精",
+  fire: "火", water: "水", grass: "草", electric: "电", wind: "风",
+  stone: "岩", light: "光", dark: "暗", mystic: "幻",
 };
 
 export function typeZh(id) {
@@ -495,21 +493,6 @@ export function pveDailyFirstWinMul(meta, today = localDateStr()) {
   return { mul: 1.5, isFirst: true };
 }
 
-/** Shop daily deal: pay 3 FC → +10 FC once/day (honest 50%-off teaser pack). */
-export function canBuyShopDailyDeal(meta, today = localDateStr()) {
-  const last = meta && typeof meta === "object" && typeof meta.shopDailyDealDate === "string" ? meta.shopDailyDealDate : "";
-  return last !== today;
-}
-
-export function markShopDailyDealBought(meta, today = localDateStr()) {
-  if (!meta || typeof meta !== "object") return false;
-  if (!canBuyShopDailyDeal(meta, today)) return false;
-  meta.shopDailyDealDate = today;
-  return true;
-}
-
-export const SHOP_DAILY_DEAL = { costFc: 3, gainFc: 10 };
-
 /** Season score = dex*10 + pveWins; progress vs ghost rivals. */
 export function seasonLocalScore(dexUnique, pveWins) {
   return Math.max(0, Math.floor(dexUnique || 0)) * 10 + Math.max(0, Math.floor(pveWins || 0));
@@ -753,23 +736,6 @@ export function markGatherDailyClaimed(state, today = localDateStr()) {
   if (!state.meta || typeof state.meta !== "object") state.meta = {};
   state.meta.gatherDailyClaimed = true;
   state.meta.gatherDailyDate = today;
-  return true;
-}
-
-/** Shop: free + spin done → bonus claim（特惠小包不计入）. */
-export function shopDailyTripleProgress(meta, today = localDateStr()) {
-  const m = meta && typeof meta === "object" ? meta : {};
-  const free = m.dailyFreeFcDate === today;
-  const spin = m.dailySpinDate === today;
-  const n = (free ? 1 : 0) + (spin ? 1 : 0);
-  const claimed = m.shopTripleClaimDate === today;
-  return { n, goal: 2, free, deal: false, spin, claimed, canClaim: n >= 2 && !claimed };
-}
-
-export function markShopDailyTripleClaimed(meta, today = localDateStr()) {
-  if (!meta || typeof meta !== "object") return false;
-  if (!shopDailyTripleProgress(meta, today).canClaim) return false;
-  meta.shopTripleClaimDate = today;
   return true;
 }
 

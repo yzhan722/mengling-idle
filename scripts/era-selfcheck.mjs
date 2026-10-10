@@ -99,8 +99,8 @@ assert(ERA_DEFS.every((e) => typeof e.pveHint === "string" && e.pveHint.length >
   const fossil = { era: emptyEraState(2) };
   const rock = { tier: "common", dex: 74 };
   const normal = { tier: "common", dex: 16 };
-  const getTypes = (mon) => (mon.dex === 74 ? ["rock", "ground"] : ["normal", "flying"]);
-  assert(applyEncounterBias(10, rock, fossil, getTypes) > applyEncounterBias(10, normal, fossil, getTypes), "fossil boosts rock/ground");
+  const getTypes = (mon) => (mon.dex === 74 ? ["stone"] : ["wind"]);
+  assert(applyEncounterBias(10, rock, fossil, getTypes) > applyEncounterBias(10, normal, fossil, getTypes), "fossil boosts stone");
 }
 
 {
@@ -144,6 +144,7 @@ assert(deriveEraIndex({ dex: { caught: {} }, tech: {}, buildings: {} }) === 0, "
       questCounters: { catch_count: 12 },
       quests: [{ id: "fossil_catch_150", kind: "main", type: "catch_count", target: 150, progress: 12, done: false, scope: "era" }],
     },
+    shinyCount: 1,
   };
   const before = progressSnapshot(state);
   ensureEraState(state);
@@ -161,6 +162,7 @@ assert(deriveEraIndex({ dex: { caught: {} }, tech: {}, buildings: {} }) === 0, "
     era: emptyEraState(8),
     dex: { caught: Object.fromEntries([...Array(100)].map((_, i) => [String(i + 1), 1])) },
     tech: Object.fromEntries([...Array(8)].map((_, i) => [`t${i}`, true])),
+    shinyCount: 1,
   };
   bumpEraCounter(state, "catch_count", 10);
   bumpEraCounter(state, "pokeball_earned", 10);
@@ -194,6 +196,7 @@ assert(deriveEraIndex({ dex: { caught: {} }, tech: {}, buildings: {} }) === 0, "
     buildings: { field: { owned: 3 } },
     tech: Object.fromEntries([...Array(16)].map((_, i) => [`t${i}`, true])),
     era: emptyEraState(8),
+    shinyCount: 1,
   };
   bumpEraCounter(state, "catch_count", 360);
   bumpEraCounter(state, "pokeball_earned", 400);

@@ -69,6 +69,7 @@ export function createRenderLeaderboard({
       if (k === "gather") return Boolean(ui.lbGatherFolded);
       if (k === "resource") return Boolean(ui.lbResourceFolded);
       if (k === "catch") return Boolean(ui.lbCatchFolded);
+      if (k === "rebirths") return Boolean(ui.lbRebirthFolded);
       return false;
     };
     const sectionHeader = (k, title) => {
@@ -132,7 +133,7 @@ export function createRenderLeaderboard({
         <div class="row__left">
           <div class="row__title">当前成绩</div>
           <div class="row__desc">图鉴 ${dexNow} · 队伍战力(前6) ${teamNow} · 总战力 ${totalPowerNow}</div>
-          <div class="row__desc">孵蛋 ${hatchNow} · 闪光 ${shinyNow} · 采集 ${gatherNow} · 产出 ${resourceNow} · 捕获 ${catchNow}${ui.lbErr ? ` · <span class=\"badge badge--danger\">${escapeHtml(ui.lbErr)}</span>` : ""}</div>
+          <div class="row__desc">孵蛋 ${hatchNow} · 闪光 ${shinyNow} · 采集 ${gatherNow} · 产出 ${resourceNow} · 捕获 ${catchNow} · 轮回 ${Math.max(0, Math.floor(state.era?.prestigeCount || 0))}${ui.lbErr ? ` · <span class=\"badge badge--danger\">${escapeHtml(ui.lbErr)}</span>` : ""}</div>
         </div>
         <div class="row__right">
           <button class="btn btn--primary" data-lb-act="submit" ${ui.lbBusy ? "disabled" : ""}>刷新</button>
@@ -234,6 +235,12 @@ export function createRenderLeaderboard({
     if (catchItems) {
       rows.push(sectionHeader("catch", "捕获大师榜 Top100"));
       if (!isFolded("catch")) rows.push(renderScoreBoard(catchItems, "捕获"));
+    }
+
+    const rebirthItems = boardRows("rebirths", ui.lbRebirthItems);
+    if (rebirthItems) {
+      rows.push(sectionHeader("rebirths", "轮回榜 Top100"));
+      if (!isFolded("rebirths")) rows.push(renderScoreBoard(rebirthItems, "轮回"));
     }
 
     const powerItems = boardRows("power", ui.lbPowerItems);

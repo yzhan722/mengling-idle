@@ -10,7 +10,7 @@ export function createBeastDataClient() {
     const baseStats = globalThis.BEAST_STATS?.[d];
     if (!types && !baseStats) return null;
     return {
-      types: Array.isArray(types) ? types : ["normal"],
+      types: Array.isArray(types) ? types : ["wind"],
       baseStats: baseStats && typeof baseStats === "object" ? baseStats : null,
     };
   }

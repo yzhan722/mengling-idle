@@ -1,4 +1,4 @@
-import { legacyIdMap, beasts, getBeastTier, STRAY_BEAST } from "./modules/beast_defs.js";
+import { beasts, getBeastTier, STRAY_BEAST } from "./modules/beast_defs.js";
 import { EXTRA_TECH_DEFS, EXTRA_TECH_FLAGS } from "./modules/tech_defs.js?v=0.1.0";
 import { RESOURCE_DEFS } from "./modules/defs_resources.js?v=0.1.0";
 import { BUILDING_DEFS } from "./modules/defs_buildings.js?v=0.1.0";
@@ -30,9 +30,7 @@ import { createRenderMons } from "./modules/render/mons.js?v=0.1.0";
 import { createRenderDex } from "./modules/render/dex.js?v=0.1.0";
 import { createRenderFutureShop } from "./modules/render/future.js?v=0.1.0";
 import { TYPE_SKILLS } from "./modules/type_skills.js?v=0.1.0";
-import { createDailySignin } from "./modules/daily_signin.js";
 import { createMonthlyCard } from "./modules/monthly_card.js";
-import { createDailyTasks } from "./modules/daily_tasks.js";
 import { initDexTab } from "./modules/tabs/dex_tab.js?v=0.1.0";
 import { initBuildingsTab } from "./modules/tabs/buildings_tab.js?v=0.1.0";
 import { initTechTab } from "./modules/tabs/tech_tab.js?v=0.1.0";
@@ -43,7 +41,6 @@ import { initMonsTab } from "./modules/tabs/mons_tab.js?v=0.1.0";
 import { createRenderItems } from "./modules/tabs/items_tab.js?v=0.1.0";
 import { createItemUsage } from "./modules/item_usage.js";
 import { createTabController } from "./modules/tabs/tabs_controller.js?v=0.1.0";
-import { createRenderDailyTasks } from "./modules/render/daily_tasks.js";
 import { createRenderFunctions, initFunctionsTab } from "./modules/tabs/functions_tab.js";
 import { getExpLevelDef } from "./modules/expedition_defs.js";
 import { expeditionTypeMul } from "./modules/systems/expedition.js";
@@ -171,7 +168,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
 
   const defs = {
     resources: RESOURCE_DEFS,
-    legacyIdMap,
     beasts,
     tech: {
       berryCultivation: {
@@ -779,6 +775,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     lbGatherItems: null,
     lbResourceItems: null,
     lbCatchItems: null,
+    lbRebirthItems: null,
     lbDexFolded: false,
     lbPowerFolded: false,
     lbContribFolded: false,
@@ -788,6 +785,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     lbGatherFolded: false,
     lbResourceFolded: false,
     lbCatchFolded: false,
+    lbRebirthFolded: false,
     lbBusy: false,
     lbErr: "",
     overlaysDirty: true,
@@ -874,7 +872,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
   const elCaptureActions = document.getElementById("captureActions");
 
   const elFutureShop = document.getElementById("futureShop");
-  const elDailyTasks = document.getElementById("dailyTasks");
 
   const elMonList = document.getElementById("monList");
   const elMonDetail = document.getElementById("monDetail");
@@ -946,8 +943,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
   let renderFutureShop = () => {};
   let renderItems = () => {};
   let renderHelp = () => {};
-  let renderDailyTasks = () => {};
-  let dailyTasks = null;
   let renderPve = () => {};
   let renderFunctionsImpl = () => {};
   let socialTab = null;
@@ -1053,15 +1048,12 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       bumpEraCounter(state, "gather_total", 1);
       // ponytail: era berry quest counts gather yield even when warehouse is full
       bumpEraCounter(state, "berry_earned", intended > 0 ? intended : catnipGained);
-      dailyTasks?.onEvent("gather", { resource: "catnip", amount: catnipGained });
-      dailyTasks?.onEvent("clickGather");
       analytics.track("gather_click", { catnipGained: catnipGained ?? 0 });
       syncEraProgress();
       markCaptureDirty();
     },
     onPokeballCraft: (qty) => {
       bumpEraCounter(state, "pokeball_earned", qty);
-      dailyTasks?.onEvent("craft", { item: "pokeball", amount: qty });
       syncEraProgress();
       markCaptureDirty();
     },
@@ -1246,12 +1238,16 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     pushTickerEvent,
     onPokeballCraft: (qty) => {
       bumpEraCounter(state, "pokeball_earned", qty);
-      dailyTasks?.onEvent("craft", { item: "pokeball", amount: qty });
       syncEraProgress();
       markCaptureDirty();
     },
     onEraAdvance: tryAdvanceEra,
     getCaptureAreas,
+    starterMonFactory: () => {
+      const pool = (defs.beasts || []).filter((b) => b && (b.tier === "rare" || b.tier === "epic"));
+      const pick = pool[Math.floor(randFloat() * pool.length)] || pool[0];
+      return pick ? createMonInstance(pick) : null;
+    },
   });
 
   initBuildingsTab({
@@ -1990,7 +1986,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     markLeaderboardDirty();
     render();
     try {
-      const [dex, power, contrib, hatch, shiny, totalPower, gather, resource, catchLb] = await Promise.all([
+      const [dex, power, contrib, hatch, shiny, totalPower, gather, resource, catchLb, rebirthLb] = await Promise.all([
         lbFetchJson(`${base}/api/leaderboard/dex?limit=100`).catch(() => ({ items: [] })),
         lbFetchJson(`${base}/api/leaderboard/power?limit=100`).catch(() => ({ items: [] })),
         lbFetchJson(`${base}/api/leaderboard/contrib?limit=100`).catch(() => ({ items: [] })),
@@ -2000,6 +1996,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         lbFetchJson(`${base}/api/leaderboard/gather?limit=100`).catch(() => ({ items: [] })),
         lbFetchJson(`${base}/api/leaderboard/resource?limit=100`).catch(() => ({ items: [] })),
         lbFetchJson(`${base}/api/leaderboard/catch?limit=100`).catch(() => ({ items: [] })),
+        lbFetchJson(`${base}/api/leaderboard/rebirths?limit=100`).catch(() => ({ items: [] })),
       ]);
       ui.lbDexItems = Array.isArray(dex?.items) ? dex.items : [];
       ui.lbPowerItems = Array.isArray(power?.items) ? power.items : [];
@@ -2010,6 +2007,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       ui.lbGatherItems = Array.isArray(gather?.items) ? gather.items : [];
       ui.lbResourceItems = Array.isArray(resource?.items) ? resource.items : [];
       ui.lbCatchItems = Array.isArray(catchLb?.items) ? catchLb.items : [];
+      ui.lbRebirthItems = Array.isArray(rebirthLb?.items) ? rebirthLb.items : [];
     } catch (e) {
       const raw = String(e && typeof e === "object" && "message" in e ? e.message : e || "请求失败");
       const isAbort = Boolean(e && typeof e === "object" && "name" in e && e.name === "AbortError");
@@ -2056,6 +2054,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
         gatherClicks,
         resourceProduced,
         catchCount,
+        rebirthCount: Math.max(0, Math.floor(Number.isFinite(state.era?.prestigeCount) ? state.era.prestigeCount : 0)),
         gameVersion: getGameVersion(),
         topMons,
         avatar: typeof ui.lbAvatar === "string" && ui.lbAvatar ? ui.lbAvatar : null,
@@ -2150,7 +2149,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
   });
   cloudSave.installCloudPanelUI({ setStatus: setCloudStatus, refreshGame: () => render() });
 
-  // API fetch for daily_tasks / authenticated endpoints (Bearer from cloudSave)
+  // API fetch for authenticated endpoints (Bearer from cloudSave)
   ui.fetch = async (path, { method = "GET", body = null } = {}) => {
     const headers = { "Content-Type": "application/json" };
     const token = cloudSave.getToken();
@@ -2190,7 +2189,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       }
       setCloudStatus("同步中...");
       await cloudSave.syncAll();
-      await dailyTasks?.syncFromServer?.();
       cloudSave.startAutoSync();
       const st = cloudSave.getSyncStatus();
       if (st.status === "error") {
@@ -2503,8 +2501,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     getState: () => state,
     TYPE_ZH,
     dexCaughtUnique,
-    onPveAttempt: () => dailyTasks?.onEvent("pveAttempt"),
-    onPveWin: () => dailyTasks?.onEvent("pveWin"),
   });
 
   // ===== SECTION:RENDER_FUNCTIONS — renderFunctions — 维护者窗口C =====
@@ -2540,36 +2536,11 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     getState: () => state,
   });
 
-  const dailySignin = createDailySignin({
-    state,
-    addRes,
-    addLog,
-  });
-
   const monthlyCard = createMonthlyCard({
     state,
     addRes,
     addLog,
   });
-
-  dailyTasks = createDailyTasks({
-    state,
-    addRes,
-    addLog,
-    dailySignin,
-    apiFetch: (path, opts) => ui.fetch(path, opts),
-    hasAuth: () => Boolean(cloudSave.getToken()),
-  });
-  {
-    const claimRewards0 = dailyTasks.claimRewards.bind(dailyTasks);
-    dailyTasks.claimRewards = async () => {
-      const res = await claimRewards0();
-      if (res?.ok) analytics.track("daily_claim", { futurecoin: res.futurecoin ?? 0 });
-      return res;
-    };
-  }
-  dailyTasks.onEvent("login");
-  if (cloudSave.getToken()) dailyTasks.syncFromServer().catch(() => {});
 
   renderFutureShop = createRenderFutureShop({
     elFutureShop,
@@ -2578,12 +2549,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     fmt,
     getState: () => state,
     monthlyCard,
-  });
-
-  renderDailyTasks = createRenderDailyTasks({
-    elDailyTasks,
-    fmt,
-    dailyTasks,
   });
 
   const tick = createTick({
@@ -2656,7 +2621,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       syncEraProgress: () => syncEraProgress(),
       afterAward: ({ species, prev, isShiny, prevCatchCount }) => {
         if (prevCatchCount === 0) analytics.trackFirstCapture({ beastId: species.id, dex: species.dex });
-        dailyTasks?.onEvent("catch");
 
         if (prev === 0 && (species.tier === "rare" || species.tier === "epic") && typeof pushTickerEvent === "function") {
           pushTickerEvent("catch", `捕捉成功 ${species.name}`);
@@ -2723,13 +2687,8 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     const techEff = computeTechEffects();
     const base = baseCatchChanceByDex(p.dex);
     const add = typeof techEff.catchChanceAdd === "number" ? techEff.catchChanceAdd : 0;
-    const dragonRem =
-      typeof state.skills?.dragonCatchBoostRemainingSec === "number" && Number.isFinite(state.skills.dragonCatchBoostRemainingSec)
-        ? Math.max(0, state.skills.dragonCatchBoostRemainingSec)
-        : 0;
-    const dragonAdd = dragonRem > 0 ? 0.1 : 0;
     // 科技加成递减边际：前20%线性，之后逐渐衰减（避免common萌灵接近100%）
-    const addRaw = add + dragonAdd;
+    const addRaw = add;
     const addSoft = addRaw <= 0.2 ? addRaw : 0.2 + (addRaw - 0.2) * 0.4;
     const baseWithTech = base * Math.max(1, 1 + addSoft);
     const fails = typeof state.rng?.catchFails === "number" ? state.rng.catchFails : 0;
@@ -2852,7 +2811,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     lbFetchJson,
     lbBaseUrl,
     onBossBullyMaybeReward,
-    onEvolve: () => dailyTasks?.onEvent("evolve"),
     getBeastDataByDex,
   });
 
@@ -2896,7 +2854,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     addLog,
     render,
     monthlyCard,
-    dailyTasks,
   });
 
   renderDex = createRenderDex({
@@ -2975,10 +2932,7 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
       if (ui.activeTab === "capture") renderCapture();
       if (ui.activeTab === "functions") renderFunctions();
       if (ui.activeTab === "leaderboard") renderLeaderboard();
-      if (ui.activeTab === "future") {
-        renderFutureShop();
-        renderDailyTasks.refresh();
-      }
+      if (ui.activeTab === "future") renderFutureShop();
       if (ui.activeTab === "mons") renderMons();
       if (ui.activeTab === "dex") renderDex();
       if (ui.activeTab === "pve") renderPve();
@@ -3043,11 +2997,6 @@ import { pityFailStep, luckyCatchMul, ensureLuckyDay, bumpCatchStreak, resetCatc
     }).catch(() => {});
     if (cloudSave.getToken()) {
       doCloudSyncNow();
-    }
-
-    try {
-      if (typeof renderDailyTasks?.refresh === "function") renderDailyTasks.refresh();
-    } catch {
     }
 
     if (!autosaveEnabled) {

@@ -75,8 +75,8 @@ assert(getExpLevelDef("nope").key === "basic", "fallback basic");
 assert(getTypeMul("water", "fire") === TYPE_MUL.SUPER_EFFECTIVE, "water>fire");
 assert(expeditionTypeMulFromTypes(["water"], "fire") === 1.5, "exp mul SE");
 assert(expeditionTypeMulFromTypes(["fire"], "water") === 0.5, "exp mul weak");
-assert(expeditionTypeMulFromTypes(["electric"], "ground") === 0.5, "exp mul immune path");
-assert(expeditionTypeMulFromTypes(["normal"], "normal") === 1, "exp mul neutral");
+assert(expeditionTypeMulFromTypes(["wind"], "electric") === 0.5, "exp mul weak path");
+assert(expeditionTypeMulFromTypes(["wind"], "wind") === 1, "exp mul neutral");
 {
   const clamp0 = (n, a, b) => Math.max(a, Math.min(b, n));
   const rewardMul = (muls) => clamp0(muls.reduce((s, x) => s + x, 0) / muls.length, 0.75, 1.5);
@@ -102,7 +102,7 @@ const state = {
   dex: { caught: { 1: 1, 2: 1 } },
   permanentBoosts: { capture: 2 },
   pokeballMade: 0,
-  skills: { steelBallDiscountCharges: 0 },
+  skills: {},
   buildings: { researchLab: { owned: 0 } },
   res: { catnip: { cap: 100 } },
 };
@@ -160,7 +160,7 @@ const pdefs = {
 };
 const ps = {
   permanentBoosts: { capacity: 2, production: 1 },
-  skills: { normalBoostStacks: [1, 2] },
+  skills: {},
   buildings: {
     hut: { owned: 1 }, workshop: { owned: 0 }, lumberYard: { owned: 0 }, quarry: { owned: 0 },
     breedingHouse: { owned: 1 }, trainingGround: { owned: 2 }, expeditionPost: { owned: 0 },
@@ -192,10 +192,10 @@ assert(JSON.stringify(ps.training.activeIds) === "[1,2]", "training filter");
 const rates = computeUnlockedResourceRates(ps, { woodRateMul: 1, mineralsRateMul: 1 });
 pe.woodPerSec = rates.woodPerSec;
 finalizeProductionRates(pe, ps, 1);
-assert(Math.abs(pe.catnipPerSec - (2 * 3 * 0.5 * 1.1 - 10)) < 1e-9, "finalize rates");
+assert(Math.abs(pe.catnipPerSec - (2 * 0.5 * 1.1 - 10)) < 1e-9, "finalize rates");
 {
   const pe2 = { catnipPerSec: 20, woodPerSec: 10, mineralsPerSec: 4 };
-  const ps2 = { permanentBoosts: {}, skills: { normalBoostStacks: [] }, breeding: { on: false } };
+  const ps2 = { permanentBoosts: {}, skills: {}, breeding: { on: false } };
   finalizeProductionRates(pe2, ps2, 1);
   const baseCat = pe2.catnipPerSec;
   pe2.catnipPerSec = 20;
@@ -417,22 +417,18 @@ assert(win.winner === 1 && win.rounds > 0, "pvp strong wins");
     skillCdSec,
     listActiveSkillBuffs,
   } = await import("../modules/type_skills.js");
-  assert(Object.keys(TYPE_SKILLS).length === 18, "18 type skills");
-  assert(IMPLEMENTED_SKILL_TYPES.length === 18, "all skills marked implemented");
-  assert(isSkillImplemented("poison") && isSkillImplemented("flying") && isSkillImplemented("psychic"), "ex-missing skills wired");
+  assert(Object.keys(TYPE_SKILLS).length === 9, "9 type skills");
+  assert(IMPLEMENTED_SKILL_TYPES.length === 9, "all skills marked implemented");
+  assert(isSkillImplemented("wind") && isSkillImplemented("stone") && isSkillImplemented("mystic"), "9 系技能全接入");
   assert(skillCdSec("grass") === 8 * 3600 && skillCdSec("fire") === 3600, "skill cds");
-  assert(BATCH_ONCE_SKILL_TYPES.includes("normal") && BATCH_ONCE_SKILL_TYPES.includes("bug"), "batch-once covers global buffs");
+  assert(BATCH_ONCE_SKILL_TYPES.includes("stone") && BATCH_ONCE_SKILL_TYPES.includes("mystic"), "batch-once covers global buffs");
   const lines = listActiveSkillBuffs({
-    trainingStacks: [10],
-    normalBoostStacks: [1, 2],
-    iceSatietySlowRemainingSec: 90,
-    steelBallDiscountCharges: 3,
+    fairyAffGainRemainingSec: 60,
+    rockBuildBoostRemainingSec: 90,
     darkPveDamageBoostRemainingSec: 120,
   });
-  assert(lines.some((x) => x.includes("训练")), "buff strip training");
-  assert(lines.some((x) => x.includes("产量")), "buff strip normal");
-  assert(lines.some((x) => x.includes("保鲜")), "buff strip ice");
-  assert(lines.some((x) => x.includes("精工")), "buff strip steel");
+  assert(lines.some((x) => x.includes("祝福")), "buff strip light");
+  assert(lines.some((x) => x.includes("打磨")), "buff strip stone");
   assert(lines.some((x) => x.includes("霸凌")), "buff strip dark");
 }
 
@@ -495,6 +491,8 @@ const newbie = spawnSync(process.execPath, [path.join(__dirname, "newbie-path-se
 if (newbie.status !== 0) failed += 1;
 const restart = spawnSync(process.execPath, [path.join(__dirname, "restart-p1-p13-selfcheck.mjs")], { stdio: "inherit" });
 if (restart.status !== 0) failed += 1;
+const rebirth = spawnSync(process.execPath, [path.join(__dirname, "rebirth-selfcheck.mjs")], { stdio: "inherit" });
+if (rebirth.status !== 0) failed += 1;
 const branding = spawnSync(process.execPath, [path.join(__dirname, "branding-selfcheck.mjs")], { stdio: "inherit" });
 if (branding.status !== 0) failed += 1;
 

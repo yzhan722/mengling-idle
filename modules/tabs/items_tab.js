@@ -196,7 +196,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
             if (have < 1) return;
             state.res.hugeBerry.value = Math.max(0, have - 1);
             if (!state.skills || typeof state.skills !== "object") {
-              state.skills = { trainingStacks: [], normalBoostStacks: [], hugeBerryBuffRemainingSec: 0 };
+              state.skills = { hugeBerryBuffRemainingSec: 0 };
             }
             const rem0 =
               typeof state.skills.hugeBerryBuffRemainingSec === "number" && Number.isFinite(state.skills.hugeBerryBuffRemainingSec)

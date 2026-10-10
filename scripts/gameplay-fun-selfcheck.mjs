@@ -8,7 +8,6 @@ import {
   bumpSessionPveWin,
   catchStreakMilestoneBadges,
   catchStreakReward,
-  canBuyShopDailyDeal,
   canClaimDailyFreeFc,
   canClaimDexRegion,
   dailyGoalsChecklist,
@@ -27,7 +26,6 @@ import {
   luckyWeekEncounterMul,
   markDailyFreeFcClaimed,
   markDexRegionClaimed,
-  markShopDailyDealBought,
   natureAdvMissingPreferChance,
   natureBreedTimeMul,
   natureDexBonusMul,
@@ -49,7 +47,6 @@ import {
   seasonBarVsGhosts,
   seasonLocalScore,
   sessionHighlightsLine,
-  SHOP_DAILY_DEAL,
   tryBallSave,
   canClaimDailySpin,
   rollDailySpin,
@@ -67,8 +64,6 @@ import {
   bumpGatherDaily,
   gatherDailyProgress,
   markGatherDailyClaimed,
-  shopDailyTripleProgress,
-  markShopDailyTripleClaimed,
   noteExpeditionDailyDone,
   expeditionDailyProgress,
   markExpeditionDailyClaimed,
@@ -392,16 +387,6 @@ import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS, isoW
 }
 
 {
-  const meta = {};
-  const today = localDateStr();
-  assert.equal(canBuyShopDailyDeal(meta, today), true, "deal available");
-  assert.equal(SHOP_DAILY_DEAL.costFc, 3, "deal cost");
-  assert.equal(SHOP_DAILY_DEAL.gainFc, 10, "deal gain");
-  markShopDailyDealBought(meta, today);
-  assert.equal(canBuyShopDailyDeal(meta, today), false, "deal bought");
-}
-
-{
   assert.equal(seasonLocalScore(5, 2), 52, "season score");
   const bar = seasonBarVsGhosts(50, [
     { name: "短裤小子", score: 80 },
@@ -534,18 +519,6 @@ import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS, isoW
   const g = gatherDailyProgress(state, "2099-04-01");
   assert.equal(g.canClaim, true, "gather daily claimable");
   assert.equal(markGatherDailyClaimed(state, "2099-04-01"), true, "gather mark");
-}
-
-{
-  const today = localDateStr();
-  const onlyDeal = { shopDailyDealDate: today };
-  assert.equal(shopDailyTripleProgress(onlyDeal, today).canClaim, false, "deal alone not enough");
-  const meta = { dailyFreeFcDate: today, dailySpinDate: today };
-  const t = shopDailyTripleProgress(meta, today);
-  assert.equal(t.goal, 2, "double goal");
-  assert.equal(t.canClaim, true, "free+spin ready without deal");
-  markShopDailyTripleClaimed(meta, today);
-  assert.equal(shopDailyTripleProgress(meta, today).canClaim, false, "double claimed");
 }
 
 {

@@ -246,27 +246,6 @@ export function createTick(ctx) {
     });
   }
 
-  const decArr = (arr, dtSec) => {
-    if (!Array.isArray(arr) || arr.length === 0) return [];
-    const out = [];
-    for (const x of arr) {
-      const v0 = typeof x === "number" && Number.isFinite(x) ? x : 0;
-      const v1 = v0 - dtSec;
-      if (v1 > 0) out.push(v1);
-    }
-    return out;
-  };
-
-  const applyPsychicCraftBoost = (state, sec) => {
-    const charges0 =
-      typeof state.skills?.psychicCraftBoostCharges === "number" && Number.isFinite(state.skills.psychicCraftBoostCharges)
-        ? Math.max(0, Math.floor(state.skills.psychicCraftBoostCharges))
-        : 0;
-    if (charges0 <= 0) return sec;
-    state.skills.psychicCraftBoostCharges = charges0 - 1;
-    return Math.max(1, Math.ceil(sec * 0.8));
-  };
-
   return function tick(dtSec, opts = null) {
     const offline = Boolean(opts && typeof opts === "object" && opts.offline);
     const state = getState();
@@ -279,30 +258,12 @@ export function createTick(ctx) {
 
     if (!state.skills || typeof state.skills !== "object") {
       state.skills = {
-        trainingStacks: [],
-        normalBoostStacks: [],
         hugeBerryBuffRemainingSec: 0,
-        steelBallDiscountCharges: 0,
-        iceSatietySlowRemainingSec: 0,
         fairyAffGainRemainingSec: 0,
-        dragonCatchBoostRemainingSec: 0,
-        psychicCraftBoostCharges: 0,
         rockBuildBoostRemainingSec: 0,
-        poisonResourceSaveRemainingSec: 0,
         darkPveDamageBoostRemainingSec: 0,
       };
     }
-    const trainStacks0 = Array.isArray(state.skills.trainingStacks) ? state.skills.trainingStacks : [];
-    const normalStacks0 = Array.isArray(state.skills.normalBoostStacks) ? state.skills.normalBoostStacks : [];
-    const trainStacks1 = decArr(trainStacks0, dtSec);
-    const normalStacks1 = decArr(normalStacks0, dtSec);
-    if (trainStacks1.length !== trainStacks0.length) {
-      state.skills.trainingStacks = trainStacks1;
-      if (ui.activeTab === "functions") ui.functionsDirty = true;
-    } else {
-      state.skills.trainingStacks = trainStacks1;
-    }
-    state.skills.normalBoostStacks = normalStacks1;
 
     const huge0 =
       typeof state.skills.hugeBerryBuffRemainingSec === "number" && Number.isFinite(state.skills.hugeBerryBuffRemainingSec)
@@ -311,13 +272,6 @@ export function createTick(ctx) {
     const huge1 = huge0 > 0 ? Math.max(0, huge0 - dtSec) : 0;
     if (huge1 !== huge0) state.skills.hugeBerryBuffRemainingSec = huge1;
 
-    const ice0 =
-      typeof state.skills.iceSatietySlowRemainingSec === "number" && Number.isFinite(state.skills.iceSatietySlowRemainingSec)
-        ? state.skills.iceSatietySlowRemainingSec
-        : 0;
-    const ice1 = ice0 > 0 ? Math.max(0, ice0 - dtSec) : 0;
-    if (ice1 !== ice0) state.skills.iceSatietySlowRemainingSec = ice1;
-
     const fairy0 =
       typeof state.skills.fairyAffGainRemainingSec === "number" && Number.isFinite(state.skills.fairyAffGainRemainingSec)
         ? state.skills.fairyAffGainRemainingSec
@@ -325,26 +279,12 @@ export function createTick(ctx) {
     const fairy1 = fairy0 > 0 ? Math.max(0, fairy0 - dtSec) : 0;
     if (fairy1 !== fairy0) state.skills.fairyAffGainRemainingSec = fairy1;
 
-    const dragon0 =
-      typeof state.skills.dragonCatchBoostRemainingSec === "number" && Number.isFinite(state.skills.dragonCatchBoostRemainingSec)
-        ? state.skills.dragonCatchBoostRemainingSec
-        : 0;
-    const dragon1 = dragon0 > 0 ? Math.max(0, dragon0 - dtSec) : 0;
-    if (dragon1 !== dragon0) state.skills.dragonCatchBoostRemainingSec = dragon1;
-
     const rock0 =
       typeof state.skills.rockBuildBoostRemainingSec === "number" && Number.isFinite(state.skills.rockBuildBoostRemainingSec)
         ? state.skills.rockBuildBoostRemainingSec
         : 0;
     const rock1 = rock0 > 0 ? Math.max(0, rock0 - dtSec) : 0;
     if (rock1 !== rock0) state.skills.rockBuildBoostRemainingSec = rock1;
-
-    const poison0 =
-      typeof state.skills.poisonResourceSaveRemainingSec === "number" && Number.isFinite(state.skills.poisonResourceSaveRemainingSec)
-        ? state.skills.poisonResourceSaveRemainingSec
-        : 0;
-    const poison1 = poison0 > 0 ? Math.max(0, poison0 - dtSec) : 0;
-    if (poison1 !== poison0) state.skills.poisonResourceSaveRemainingSec = poison1;
 
     const dark0 =
       typeof state.skills.darkPveDamageBoostRemainingSec === "number" && Number.isFinite(state.skills.darkPveDamageBoostRemainingSec)
@@ -589,8 +529,7 @@ export function createTick(ctx) {
               return !(t && typeof t === "object" && typeof t.remainingSec === "number" && t.remainingSec > 0);
             };
             const startTask = (k, totalSec) => {
-              const boostedSec = applyPsychicCraftBoost(state, totalSec);
-              craftObj[k] = { remainingSec: boostedSec, totalSec: boostedSec };
+              craftObj[k] = { remainingSec: totalSec, totalSec };
               if (ui && ui.activeTab === "future") ui.futureDirty = true;
             };
 
@@ -799,8 +738,7 @@ export function createTick(ctx) {
 
     if (mons.length > 0) {
       const satietyMulBase = 1;
-      const trainStacksN = Array.isArray(state.skills?.trainingStacks) ? state.skills.trainingStacks.length : 0;
-      const trainExpMul = 10 + Math.max(0, trainStacksN) * 5;
+      const trainExpMul = 10;
       const satRegen = huge1 > 0 ? (10 / 3600) * dtSec : 0;
       const affRateBase = dtSec / (60 * 60 * 2);
       const affLvl = typeof getServerBuffLevel === "function" ? Math.max(0, Math.floor(getServerBuffLevel("aff") || 0)) : 0;
@@ -829,11 +767,6 @@ export function createTick(ctx) {
             skillTimerChanged = true;
           }
           if (ar1 <= 0) {
-            if (at0 === "ground") {
-              const qty = Math.random() < 0.5 ? 1 : 2;
-              addRes("evolutionEnergy", qty);
-              addLog(`挖矿完成：灵源 +${qty}`, true);
-            }
             if (at0 === "grass") {
               addRes("bigBerry", 1);
               addLog("果树成熟：大灵果 +1", true);

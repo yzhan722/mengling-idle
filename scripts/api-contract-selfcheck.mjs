@@ -81,8 +81,9 @@ const BOARD_COL = {
   gather: "gatherClicks",
   resource: "resourceProduced",
   catch: "catchCount",
+  rebirths: "rebirthCount",
 };
-assert(Object.keys(BOARD_COL).length === 9, "9 boards");
+assert(Object.keys(BOARD_COL).length === 10, "10 boards");
 
 const actorBoundEndpoints = [
   "social/messages.js",
@@ -96,8 +97,6 @@ const actorBoundEndpoints = [
   "friends/accept.js",
   "friends/request.js",
   "friends/gift.js",
-  "daily_tasks/index.js",
-  "daily_tasks/claim.js",
 ];
 for (const endpoint of actorBoundEndpoints) {
   const source = await readFile(new URL(`../functions/api/${endpoint}`, import.meta.url), "utf8");

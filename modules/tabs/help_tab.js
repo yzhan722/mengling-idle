@@ -142,23 +142,32 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
       <div style="line-height:1.8">
         ${h('稀有度')}：普通(80%) · 少见(15%) · 稀有(4%) · 史诗(1%)${br}
         ${h('闪光萌灵')}：极小概率，出现时有全屏特效提示${br}
-        ${h('幻灵/传说')}：特殊区域，捕获率极低，建议配合龙系技能和捕获Buff${br}
-        捕捉页有「时代」主线任务；完成条件后可迈入下一时代，规则加成会叠加，存档资源/萌灵不重置。
+        ${h('幻灵/传说')}：幻梦秘境专属，捕获率极低，建议配合捕获Buff${br}
+        捕捉页有「时代」主线任务；完成条件后可迈入下一时代，规则加成会叠加，时代推进不重置存档。
       </div>
       ${gap}
       <table style="width:100%;border-collapse:collapse;font-size:12px">
         <tr style="opacity:0.6"><td>区域</td><td>解锁图鉴数</td><td>生态</td></tr>
-        <tr><td>芽芽草甸</td><td>0种</td><td>草/虫/一般</td></tr>
-        <tr><td>蜜露林径</td><td>25种</td><td>草/虫/妖精</td></tr>
-        <tr><td>溪光浅滩</td><td>70种</td><td>水</td></tr>
-        <tr><td>风铃高原</td><td>140种</td><td>飞行/电/格斗</td></tr>
-        <tr><td>星砂荒漠</td><td>210种</td><td>地面/岩石/火</td></tr>
-        <tr><td>月见花园</td><td>280种</td><td>妖精/超能力/幽灵</td></tr>
-        <tr><td>霜晶山脊</td><td>350种</td><td>冰/钢/岩石</td></tr>
-        <tr><td>龙眠幽谷</td><td>430种</td><td>龙/恶/幽灵/毒</td></tr>
-        <tr><td>幻梦秘境</td><td>520种</td><td>传说/幻之</td></tr>
+        <tr><td>芽芽草甸</td><td>0种</td><td>风/草/暗</td></tr>
+        <tr><td>蜜露林径</td><td>6种</td><td>草/风/光</td></tr>
+        <tr><td>溪光浅滩</td><td>16种</td><td>水/草/风</td></tr>
+        <tr><td>风铃高原</td><td>32种</td><td>水/电/岩</td></tr>
+        <tr><td>星砂荒漠</td><td>48种</td><td>岩/火/水</td></tr>
+        <tr><td>月见花园</td><td>64种</td><td>火/岩/风</td></tr>
+        <tr><td>霜晶山脊</td><td>80种</td><td>岩/幻/暗</td></tr>
+        <tr><td>龙眠幽谷</td><td>96种</td><td>暗/风/幻</td></tr>
+        <tr><td>幻梦秘境</td><td>120种</td><td>幻</td></tr>
       </table>
-      ${tip('龙系萌灵技能可临时提升捕获率，抓幻灵前先用！')}
+      ${tip('暗系萌灵技能「霸凌」可在PvE压血线；抓幻灵前囤捕获加成道具。')}
+    `));
+
+    rows.push(block("转生轮回", `
+      <div style="line-height:1.8">
+        ${h('解锁')}：悖梦时空主线全清 + 拥有 ≥1 闪光萌灵 → 萌灵页时代面板出现「时空歪曲挑战」。${br}
+        ${h('重置')}：资源/建筑/研究/队伍/自动化清空；${h('保留')}：图鉴（含闪光）、永久加成、PvE进度、未来币已购内容。${br}
+        ${h('灵珀')}：按图鉴数/闪光数/本轮速度结算，在「未来币·转生轮回」区兑换永久加成：产出/捕获/上限/开局科技/开局稀有萌灵。${br}
+        ${h('循环')}：扭曲周目时代计数目标 ×1.5ⁿ 递增；轮回次数计入排行榜「轮回榜」。
+      </div>
     `));
 
     rows.push(block("萌灵培育", `
@@ -200,7 +209,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
 
     rows.push(block("未来币与全服 Buff", `
       <div style='line-height:1.8'>
-        <strong>未来币来源</strong>：远征完成、每日任务（含连续登录）、林佬奖励<br/>
+        <strong>未来币来源</strong>：远征完成、商店每日福利、林佬奖励<br/>
         <strong>用途</strong>：购买全服Buff（1币≈1分钟），兑换道具
       </div>
       <table style='width:100%;border-collapse:collapse;font-size:12px'>
@@ -213,24 +222,6 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <tr><td>全服亲密度</td><td>+5% 亲密度增长</td></tr>
       </table>
       <div class='muted' style='font-size:11px;margin-top:6px'>提示：全服Buff全服共享——你买了大家受益。</div>
-    `));
-
-    rows.push(block("每日任务", `
-      <div style='line-height:1.8'>
-        每天随机 5 个玩法目标；完成任意任务后可在「商店与合成」领取奖励。<br/>
-        <strong>连续登录</strong>已并入任务领取：领奖时自动发放当日连续登录奖励（7天循环），不再单独签到。
-      </div>
-      <table style='width:100%;border-collapse:collapse;font-size:12px'>
-        <tr style='opacity:0.6'><td>连续天数</td><td>登录奖励</td></tr>
-        <tr><td>第1天</td><td>未来币x5 + 灵果x500</td></tr>
-        <tr><td>第2天</td><td>未来币x5 + 灵木x200</td></tr>
-        <tr><td>第3天</td><td>未来币x10 + 灵晶碎片x100</td></tr>
-        <tr><td>第4天</td><td>未来币x10 + 灵球x50</td></tr>
-        <tr><td>第5天</td><td>未来币x15 + 跃级糖丸x1</td></tr>
-        <tr><td>第6天</td><td>未来币x20 + 灵源x2</td></tr>
-        <tr><td>第7天</td><td>未来币x50 + 灵晶石x1 + 跃级糖丸x3</td></tr>
-      </table>
-      <div class='muted' style='font-size:11px;margin-top:6px'>提示：月卡每日领取仍在未来币商店，与任务独立。</div>
     `));
 
     rows.push(block("图鉴与排行榜", `

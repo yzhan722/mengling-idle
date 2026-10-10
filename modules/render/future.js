@@ -1,3 +1,5 @@
+import { LEGACY_PERK_ORDER, LEGACY_PERKS, canBuyPerk, perkCost, perkLevel } from "../systems/rebirth.js";
+
 export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, monthlyCard }) {
   return function renderFutureShop() {
     const state = getState();
@@ -37,7 +39,7 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
 
     const rows = [];
     const foldCfg = ui.futureShopFold && typeof ui.futureShopFold === "object" ? ui.futureShopFold : {};
-    const foldDefaults = { daily: false, exchange: false, boost: true, permanent: true, item: true, package: true, auto: true, craft: true };
+    const foldDefaults = { daily: false, rebirth: false, exchange: false, boost: true, permanent: true, item: true, auto: true, craft: true };
     const isFolded = (k) =>
       Boolean(
         foldCfg && Object.prototype.hasOwnProperty.call(foldCfg, k)
@@ -61,7 +63,6 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
     const exchangeRows = [];
     const autoRows = [];
     const craftRows = [];
-    const packageRows = [];
     const boostRows = [];
     const permanentRows = [];
     const itemRows = [];
@@ -97,20 +98,6 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
           </div>
         </div>
       `);
-      const dealBought = state.meta.shopDailyDealDate === today;
-      const haveFc = Math.max(0, Math.floor(state.res.futurecoin?.value ?? 0));
-      const dealOk = !dealBought && haveFc >= 3;
-      dailyRows.push(`
-        <div class="row">
-          <div class="row__left">
-            <div class="row__title">今日特惠小包</div>
-            <div class="row__desc">半价：花 3 未来币得 +10 未来币（每日限一次，诚实小赚）。</div>
-          </div>
-          <div class="row__right">
-            <button class="btn btn--primary btn--small" data-fc-daily-deal ${dealOk ? "" : "disabled"}>${dealBought ? "今日已购" : "购买（3→+10）"}</button>
-          </div>
-        </div>
-      `);
       const spinClaimed = state.meta.dailySpinDate === today;
       dailyRows.push(`
         <div class="row">
@@ -123,27 +110,9 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
           </div>
         </div>
       `);
-      const triple = (() => {
-        const free = state.meta.dailyFreeFcDate === today;
-        const spin = state.meta.dailySpinDate === today;
-        const n = (free ? 1 : 0) + (spin ? 1 : 0);
-        const claimed = state.meta.shopTripleClaimDate === today;
-        return { n, claimed, canClaim: n >= 2 && !claimed };
-      })();
-      dailyRows.push(`
-        <div class="row">
-          <div class="row__left">
-            <div class="row__title">每日双礼</div>
-            <div class="row__desc">免费币 + 转盘全做完（${triple.n}/2）→ 额外 +15 未来币</div>
-          </div>
-          <div class="row__right">
-            <button class="btn btn--primary btn--small" data-fc-daily-triple ${triple.canClaim ? "" : "disabled"}>${triple.claimed ? "双礼已领" : "领取双礼 +15"}</button>
-          </div>
-        </div>
-      `);
     }
 
-    // 月卡（每日签到已并入上方「每日任务」领取，避免双入口）
+    // 月卡
     if (monthlyCard) {
       const cardInfo = monthlyCard.getInfo();
       const rewardText = Object.entries(cardInfo.dailyReward)
@@ -375,52 +344,6 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
         <div class="row__right">
           <button class="btn btn--small" data-fc-boost="production" data-fc-price="${prodBoostPrice1}" data-fc-sec="${prodBoostSec1}" ${canBuyProdBoost1 ? "" : "disabled"}>兑换一小时（${prodBoostPrice1}币）</button>
           <button class="btn btn--primary" data-fc-boost="production" data-fc-price="${prodBoostPrice10}" data-fc-sec="${prodBoostSec10}" ${canBuyProdBoost10 ? "" : "disabled"}>兑换十小时（${prodBoostPrice10}币）</button>
-        </div>
-      </div>
-    `);
-
-    // 资源礼包
-    const smallPackPrice = 50;
-    const canBuySmallPack = (state.res.futurecoin?.value ?? 0) >= smallPackPrice;
-    packageRows.push(`
-      <div class="row">
-        <div class="row__left">
-          <div class="row__title">基础资源礼包</div>
-          <div class="row__desc">价格：${smallPackPrice} 未来币</div>
-          <div class="row__desc">内容：灵果 x1000、灵木 x500、灵晶碎片 x50、灵球 x10</div>
-        </div>
-        <div class="row__right">
-          <button class="btn btn--primary" data-fc-package="small" data-fc-price="${smallPackPrice}" ${canBuySmallPack ? "" : "disabled"}>购买</button>
-        </div>
-      </div>
-    `);
-
-    const mediumPackPrice = 150;
-    const canBuyMediumPack = (state.res.futurecoin?.value ?? 0) >= mediumPackPrice;
-    packageRows.push(`
-      <div class="row">
-        <div class="row__left">
-          <div class="row__title">进阶资源礼包</div>
-          <div class="row__desc">价格：${mediumPackPrice} 未来币</div>
-          <div class="row__desc">内容：大灵果 x20、灵源 x10、灵晶石 x3、跃级糖丸 x5</div>
-        </div>
-        <div class="row__right">
-          <button class="btn btn--primary" data-fc-package="medium" data-fc-price="${mediumPackPrice}" ${canBuyMediumPack ? "" : "disabled"}>购买</button>
-        </div>
-      </div>
-    `);
-
-    const largePackPrice = 500;
-    const canBuyLargePack = (state.res.futurecoin?.value ?? 0) >= largePackPrice;
-    packageRows.push(`
-      <div class="row">
-        <div class="row__left">
-          <div class="row__title">豪华资源礼包</div>
-          <div class="row__desc">价格：${largePackPrice} 未来币</div>
-          <div class="row__desc">内容：巨大灵果 x10、觉醒石 x2、灵契绳 x3、究极灵球 x1、跃级糖丸 x20</div>
-        </div>
-        <div class="row__right">
-          <button class="btn btn--primary" data-fc-package="large" data-fc-price="${largePackPrice}" ${canBuyLargePack ? "" : "disabled"}>购买</button>
         </div>
       </div>
     `);
@@ -750,22 +673,6 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
       </div>
     `);
 
-    // 药剂礼包
-    const potionPackPrice = 100;
-    const canBuyPotionPack = (state.res.futurecoin?.value ?? 0) >= potionPackPrice;
-    packageRows.push(`
-      <div class="row">
-        <div class="row__left">
-          <div class="row__title">药剂礼包</div>
-          <div class="row__desc">价格：${potionPackPrice} 未来币</div>
-          <div class="row__desc">内容：各属性药剂（HP/攻击/防御/特攻/特防/速度）各 x5</div>
-        </div>
-        <div class="row__right">
-          <button class="btn btn--primary" data-fc-package="potion" data-fc-price="${potionPackPrice}" ${canBuyPotionPack ? "" : "disabled"}>购买</button>
-        </div>
-      </div>
-    `);
-
     // 永久增益
     const MAX_PERM_LEVEL = 10;
     const permExpLvl = typeof state.permanentBoosts?.exp === "number" ? Math.max(0, Math.min(MAX_PERM_LEVEL, Math.floor(state.permanentBoosts.exp))) : 0;
@@ -1027,6 +934,40 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
     rows.push(sectionHeader("daily", "每日福利（月卡）"));
     if (!isFolded("daily")) rows.push(...dailyRows);
 
+    if (state.era?.prestigeUnlocked) {
+      rows.push(sectionHeader("rebirth", "转生轮回"));
+      if (!isFolded("rebirth")) {
+        const essence = Math.max(0, Math.floor(state.meta?.legacy?.essence || 0));
+        const rebirths = Math.max(0, Math.floor(state.era?.prestigeCount || 0));
+        rows.push(`
+          <div class="row">
+            <div class="row__left">
+              <div class="row__title">灵珀 ×${essence} · 已轮回 ${rebirths} 次</div>
+              <div class="row__desc">悖梦主线全清且持有闪光萌灵后，在萌灵页时代面板发起「时空歪曲」。灵珀买轮回加成，永久生效。</div>
+            </div>
+          </div>
+        `);
+        for (const pid of LEGACY_PERK_ORDER) {
+          const pdef = LEGACY_PERKS[pid];
+          const lvl = perkLevel(state, pid);
+          const maxed = lvl >= pdef.max;
+          const cost = perkCost(pid, lvl);
+          const canBuy = canBuyPerk(state, pid);
+          rows.push(`
+            <div class="row">
+              <div class="row__left">
+                <div class="row__title">${pdef.name} <span class="badge">${lvl}/${pdef.max}</span></div>
+                <div class="row__desc">${pdef.desc}</div>
+              </div>
+              <div class="row__right">
+                ${maxed ? `<span class="badge">已满</span>` : `<button class="btn btn--primary" data-legacy-perk="${pid}" ${canBuy ? "" : "disabled"}>${cost} 灵珀</button>`}
+              </div>
+            </div>
+          `);
+        }
+      }
+    }
+
     rows.push(sectionHeader("exchange", "兑换"));
     if (!isFolded("exchange")) rows.push(...exchangeRows);
 
@@ -1038,9 +979,6 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
 
     rows.push(sectionHeader("item", "道具"));
     if (!isFolded("item")) rows.push(...itemRows);
-
-    rows.push(sectionHeader("package", "礼包"));
-    if (!isFolded("package")) rows.push(...packageRows);
 
     rows.push(sectionHeader("auto", "自动"));
     if (!isFolded("auto")) rows.push(...autoRows);

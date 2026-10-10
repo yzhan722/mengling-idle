@@ -2,17 +2,14 @@ import { nowMs, clamp, pad3 } from "./utils.js";
 
 import { clampStar } from "./stars.js";
 
-import { createMonInstance as createMonInstance0 } from "./mons.js";
-
 import { ensureMonAbility } from "./abilities.js";
-
-import { legacyIdMap, beasts } from "./beast_defs.js";
 
 import { BUILDING_DEFS } from "./defs_buildings.js";
 
 import { EXTRA_TECH_FLAGS } from "./tech_defs.js?v=0.31.4";
 
 import { ensureEraState } from "./systems/era.js";
+import { normalizeLegacy } from "./systems/rebirth.js";
 
 
 
@@ -74,7 +71,7 @@ export const BASE_TECH_FLAGS = {
 
 export const BUILDING_MAX_LEVEL = 50;
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 
 
 
@@ -89,6 +86,8 @@ export const defaultState = () => ({
     createdAt: nowMs(),
 
     lastSavedAt: nowMs(),
+
+    legacy: { essence: 0, essenceEarned: 0, perks: {} },
 
   },
 
@@ -171,18 +170,6 @@ export const defaultState = () => ({
 
   resourceProduced: 0,
 
-  dailySignin: {
-
-    lastSigninDate: "",
-
-    consecutiveDays: 0,
-
-    totalDays: 0,
-
-    claimed: false,
-
-  },
-
   monthlyCard: {
 
     active: false,
@@ -192,16 +179,6 @@ export const defaultState = () => ({
     lastClaimDate: "",
 
     totalClaimed: 0,
-
-  },
-
-  dailyTasks: {
-
-    lastResetDate: "",
-
-    tasks: [],
-
-    claimed: false,
 
   },
 
@@ -343,25 +320,11 @@ export const defaultState = () => ({
 
   skills: {
 
-    trainingStacks: [],
-
-    normalBoostStacks: [],
-
     hugeBerryBuffRemainingSec: 0,
-
-    steelBallDiscountCharges: 0,
-
-    iceSatietySlowRemainingSec: 0,
 
     fairyAffGainRemainingSec: 0,
 
-    dragonCatchBoostRemainingSec: 0,
-
-    psychicCraftBoostCharges: 0,
-
     rockBuildBoostRemainingSec: 0,
-
-    poisonResourceSaveRemainingSec: 0,
 
     darkPveDamageBoostRemainingSec: 0,
 
@@ -537,38 +500,6 @@ function normalizeSaveData(data) {
 
 
 
-function migrateSaveData(data, fromVersion, toVersion) {
-
-  let v = typeof fromVersion === "number" && Number.isFinite(fromVersion) ? Math.max(0, Math.floor(fromVersion)) : 0;
-
-  if (!data.meta || typeof data.meta !== "object") data.meta = {};
-
-
-
-  if (v < 2) {
-
-    const t0 = typeof data.t === "number" && Number.isFinite(data.t) ? data.t : nowMs();
-
-    if (typeof data.meta.createdAt !== "number" || !Number.isFinite(data.meta.createdAt)) data.meta.createdAt = t0;
-
-    if (typeof data.meta.lastSavedAt !== "number" || !Number.isFinite(data.meta.lastSavedAt)) data.meta.lastSavedAt = t0;
-
-    v = 2;
-
-  }
-
-
-
-  data.version = toVersion;
-
-  data.meta.saveVersion = toVersion;
-
-  return data;
-
-}
-
-
-
 function validateSaveData(data) {
 
   if (!data || typeof data !== "object") return false;
@@ -591,9 +522,9 @@ export function loadFromRaw(raw) {
 
   if (!normalized) return null;
 
-  const fromVersion = normalized.meta?.saveVersion ?? normalized.version ?? 0;
+  if (getSaveVersion(normalized) !== SAVE_VERSION) return null;
 
-  const data = migrateSaveData(normalized, fromVersion, SAVE_VERSION);
+  const data = normalized;
 
   if (!validateSaveData(data)) return null;
 
@@ -649,6 +580,8 @@ export function loadFromRaw(raw) {
   if (!s.meta || typeof s.meta !== "object") s.meta = { saveVersion: SAVE_VERSION };
 
   s.meta.saveVersion = SAVE_VERSION;
+
+  s.meta.legacy = normalizeLegacy(s.meta.legacy);
 
 
 
@@ -899,25 +832,11 @@ export function loadFromRaw(raw) {
 
   s.skills = {
 
-    trainingStacks: [],
-
-    normalBoostStacks: [],
-
     hugeBerryBuffRemainingSec: 0,
-
-    steelBallDiscountCharges: 0,
-
-    iceSatietySlowRemainingSec: 0,
 
     fairyAffGainRemainingSec: 0,
 
-    dragonCatchBoostRemainingSec: 0,
-
-    psychicCraftBoostCharges: 0,
-
     rockBuildBoostRemainingSec: 0,
-
-    poisonResourceSaveRemainingSec: 0,
 
     darkPveDamageBoostRemainingSec: 0,
 
@@ -925,59 +844,17 @@ export function loadFromRaw(raw) {
 
   if (data.skills && typeof data.skills === "object") {
 
-    const ts = Array.isArray(data.skills.trainingStacks) ? data.skills.trainingStacks : [];
-
-    const ns = Array.isArray(data.skills.normalBoostStacks) ? data.skills.normalBoostStacks : [];
-
-    s.skills.trainingStacks = ts
-
-      .map((x) => (typeof x === "number" && Number.isFinite(x) ? x : 0))
-
-      .filter((x) => x > 0)
-
-      .slice(0, 200);
-
-    s.skills.normalBoostStacks = ns
-
-      .map((x) => (typeof x === "number" && Number.isFinite(x) ? x : 0))
-
-      .filter((x) => x > 0)
-
-      .slice(0, 200);
-
     const rem = data.skills.hugeBerryBuffRemainingSec;
 
     if (typeof rem === "number" && Number.isFinite(rem)) s.skills.hugeBerryBuffRemainingSec = Math.max(0, rem);
-
-
-
-    const steel = data.skills.steelBallDiscountCharges;
-
-    if (typeof steel === "number" && Number.isFinite(steel)) s.skills.steelBallDiscountCharges = Math.max(0, Math.floor(steel));
-
-    const ice = data.skills.iceSatietySlowRemainingSec;
-
-    if (typeof ice === "number" && Number.isFinite(ice)) s.skills.iceSatietySlowRemainingSec = Math.max(0, ice);
 
     const fairy = data.skills.fairyAffGainRemainingSec;
 
     if (typeof fairy === "number" && Number.isFinite(fairy)) s.skills.fairyAffGainRemainingSec = Math.max(0, fairy);
 
-    const dragon = data.skills.dragonCatchBoostRemainingSec;
-
-    if (typeof dragon === "number" && Number.isFinite(dragon)) s.skills.dragonCatchBoostRemainingSec = Math.max(0, dragon);
-
-    const psychic = data.skills.psychicCraftBoostCharges;
-
-    if (typeof psychic === "number" && Number.isFinite(psychic)) s.skills.psychicCraftBoostCharges = Math.max(0, Math.floor(psychic));
-
     const rock = data.skills.rockBuildBoostRemainingSec;
 
     if (typeof rock === "number" && Number.isFinite(rock)) s.skills.rockBuildBoostRemainingSec = Math.max(0, rock);
-
-    const poison = data.skills.poisonResourceSaveRemainingSec;
-
-    if (typeof poison === "number" && Number.isFinite(poison)) s.skills.poisonResourceSaveRemainingSec = Math.max(0, poison);
 
     const dark = data.skills.darkPveDamageBoostRemainingSec;
 
@@ -1115,51 +992,7 @@ export function loadFromRaw(raw) {
 
   if (data.crafting && typeof data.crafting === "object") {
 
-    const legacyType = typeof data.crafting.type === "string" ? data.crafting.type : null;
-
-    const legacyRemainingSec =
-
-      typeof data.crafting.remainingSec === "number" && Number.isFinite(data.crafting.remainingSec)
-
-        ? data.crafting.remainingSec
-
-        : null;
-
-    const legacyTotalSec =
-
-      typeof data.crafting.totalSec === "number" && Number.isFinite(data.crafting.totalSec)
-
-        ? data.crafting.totalSec
-
-        : legacyRemainingSec;
-
-
-
-    if (legacyType && typeof legacyRemainingSec === "number" && legacyRemainingSec > 0) {
-
-      const remainingSec = legacyRemainingSec;
-
-      const totalSec = typeof legacyTotalSec === "number" && legacyTotalSec > 0 ? legacyTotalSec : remainingSec;
-
-      const mappedType = legacyType === "evolutionStone" ? "evolutionEnergy" : legacyType;
-
-      s.crafting = {
-
-        evolutionEnergy: mappedType === "evolutionEnergy" ? { remainingSec, totalSec } : null,
-
-        evolutionStone: null,
-
-        linkRope: mappedType === "linkRope" ? { remainingSec, totalSec } : null,
-
-        hugeBerry: null,
-
-        megaStone: null,
-
-      };
-
-    } else {
-
-      const readTask = (k) => {
+    const readTask = (k) => {
 
         const t = data.crafting[k];
 
@@ -1204,8 +1037,6 @@ export function loadFromRaw(raw) {
         };
 
       }
-
-    }
 
   }
 
@@ -1384,12 +1215,6 @@ export function loadFromRaw(raw) {
           continue;
 
         }
-
-
-
-        const mapped = legacyIdMap[k];
-
-        if (mapped) s.dex.caught[mapped] = (s.dex.caught[mapped] ?? 0) + count;
 
       }
 
@@ -1584,67 +1409,11 @@ export function loadFromRaw(raw) {
 
     }
 
-  } else {
-
-    // 老存档迁移：如果之前只有 dex.caught，则生成少量萌灵实例用于展示
-
-    const caught = data.dex?.caught;
-
-    if (caught && typeof caught === "object") {
-
-      const entries = Object.entries(caught)
-
-        .map(([k, v]) => [String(k), typeof v === "number" ? Math.floor(v) : 0])
-
-        .filter(([, v]) => v > 0);
-
-
-
-      let createdCount = 0;
-
-      for (const [k, v] of entries) {
-
-        const pid = k.startsWith("p") ? k : legacyIdMap[k];
-
-        if (!pid) continue;
-
-        const p = beasts.find((x) => x.id === pid);
-
-        if (!p) continue;
-
-        const n = Math.min(v, 10);
-
-        for (let i = 0; i < n; i += 1) {
-
-          if (createdCount >= 200) break;
-
-          const mon = createMonInstance0(p, {
-
-            idOverride: s.mons.nextId,
-
-            idFallback: s.mons.nextId,
-
-          });
-
-          s.mons.list.push(mon);
-
-          s.mons.nextId += 1;
-
-          createdCount += 1;
-
-        }
-
-        if (createdCount >= 200) break;
-
-      }
-
-    }
-
   }
 
 
 
-  // 兼容旧存档：如果萌灵是通过进化/解锁获得，但 dex.caught 没记录，则用现有萌灵列表补登记
+  // 进化/解锁获得的萌灵不会写 dex.caught，用现有萌灵列表补登记
 
   if (!s.dex || typeof s.dex !== "object") s.dex = { caught: {} };
 
@@ -1687,38 +1456,6 @@ export function loadFromRaw(raw) {
     s.totalPlayMs = Math.max(0, Math.floor(data.totalPlayMs));
   }
 
-  // 恢复每日签到数据
-
-  if (data.dailySignin && typeof data.dailySignin === "object") {
-
-    if (typeof data.dailySignin.lastSigninDate === "string") {
-
-      s.dailySignin.lastSigninDate = data.dailySignin.lastSigninDate;
-
-    }
-
-    if (typeof data.dailySignin.consecutiveDays === "number" && Number.isFinite(data.dailySignin.consecutiveDays)) {
-
-      s.dailySignin.consecutiveDays = Math.max(0, Math.floor(data.dailySignin.consecutiveDays));
-
-    }
-
-    if (typeof data.dailySignin.totalDays === "number" && Number.isFinite(data.dailySignin.totalDays)) {
-
-      s.dailySignin.totalDays = Math.max(0, Math.floor(data.dailySignin.totalDays));
-
-    }
-
-    if (typeof data.dailySignin.claimed === "boolean") {
-
-      s.dailySignin.claimed = data.dailySignin.claimed;
-
-    }
-
-  }
-
-
-
   // 恢复月卡数据
 
   if (data.monthlyCard && typeof data.monthlyCard === "object") {
@@ -1744,44 +1481,6 @@ export function loadFromRaw(raw) {
     if (typeof data.monthlyCard.totalClaimed === "number" && Number.isFinite(data.monthlyCard.totalClaimed)) {
 
       s.monthlyCard.totalClaimed = Math.max(0, Math.floor(data.monthlyCard.totalClaimed));
-
-    }
-
-  }
-
-
-
-  // 恢复每日任务数据
-
-  if (data.dailyTasks && typeof data.dailyTasks === "object") {
-
-    if (typeof data.dailyTasks.lastResetDate === "string") {
-
-      s.dailyTasks.lastResetDate = data.dailyTasks.lastResetDate;
-
-    }
-
-    if (Array.isArray(data.dailyTasks.tasks)) {
-
-      s.dailyTasks.tasks = data.dailyTasks.tasks.filter((t) => 
-
-        t && typeof t === "object" && 
-
-        typeof t.id === "string" && 
-
-        typeof t.type === "string" && 
-
-        typeof t.current === "number" && 
-
-        typeof t.target === "number"
-
-      );
-
-    }
-
-    if (typeof data.dailyTasks.claimed === "boolean") {
-
-      s.dailyTasks.claimed = data.dailyTasks.claimed;
 
     }
 

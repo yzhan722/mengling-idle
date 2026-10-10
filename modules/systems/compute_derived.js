@@ -11,6 +11,7 @@ import {
   finalizeProductionRates,
 } from "./production.js";
 import { natureResCapMul } from "./gameplay_fun.js";
+import { legacyCapMul } from "./rebirth.js";
 
 /**
  * Recompute caps, unlocks, and production rates. Shared by app.js and headless sim.
@@ -23,7 +24,7 @@ export function computeDerived(state, ctx) {
   eff.unlockPokeball = Boolean(state.tech.pokeballBasics);
 
   const caps = computeBaseResourceCaps(defs, eff);
-  const permCapMul = permanentBoostMul(state.permanentBoosts?.capacity) * natureResCapMul(state);
+  const permCapMul = permanentBoostMul(state.permanentBoosts?.capacity) * natureResCapMul(state) * legacyCapMul(state);
   applyCoreResourceCaps(state, caps, eff.unlockPokeball, permCapMul);
   applyStaticItemCaps(state, computeStaticItemCaps(defs));
 
