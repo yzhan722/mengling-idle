@@ -2,7 +2,7 @@
 // 维护者窗口：C（渲染）/ 数据刷新仍在 app.js SECTION:LEADERBOARD_DATA
 
 import { seasonBarVsGhosts, seasonLocalScore, canClaimLbRivalReward, markLbRivalRewardClaimed, localDateStr } from "../systems/gameplay_fun.js";
-import { ghostRivalsForDay, padLeaderboard } from "../systems/world_presence.js?v=0.41.8";
+import { ghostRivalsForDay, padLeaderboard } from "../systems/world_presence.js?v=0.1.0";
 
 export function createRenderLeaderboard({
   elLeaderboard,
