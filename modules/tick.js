@@ -788,7 +788,7 @@ export function createTick(ctx) {
         const isTraining = trainingSet ? trainingSet.has(m.id) : false;
         const isBreeding = breedingOn && (m.id === breedingAId || m.id === breedingBId);
         const satietyMul = satietyMulBase * (isTraining ? 2 : 1) * natureSatietyDecayMul(m);
-        const loss = (dtSec / 600) * satietyMul * (ice1 > 0 ? 0.5 : 1);
+        const loss = (dtSec / 600) * satietyMul;
         const affRate = affRateBase * natureAffectionMul(m);
 
         const sat0 = clamp(typeof m.satiety === "number" && Number.isFinite(m.satiety) ? m.satiety : 100, 0, 100);
