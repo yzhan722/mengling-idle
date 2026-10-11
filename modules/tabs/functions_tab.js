@@ -481,7 +481,11 @@ export function createRenderFunctions({
 
     let breedingModalHtml = "";
     if (ui.breedingModalOpen) {
-      const allCandidates = list.filter((m) => m);
+      // 远征与饲养互斥：远征中的萌灵不可进饲养位
+      const expBusyIds = new Set(
+        Boolean(state.expedition?.on) && Array.isArray(state.expedition.activeIds) ? state.expedition.activeIds : [],
+      );
+      const allCandidates = list.filter((m) => m && !expBusyIds.has(m.id));
 
       const q0 = typeof ui.breedingModalQuery === "string" ? ui.breedingModalQuery : "";
       const q = String(q0 || "").trim();
@@ -570,7 +574,7 @@ export function createRenderFunctions({
         .join("");
 
       const title = `饲养：选择萌灵（需要 2 只）`;
-      const sub = `支持筛选/排序与多选（最多 2 只），点击“开始饲养”后会直接开始。`;
+      const sub = `支持筛选/排序与多选（最多 2 只），远征中的萌灵不会出现。点击“开始饲养”后会直接开始。`;
       const empty = sorted.length === 0 ? `<div class="badge badge--muted">暂无可选萌灵</div>` : "";
       const canConfirm = sel.length === 2;
 
@@ -742,8 +746,15 @@ export function createRenderFunctions({
       `);
         }
 
+        // 远征与饲养互斥：饲养中的萌灵不可远征
+        const breedBusyIds = new Set(
+          state.breeding?.on
+            ? [state.breeding.aId, state.breeding.bId].filter((x) => typeof x === "number")
+            : [],
+        );
         const selectedIds0 = state.expedition.selectedIds.slice(0, 20);
         const selectedIds1 = selectedIds0.filter((id) => {
+          if (breedBusyIds.has(id)) return false;
           const m = list.find((x) => x && x.id === id) ?? null;
           if (!m) return false;
           const cd0 =
@@ -800,6 +811,7 @@ export function createRenderFunctions({
           ].join("");
 
           const candidates = list.filter((m) => {
+            if (breedBusyIds.has(m.id)) return false;
             const cd0 =
               typeof m.skillCdRemainingSec === "number" && Number.isFinite(m.skillCdRemainingSec)
                 ? Math.max(0, m.skillCdRemainingSec)
@@ -854,7 +866,7 @@ export function createRenderFunctions({
                 <button class="btn btn--small" data-exp-team-close="1">关闭</button>
               </div>
             </div>
-            <div class="modal__desc">多选请直接勾选（最多 20 只，技能冷却中的萌灵不会出现在列表中）。</div>
+            <div class="modal__desc">多选请直接勾选（最多 20 只，技能冷却或饲养中的萌灵不会出现在列表中）。</div>
             <div class="modal__body">${candidateRows}</div>
           </div>
         </div>
@@ -1361,9 +1373,12 @@ export function initFunctionsTab({
       if (Boolean(state.breeding.on)) return;
       const sel0 = Array.isArray(ui.breedingModalSelectedIds) ? ui.breedingModalSelectedIds : [];
       const alive = state.mons?.list ?? [];
+      const expBusyIds = new Set(
+        Boolean(state.expedition?.on) && Array.isArray(state.expedition.activeIds) ? state.expedition.activeIds : [],
+      );
       const sel = sel0
         .map((id) => alive.find((m) => m && m.id === id) ?? null)
-        .filter((x) => x)
+        .filter((x) => x && !expBusyIds.has(x.id))
         .slice(0, 2);
       if (sel.length !== 2) return;
       if (sel[0].id === sel[1].id) return;
@@ -1485,6 +1500,7 @@ export function initFunctionsTab({
       const mons = state.mons?.list ?? [];
       const selMons = selIds.map((id) => mons.find((x) => x && x.id === id) ?? null).filter((x) => x);
       if (selMons.length <= 0) return;
+      if (state.breeding?.on && selMons.some((m) => m.id === state.breeding.aId || m.id === state.breeding.bId)) return;
       for (const m of selMons) {
         const cd0 =
           typeof m.skillCdRemainingSec === "number" && Number.isFinite(m.skillCdRemainingSec)
