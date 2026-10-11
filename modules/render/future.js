@@ -568,7 +568,7 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
         <div class="row__left">
           <div class="row__title">捕灵球</div>
           <div class="row__desc">价格：${netballPrice} 未来币/5个</div>
-          <div class="row__desc">效果：对虫/水/草属性捕获率 ×3</div>
+          <div class="row__desc">效果：对水/草属性捕获率 ×3</div>
         </div>
         <div class="row__right">
           <div class="badge">当前：${fmt(state.res.netball?.value ?? 0)}</div>

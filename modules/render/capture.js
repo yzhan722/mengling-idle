@@ -39,15 +39,15 @@ const MUTATOR_LABELS = {
 };
 
 const AREA_HINTS = {
-  meadow: "芽芽草甸：新手友好的初遇之地，常见草/虫/一般系。",
-  woods: "蜜露林径：甜香花林，妖精与虫系萌灵出没。",
-  brook: "溪光浅滩：清澈水域，水系萌灵的家园。",
-  plateau: "风铃高原：风声呼啸，飞行/电/格斗系活跃。",
-  dunes: "星砂荒漠：月夜流沙，地面/岩石/火系栖息。",
-  garden: "月见花园：月光花圃，妖精/超能力/幽灵系徘徊。",
-  ridge: "霜晶山脊：风雪巅峰，冰/钢/岩石系驻守。",
-  hollow: "龙眠幽谷：幽邃深处，龙/恶/幽灵/毒系潜藏。",
-  sanctum: "传说/幻之萌灵专属。每次遭遇或高级遭遇各消耗 100 未来币。",
+  meadow: "芽芽草甸：新手友好的初遇之地，常见草/风/暗系。",
+  woods: "蜜露林径：甜香花林，草/风/光/暗系萌灵出没。",
+  brook: "溪光浅滩：清澈水域，水/草/风/光系萌灵的家园。",
+  plateau: "风铃高原：风声呼啸，水/电/岩系活跃。",
+  dunes: "星砂荒漠：月夜流沙，岩/火/水/电系栖息。",
+  garden: "月见花园：月光花圃，火/岩/风系徘徊。",
+  ridge: "霜晶山脊：风雪巅峰，岩/幻/暗系驻守。",
+  hollow: "龙眠幽谷：幽邃深处，暗/幻/风系潜藏。",
+  sanctum: "幻梦秘境：幻系萌灵专属。每次遭遇或高级遭遇各消耗 100 未来币。",
 };
 
 export function createRenderCapture({
@@ -502,7 +502,7 @@ export function createRenderCapture({
               ${ubVal > 0 ? `<option value="ultraball" ${selectedBall === "ultraball" ? "selected" : ""}>高级灵球 (${ubVal}) - 捕获率x2</option>` : ""}
               ${qbVal > 0 ? `<option value="quickball" ${selectedBall === "quickball" ? "selected" : ""}>迅捷灵球 (${qbVal}) - 首次遭遇x5</option>` : ""}
               ${lbVal > 0 ? `<option value="luxuryball" ${selectedBall === "luxuryball" ? "selected" : ""}>豪华灵球 (${lbVal}) - 亲密度+20</option>` : ""}
-              ${nbVal > 0 ? `<option value="netball" ${selectedBall === "netball" ? "selected" : ""}>捕灵球 (${nbVal}) - 虫/水/草x3</option>` : ""}
+              ${nbVal > 0 ? `<option value="netball" ${selectedBall === "netball" ? "selected" : ""}>捕灵球 (${nbVal}) - 水/草x3</option>` : ""}
               ${dbVal > 0 ? `<option value="duskball" ${selectedBall === "duskball" ? "selected" : ""}>暗夜灵球 (${dbVal}) - 夜间x3</option>` : ""}
             </select>
           </div>

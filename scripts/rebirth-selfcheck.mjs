@@ -44,7 +44,7 @@ function clearedState(overrides = {}) {
     tech: Object.fromEntries([...Array(16)].map((_, i) => [`t${i}`, true])),
     buildings: { field: { owned: 60 } },
     res: { catnip: { value: 999, cap: 1000 } },
-    mons: [{ id: 1, pid: "test", level: 50 }],
+    mons: { list: [{ id: 1, pid: "test", level: 50 }], nextId: 2 },
     auto: { clicker: true },
     permanentBoosts: { exp: 2 },
     shinyCount: REBIRTH_SHINY_REQ,
@@ -112,7 +112,7 @@ function clearedState(overrides = {}) {
   assert(state.tech.t0 !== true && state.tech.berryCultivation === true && state.tech.pokeballBasics === true,
     "tech reset but startTech perk grants starter techs");
   assert(state.auto.clicker === false, "auto reset");
-  assert(state.mons.length === 1 && state.mons[0].pid === "giftmon", "mons cleared + starterMon perk grants gift");
+  assert(state.mons.list.length === 1 && state.mons.list[0].pid === "giftmon", "mons cleared + starterMon perk grants gift");
   assert(state.dex.caught["1"] === 1, "dex kept");
   assert(state.permanentBoosts.exp === 2, "permanentBoosts kept");
   assert(starterCalled === 1, "starterMonFactory invoked once");

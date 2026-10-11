@@ -23,7 +23,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       quickball: "首次遭遇捕获率 x5",
       luxuryball: "捕获后亲密度 +20",
       masterball: "用于捕捉萌灵（必定成功）",
-      netball: "对虫/水/草属性捕获率 ×3",
+      netball: "对水/草属性捕获率 ×3",
       duskball: "夜间捕获率 ×3，其余时段 ×1.2",
       futurecoin: "用于未来币商店兑换/升级",
       evolutionStone: "用于进化页的石之进化（消耗 x1）",

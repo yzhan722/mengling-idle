@@ -209,7 +209,7 @@ export function confirmPrestige(state, { addLog, getCaptureAreas, starterMonFact
   if (state.tech && typeof state.tech === "object") {
     for (const k of Object.keys(state.tech)) state.tech[k] = false;
   }
-  if (Array.isArray(state.mons)) state.mons.length = 0;
+  if (state.mons && Array.isArray(state.mons.list)) state.mons.list.length = 0;
   if (state.auto && typeof state.auto === "object") {
     for (const k of Object.keys(state.auto)) state.auto[k] = false;
   }
@@ -238,7 +238,7 @@ export function confirmPrestige(state, { addLog, getCaptureAreas, starterMonFact
   }
   if (perkLevel(state, "starterMon") > 0 && typeof opts.starterMonFactory === "function") {
     const mon = opts.starterMonFactory();
-    if (mon && Array.isArray(state.mons)) state.mons.push(mon);
+    if (mon && state.mons && Array.isArray(state.mons.list)) state.mons.list.push(mon);
   }
 
   if (typeof addLog === "function") {

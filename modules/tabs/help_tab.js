@@ -186,24 +186,15 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
       <table style="width:100%;border-collapse:collapse;font-size:12px">
         
         <tr style='opacity:0.6'><td>属性</td><td>技能效果</td><td>前置条件</td></tr>
-        <tr><td>格斗</td><td>训练叠加+1（加速升级）</td><td>有萌灵在训练</td></tr>
-        <tr><td>草</td><td>种植果树（产大灵果）</td><td>有灵果</td></tr>
-        <tr><td>水</td><td>给果树浇水加速成熟</td><td>有果树生长中</td></tr>
-        <tr><td>火</td><td>生蛋加速</td><td>育灵屋生蛋中</td></tr>
-        <tr><td>电</td><td>当前研究减少冷却时间</td><td>有科技研究中</td></tr>
-        <tr><td>地面</td><td>进入挖矿状态（产灵源）</td><td>无</td></tr>
-        <tr><td>毒</td><td>资源消耗减少20%（60分钟）</td><td>无</td></tr>
-        <tr><td>飞行</td><td>探险剩余时间 -30分钟</td><td>有探险任务</td></tr>
-        <tr><td>超能力</td><td>合成时间 -20%（下10次）</td><td>无</td></tr>
-        <tr><td>岩石</td><td>建筑成本降低20%（60分钟）</td><td>无</td></tr>
-        <tr><td>冰</td><td>饱腹度下降减慢60分钟</td><td>无</td></tr>
-        <tr><td>龙</td><td>捕获率提升10分钟</td><td>无</td></tr>
-        <tr><td>恶</td><td>PVE伤害+50% 10分钟</td><td>无</td></tr>
-        <tr><td>钢</td><td>灵球制作成本-10%（100次）</td><td>无</td></tr>
-        <tr><td>妖精</td><td>亲密度增长加速60分钟</td><td>无</td></tr>
-        <tr><td>一般</td><td>全队资源产量提升（可叠加）</td><td>无</td></tr>
-        <tr><td>幽灵</td><td>随机一只萌灵技能冷却减半</td><td>无</td></tr>
-        <tr><td>虫</td><td>恐吓林佬（需服务器连接）</td><td>林佬存活</td></tr>
+        <tr><td>火 · 温暖</td><td>生蛋剩余时间 -15 分钟</td><td>育灵屋生蛋中</td></tr>
+        <tr><td>水 · 浇水</td><td>种植中的果树 -10 分钟</td><td>有果树生长中</td></tr>
+        <tr><td>草 · 种植</td><td>消耗 1万灵果，8 小时后得大灵果</td><td>灵果 ≥10000</td></tr>
+        <tr><td>电 · 充电</td><td>研究剩余时间 -10 分钟</td><td>有科技研究中</td></tr>
+        <tr><td>风 · 飞翔</td><td>远征剩余时间 -30 分钟</td><td>有远征进行中</td></tr>
+        <tr><td>岩 · 打磨</td><td>建筑成本 -20%（60分钟）</td><td>无</td></tr>
+        <tr><td>光 · 祝福</td><td>亲密度获取 ×2（60分钟）</td><td>无</td></tr>
+        <tr><td>暗 · 霸凌</td><td>PvE 伤害 +50%（10分钟）</td><td>无</td></tr>
+        <tr><td>幻 · 梦魇</td><td>攻击全服林佬 Boss</td><td>林佬存活（需服务器连接）</td></tr>
       </table>
     `));
 
