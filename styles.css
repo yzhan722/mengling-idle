@@ -1047,19 +1047,19 @@ body {
    line-height: 1.6;
  }
 
-.pk-icon {
+.mon-icon {
   width: 64px;
   height: 64px;
   image-rendering: pixelated;
   flex: 0 0 auto;
 }
 
- .pk-icon--silhouette {
+ .mon-icon--silhouette {
    filter: brightness(0) contrast(1.2) drop-shadow(0 0 1px rgba(255, 255, 255, 0.25));
    opacity: 0.95;
  }
 
-.iconGrid--full .pk-icon {
+.iconGrid--full .mon-icon {
   width: 32px;
   height: 32px;
 }
@@ -1160,7 +1160,7 @@ body {
     flex-wrap: wrap;
   }
 
-  #monList .pk-icon {
+  #monList .mon-icon {
     width: 48px;
     height: 48px;
   }
@@ -1680,12 +1680,12 @@ body {
   100% { background-position: 200% 50%; }
 }
 
-.pk-icon--shiny {
+.mon-icon--shiny {
   position: relative;
   overflow: hidden;
 }
 
-.pk-icon--shiny::before {
+.mon-icon--shiny::before {
   content: '';
   position: absolute;
   top: 0;
@@ -1711,7 +1711,7 @@ body {
   50% { opacity: 1; transform: scale(1) rotate(180deg); }
 }
 
-.pk-icon--shiny::after {
+.mon-icon--shiny::after {
   content: '✨';
   position: absolute;
   top: -5px;
@@ -2542,7 +2542,7 @@ body {
     flex-wrap: wrap;
     gap: 4px;
   }
-  .pk-icon {
+  .mon-icon {
     width: 44px;
     height: 44px;
   }

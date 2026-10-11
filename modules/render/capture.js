@@ -182,7 +182,7 @@ export function createRenderCapture({
         const n = caughtMap && typeof caughtMap[p.id] === "number" ? caughtMap[p.id] : 0;
         const html = renderBeastIcon(p.dex, p.name);
         if (n > 0) return html;
-        return html.replace('class="pk-icon"', 'class="pk-icon pk-icon--silhouette"');
+        return html.replace('class="mon-icon"', 'class="mon-icon mon-icon--silhouette"');
       })
       .join("");
 

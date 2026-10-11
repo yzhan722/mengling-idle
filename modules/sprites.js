@@ -95,7 +95,7 @@ export function installSpriteHandlers() {
 
 export const renderBeastIcon = (dex, alt, isShiny = false) => {
   const a = escapeHtml(alt ?? "");
-  return `<img class="pk-icon" src="${localArtUrl(dex, isShiny)}" data-dex="${escapeHtml(
+  return `<img class="mon-icon" src="${localArtUrl(dex, isShiny)}" data-dex="${escapeHtml(
     String(dex),
   )}" data-shiny="${isShiny ? 1 : 0}" alt="${a}" loading="eager" decoding="async" onerror="globalThis.__beastSpriteOnError && globalThis.__beastSpriteOnError(this)" />`;
 };
