@@ -7,7 +7,8 @@ import { dirname, join } from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const saveApi = readFileSync(join(root, "functions/api/save/index.js"), "utf8");
 const cloud = readFileSync(join(root, "modules/cloud_save.js"), "utf8");
-const app = readFileSync(join(root, "app.js"), "utf8");
+const saveCloudApp = readFileSync(join(root, "modules/app/save_cloud.js"), "utf8");
+const app = readFileSync(join(root, "app.js"), "utf8") + saveCloudApp;
 
 assert.ok(saveApi.includes("status: 409"), "optimistic lock 409");
 assert.ok(saveApi.includes("remoteAt > updatedAt"), "stale client refused");

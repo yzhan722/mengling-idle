@@ -20,7 +20,7 @@ export function createSocialTab({
   renderSocial,
   friendsSystem,
   renderFriends,
-  state,
+  getState,
   createPvpBattle,
   getMonCurrentStats,
   getBeastDataByDex,
@@ -28,7 +28,7 @@ export function createSocialTab({
 }) {
   
   let selectedTeam = []; // 当前选中的队伍（已归一化为 PVP 战报字段）
-  ui.pvpRecent = normalizePvpRecent(state?.meta?.pvpRecent);
+  ui.pvpRecent = normalizePvpRecent(getState()?.meta?.pvpRecent);
 
   function monTypes(mon) {
     const api = typeof getBeastDataByDex === "function" ? getBeastDataByDex(mon.dex) : null;
@@ -259,9 +259,9 @@ export function createSocialTab({
       if (!ui.pvpRecent) ui.pvpRecent = [];
       ui.pvpRecent.unshift({ line, winner, at: r.created_at || Date.now() });
       ui.pvpRecent = ui.pvpRecent.slice(0, 5);
-      if (!state.meta || typeof state.meta !== "object") state.meta = {};
-      state.meta.pvpRecent = ui.pvpRecent.slice();
-      bumpPvpSeasonStats(state.meta, winner);
+      if (!(getState()).meta || typeof (getState()).meta !== "object") (getState()).meta = {};
+      (getState()).meta.pvpRecent = ui.pvpRecent.slice();
+      bumpPvpSeasonStats((getState()).meta, winner);
       addLog(`PvP（回传）：${line}`, iWon);
       if (typeof pushTickerEvent === "function") pushTickerEvent("pvp", line);
     }
@@ -290,8 +290,8 @@ export function createSocialTab({
     const el = document.getElementById("npcTrainers");
     if (!el) return;
     const trainers = listNpcTrainers();
-    const record = ensureNpcRecord(state);
-    const weekly = npcWeeklyProgress(state);
+    const record = ensureNpcRecord((getState()));
+    const weekly = npcWeeklyProgress((getState()));
     const ladderRows = trainers
       .map((t) => {
         const line = npcRecordLine(record, t.id);
@@ -335,19 +335,19 @@ export function createSocialTab({
 
   function recordLocalPvpResult(result, label) {
     if (!ui.pvpRecent) ui.pvpRecent = [];
-    if (!state.meta || typeof state.meta !== "object") state.meta = {};
+    if (!(getState()).meta || typeof (getState()).meta !== "object") (getState()).meta = {};
     const recentWithCurrent = [{ winner: result.winner }, ...ui.pvpRecent];
-    bumpPvpSeasonStats(state.meta, result.winner);
+    bumpPvpSeasonStats((getState()).meta, result.winner);
     const line = summarizePvpBattle(result, "你", {
       seasonId: ui.remoteConfig?.seasonId,
       recent: recentWithCurrent,
-      stats: state.meta?.pvpStats,
+      stats: (getState()).meta?.pvpStats,
     });
     const prefix = label ? `${label} · ` : "";
     addLog(`PvP：${prefix}${line}`, result.winner === 2);
     ui.pvpRecent.unshift({ line: `${prefix}${line}`, winner: result.winner, at: Date.now() });
     ui.pvpRecent = ui.pvpRecent.slice(0, 5);
-    state.meta.pvpRecent = ui.pvpRecent.slice();
+    (getState()).meta.pvpRecent = ui.pvpRecent.slice();
     renderPvpRecent();
   }
 
@@ -389,13 +389,13 @@ export function createSocialTab({
       const claimBtn = e.target.closest("[data-npc-weekly-claim]");
       if (claimBtn && panelSocial.contains(claimBtn)) {
         if (claimBtn.disabled) return;
-        const res = claimNpcWeeklyFc(state, 20);
+        const res = claimNpcWeeklyFc((getState()), 20);
         if (res.ok) {
-          if (!state.res || typeof state.res !== "object") state.res = {};
-          if (!state.res.futurecoin || typeof state.res.futurecoin !== "object") {
-            state.res.futurecoin = { value: 0, cap: 0 };
+          if (!(getState()).res || typeof (getState()).res !== "object") (getState()).res = {};
+          if (!(getState()).res.futurecoin || typeof (getState()).res.futurecoin !== "object") {
+            (getState()).res.futurecoin = { value: 0, cap: 0 };
           }
-          state.res.futurecoin.value = Math.max(0, Math.floor(state.res.futurecoin.value || 0)) + res.fc;
+          (getState()).res.futurecoin.value = Math.max(0, Math.floor((getState()).res.futurecoin.value || 0)) + res.fc;
           addLog(`本周 NPC 挑战奖励：未来币 +${res.fc}`, true);
           renderNpcTrainers();
         } else {
@@ -427,8 +427,8 @@ export function createSocialTab({
       // simulateBattle: team1=对手, team2=你 → winner 2 = 你赢（与好友应战一致）
       const result = pvpBattle.simulateBattle(npcTeam, selectedTeam, trainer.name, "你");
       recordLocalPvpResult(result, trainer.name);
-      recordNpcFight(state, trainerId, result.winner === 2);
-      if (result.winner === 2) noteNpcWeeklyWin(state, trainerId);
+      recordNpcFight((getState()), trainerId, result.winner === 2);
+      if (result.winner === 2) noteNpcWeeklyWin((getState()), trainerId);
       renderNpcTrainers();
       showBattleResult(result);
       npcBtn.disabled = false;
@@ -487,18 +487,18 @@ export function createSocialTab({
 
       if (!ui.pvpRecent) ui.pvpRecent = [];
       const recentWithCurrent = [{ winner: result.winner }, ...ui.pvpRecent];
-      bumpPvpSeasonStats(state.meta, result.winner);
+      bumpPvpSeasonStats((getState()).meta, result.winner);
       const line = summarizePvpBattle(result, "你", {
         seasonId: ui.remoteConfig?.seasonId,
         recent: recentWithCurrent,
-        stats: state.meta?.pvpStats,
+        stats: (getState()).meta?.pvpStats,
       });
       addLog(`PvP：${line}`, result.winner === 2);
       if (typeof pushTickerEvent === "function") pushTickerEvent("pvp", line);
       ui.pvpRecent.unshift({ line, winner: result.winner, at: Date.now() });
       ui.pvpRecent = ui.pvpRecent.slice(0, 5);
-      if (!state.meta || typeof state.meta !== "object") state.meta = {};
-      state.meta.pvpRecent = ui.pvpRecent.slice();
+      if (!(getState()).meta || typeof (getState()).meta !== "object") (getState()).meta = {};
+      (getState()).meta.pvpRecent = ui.pvpRecent.slice();
 
       // 显示战斗结果
       showBattleResult(result);
@@ -695,7 +695,7 @@ export function createSocialTab({
 
   // 打开队伍选择器
   function openTeamSelector() {
-    const list = state?.mons?.list;
+    const list = (getState())?.mons?.list;
     if (!Array.isArray(list) || list.length === 0) {
       addLog("没有可用的萌灵", true);
       return;

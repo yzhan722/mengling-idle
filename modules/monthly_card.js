@@ -1,5 +1,5 @@
 // 月卡系统
-export function createMonthlyCard({ state, addRes, addLog }) {
+export function createMonthlyCard({ getState, addRes, addLog }) {
   const MONTHLY_CARD_PRICE = 300; // 未来币价格
   const MONTHLY_CARD_DAYS = 30;
   const DAILY_REWARD = {
@@ -9,6 +9,7 @@ export function createMonthlyCard({ state, addRes, addLog }) {
   };
 
   function ensureMonthlyCardState() {
+    const state = getState();
     if (!state.monthlyCard || typeof state.monthlyCard !== "object") {
       state.monthlyCard = {
         active: false,
@@ -20,16 +21,19 @@ export function createMonthlyCard({ state, addRes, addLog }) {
   }
 
   function getTodayStr() {
+    const state = getState();
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   }
 
   function isActive() {
+    const state = getState();
     ensureMonthlyCardState();
     return state.monthlyCard.active && Date.now() < state.monthlyCard.expiresAt;
   }
 
   function canClaim() {
+    const state = getState();
     if (!isActive()) return false;
     ensureMonthlyCardState();
     const today = getTodayStr();
@@ -37,6 +41,7 @@ export function createMonthlyCard({ state, addRes, addLog }) {
   }
 
   function getRemainingDays() {
+    const state = getState();
     if (!isActive()) return 0;
     ensureMonthlyCardState();
     const remaining = state.monthlyCard.expiresAt - Date.now();
@@ -44,6 +49,7 @@ export function createMonthlyCard({ state, addRes, addLog }) {
   }
 
   function purchase() {
+    const state = getState();
     ensureMonthlyCardState();
     const price = MONTHLY_CARD_PRICE;
     
@@ -77,6 +83,7 @@ export function createMonthlyCard({ state, addRes, addLog }) {
   }
 
   function claimDaily() {
+    const state = getState();
     if (!canClaim()) {
       return { success: false, message: isActive() ? "今日已领取" : "月卡未激活" };
     }
@@ -106,6 +113,7 @@ export function createMonthlyCard({ state, addRes, addLog }) {
   }
 
   function getInfo() {
+    const state = getState();
     ensureMonthlyCardState();
     const dailyFc = DAILY_REWARD.futurecoin ?? 0;
     return {

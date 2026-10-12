@@ -139,7 +139,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 {
   const saveApi = readFileSync(join(root, "functions/api/save/index.js"), "utf8");
   assert.ok(saveApi.includes("status: 409"), "optimistic lock 409");
-  const app = readFileSync(join(root, "app.js"), "utf8");
+  const app = readFileSync(join(root, "app.js"), "utf8") + readFileSync(join(root, "modules/app/save_cloud.js"), "utf8");
   assert.ok(app.includes("exportSaveJson") && app.includes("importSaveJsonFile"), "json io");
   assert.ok(app.includes("kittens_mvp_save_slot_1") || app.includes("SAVE_SLOT_KEY"), "slot1 wired");
   const social = readFileSync(join(root, "modules/render/social.js"), "utf8");

@@ -38,3 +38,31 @@ export function escapeHtml(s) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
+export function formatLocalYmd(t = nowMs()) {
+  const d = new Date(t);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+export function fmtDuration(sec) {
+  const s = Math.max(0, Math.ceil(sec));
+  const hh = Math.floor(s / 3600);
+  const mm = Math.floor((s % 3600) / 60);
+  const ss = s % 60;
+  const pad2 = (x) => String(x).padStart(2, "0");
+  if (hh > 0) return `${hh}:${pad2(mm)}:${pad2(ss)}`;
+  return `${mm}:${pad2(ss)}`;
+}
+
+export function getGameVersion() {
+  try {
+    const t = typeof document !== "undefined" ? String(document.title || "") : "";
+    const m = t.match(/\bv(\d+\.\d+\.\d+)\b/);
+    return m ? m[1] : "";
+  } catch {
+    return "";
+  }
+}

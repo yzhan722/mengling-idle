@@ -34,7 +34,7 @@ assert(help.includes("前30分钟路线"), "help 30m block");
 const html = readFileSync(join(root, "index.html"), "utf8");
 assert(html.includes("换设备不丢档"), "options cloud CTA");
 
-const app = readFileSync(join(root, "app.js"), "utf8");
+const app = readFileSync(join(root, "app.js"), "utf8") + readFileSync(join(root, "modules/app/core_fns.js"), "utf8");
 assert(app.includes("maybeNewbieHandoff"), "app wires handoff");
 
 const mem = {};

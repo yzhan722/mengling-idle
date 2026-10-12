@@ -1,8 +1,9 @@
 // 道具使用系统
-export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) {
+export function createItemUsage({ getState, addRes, addLog, addExpToMon, render }) {
   
   // 使用历练糖丸
   function useExpCandy(monId, itemType) {
+    const state = getState();
     const id = Number(monId);
     const mon = state.mons.list.find(m => m.id === id);
     if (!mon) return { success: false, message: "萌灵不存在" };
@@ -36,6 +37,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
 
   // 使用亲密度道具
   function useAffectionItem(monId, itemType) {
+    const state = getState();
     const id = Number(monId);
     const mon = state.mons.list.find(m => m.id === id);
     if (!mon) return { success: false, message: "萌灵不存在" };
@@ -77,6 +79,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
 
   // 使用王冠（提升个体值）
   function useBottleCap(monId, itemType, statType) {
+    const state = getState();
     const id = Number(monId);
     const mon = state.mons.list.find(m => m.id === id);
     if (!mon) return { success: false, message: "萌灵不存在" };
@@ -122,6 +125,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
 
   // 使用福缘蛋（经验加成）
   function useLuckyEgg(monId) {
+    const state = getState();
     const id = Number(monId);
     const mon = state.mons.list.find(m => m.id === id);
     if (!mon) return { success: false, message: "萌灵不存在" };
@@ -142,6 +146,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
   }
 
   function useMegaStone(monId) {
+    const state = getState();
     const id = Number(monId);
     const mon = state.mons.list.find(m => m && m.id === id);
     if (!mon) return { success: false, message: "萌灵不存在" };
@@ -161,6 +166,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
   }
 
   function useShinyCharm() {
+    const state = getState();
     const itemCount = state.res.shinyCharm?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
     state.res.shinyCharm.value = Math.max(0, itemCount - 1);
@@ -175,6 +181,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
 
   /** 能量饮料：回复采集充能 */
   function useEnergyDrink() {
+    const state = getState();
     const itemCount = state.res.energyDrink?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
     const cur = typeof state.gatherCharges === "number" && Number.isFinite(state.gatherCharges) ? state.gatherCharges : 0;
@@ -188,6 +195,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
 
   /** 搜索信号弹：回复遭遇充能 */
   function useSearchFlare() {
+    const state = getState();
     const itemCount = state.res.searchFlare?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
     const cur = typeof state.encounterCharges === "number" && Number.isFinite(state.encounterCharges) ? state.encounterCharges : 0;
@@ -201,6 +209,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
 
   /** 高级搜索电池：回复高级搜索次数 */
   function useAdvSearchCell() {
+    const state = getState();
     const itemCount = state.res.advSearchCell?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
     const encPlusMaxBonus =
@@ -222,6 +231,7 @@ export function createItemUsage({ state, addRes, addLog, addExpToMon, render }) 
 
   /** 暖心铃：全队亲密度 +3 */
   function useSootheBell() {
+    const state = getState();
     const itemCount = state.res.sootheBell?.value || 0;
     if (itemCount < 1) return { success: false, message: "道具数量不足" };
     const list = Array.isArray(state.mons?.list) ? state.mons.list : [];
