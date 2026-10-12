@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import "../data/beasts.js";
+import "../data/beasts_zh.js";
 import {
   calcDamage,
   simulateBattle,
@@ -134,6 +136,44 @@ try {
   assert(ch4 && ch4.unlockDex === 90 && ch4.stages.length >= 4, "chapter 4 has 4+ stages @ dex 90");
   assert(ch4.stages[0].id === "4-1" && ch4.stages[0].unlockReq === null, "4-1 first stage open");
   assert(ch4.name.includes("峰顶"), "chapter 4 peak name");
+
+  // P3 扩容：4→8 章（约 50 关），结构全量校验
+  assert(PVE_CHAPTERS.length === 8, `8 chapters expected, got ${PVE_CHAPTERS.length}`);
+  const TYPE_SET = new Set(["fire","water","grass","electric","wind","stone","light","dark","mystic"]);
+  const roster = new Set(globalThis.BEAST_ROSTER ?? []);
+  const zh = globalThis.BEAST_ZH ?? {};
+  const stageIds = new Set();
+  let stageTotal = 0;
+  const REWARD_KEYS = new Set(["futurecoin","exp","evolutionEnergy","evolutionStone","linkRope"]);
+  for (const ch of PVE_CHAPTERS) {
+    assert(typeof ch.unlockDex === "number" && ch.unlockDex <= 150, `ch${ch.id} unlockDex reachable (${ch.unlockDex})`);
+    let prevId = null;
+    for (const st of ch.stages) {
+      stageTotal += 1;
+      assert(!stageIds.has(st.id), `dup stage id ${st.id}`);
+      stageIds.add(st.id);
+      assert(st.id.startsWith(`${ch.id}-`), `stage ${st.id} not in chapter ${ch.id}`);
+      assert(TYPE_SET.has(st.type), `${st.id} bad type ${st.type}`);
+      assert(st.unlockReq === prevId, `${st.id} unlockReq should chain from ${prevId}, got ${st.unlockReq}`);
+      prevId = st.id;
+      assert(st.enemies.length >= 1 && st.enemies.length <= 4, `${st.id} enemy count ${st.enemies.length}`);
+      for (const e of st.enemies) {
+        if (roster.size) {
+          assert(roster.has(e.dex), `${st.id} enemy dex ${e.dex} not in roster`);
+          const want = zh[`p${String(e.dex).padStart(3, "0")}`];
+          if (want) assert(e.name === want, `${st.id} enemy ${e.dex} name ${e.name} != ${want}`);
+        }
+        assert(e.lvl >= 1 && e.lvl <= 100, `${st.id} enemy lvl ${e.lvl} out of range`);
+        assert(e.stars >= 0 && e.stars <= 3, `${st.id} enemy stars ${e.stars}`);
+      }
+      for (const k of Object.keys(st.rewards ?? {})) assert(REWARD_KEYS.has(k), `${st.id} bad reward key ${k}`);
+      for (const k of Object.keys(st.repeatRewards ?? {})) assert(REWARD_KEYS.has(k), `${st.id} bad repeat key ${k}`);
+      assert((st.rewards?.futurecoin ?? 0) > 0 && (st.rewards?.exp ?? 0) > 0, `${st.id} must reward fc+exp`);
+    }
+  }
+  assert(stageTotal === 50, `50 stages expected (2x), got ${stageTotal}`);
+  const ch8 = PVE_CHAPTERS.find((c) => c.id === "8");
+  assert(ch8 && ch8.stages.at(-1).enemies.some((e) => e.dex === 150), "8-5 梦蚀尊 finale boss present");
 } finally {
   Math.random = realRandom;
 }
