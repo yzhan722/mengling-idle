@@ -112,6 +112,7 @@ export function initGameUi(ctx) {
     render,
     doCatch,
     getState,
+    activateTab,
     onGather: (intendedOrGained, maybeGained) => {
       const intended =
         typeof maybeGained === "number"

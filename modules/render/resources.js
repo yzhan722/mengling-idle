@@ -11,18 +11,19 @@ function fmtRate(perSec) {
   return `${Math.floor(perSec)}/秒`;
 }
 
-// 根据图鉴数量计算育灵师等级
+// 根据图鉴数量计算育灵师等级（适配 160 图鉴与 9 大生态区解锁节奏）
 export function getTrainerLevel(dexUnique) {
   const n = Math.max(0, Math.floor(dexUnique || 0));
-  if (n >= 600) return { level: 9, name: "精英四天王", next: null, nextReq: 600 };
-  if (n >= 450) return { level: 8, name: "幽谷贤者", next: "幻梦秘境", nextReq: 600 };
-  if (n >= 350) return { level: 7, name: "山脊守望者", next: "龙眠幽谷", nextReq: 450 };
-  if (n >= 250) return { level: 6, name: "花园月侍", next: "霜晶山脊", nextReq: 350 };
-  if (n >= 150) return { level: 5, name: "荒漠行者", next: "月见花园", nextReq: 250 };
-  if (n >= 80)  return { level: 4, name: "高原驭风者", next: "星砂荒漠", nextReq: 150 };
-  if (n >= 30)  return { level: 3, name: "浅滩游猎手", next: "风铃高原", nextReq: 80 };
-  if (n >= 10)  return { level: 2, name: "林径育灵员", next: "溪光浅滩", nextReq: 30 };
-  return         { level: 1, name: "新手饲养员", next: "蜜露林径", nextReq: 10 };
+  if (n >= 150) return { level: 9, name: "幻梦大宗师", next: null, nextReq: 160 };
+  if (n >= 120) return { level: 8, name: "秘境寻梦者", next: "全图鉴宗师", nextReq: 150 };
+  if (n >= 100) return { level: 7, name: "幽谷驭龙师", next: "幻梦秘境", nextReq: 120 };
+  if (n >= 80)  return { level: 6, name: "霜脊守望者", next: "龙眠幽谷", nextReq: 100 };
+  if (n >= 60)  return { level: 5, name: "月庭聆风使", next: "霜晶山脊", nextReq: 80 };
+  if (n >= 45)  return { level: 4, name: "星砂荒漠客", next: "月见花园", nextReq: 60 };
+  if (n >= 30)  return { level: 3, name: "风铃高原行", next: "星砂荒漠", nextReq: 45 };
+  if (n >= 15)  return { level: 2, name: "浅滩游猎手", next: "风铃高原", nextReq: 30 };
+  if (n >= 5)   return { level: 2, name: "蜜林育灵员", next: "溪光浅滩", nextReq: 15 };
+  return         { level: 1, name: "初阶育灵师", next: "蜜露林径", nextReq: 5 };
 }
 
 export function createRenderResources({ elResources, defs, fmt, getState }) {

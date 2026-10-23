@@ -93,13 +93,14 @@ export function createRenderDex({
             ${gallery
               .map(
                 (e) =>
-                  `<span class="row__titleLine" title="${escapeHtml(e.name)}">${renderBeastIcon(e.dex, e.name, true)}<span class="muted" style="font-size:11px">${escapeHtml(e.name)}</span></span>`
+                  `<button type="button" class="shiny-gallery-chip" data-dex-shiny-showcase="${escapeHtml(String(e.dex))}" title="点击全屏鉴赏 ${escapeHtml(e.name)}">${renderBeastIcon(e.dex, e.name, true)}<span class="shiny-gallery-chip__name">${escapeHtml(e.name)}</span></button>`
               )
               .join("")}
+            <button type="button" class="btn btn--small btn--primary" data-dex-shiny-showcase="all">✨ 全屏陈列秀</button>
             <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-share data-share="${escapeHtml(shareText)}">复制分享</button>
             <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-card>保存分享卡</button>
           </div>`
-        : `<div class="row__desc muted">闪光馆空空如也 — 捕捉或孵出闪光后会出现在这里。</div>`;
+        : `<div class="row__desc muted">闪光馆空空如也 — 捕捉或孵出闪光后会出现在这里，并可开启全屏星芒陈列秀。</div>`;
 
     elDexSummary.innerHTML = `
       <div class="row dex-summary">
@@ -179,10 +180,12 @@ export function createRenderDex({
       const seen = n > 0;
       const isShinyEntry = Boolean(shinyMap[p.id]);
       const revealMissing = onlyMissing;
-      const title = seen || revealMissing || isShinyEntry ? p.name : "????";
-
-      const icon = seen || revealMissing || isShinyEntry ? renderBeastIcon(p.dex, p.name, isShinyEntry) : "";
       const locked = !seen && !revealMissing && !isShinyEntry;
+      const title = locked ? "????" : p.name;
+
+      const icon = locked
+        ? `<span class="dex-silhouette" aria-hidden="true">${renderBeastIcon(p.dex, "未知萌灵", false)}</span>`
+        : renderBeastIcon(p.dex, p.name, isShinyEntry);
 
       rows.push(`
         <div class="row ${locked ? "is-locked" : ""}">

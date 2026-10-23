@@ -451,6 +451,48 @@ assert(win.winner === 1 && win.rounds > 0, "pvp strong wins");
   assert(!("fake" in cleaned[0]) && !("fake" in cleaned[0].attrs), "no fake markers anywhere");
 }
 
+{
+  await import("../data/beasts.js");
+  const { computeNewbieCompass, selectCampCompanions, getCampfireVisualTier } = await import(
+    "../modules/systems/newbie_compass.js"
+  );
+  const { getTrainerLevel } = await import("../modules/render/resources.js");
+  const { beastSpriteSvg, renderBeastIcon } = await import("../modules/sprites.js");
+
+  const c1 = computeNewbieCompass({ res: { catnip: { value: 10 } }, catchCount: 0 });
+  assert(c1.stepIndex === 1 && c1.ctaAction === "gather", "compass step 1 gather");
+  const c2 = computeNewbieCompass({ res: { catnip: { value: 35 } }, catchCount: 0 });
+  assert(c2.stepIndex === 2 && c2.ctaAction === "tab:science", "compass step 2 research");
+  const c3 = computeNewbieCompass({ tech: { pokeballBasics: true }, res: { pokeball: { value: 5 } }, catchCount: 0 });
+  assert(c3.stepIndex === 3 && c3.ctaAction === "tab:capture", "compass step 3 first catch");
+  const c4 = computeNewbieCompass({ catchCount: 1, buildings: { hut: { owned: 1 } } });
+  assert(c4.stepIndex === 4 && c4.ctaAction === "scroll:buildings", "compass step 4 infra");
+  const c5 = computeNewbieCompass({
+    catchCount: 1,
+    buildings: { hut: { owned: 1 }, lumberYard: { owned: 1 }, workshop: { owned: 1 }, trainingGround: { owned: 1 } },
+    training: { activeIds: [] },
+  });
+  assert(c5.stepIndex === 5 && c5.ctaAction === "tab:functions", "compass step 5 training");
+
+  const companions = selectCampCompanions({
+    mons: {
+      list: [
+        { id: 1, dex: 1, name: "芽苞苞", lvl: 5, isShiny: false },
+        { id: 2, dex: 151, name: "梦团团", lvl: 10, isShiny: true },
+      ],
+    },
+  });
+  assert(companions.length === 2 && companions[0].id === 2, "shiny companion prioritized first");
+  assert(getCampfireVisualTier({ era: { index: 5 } }).tier === 4, "campfire visual tier 4");
+  assert(getTrainerLevel(150).level === 9 && getTrainerLevel(0).nextReq === 5, "trainer level calibrated to 160 dex");
+
+  const svg12 = beastSpriteSvg(12, false);
+  const svg150 = beastSpriteSvg(150, false);
+  const iconHtml = renderBeastIcon(25, "电毛球", true);
+  assert(svg12 !== svg150 && svg12.includes("<svg"), "distinct procedural svg sprites");
+  assert(iconHtml.includes("data:image/svg+xml;utf8,") && iconHtml.includes("mon-icon--shiny"), "zero-404 data uri icon");
+}
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const era = spawnSync(process.execPath, [path.join(__dirname, "era-selfcheck.mjs")], { stdio: "inherit" });
 if (era.status !== 0) failed += 1;

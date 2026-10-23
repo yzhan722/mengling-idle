@@ -3800,3 +3800,538 @@ body {
   }
 }
 
+
+/* ==========================================================================
+   v0.1.0 前端沉浸感、新手主线罗盘、夜间篝火营地舞台与立绘美术升级
+   ========================================================================== */
+
+.mon-icon {
+  image-rendering: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.38));
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), filter 0.2s ease;
+}
+
+.row:hover .mon-icon,
+.camp-companion:hover .mon-icon {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.mon-icon--shiny {
+  filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.45)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+.mon-icon--epic {
+  filter: drop-shadow(0 0 12px rgba(192, 132, 252, 0.5)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
+}
+
+.dex-silhouette {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dex-silhouette .mon-icon {
+  filter: brightness(0) invert(0.18) drop-shadow(0 0 2px rgba(250, 204, 21, 0.22));
+  opacity: 0.72;
+}
+
+/* ── 夜间篝火营地舞台 (.camp-stage) ──────────────────────────────────────── */
+.camp-stage {
+  position: relative;
+  border-radius: var(--radius-lg, 14px);
+  border: 1px solid rgba(250, 204, 21, 0.24);
+  background: linear-gradient(180deg, rgba(13, 20, 36, 0.95) 0%, rgba(24, 19, 32, 0.95) 100%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.camp-stage__backdrop {
+  position: relative;
+  min-height: 176px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.camp-stage__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.camp-stage__flame {
+  transform-origin: 340px 148px;
+  animation: campFlameFlicker 2.6s ease-in-out infinite alternate;
+}
+
+.camp-spark {
+  animation: campSparkRise 3.2s ease-out infinite;
+}
+.camp-spark--2 { animation-delay: 0.8s; }
+.camp-spark--3 { animation-delay: 1.6s; }
+.camp-spark--4 { animation-delay: 0.4s; }
+.camp-spark--5 { animation-delay: 1.9s; }
+
+@keyframes campFlameFlicker {
+  0% { transform: scale(0.97) rotate(-1.5deg); }
+  50% { transform: scale(1.04, 1.07) rotate(1.2deg); }
+  100% { transform: scale(0.99, 1.03) rotate(-0.8deg); }
+}
+
+@keyframes campSparkRise {
+  0% { transform: translateY(0) scale(1); opacity: 0.9; }
+  100% { transform: translateY(-28px) scale(0.4); opacity: 0; }
+}
+
+.camp-stage__header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 14px 0;
+}
+
+.camp-stage__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fde047;
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  backdrop-filter: blur(6px);
+}
+
+.camp-stage__sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.68);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.camp-stage__companions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 10px;
+  padding: 8px 16px 12px;
+  min-height: 128px;
+}
+
+.camp-stage__emptyHint {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: rgba(255, 236, 200, 0.88);
+  background: rgba(11, 15, 23, 0.72);
+  border: 1px dashed rgba(250, 204, 21, 0.32);
+  backdrop-filter: blur(4px);
+}
+
+.camp-companion {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.camp-companion:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-3px);
+}
+
+.camp-companion--slot0 { margin-right: auto; margin-left: 6%; }
+.camp-companion--slot1 { margin-left: auto; margin-right: 6%; }
+.camp-companion--slot2 { margin-right: 4%; }
+
+.camp-companion__bubble {
+  max-width: 170px;
+  padding: 3px 9px;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: rgba(255, 248, 220, 0.95);
+  background: rgba(15, 23, 42, 0.84);
+  border: 1px solid rgba(250, 204, 21, 0.28);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.camp-companion__avatar .mon-icon {
+  width: 58px;
+  height: 58px;
+  animation: companionIdleBob 3s ease-in-out infinite;
+}
+
+.camp-companion--slot1 .camp-companion__avatar .mon-icon {
+  animation-delay: 0.9s;
+}
+
+.camp-companion--slot2 .camp-companion__avatar .mon-icon {
+  animation-delay: 1.7s;
+}
+
+@keyframes companionIdleBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.camp-companion__tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f8fafc;
+  background: rgba(11, 15, 23, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* ── 新手与前中期主线罗盘 (.compass-card) ────────────────────────────────── */
+.compass-card {
+  position: relative;
+  border: 1px solid rgba(250, 204, 21, 0.42) !important;
+  background:
+    radial-gradient(380px 140px at 0% 0%, rgba(250, 204, 21, 0.16), transparent 70%),
+    radial-gradient(320px 140px at 100% 100%, rgba(52, 211, 153, 0.12), transparent 70%),
+    rgba(20, 26, 40, 0.78) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32), inset 0 0 0 1px rgba(250, 204, 21, 0.12);
+}
+
+.compass-card__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.compass-card__badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #0b0f17;
+  background: linear-gradient(90deg, #facc15, #fbbf24);
+  letter-spacing: 0.03em;
+}
+
+.compass-card__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.compass-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.compass-dot.is-done {
+  background: #34d399;
+  border-color: #34d399;
+}
+
+.compass-dot.is-active {
+  width: 18px;
+  background: #facc15;
+  border-color: #fde047;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
+}
+
+.compass-card__title {
+  font-size: 15px !important;
+  color: #fef08a !important;
+}
+
+.compass-card__why {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(167, 243, 208, 0.92);
+}
+
+.compass-bar {
+  position: relative;
+  margin-top: 8px;
+  max-width: 380px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.compass-bar__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f59e0b 0%, #facc15 55%, #34d399 100%);
+  transition: width 0.25s ease;
+}
+
+.compass-bar__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.compass-card__cta {
+  min-height: 40px;
+  padding: 8px 16px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.28) !important;
+}
+
+/* ── 采集浮动反馈粒子 (.gather-float) ────────────────────────────────────── */
+.gather-float {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fef08a;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(250, 204, 21, 0.55);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  animation: gatherFloatUp 0.92s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.gather-float--combo {
+  color: #6ee7b7;
+  border-color: rgba(52, 211, 153, 0.65);
+}
+
+@keyframes gatherFloatUp {
+  0% { opacity: 0; transform: translate(-50%, 6px) scale(0.85); }
+  20% { opacity: 1; transform: translate(-50%, -6px) scale(1.04); }
+  100% { opacity: 0; transform: translate(-50%, -34px) scale(0.95); }
+}
+
+/* ── 引导气泡升级 (.guideBubble) ─────────────────────────────────────────── */
+.guideBubble__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #facc15;
+  margin-bottom: 4px;
+}
+
+.guideBubble__dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.guideBubble__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.guideBubble__dot.is-done { background: #34d399; }
+.guideBubble__dot.is-active { width: 12px; background: #facc15; }
+
+.guideBubble__tip {
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(255, 236, 200, 0.86);
+  background: rgba(250, 204, 21, 0.08);
+  border: 1px solid rgba(250, 204, 21, 0.2);
+}
+
+/* ── 闪光馆芯片与全屏陈列台 (.shiny-showcase) ────────────────────────────── */
+.shiny-gallery-chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  background: rgba(250, 204, 21, 0.08);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.shiny-gallery-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(250, 204, 21, 0.7);
+}
+
+.shiny-gallery-chip .mon-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.shiny-gallery-chip__name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fef08a;
+}
+
+.shiny-showcase-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(5, 8, 16, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+.shiny-showcase {
+  max-width: 640px !important;
+  width: 94vw !important;
+  padding: 18px 20px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(250, 204, 21, 0.45) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.72), 0 0 36px rgba(250, 204, 21, 0.16) !important;
+  background:
+    radial-gradient(420px 220px at 50% 25%, rgba(250, 204, 21, 0.22), transparent 70%),
+    linear-gradient(180deg, #0d1322 0%, #090d16 100%) !important;
+}
+
+.shiny-showcase__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shiny-showcase__eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #facc15;
+}
+
+.shiny-showcase__title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.shiny-showcase__stage {
+  position: relative;
+  margin: 14px 0;
+  padding: 20px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(250, 204, 21, 0.28);
+  background: radial-gradient(circle at 50% 45%, rgba(250, 204, 21, 0.2), rgba(11, 15, 23, 0.85) 72%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.shiny-showcase__heroArt .mon-icon {
+  width: 116px;
+  height: 116px;
+  animation: companionIdleBob 2.8s ease-in-out infinite;
+}
+
+.shiny-showcase__heroName {
+  margin-top: 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fef08a;
+}
+
+.shiny-showcase__heroSub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.shiny-showcase__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+
+.shiny-showcase__pedestal {
+  appearance: none;
+  padding: 8px 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.shiny-showcase__pedestal.is-active,
+.shiny-showcase__pedestal:hover {
+  border-color: #facc15;
+  background: rgba(250, 204, 21, 0.14);
+}
+
+.shiny-showcase__pedestalArt .mon-icon {
+  width: 52px;
+  height: 52px;
+}
+
+.shiny-showcase__pedestalName {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .camp-stage__flame,
+  .camp-spark,
+  .camp-companion__avatar .mon-icon,
+  .shiny-showcase__heroArt .mon-icon {
+    animation: none !important;
+  }
+}

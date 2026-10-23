@@ -46,7 +46,7 @@ export function createRenderLoop({ ui, getState, computeDerived, renders, elLog,
           tabController.refreshTabChrome();
         }
       })();
-      if (ui.bonfireDirty) renders.renderBonfireActions();
+      if (ui.bonfireDirty || ui.activeTab === "bonfire") renders.renderBonfireActions();
       if (ui.activeTab === "bonfire") renders.renderBuildings();
       if (ui.activeTab === "science") renders.renderTech();
       if (ui.activeTab === "capture") renders.renderCapture();

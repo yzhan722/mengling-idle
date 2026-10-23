@@ -10,7 +10,7 @@ const GUIDE_STEPS = [
     title: "第1步：先采集灵果",
     desc: "点顶栏【采集】换灵果。灵果是研究与建造的燃料。",
     targetId: "btnGather",
-    position: "right",
+    position: "bottom",
   },
   {
     id: "research",
@@ -116,13 +116,18 @@ export function initGuideSystem({ getState, activateTab, addLog } = {}) {
 
     bubbleEl = document.createElement("div");
     bubbleEl.className = "guideBubble";
+    const stepDots = GUIDE_STEPS.map(
+      (_, i) => `<span class="guideBubble__dot ${i === idx ? "is-active" : i < idx ? "is-done" : ""}"></span>`
+    ).join("");
     bubbleEl.innerHTML = `
+      <div class="guideBubble__eyebrow">🔥 营地新手指引 (${idx + 1}/${GUIDE_STEPS.length}) <span class="guideBubble__dots">${stepDots}</span></div>
       <div class="guideBubble__title">${step.title}</div>
       <div class="guideBubble__desc">${step.desc}</div>
+      <div class="guideBubble__tip">💡 引导结束后，随时可在「篝火」首屏的【主线罗盘】查看当前目标与一键直达按钮。</div>
       <div class="guideBubble__footer">
-        <button class="guideBubble__btn" id="guideBtnSkip" type="button">跳过引导</button>
+        <button class="guideBubble__btn" id="guideBtnSkip" type="button">我知道了（看罗盘）</button>
         <button class="guideBubble__btn guideBubble__btn--primary" id="guideBtnNext" type="button">${
-          idx < GUIDE_STEPS.length - 1 ? "下一步" : "完成"
+          idx < GUIDE_STEPS.length - 1 ? "下一步 →" : "开始冒险！"
         }</button>
       </div>
     `;
@@ -173,6 +178,13 @@ export function initGuideSystem({ getState, activateTab, addLog } = {}) {
       } else {
         top = r.bottom + margin;
         left = r.left;
+      }
+      // Avoid overlapping top-right toast stack and topbar resource pills on desktop
+      if (top < 150 && vw >= 760) {
+        const safeRightLimit = vw - 310 - bw;
+        if (left > safeRightLimit) {
+          left = Math.max(margin, Math.min(r.right - bw, safeRightLimit));
+        }
       }
     } else {
       top = vh / 2 - bh / 2;
