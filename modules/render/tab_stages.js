@@ -3,6 +3,7 @@
 // 都拥有与「篝火主页」同等级别的 16:9 手绘场景原画 + 动态 SVG 光效 + 实时数据交互舞台。
 
 import { pad3 } from "../utils.js";
+import { renderOrbSvg, renderResSvg, renderBuildingSvg } from "./rpg_svg_icons.js";
 
 /**
  * 将全景舞台 (stageHtml) 与列表内容 (rowsHtml) 挂载到容器，
@@ -238,23 +239,23 @@ export function renderCaptureStageHtml({
     : "";
 
   const BALL_BELT_DEFS = [
-    { id: "pokeball", icon: "🔴", name: "灵球", tag: "1.0x", count: pbVal, always: true },
-    { id: "ultraball", icon: "🔵", name: "高级灵球", tag: "2.0x", count: ubVal },
-    { id: "quickball", icon: "⚡", name: "迅捷灵球", tag: "首发5x", count: qbVal },
-    { id: "luxuryball", icon: "💛", name: "豪华灵球", tag: "亲密+20", count: lbVal },
-    { id: "netball", icon: "🕸️", name: "捕灵球", tag: "水草3x", count: nbVal },
-    { id: "duskball", icon: "🌙", name: "暗夜灵球", tag: "夜间3x", count: dbVal },
+    { id: "pokeball", name: "灵球", tag: "1.0x", count: pbVal, always: true },
+    { id: "ultraball", name: "高级灵球", tag: "2.0x", count: ubVal },
+    { id: "quickball", name: "迅捷灵球", tag: "首发5x", count: qbVal },
+    { id: "luxuryball", name: "豪华灵球", tag: "亲密+20", count: lbVal },
+    { id: "netball", name: "捕灵球", tag: "水草3x", count: nbVal },
+    { id: "duskball", name: "暗夜灵球", tag: "夜间3x", count: dbVal },
   ];
 
   const ballBeltHtml = `
     <div class="capture-ball-belt" role="group" aria-label="灵球战术腰带">
-      <span class="capture-ball-belt__label">🎒 灵球战术腰带：</span>
+      <span class="capture-ball-belt__label">${renderOrbSvg("pokeball", 16)} 灵球战术腰带：</span>
       <div class="capture-ball-belt__slots">
         ${BALL_BELT_DEFS.filter((b) => b.always || b.count > 0 || selectedBall === b.id)
           .map(
             (b) => `
           <button type="button" class="ball-slot ${selectedBall === b.id ? "is-selected" : ""} ${b.count <= 0 ? "is-empty" : ""}" data-stage-act="select-ball" data-ball-type="${b.id}" title="切换为 ${b.name}（库存 ${b.count}）">
-            <span class="ball-slot__icon">${b.icon}</span>
+            <span class="ball-slot__icon">${renderOrbSvg(b.id, 18)}</span>
             <span class="ball-slot__name">${b.name}</span>
             <span class="ball-slot__tag">${b.tag}</span>
             <span class="ball-slot__cnt">×${b.count}</span>
@@ -264,7 +265,7 @@ export function renderCaptureStageHtml({
         ${
           mbVal > 0
             ? `<button type="button" class="ball-slot ball-slot--master" data-capture-action="masterball" ${enc ? "" : "disabled"} title="使用究极灵球 100% 必中捕获！">
-                <span class="ball-slot__icon">🟣</span>
+                <span class="ball-slot__icon">${renderOrbSvg("masterball", 18)}</span>
                 <span class="ball-slot__name">究极灵球</span>
                 <span class="ball-slot__tag">100%必中</span>
                 <span class="ball-slot__cnt">×${mbVal}</span>
@@ -321,7 +322,7 @@ export function renderCaptureStageHtml({
           <div class="capture-chance-meter">
             <div class="capture-chance-meter__top">
               <span>🎯 综合捕获率预估：<strong>${pct}%</strong>（缩圈完美命中可再 +15%）</span>
-              <span>当前球种：${selectedBall === "pokeball" ? "🔴 灵球" : selectedBall === "ultraball" ? "🔵 高级灵球" : selectedBall === "quickball" ? "⚡ 迅捷灵球" : selectedBall === "luxuryball" ? "💛 豪华灵球" : selectedBall === "netball" ? "🕸️ 捕灵球" : "🌙 暗夜灵球"}</span>
+              <span>当前球种：${renderOrbSvg(selectedBall, 14)} ${selectedBall === "pokeball" ? "灵球" : selectedBall === "ultraball" ? "高级灵球" : selectedBall === "quickball" ? "迅捷灵球" : selectedBall === "luxuryball" ? "豪华灵球" : selectedBall === "netball" ? "捕灵球" : "暗夜灵球"}</span>
             </div>
             <div class="capture-chance-meter__bar">
               <div class="capture-chance-meter__fill" style="width:${Math.max(6, pct)}%"></div>
@@ -616,19 +617,19 @@ export function renderFutureStageHtml({
       <div class="tab-stage__body tab-stage__body--bazaar">
         <div class="bazaar-vault">
           <div class="bazaar-vault__item">
-            <span class="bazaar-vault__label">🪙 未来币储备</span>
+            <span class="bazaar-vault__label">${renderResSvg("futurecoin", 16)} 未来币储备</span>
             <span class="bazaar-vault__val">${fmt(fc)}</span>
           </div>
           <div class="bazaar-vault__item">
-            <span class="bazaar-vault__label">🔮 轮回灵珀</span>
+            <span class="bazaar-vault__label">${renderResSvg("minerals", 16)} 轮回灵珀</span>
             <span class="bazaar-vault__val">${fmt(essence)}</span>
           </div>
           <div class="bazaar-vault__item">
-            <span class="bazaar-vault__label">🍓 灵果库存</span>
+            <span class="bazaar-vault__label">${renderResSvg("catnip", 16)} 灵果库存</span>
             <span class="bazaar-vault__val">${fmt(catnip)}</span>
           </div>
           <div class="bazaar-vault__item">
-            <span class="bazaar-vault__label">🪵 灵木库存</span>
+            <span class="bazaar-vault__label">${renderResSvg("wood", 16)} 灵木库存</span>
             <span class="bazaar-vault__val">${fmt(wood)}</span>
           </div>
         </div>
@@ -823,19 +824,19 @@ export function renderItemsStageHtml({ state, care }) {
       <div class="tab-stage__body tab-stage__body--bazaar">
         <div class="bazaar-vault">
           <div class="bazaar-vault__item">
-            <span class="bazaar-vault__label">🔴 灵球匣总计</span>
+            <span class="bazaar-vault__label">${renderOrbSvg("pokeball", 16)} 灵球匣总计</span>
             <span class="bazaar-vault__val">${ballTotal}</span>
           </div>
           <div class="bazaar-vault__item">
-            <span class="bazaar-vault__label">🍬 灵果与糖丸</span>
+            <span class="bazaar-vault__label">${renderResSvg("catnip", 16)} 灵果与糖丸</span>
             <span class="bazaar-vault__val">${foodTotal}</span>
           </div>
           <div class="bazaar-vault__item">
-            <span class="bazaar-vault__label">🧪 六维强化秘药</span>
+            <span class="bazaar-vault__label">${renderResSvg("science", 16)} 六维强化秘药</span>
             <span class="bazaar-vault__val">${potionTotal}</span>
           </div>
           <div class="bazaar-vault__item">
-            <span class="bazaar-vault__label">🔮 灵石与奇珍</span>
+            <span class="bazaar-vault__label">${renderResSvg("minerals", 16)} 灵石与奇珍</span>
             <span class="bazaar-vault__val">${relicTotal}</span>
           </div>
         </div>

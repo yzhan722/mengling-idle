@@ -7,6 +7,7 @@ import {
   markItemsCareClaimed,
 } from "../systems/gameplay_fun.js";
 import { renderItemsStageHtml } from "../render/tab_stages.js";
+import { renderResSvg } from "../render/rpg_svg_icons.js";
 
 export function createRenderItems({ defs, getState, itemUsage, ui, render, markMonsDirty, addLog }) {
   const failMsg = (msg) => {
@@ -420,12 +421,19 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           : "";
 
         return `
-          <div class="row">
-            <div class="row__left">
-              <div class="row__title">${name}</div>
-              <div class="row__desc">${effect}</div>
+          <div class="row bcard item-card">
+            <div class="row__left bcard__main">
+              <div class="bcard__head">
+                <div class="bcard__emblem">
+                  <div class="bcard__icon">${renderResSvg(rid, 28)}</div>
+                </div>
+                <div class="bcard__titleWrap">
+                  <div class="row__title">${name}</div>
+                  <div class="row__desc">${effect}</div>
+                </div>
+              </div>
             </div>
-            <div class="row__right">
+            <div class="row__right bcard__actions">
               <div class="badge">数量：${hasCap ? `${val} / ${cap}` : val}</div>
               ${useBtn}
             </div>
@@ -434,13 +442,20 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       }).join("");
 
       const autoFeedRow = catName === "消耗品"
-        ? `<div class="row"><div class="row__left"><div class="row__title">自动喂食大灵果</div><div class="row__desc"><input class="chk" type="checkbox" data-auto-feed-big-berry ${Boolean(state.auto?.autoFeedBigBerry) ? "checked" : ""} /> 任一萌灵饱腹度低于 30 时，消耗1个大灵果为全体 +50</div></div></div>`
+        ? `<div class="row row--full"><div class="row__left"><div class="row__title">自动喂食大灵果</div><div class="row__desc"><input class="chk" type="checkbox" data-auto-feed-big-berry ${Boolean(state.auto?.autoFeedBigBerry) ? "checked" : ""} /> 任一萌灵饱腹度低于 30 时，消耗1个大灵果为全体 +50</div></div></div>`
         : "";
+      const catIconRid = {
+        "捕捉": "pokeball",
+        "货币": "futurecoin",
+        "进化": "evolutionStone",
+        "培养": "rareCandy",
+        "消耗品": "bigBerry",
+        "特殊": "shinyCharm",
+        "药剂": "hpPotion",
+      }[catName] || "futurecoin";
       return `
-        <div class="row">
-          <div class="row__left">
-            <div class="row__title">${catName}</div>
-          </div>
+        <div class="building-section">
+          <div class="building-section__title"><span class="building-section__icon">${renderResSvg(catIconRid, 18)}</span><span>${catName}</span><span class="building-section__meta">共 ${rids.length} 项</span></div>
         </div>
         ${rows}
         ${autoFeedRow}
@@ -481,7 +496,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
 
     let html = `
       ${itemsStageHtml}
-      <div class="row">
+      <div class="row row--full">
         <div class="row__left">
           <div class="row__title">今日推荐</div>
           <div class="row__desc">${
@@ -501,7 +516,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           <button class="btn btn--primary btn--small" data-item-care-claim ${care.canClaim ? "" : "disabled"}>${care.claimed ? "护理已领" : "领取护理 +8"}</button>
         </div>
       </div>
-      <div class="row"><div class="row__left"><div class="row__title">道具状态</div><div class="row__desc">全局双倍经验：${globalExpRem > 0 ? fmtRemain(globalExpRem) : "未激活"}${shinyCharmRem > 0 ? ` · 虹彩护符：${fmtRemain(shinyCharmRem)}` : ""} · 捕捉类在捕捉页用，培养类点「使用」选萌灵</div></div></div>`;
+      <div class="row row--full"><div class="row__left"><div class="row__title">道具状态</div><div class="row__desc">全局双倍经验：${globalExpRem > 0 ? fmtRemain(globalExpRem) : "未激活"}${shinyCharmRem > 0 ? ` · 虹彩护符：${fmtRemain(shinyCharmRem)}` : ""} · 捕捉类在捕捉页用，培养类点「使用」选萌灵</div></div></div>`;
     for (const [catName, rids] of Object.entries(categories)) {
       html += renderCategory(catName, rids);
     }

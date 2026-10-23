@@ -86,7 +86,7 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     );
 
     rows.push(`
-      <div class="row">
+      <div class="row row--full">
         <div class="row__left">
           <div class="row__title">当前未来币</div>
           <div class="row__desc">可用灵果/灵木兑换未来币。</div>

@@ -1,4 +1,5 @@
 // ponytail: 产能摘要已由各资源筹码 .resrow__meta 承担，不再往顶栏插重复 #prodHint
+import { renderResSvg } from "./rpg_svg_icons.js";
 
 // 将速率转为更直观的文本：速率很低时显示「约Xs/个」
 function fmtRate(perSec) {
@@ -47,6 +48,9 @@ export function createRenderResources({ elResources, defs, fmt, getState }) {
 
       const left = document.createElement("div");
       left.className = "resrow__left";
+      const iconEl = document.createElement("span");
+      iconEl.className = "resrow__icon";
+      iconEl.innerHTML = renderResSvg(it.id, 18);
       const nameEl = document.createElement("div");
       nameEl.className = "resrow__k";
       nameEl.textContent = it.name;
@@ -55,7 +59,7 @@ export function createRenderResources({ elResources, defs, fmt, getState }) {
       metaEl.className = "resrow__meta";
       metaEl.textContent = it.meta;
 
-      left.append(nameEl, metaEl);
+      left.append(iconEl, nameEl, metaEl);
 
       const valueEl = document.createElement("div");
       valueEl.className = "resrow__v";

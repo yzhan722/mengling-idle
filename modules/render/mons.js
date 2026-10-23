@@ -261,7 +261,7 @@ export function createRenderMons({
 
       if (total > 80) {
         rows.push(`
-          <div class="row is-locked">
+          <div class="row row--full is-locked">
             <div class="row__left">
               <div class="row__title">盒子较满（${total} 只）</div>
               <div class="row__desc">低战力萌灵可放生换取跃级糖丸；智能放生会保留闪光、稀有及以上、高星、忙碌萌灵，以及同种/同进化系最后一只。</div>
@@ -271,13 +271,13 @@ export function createRenderMons({
       }
 
       rows.push(`
-        <div class="row">
+        <div class="row row--full">
           <div class="row__left">
             <input class="input input--search" data-mon-search type="search" placeholder="搜索萌灵名称…" value="${escapeHtml(searchQ)}" />
             ${filterChips.length ? `<div class="filter-chips">${filterChips.map((c) => `<span class="filter-chip">${escapeHtml(c)}</span>`).join("")}</div>` : ""}
           </div>
         </div>
-        <div class="row">
+        <div class="row row--full">
           <div class="row__left">
             <div class="row__title">快捷操作</div>
             <div class="row__desc">饱腹不足：${feedAllCount} 只 · 饥饿(&lt;50)：${hungryCount} 只 · 灵果：${Math.floor(state.res.catnip?.value ?? 0)} · 糖果：${candyHave}</div>
@@ -307,7 +307,7 @@ export function createRenderMons({
           return `<button class="btn btn--small type type-${escapeHtml(t)}${isReady ? ' btn--ready' : ''}" data-mon-batch-skill="${escapeHtml(t)}" title="${escapeHtml(TYPE_SKILL_DESC[t] || "")}" ${isReady ? '' : 'disabled'}>${label}</button>`;
         }).join("");
         rows.push(`
-          <div class="row">
+          <div class="row row--full">
             <div class="row__left">
               <div class="row__title">批量技能</div>
               <div class="row__desc">可触发：冷却完毕且饱腹≥50 · 全局增益类每次只发动 1 只</div>
@@ -320,7 +320,7 @@ export function createRenderMons({
       const buffLines = listActiveSkillBuffs(state.skills);
       if (buffLines.length > 0) {
         rows.push(`
-          <div class="row">
+          <div class="row row--full">
             <div class="row__left">
               <div class="row__title">技能增益</div>
               <div class="row__desc">${escapeHtml(buffLines.join(" · "))}</div>
@@ -335,7 +335,7 @@ export function createRenderMons({
             ? "当前筛选无结果，试试放宽地区/属性或清空搜索。"
             : "去“捕捉”页抓一只吧。";
         rows.push(`
-          <div class="row is-locked">
+          <div class="row row--full is-locked">
             <div class="row__left">
               <div class="row__title">暂无萌灵</div>
               <div class="row__desc">${escapeHtml(emptyHint)}</div>
@@ -419,7 +419,7 @@ export function createRenderMons({
           const mOrder = globalThis.BEAST_ORDER?.[mPid] || m.dex;
           const mTitleHtml = mTitle ? `<span class="beast-title-tag">【${escapeHtml(mTitle)}】</span>` : "";
           rows.push(`
-            <div class="row">
+            <div class="row mon-card">
               <div class="row__left">
                 <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span>${mTitleHtml}${shinyBadge}<span style="margin-left:8px">${starsHtml}</span></div>
                 <div class="row__desc">Lv.${m.lvl} · 战力 ${power} · 性格 ${escapeHtml(natureName)} · 特性 ${escapeHtml(ab?.name || "—")} · 饱腹度 ${sat}/100 · 亲密度 ${aff}/100${"caughtWith" in m && m.caughtWith && m.caughtWith !== "pokeball" ? " · " + ({"pokeball":"灵球","ultraball":"高级灵球","quickball":"迅捷灵球","luxuryball":"豪华灵球","masterball":"究极灵球","netball":"捕灵球","duskball":"暗夜灵球"}[m.caughtWith] ?? m.caughtWith) : ""}</div>

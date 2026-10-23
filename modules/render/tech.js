@@ -3,6 +3,7 @@ import { getTechStage, TECH_STAGE_LABELS, TECH_STAGE_ORDER } from "../tech_defs.
 import { researchProgressTheater } from "../systems/gameplay_fun.js";
 import { escapeHtml } from "../utils.js";
 import { renderScienceStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
+import { renderTechSvg, renderResSvg } from "./rpg_svg_icons.js";
 
 const TECH_PACING_BLURB =
   "研究耗时随投入分档：起步科技约数秒～半分钟，中期扩产约 1 分钟，后期飞跃链显著更长；建研究所可缩短耗时。";
@@ -21,26 +22,26 @@ function getTechVisualMeta(tid, tdef, stg) {
   const id = String(tid || "").toLowerCase();
   const nm = String(tdef?.name || "");
   if (id.includes("ball") || nm.includes("球") || nm.includes("捕捉")) {
-    return { icon: "🔴", tone: "rose", tag: "灵球工艺" };
+    return { svgKind: "ball", tone: "rose", tag: "灵球工艺" };
   }
   if (id.includes("berry") || id.includes("compost") || id.includes("field") || nm.includes("灵果") || nm.includes("堆肥")) {
-    return { icon: "🍓", tone: "emerald", tag: "灵植农学" };
+    return { svgKind: "berry", tone: "emerald", tag: "灵植农学" };
   }
   if (id.includes("wood") || id.includes("carpent") || id.includes("lumber") || nm.includes("木") || nm.includes("锯")) {
-    return { icon: "🌲", tone: "amber", tag: "林木工程" };
+    return { svgKind: "wood", tone: "amber", tag: "林木工程" };
   }
   if (id.includes("mine") || id.includes("mineral") || id.includes("quarry") || nm.includes("晶") || nm.includes("矿")) {
-    return { icon: "💎", tone: "cyan", tag: "晶脉勘探" };
+    return { svgKind: "mineral", tone: "cyan", tag: "晶脉勘探" };
   }
   if (id.includes("shiny") || id.includes("myth") || nm.includes("闪光") || nm.includes("幻")) {
-    return { icon: "✨", tone: "gold", tag: "星辉异象" };
+    return { svgKind: "shiny", tone: "gold", tag: "星辉异象" };
   }
   if (id.includes("research") || id.includes("lib") || nm.includes("研究") || nm.includes("观测")) {
-    return { icon: "🔭", tone: "violet", tag: "星轨学派" };
+    return { svgKind: "science", tone: "violet", tag: "星轨学派" };
   }
-  if (stg === "early") return { icon: "🌱", tone: "emerald", tag: "营地起步" };
-  if (stg === "late") return { icon: "🚀", tone: "gold", tag: "飞跃奥秘" };
-  return { icon: "⚙️", tone: "cyan", tag: "中枢扩产" };
+  if (stg === "early") return { svgKind: "berry", tone: "emerald", tag: "营地起步" };
+  if (stg === "late") return { svgKind: "shiny", tone: "gold", tag: "飞跃奥秘" };
+  return { svgKind: "science", tone: "cyan", tag: "中枢扩产" };
 }
 
 export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchMode, elResearchEff, defs, canAfford, computeResearchTimeSec, fmtDuration, getResearchEfficiency, getState, getResearchCost }) {
@@ -117,9 +118,8 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
         .map(([rid, v]) => {
           const curVal = state.res?.[rid]?.value ?? 0;
           const enough = curVal >= v;
-          const rIcon = RES_ICONS[rid] || "";
           const rName = defs.resources[rid]?.name || rid;
-          return `<span class="cost-chip ${enough ? "is-ok" : "is-short"}">${rIcon} ${rName}${v}</span>`;
+          return `<span class="cost-chip ${enough ? "is-ok" : "is-short"}">${renderResSvg(rid, 14)} ${rName}${v}</span>`;
         })
         .join("");
 
@@ -171,7 +171,7 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
           <div class="row__left bcard__main">
             <div class="bcard__head">
               <div class="bcard__emblem bcard__emblem--${vis.tone}" aria-hidden="true">
-                <span class="bcard__icon">${vis.icon}</span>
+                <span class="bcard__icon">${renderTechSvg(vis.svgKind, 26)}</span>
                 <span class="bcard__lvlBadge">⏱${timeText}</span>
               </div>
               <div class="bcard__titleWrap">

@@ -1,3 +1,5 @@
+import { renderBuildingSvg, renderResSvg } from "./rpg_svg_icons.js";
+
 const BUILDING_MAX_LEVEL = 50;
 
 const BUILDING_VISUALS = {
@@ -77,9 +79,8 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
         .map(([rid, v]) => {
           const curVal = state.res?.[rid]?.value ?? 0;
           const enough = curVal >= v;
-          const rIcon = RES_ICONS[rid] || "";
           const rName = defs.resources[rid]?.name || rid;
-          return `<span class="cost-chip ${enough ? "is-ok" : "is-short"}" title="当前 ${Math.floor(curVal)} / 需要 ${v}">${rIcon} ${rName}${v}</span>`;
+          return `<span class="cost-chip ${enough ? "is-ok" : "is-short"}" title="当前 ${Math.floor(curVal)} / 需要 ${v}">${renderResSvg(rid, 14)} ${rName}${v}</span>`;
         })
         .join("");
 
@@ -99,7 +100,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
           <div class="row__left bcard__main">
             <div class="bcard__head">
               <div class="bcard__emblem bcard__emblem--${vis.tone}" aria-hidden="true">
-                <span class="bcard__icon">${vis.icon}</span>
+                <span class="bcard__icon">${renderBuildingSvg(bid, 26)}</span>
                 <span class="bcard__lvlBadge">Lv.${owned}</span>
               </div>
               <div class="bcard__titleWrap">

@@ -6155,5 +6155,181 @@ button.capture-wanderer.is-rustling {
   color: #fde047;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   v0.6.0 商业级多图层 SVG 图标体系、置顶全景舞台与全站双列 RPG 典藏卡阵
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. 定制矢量 SVG 图标光影与对齐 */
+.rpg-svg-orb,
+.rpg-svg-res,
+.rpg-svg-bldg {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.55));
+}
+
+.resrow__left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.resrow__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: radial-gradient(circle at 35% 30%, rgba(250, 204, 21, 0.22), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+/* 2. 全页面舞台置顶净化：消除舞台上方的冗余说明框与顺序错位 */
+#panel-future > .futureShopIntro,
+#panel-future > .sidebar__divider,
+#panel-future > .panel__title {
+  display: none !important;
+}
+
+#panel-capture.is-active,
+#panel-dex.is-active {
+  display: flex;
+  flex-direction: column;
+}
+
+#panel-capture > #captureInfo,
+#panel-dex > #dexSummary {
+  order: -1;
+}
+
+#panel-capture > .actions,
+#panel-dex > .actions,
+#panel-mons > .actions,
+#panel-science > .actions {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(250, 204, 21, 0.25);
+}
+
+select.select,
+#dexArea {
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(250, 204, 21, 0.32);
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#items .building-section {
+  align-items: stretch;
+  text-align: left;
+}
+
+#items .building-section__title {
+  justify-content: flex-start;
+  text-align: left;
+  width: 100%;
+}
+
+/* 3. 萌灵、图鉴、商店、道具双列商业级 RPG 典藏卡阵 */
+@media (min-width: 860px) {
+  #monList:not([hidden]),
+  #dexList:not([hidden]),
+  #futureShop:not([hidden]),
+  #items:not([hidden]) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  #monList .tab-stage,
+  #monList .row--full,
+  #monList .modalOverlay,
+  #dexList .tab-stage,
+  #dexList .row--full,
+  #futureShop .tab-stage,
+  #futureShop .row--full,
+  #futureShop .sidebar__sectionTitleRow,
+  #items .tab-stage,
+  #items .row--full,
+  #items .building-section,
+  #items .modalOverlay {
+    grid-column: 1 / -1;
+  }
+
+  #monList .mon-card,
+  #dexList .dex-card,
+  #futureShop .tab-stage-rows > .row:not(.row--full),
+  #items .item-card {
+    margin: 0;
+    height: 100%;
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(17, 24, 39, 0.9) 0%, rgba(11, 15, 25, 0.95) 100%);
+    border: 1px solid rgba(250, 204, 21, 0.24);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  #monList .mon-card:hover,
+  #dexList .dex-card:hover,
+  #futureShop .tab-stage-rows > .row:not(.row--full):hover,
+  #items .item-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(250, 204, 21, 0.55);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(250, 204, 21, 0.16);
+  }
+}
+
+/* 4. 萌灵卡与图鉴卡的暗金立绘头像框升级 */
+.mon-card,
+.dex-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px !important;
+}
+
+.mon-card .row__titleLine .mon-icon,
+.dex-card .row__titleLine .mon-icon {
+  width: 50px;
+  height: 50px;
+  padding: 4px;
+  border-radius: 12px;
+  background: radial-gradient(circle at 50% 35%, rgba(250, 204, 21, 0.24), rgba(15, 23, 42, 0.92));
+  border: 1px solid rgba(250, 204, 21, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 10px rgba(0, 0, 0, 0.42);
+  flex-shrink: 0;
+}
+
+.mon-card .row__right,
+.dex-card .row__right {
+  width: 100%;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#futureShop .sidebar__sectionTitleRow {
+  padding: 9px 14px;
+  margin-top: 6px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(250, 204, 21, 0.16) 0%, rgba(15, 23, 42, 0.78) 70%, transparent 100%);
+  border-left: 4px solid #facc15;
+  border-top: 1px solid rgba(250, 204, 21, 0.22);
+  border-bottom: 1px solid rgba(250, 204, 21, 0.14);
+}
+
+
 
 
