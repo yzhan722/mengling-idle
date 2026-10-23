@@ -4,6 +4,8 @@ import {
   shinyUniqueCount,
   syncShinyGalleryFromMons,
 } from "../systems/collection_fun.js";
+import { typeZh } from "../systems/gameplay_fun.js";
+import { ZONE_IDS, ZONE_LABELS } from "../beast_defs.js";
 
 export function createRenderDex({
   elDexSummary,
@@ -157,7 +159,9 @@ export function createRenderDex({
       if (!q) return true;
       const qLower = q.toLowerCase();
       const dexStr = String(p.dex);
-      if (dexStr === qLower || pad3(p.dex) === qLower) return true;
+      const orderStr = String(p.order || p.dex);
+      if (dexStr === qLower || pad3(p.dex) === qLower || orderStr === qLower || pad3(p.order || p.dex) === qLower) return true;
+      if (p.title && p.title.toLowerCase().includes(qLower)) return true;
       return p.name.toLowerCase().includes(qLower);
     });
 
@@ -174,6 +178,9 @@ export function createRenderDex({
     if (elDexPrev) elDexPrev.disabled = ui.dexPage <= 0;
     if (elDexNext) elDexNext.disabled = ui.dexPage >= maxPage;
 
+    const typesMap = globalThis.BEAST_TYPES ?? {};
+    const TIER_LABELS = { common: "常见", uncommon: "少见", rare: "稀有", epic: "史诗" };
+
     const rows = [];
     for (const p of slice) {
       const n = typeof caught[p.id] === "number" ? caught[p.id] : 0;
@@ -181,19 +188,37 @@ export function createRenderDex({
       const isShinyEntry = Boolean(shinyMap[p.id]);
       const revealMissing = onlyMissing;
       const locked = !seen && !revealMissing && !isShinyEntry;
+      const displayNo = pad3(p.order || p.dex);
       const title = locked ? "????" : p.name;
+      const subtitleTag = !locked && p.title ? `<span class="beast-title-tag">【${escapeHtml(p.title)}】</span>` : "";
+      const zoneId = ZONE_IDS[p.zone] || "meadow";
+      const zoneName = ZONE_LABELS[zoneId] || "芽芽草甸";
+      const tierLabel = TIER_LABELS[p.tier] || "常见";
+      const pTypes = Array.isArray(typesMap[p.dex]) ? typesMap[p.dex] : [];
+      const typeBadgesHtml = !locked
+        ? pTypes
+            .map((t) => `<span class="badge type type-${escapeHtml(t)}">${escapeHtml(typeZh(t))}</span>`)
+            .join("")
+        : "";
+      const loreHtml = locked
+        ? `<div class="row__desc dex-lore muted">栖息地线索：${escapeHtml(zoneName)} · 探索捕捉后解锁《星野灵兽录》生态传记。</div>`
+        : p.desc
+          ? `<div class="row__desc dex-lore">${escapeHtml(p.desc)}</div>`
+          : "";
 
       const icon = locked
         ? `<span class="dex-silhouette" aria-hidden="true">${renderBeastIcon(p.dex, "未知萌灵", false)}</span>`
         : renderBeastIcon(p.dex, p.name, isShinyEntry);
 
       rows.push(`
-        <div class="row ${locked ? "is-locked" : ""}">
+        <div class="row dex-card ${locked ? "is-locked" : ""}">
           <div class="row__left">
-            <div class="row__title row__titleLine">${icon}<span>No.${pad3(p.dex)} ${title}${isShinyEntry ? " ★" : ""}</span></div>
+            <div class="row__title row__titleLine">${icon}<span>No.${displayNo} ${escapeHtml(title)}</span>${subtitleTag}${isShinyEntry ? ' <span class="badge badge--ok">★ 闪光</span>' : ""}${typeBadgesHtml}</div>
+            ${loreHtml}
           </div>
           <div class="row__right">
-            <div class="badge ${isShinyEntry ? "badge--ok" : seen ? "badge--ok" : "badge--muted"}">${isShinyEntry ? "闪光图鉴" : seen ? `数量：${n}` : "-"}</div>
+            <div class="badge badge--muted">${escapeHtml(zoneName)} · ${escapeHtml(tierLabel)}</div>
+            <div class="badge ${isShinyEntry ? "badge--ok" : seen ? "badge--ok" : "badge--muted"}">${isShinyEntry ? `已捕获 ${n} · ★` : seen ? `已捕获 ${n}` : "未登记"}</div>
             ${!seen ? `<button type="button" class="btn btn--small" data-dex-goto-capture="${escapeHtml(p.id)}">去捕捉</button>` : ""}
           </div>
         </div>

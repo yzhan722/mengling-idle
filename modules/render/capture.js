@@ -431,19 +431,34 @@ export function createRenderCapture({
 
       const nearMissActive = Boolean(enc && ui.lastCatchNearMiss?.pid === enc.id);
       const encFullBadge = encCharges >= 100 ? `<div class="badge badge--ok">充能已满</div>` : "";
+      const encTitleTag = enc && enc.title ? `<span class="beast-title-tag">【${escapeHtml(enc.title)}】</span>` : "";
+      const encDescHtml = enc && enc.desc ? `<div class="row__desc dex-lore">${escapeHtml(enc.desc)}</div>` : "";
+      const encTypesArr = enc && Array.isArray(globalThis.BEAST_TYPES?.[enc.dex]) ? globalThis.BEAST_TYPES[enc.dex] : [];
+      const encTypesHtml = encTypesArr
+        .map((t) => `<span class="badge type type-${escapeHtml(t)}">${escapeHtml(typeZh(t))}</span>`)
+        .join("");
 
       rows.push(`
         <div class="row${nearMissActive ? " capture-near-miss" : ""}">
           <div class="row__left">
             <div class="row__title">遭遇</div>
-            <div class="row__desc">${enc ? `你遇到了：${escapeHtml(enc.name)}（${tierText}）` : "点击遭遇开始搜寻萌灵。"}</div>
+            ${
+              enc
+                ? `<div class="encounter-showcase">
+                    <div class="encounter-showcase__art">${renderBeastIcon(enc.dex, enc.name, encIsShiny)}</div>
+                    <div class="encounter-showcase__info">
+                      <div class="row__title row__titleLine"><span>${escapeHtml(enc.name)}</span>${encTitleTag}<span class="badge">${tierText}</span>${encTypesHtml}</div>
+                      ${encDescHtml}
+                    </div>
+                  </div>`
+                : `<div class="row__desc">点击遭遇开始搜寻萌灵。</div>`
+            }
           </div>
           <div class="row__right">
             ${encFullBadge}
             ${enc ? `<div class="badge ${encSeen ? "badge--muted" : "badge--ok"}">${encSeen ? "已有" : "首次"}</div>` : ""}
             ${enc && encIsShiny ? `<div class="badge badge--ok">！！！闪光！！！</div>` : ""}
             ${enc && encIsMythic ? `<div class="badge badge--ok">！！！幻灵！！！</div>` : ""}
-            ${enc ? `<div class="badge">${renderBeastIcon(enc.dex, enc.name, encIsShiny)} ${escapeHtml(enc.name)}</div>` : ""}
             ${encNatureHtml}
             <label class="check" style="margin-right:6px">
               <input type="checkbox" data-auto-encounter-toggle ${autoEncOn ? "checked" : ""} />

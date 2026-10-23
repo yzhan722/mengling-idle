@@ -401,15 +401,19 @@ export function createRenderMons({
 
           const natureName = getNatureInfo(m.nature)?.name || "—";
           const ab = getAbilityInfo(m.ability);
+          const mPid = `p${pad3(m.dex)}`;
+          const mTitle = globalThis.BEAST_TITLE?.[mPid] || "";
+          const mOrder = globalThis.BEAST_ORDER?.[mPid] || m.dex;
+          const mTitleHtml = mTitle ? `<span class="beast-title-tag">【${escapeHtml(mTitle)}】</span>` : "";
           rows.push(`
             <div class="row">
               <div class="row__left">
-                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span>${shinyBadge}<span style="margin-left:8px">${starsHtml}</span></div>
+                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span>${mTitleHtml}${shinyBadge}<span style="margin-left:8px">${starsHtml}</span></div>
                 <div class="row__desc">Lv.${m.lvl} · 战力 ${power} · 性格 ${escapeHtml(natureName)} · 特性 ${escapeHtml(ab?.name || "—")} · 饱腹度 ${sat}/100 · 亲密度 ${aff}/100${"caughtWith" in m && m.caughtWith && m.caughtWith !== "pokeball" ? " · " + ({"pokeball":"灵球","ultraball":"高级灵球","quickball":"迅捷灵球","luxuryball":"豪华灵球","masterball":"究极灵球","netball":"捕灵球","duskball":"暗夜灵球"}[m.caughtWith] ?? m.caughtWith) : ""}</div>
               </div>
               <div class="row__mid">${skillHtml}</div>
               <div class="row__right">
-                <div class="badge">No.${pad3(m.dex)}</div>
+                <div class="badge">No.${pad3(mOrder)}</div>
                 <button class="btn btn--small${sat0 < 30 ? ' btn--warning' : sat0 < 60 ? ' btn--warning' : ''}" data-mon-feed="${m.id}" ${sat0 >= 100 ? "disabled" : ""}>${sat0 < 60 ? `喂食(${sat}/100)` : '喂食'}</button>
                 <button class="btn btn--small" data-mon-open="${m.id}">查看</button>
                 <button class="btn btn--small" data-mon-starup="${m.id}" ${stars >= 5 ? "disabled" : ""}>升星</button>
@@ -566,11 +570,17 @@ export function createRenderMons({
       }
     }
 
+    const selPid = `p${pad3(selected.dex)}`;
+    const selTitle = globalThis.BEAST_TITLE?.[selPid] || "";
+    const selDesc = globalThis.BEAST_DESC?.[selPid] || "";
+    const selOrder = globalThis.BEAST_ORDER?.[selPid] || selected.dex;
+
     elMonDetail.innerHTML = `
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderBeastIcon(selected.dex, selected.name, Boolean(selected.isShiny))}<span>${escapeHtml(selected.name)}</span>${Boolean(selected.isShiny) ? `<span class="badge badge--ok" style="margin-left:6px">闪光</span>` : ""}<span style="margin-left:8px">${renderStars(selected.stars)}</span></div>
-          <div class="row__desc">No.${pad3(selected.dex)} · ${selected.tier === "common" ? "常见" : selected.tier === "uncommon" ? "少见" : selected.tier === "rare" ? "稀有" : "史诗"}</div>
+          <div class="row__title row__titleLine">${renderBeastIcon(selected.dex, selected.name, Boolean(selected.isShiny))}<span>${escapeHtml(selected.name)}</span>${selTitle ? `<span class="beast-title-tag">【${escapeHtml(selTitle)}】</span>` : ""}${Boolean(selected.isShiny) ? `<span class="badge badge--ok" style="margin-left:6px">闪光</span>` : ""}<span style="margin-left:8px">${renderStars(selected.stars)}</span></div>
+          <div class="row__desc">No.${pad3(selOrder)} · ${selected.tier === "common" ? "常见" : selected.tier === "uncommon" ? "少见" : selected.tier === "rare" ? "稀有" : "史诗"}</div>
+          ${selDesc ? `<div class="row__desc dex-lore">${escapeHtml(selDesc)}</div>` : ""}
         </div>
         <div class="row__right">
           <div class="badge">Lv.${selected.lvl}</div>
@@ -638,7 +648,7 @@ export function createRenderMons({
       <div class="row">
         <div class="row__left">
           <div class="row__title">种族值</div>
-          <div class="row__desc">来自官方数据</div>
+          <div class="row__desc">星野灵兽本源六维潜能</div>
         </div>
         <div class="row__right">
           ${baseBadges}

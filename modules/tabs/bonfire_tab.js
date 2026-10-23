@@ -16,139 +16,19 @@ import { renderBeastIcon } from "../sprites.js";
 import { escapeHtml } from "../utils.js";
 
 function renderCampStageSvg(fireTier) {
-  const flameScale = 0.88 + (fireTier - 1) * 0.14;
+  const glowOpacity = (0.28 + fireTier * 0.08).toFixed(2);
   return `
-    <svg class="camp-stage__svg" viewBox="0 0 680 184" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <defs>
-        <radialGradient id="campGlow" cx="50%" cy="78%" r="54%">
-          <stop offset="0%" stop-color="#fbbf24" stop-opacity="${0.48 + fireTier * 0.06}"/>
-          <stop offset="42%" stop-color="#f97316" stop-opacity="0.22"/>
-          <stop offset="78%" stop-color="#7c2d12" stop-opacity="0.08"/>
-          <stop offset="100%" stop-color="#0b0f17" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="lanternGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#fde047" stop-opacity="0.65"/>
-          <stop offset="55%" stop-color="#f59e0b" stop-opacity="0.22"/>
-          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="campSky" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#060a14"/>
-          <stop offset="55%" stop-color="#0f172a"/>
-          <stop offset="100%" stop-color="#1e1b2e"/>
-        </linearGradient>
-        <linearGradient id="tentFabric" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#334155"/>
-          <stop offset="100%" stop-color="#1e293b"/>
-        </linearGradient>
-        <linearGradient id="tentInner" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#fef08a"/>
-          <stop offset="55%" stop-color="#f59e0b"/>
-          <stop offset="100%" stop-color="#b45309"/>
-        </linearGradient>
-        <linearGradient id="flameOuter" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#fde047"/>
-          <stop offset="48%" stop-color="#f97316"/>
-          <stop offset="100%" stop-color="#dc2626"/>
-        </linearGradient>
-        <linearGradient id="flameMid" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#fef9c3"/>
-          <stop offset="55%" stop-color="#fb923c"/>
-          <stop offset="100%" stop-color="#ea580c"/>
-        </linearGradient>
-        <linearGradient id="flameInner" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="65%" stop-color="#fef08a"/>
-          <stop offset="100%" stop-color="#f59e0b"/>
-        </linearGradient>
-      </defs>
-      <rect width="680" height="184" rx="12" fill="url(#campSky)"/>
-      <!-- 银河柔光带与星空弦月 -->
-      <ellipse cx="340" cy="36" rx="290" ry="22" transform="rotate(-4 340 36)" fill="#38bdf8" opacity="0.045"/>
-      <circle cx="72" cy="32" r="1.4" fill="#fef08a" opacity="0.85"/>
-      <circle cx="138" cy="20" r="1.7" fill="#ffffff" opacity="0.75"/>
-      <path d="M210 20 L212 25 L217 27 L212 29 L210 34 L208 29 L203 27 L208 25 Z" fill="#fef08a" opacity="0.75"/>
-      <circle cx="282" cy="28" r="1.3" fill="#bae6fd" opacity="0.8"/>
-      <circle cx="412" cy="18" r="1.6" fill="#fef08a" opacity="0.8"/>
-      <path d="M486 24 L487.5 28 L491.5 29.5 L487.5 31 L486 35 L484.5 31 L480.5 29.5 L484.5 28 Z" fill="#bae6fd" opacity="0.7"/>
-      <circle cx="542" cy="36" r="1.3" fill="#ffffff" opacity="0.65"/>
-      <circle cx="628" cy="28" r="1.5" fill="#bae6fd" opacity="0.8"/>
-      <circle cx="590" cy="29" r="20" fill="#fef08a" opacity="0.08"/>
-      <path d="M582 18 A14 14 0 1 0 600 36 A11 11 0 1 1 582 18 Z" fill="#fef08a" opacity="0.92"/>
-      <!-- 远山层峦 -->
-      <path d="M0 138 L68 92 L144 126 L236 80 L328 124 L424 84 L524 126 L608 90 L680 128 L680 184 L0 184 Z" fill="#0b1324" opacity="0.92"/>
-      <!-- 左右松林剪影（多层次针叶林） -->
-      <g fill="#080f1d" opacity="0.95">
-        <path d="M18 68 L4 96 L12 96 L0 122 L10 122 L-2 148 L38 148 L26 122 L36 122 L24 96 L32 96 Z"/>
-        <path d="M48 80 L35 104 L42 104 L30 128 L38 128 L28 150 L68 150 L58 128 L66 128 L54 104 L61 104 Z"/>
-        <path d="M628 76 L614 102 L622 102 L610 126 L618 126 L608 150 L648 150 L638 126 L646 126 L634 102 L642 102 Z"/>
-        <path d="M658 64 L644 92 L652 92 L638 118 L648 118 L636 148 L680 148 L668 118 L678 118 L664 92 L672 92 Z"/>
-      </g>
-      <!-- 中景缓坡与营地草甸 -->
-      <path d="M0 148 Q120 128 240 144 T460 142 T680 146 L680 184 L0 184 Z" fill="#11192c"/>
-      <ellipse cx="340" cy="158" rx="310" ry="34" fill="#171523"/>
-      <ellipse cx="340" cy="138" rx="220" ry="78" fill="url(#campGlow)"/>
-      <!-- 左侧：探险家暖光帐篷与挂灯木桩 -->
-      <g class="camp-stage__tent">
-        <!-- 帐篷拉绳 -->
-        <line x1="48" y1="146" x2="66" y2="122" stroke="#475569" stroke-width="1.2" opacity="0.7"/>
-        <line x1="154" y1="146" x2="136" y2="120" stroke="#475569" stroke-width="1.2" opacity="0.7"/>
-        <!-- 帐篷侧面与主顶棚 -->
-        <path d="M56 146 L94 98 L146 142 L112 148 Z" fill="#1e293b" stroke="#475569" stroke-width="1.6" stroke-linejoin="round"/>
-        <path d="M94 98 L132 94 L154 138 L122 146 Z" fill="url(#tentFabric)" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round"/>
-        <!-- 帐篷暖光门帘 -->
-        <path d="M74 146 L94 106 L114 146 Z" fill="url(#tentInner)" opacity="0.88"/>
-        <path d="M74 146 Q86 126 94 106 L64 146 Z" fill="#334155" stroke="#64748b" stroke-width="1.2"/>
-        <path d="M114 146 Q102 126 94 106 L122 146 Z" fill="#475569" stroke="#64748b" stroke-width="1.2"/>
-        <!-- 帐篷地面暖光投射 -->
-        <ellipse cx="94" cy="150" rx="26" ry="5" fill="#f59e0b" opacity="0.28"/>
-        <!-- 营地挂灯木桩 -->
-        <path d="M164 148 L164 108 L178 104" fill="none" stroke="#78350f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        <line x1="177" y1="104" x2="177" y2="112" stroke="#94a3b8" stroke-width="1.4"/>
-        <circle cx="177" cy="117" r="16" fill="url(#lanternGlow)"/>
-        <rect x="173" y="112" width="8" height="10" rx="3" fill="#fef08a" stroke="#b45309" stroke-width="1.4"/>
-      </g>
-      <!-- 右侧：原木坐凳与萤火灵晶丛 -->
-      <g class="camp-stage__props">
-        <ellipse cx="556" cy="148" rx="34" ry="6" fill="#090c14" opacity="0.55"/>
-        <rect x="526" y="136" width="56" height="11" rx="5.5" transform="rotate(4 554 141)" fill="#78350f" stroke="#451a03" stroke-width="1.6"/>
-        <circle cx="528" cy="140" r="5.5" fill="#d97706" stroke="#451a03" stroke-width="1.4"/>
-        <!-- 灵果灌木与微光晶石 -->
-        <path d="M590 144 Q584 128 598 126 Q606 116 618 126 Q628 130 622 144 Z" fill="#14532d" stroke="#166534" stroke-width="1.5"/>
-        <circle cx="598" cy="133" r="2.6" fill="#fb7185"/>
-        <circle cx="610" cy="129" r="2.8" fill="#fbbf24"/>
-        <circle cx="615" cy="137" r="2.4" fill="#38bdf8"/>
-      </g>
-      <!-- 中央篝火底座、河卵石圈与劈柴 -->
-      <ellipse cx="340" cy="156" rx="54" ry="13" fill="#080b12" opacity="0.72"/>
-      <ellipse cx="340" cy="151" rx="38" ry="9" fill="#ea580c" opacity="${0.28 + fireTier * 0.05}"/>
-      <!-- 交错木柴 -->
-      <rect x="302" y="140" width="76" height="11" rx="5.5" transform="rotate(-15 340 145)" fill="#78350f" stroke="#451a03" stroke-width="1.8"/>
-      <rect x="302" y="140" width="76" height="11" rx="5.5" transform="rotate(15 340 145)" fill="#92400e" stroke="#451a03" stroke-width="1.8"/>
-      <rect x="314" y="143" width="52" height="9" rx="4.5" transform="rotate(-4 340 147)" fill="#b45309" stroke="#451a03" stroke-width="1.5"/>
-      <!-- 河卵石围圈（带火光高光边） -->
-      <ellipse cx="294" cy="152" rx="8" ry="5.5" fill="#475569" stroke="#1e293b" stroke-width="1.4"/>
-      <ellipse cx="308" cy="158" rx="9" ry="6" fill="#64748b" stroke="#1e293b" stroke-width="1.4"/>
-      <ellipse cx="328" cy="161" rx="9.5" ry="6.2" fill="#475569" stroke="#1e293b" stroke-width="1.4"/>
-      <ellipse cx="352" cy="161" rx="9.5" ry="6.2" fill="#64748b" stroke="#1e293b" stroke-width="1.4"/>
-      <ellipse cx="372" cy="158" rx="9" ry="6" fill="#475569" stroke="#1e293b" stroke-width="1.4"/>
-      <ellipse cx="386" cy="152" rx="8" ry="5.5" fill="#64748b" stroke="#1e293b" stroke-width="1.4"/>
-      <!-- 多层灵动火焰 -->
-      <g class="camp-stage__flame" transform="translate(340 148) scale(${flameScale}) translate(-340 -148)">
-        <!-- 外层主火舌与左右卷曲火苗 -->
-        <path d="M340 64 C324 84, 304 106, 314 134 C304 122, 298 108, 302 96 C292 114, 296 138, 314 147 C328 154, 352 154, 366 147 C384 138, 388 112, 376 94 C380 108, 374 122, 366 132 C374 106, 354 86, 340 64 Z" fill="url(#flameOuter)"/>
-        <!-- 中层暖橙火舌 -->
-        <path d="M338 78 C326 96, 314 116, 322 140 C316 130, 314 118, 318 108 C312 122, 316 140, 326 147 C336 152, 346 152, 356 146 C366 138, 368 118, 360 104 C362 116, 358 128, 352 136 C358 114, 348 94, 338 78 Z" fill="url(#flameMid)" opacity="0.92"/>
-        <!-- 内层亮黄白炽火芯 -->
-        <path d="M340 94 C330 108, 324 126, 331 144 C336 149, 344 149, 349 144 C356 126, 350 108, 340 94 Z" fill="url(#flameInner)"/>
-        <ellipse cx="340" cy="142" rx="10" ry="6" fill="#ffffff" opacity="0.75"/>
-      </g>
-      <!-- 升腾火星与森林萤火虫 -->
-      <circle class="camp-spark camp-spark--1" cx="330" cy="82" r="2.4" fill="#fde047"/>
-      <circle class="camp-spark camp-spark--2" cx="352" cy="72" r="2" fill="#fb923c"/>
-      <circle class="camp-spark camp-spark--3" cx="338" cy="58" r="1.8" fill="#fef08a"/>
-      <circle class="camp-spark camp-spark--4" cx="238" cy="112" r="2.2" fill="#86efac" opacity="0.82"/>
-      <circle class="camp-spark camp-spark--5" cx="454" cy="104" r="2.2" fill="#86efac" opacity="0.82"/>
-    </svg>
+    <div class="camp-stage__artWrap" aria-hidden="true">
+      <img class="camp-stage__bgImg" src="./assets/ui/camp_stage_night.jpg" alt="" loading="eager" decoding="async" />
+      <div class="camp-stage__fireGlow" style="--fire-glow-opacity:${glowOpacity}"></div>
+      <svg class="camp-stage__sparksSvg" viewBox="0 0 680 210" xmlns="http://www.w3.org/2000/svg">
+        <circle class="camp-spark camp-spark--1" cx="332" cy="118" r="2.6" fill="#fde047"/>
+        <circle class="camp-spark camp-spark--2" cx="354" cy="108" r="2.2" fill="#fb923c"/>
+        <circle class="camp-spark camp-spark--3" cx="340" cy="92" r="2.0" fill="#fef08a"/>
+        <circle class="camp-spark camp-spark--4" cx="228" cy="134" r="2.4" fill="#86efac" opacity="0.88"/>
+        <circle class="camp-spark camp-spark--5" cx="468" cy="126" r="2.4" fill="#86efac" opacity="0.88"/>
+      </svg>
+    </div>
   `;
 }
 

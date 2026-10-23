@@ -22,13 +22,19 @@ function openShinyShowcaseModal(state, focusDex = null) {
   overlay.className = "modalOverlay shiny-showcase-overlay";
 
   const renderContent = (spotlight) => {
+    const pid = `p${pad3(spotlight.dex)}`;
+    const spTitle = globalThis.BEAST_TITLE?.[pid] || "星野灵兽";
+    const spDesc = globalThis.BEAST_DESC?.[pid] || "概率 1/512 的星芒异色个体 · 永久铭刻于图鉴殿堂";
+    const spOrder = globalThis.BEAST_ORDER?.[pid] || spotlight.dex;
+
     const cardsHtml = entries
       .map((e) => {
         const active = e.dex === spotlight.dex;
+        const eOrder = globalThis.BEAST_ORDER?.[`p${pad3(e.dex)}`] || e.dex;
         return `
           <button type="button" class="shiny-showcase__pedestal ${active ? "is-active" : ""}" data-showcase-pick="${escapeHtml(String(e.dex))}">
             <div class="shiny-showcase__pedestalArt">${renderBeastIcon(e.dex, e.name, true)}</div>
-            <div class="shiny-showcase__pedestalName">#${pad3(e.dex)} ${escapeHtml(e.name)}</div>
+            <div class="shiny-showcase__pedestalName">#${pad3(eOrder)} ${escapeHtml(e.name)}</div>
           </button>
         `;
       })
@@ -47,9 +53,9 @@ function openShinyShowcaseModal(state, focusDex = null) {
           <div class="shiny-showcase__rays" aria-hidden="true"></div>
           <div class="shiny-showcase__heroArt">${renderBeastIcon(spotlight.dex, spotlight.name, true)}</div>
           <div class="shiny-showcase__heroMeta">
-            <span class="badge badge--ok">★ 闪光珍藏 #${pad3(spotlight.dex)}</span>
+            <span class="badge badge--ok">★ 闪光珍藏 #${pad3(spOrder)} · 【${escapeHtml(spTitle)}】</span>
             <div class="shiny-showcase__heroName">${escapeHtml(spotlight.name)}</div>
-            <div class="shiny-showcase__heroSub">概率 1/512 的星芒异色个体 · 永久铭刻于图鉴殿堂</div>
+            <div class="shiny-showcase__heroSub">${escapeHtml(spDesc)}</div>
           </div>
         </div>
         <div class="shiny-showcase__grid">

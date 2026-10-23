@@ -29,13 +29,22 @@ const getBeastTier = (dex) => {
 export function buildBeastList() {
   const roster = Array.isArray(globalThis.BEAST_ROSTER) ? globalThis.BEAST_ROSTER : [];
   const zoneMap = globalThis.BEAST_ZONES ?? {};
-  return roster.map((dex) => ({
-    id: `p${pad3(dex)}`,
-    dex,
-    name: getBeastZhName(dex) ?? `萌灵${pad3(dex)}`,
-    tier: getBeastTier(dex),
-    zone: typeof zoneMap[dex] === "number" ? zoneMap[dex] : 0,
-  }));
+  const titleMap = globalThis.BEAST_TITLE ?? {};
+  const descMap = globalThis.BEAST_DESC ?? {};
+  const orderMap = globalThis.BEAST_ORDER ?? {};
+  return roster.map((dex, idx) => {
+    const pid = `p${pad3(dex)}`;
+    return {
+      id: pid,
+      dex,
+      order: typeof orderMap[pid] === "number" ? orderMap[pid] : idx + 1,
+      name: getBeastZhName(dex) ?? `萌灵${pad3(dex)}`,
+      title: titleMap[pid] || "星野幻灵",
+      desc: descMap[pid] || "栖息于星野秘境的奇异生灵。",
+      tier: getBeastTier(dex),
+      zone: typeof zoneMap[dex] === "number" ? zoneMap[dex] : 0,
+    };
+  });
 }
 
 /** roster 外物种的旧存档兜底：图鉴/萌灵页显示为逸散状态。 */

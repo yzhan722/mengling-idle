@@ -477,8 +477,8 @@ assert(win.winner === 1 && win.rounds > 0, "pvp strong wins");
   const companions = selectCampCompanions({
     mons: {
       list: [
-        { id: 1, dex: 1, name: "芽苞苞", lvl: 5, isShiny: false },
-        { id: 2, dex: 151, name: "梦团团", lvl: 10, isShiny: true },
+        { id: 1, dex: 1, name: "翠芽幼龙", lvl: 5, isShiny: false },
+        { id: 2, dex: 151, name: "绯梦初灵", lvl: 10, isShiny: true },
       ],
     },
   });
@@ -488,9 +488,18 @@ assert(win.winner === 1 && win.rounds > 0, "pvp strong wins");
 
   const svg12 = beastSpriteSvg(12, false);
   const svg150 = beastSpriteSvg(150, false);
-  const iconHtml = renderBeastIcon(25, "电毛球", true);
+  const iconHtml = renderBeastIcon(25, "星雷金貂", true);
   assert(svg12 !== svg150 && svg12.includes("<svg"), "distinct procedural svg sprites");
-  assert(iconHtml.includes("data:image/svg+xml;utf8,") && iconHtml.includes("mon-icon--shiny"), "zero-404 data uri icon");
+  assert(
+    iconHtml.includes("./assets/beasts_shiny/025.png") &&
+      iconHtml.includes("__beastSpriteOnError") &&
+      iconHtml.includes("mon-icon--shiny"),
+    "hd illustrated beast icon with svg fallback"
+  );
+  globalThis.BEAST_FORCE_SVG = true;
+  const fallbackHtml = renderBeastIcon(25, "星雷金貂", true);
+  delete globalThis.BEAST_FORCE_SVG;
+  assert(fallbackHtml.includes("data:image/svg+xml;utf8,"), "svg fallback icon when BEAST_FORCE_SVG=true");
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

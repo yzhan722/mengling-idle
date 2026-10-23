@@ -659,13 +659,19 @@ export function beastSpriteDataUri(dex, isShiny = false) {
   return uri;
 }
 
+let rosterSetCache = null;
 const hasLocalHdArt = (dex, isShiny) => {
+  if (globalThis.BEAST_FORCE_SVG === true) return false;
   const set = isShiny ? globalThis.BEAST_HD_SHINY_DEX : globalThis.BEAST_HD_DEX;
-  return Boolean(set && typeof set.has === "function" && set.has(Number(dex)));
+  if (set && typeof set.has === "function") return set.has(Number(dex));
+  if (!rosterSetCache && Array.isArray(globalThis.BEAST_ROSTER)) {
+    rosterSetCache = new Set(globalThis.BEAST_ROSTER.map(Number));
+  }
+  return rosterSetCache ? rosterSetCache.has(Number(dex)) : true;
 };
 
 const localArtUrl = (dex, isShiny) =>
-  isShiny ? `./assets/beasts_shiny/${dex}.png` : `./assets/beasts/${dex}.png`;
+  isShiny ? `./assets/beasts_shiny/${pad3(dex)}.png` : `./assets/beasts/${pad3(dex)}.png`;
 
 export function installSpriteHandlers() {
   if (typeof globalThis.__beastSpriteOnError !== "function") {

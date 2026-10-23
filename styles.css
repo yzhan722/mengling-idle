@@ -3847,12 +3847,42 @@ body {
 
 .camp-stage__backdrop {
   position: relative;
-  min-height: 176px;
+  min-height: 204px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
+.camp-stage__artWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.camp-stage__bgImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 58%;
+  filter: saturate(1.08) contrast(1.03);
+}
+
+.camp-stage__fireGlow {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  width: 240px;
+  height: 130px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.38) 0%, rgba(250, 204, 21, 0.16) 48%, transparent 74%);
+  mix-blend-mode: screen;
+  animation: campFlameFlicker 2.6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.camp-stage__sparksSvg,
 .camp-stage__svg {
   position: absolute;
   inset: 0;
@@ -3978,8 +4008,9 @@ body {
 }
 
 .camp-companion__avatar .mon-icon {
-  width: 58px;
-  height: 58px;
+  width: 72px;
+  height: 72px;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.68)) drop-shadow(0 0 10px rgba(251, 191, 36, 0.28));
   animation: companionIdleBob 3s ease-in-out infinite;
 }
 
@@ -4329,9 +4360,61 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .camp-stage__flame,
+  .camp-stage__fireGlow,
   .camp-spark,
   .camp-companion__avatar .mon-icon,
   .shiny-showcase__heroArt .mon-icon {
     animation: none !important;
   }
+}
+
+/* ── 星野灵兽录卡片与遭遇立绘展示 (.dex-card / .encounter-showcase) ────────── */
+.beast-title-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fde047;
+  opacity: 0.92;
+}
+
+.dex-lore {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.8);
+  max-width: 72ch;
+}
+
+#dexList .dex-card .row__left {
+  gap: 4px;
+}
+
+#dexList .dex-card .row__titleLine {
+  flex-wrap: wrap;
+}
+
+.encounter-showcase {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.72) 0%, rgba(30, 41, 59, 0.45) 100%);
+  border: 1px solid rgba(250, 204, 21, 0.24);
+}
+
+.encounter-showcase__art .mon-icon {
+  width: 84px;
+  height: 84px;
+}
+
+.encounter-showcase__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.encounter-showcase__info .row__titleLine {
+  flex-wrap: wrap;
 }
