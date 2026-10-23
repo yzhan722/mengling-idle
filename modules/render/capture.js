@@ -268,8 +268,13 @@ export function createRenderCapture({
     const stageBallMult = ballCatchMult(stageBall, { types: stageEncTypes, caughtCount: stageCaughtN });
     const stageLuckyMul = stageEnc ? luckyCatchMul(state, stageEncTypes) : 1;
     const stageNatureMul = stageEnc ? natureWildCatchMul(ui.encounterNature) : 1;
+    const tacticalAdd =
+      Math.max(0, Number(ui.encounterAmbushBonus || 0)) +
+      (Math.max(0, Math.floor(ui.lureStacks || 0)) > 0 ? 0.06 : 0) +
+      Math.min(3, Math.max(0, Math.floor(ui.encounterBaitStacks || 0))) * 0.04 +
+      Math.min(2, Math.max(0, Math.floor(ui.encounterMudStacks || 0))) * 0.05;
     const stageEffChance = stageEnc
-      ? clamp(baseCatchChanceByDex(stageEnc.dex) * Math.max(0, 1 + stageAdd) * stageBallMult * stageLuckyMul * stageNatureMul + stagePity, 0, 0.95)
+      ? clamp(baseCatchChanceByDex(stageEnc.dex) * Math.max(0, 1 + stageAdd) * stageBallMult * stageLuckyMul * stageNatureMul + stagePity + tacticalAdd, 0, 0.95)
       : 0;
     const stageEncCharges = Math.max(0, Math.min(100, Math.floor(typeof state.encounterCharges === "number" ? state.encounterCharges : 100)));
     const stageAdvMax = 10 + (typeof state.permanentBoosts?.encPlusMax === "number" ? Math.max(0, Math.min(20, Math.floor(state.permanentBoosts.encPlusMax))) : 0);
@@ -281,6 +286,7 @@ export function createRenderCapture({
 
     const stageHeroHtml = renderCaptureStageHtml({
       state,
+      ui,
       area,
       unlockedAreas: unlocked,
       nextLockedArea: nextArea,
@@ -313,18 +319,29 @@ export function createRenderCapture({
       ${sessionHtml}
       ${eraPanelHtml}
       ${luckyHtml}
-      <div class="row">
-        <div class="row__left">
-          <div class="row__title">当前区域</div>
-          <div class="row__desc">${escapeHtml(area.name)} · 池子 ${pool.length} 种（${escapeHtml(tierSummary)}）</div>
-          ${poolEmptyHint ? `<div class="row__desc hint hint--danger">${escapeHtml(poolEmptyHint)}</div>` : ""}
-          ${areaHint ? `<div class="row__desc hint">${escapeHtml(areaHint)}</div>` : ""}
+      <div class="row bcard bcard--emerald">
+        <div class="row__left bcard__main">
+          <div class="bcard__head">
+            <div class="bcard__emblem bcard__emblem--emerald" aria-hidden="true">
+              <span class="bcard__icon">🗺️</span>
+              <span class="bcard__lvlBadge">${pool.length}种</span>
+            </div>
+            <div class="bcard__titleWrap">
+              <div class="bcard__titleLine">
+                <span class="row__title">当前区域：${escapeHtml(area.name)}</span>
+                <span class="bcard__tag">生态分布</span>
+              </div>
+              <div class="row__desc">栖息池共 ${pool.length} 种（${escapeHtml(tierSummary)}）</div>
+              ${poolEmptyHint ? `<div class="row__desc hint hint--danger">${escapeHtml(poolEmptyHint)}</div>` : ""}
+              ${areaHint ? `<div class="row__desc hint">${escapeHtml(areaHint)}</div>` : ""}
+            </div>
+          </div>
+          ${preview && !previewHiddenEffective ? `<div class="iconGrid iconGrid--full" style="margin-top:8px">${preview}</div>` : ""}
         </div>
         <div class="row__right">
           ${isMobile && preview ? `<button class="btn btn--ghost btn--small" data-capture-preview-toggle>${previewHiddenEffective ? "显示预览" : "隐藏预览"}</button>` : ""}
         </div>
       </div>
-      ${preview && !previewHiddenEffective ? `<div class="row"><div class="row__left"><div class="row__title">本区域预览</div></div><div class="row__right" style="justify-content:flex-start;flex:1 1 auto;width:100%;"><div class="iconGrid iconGrid--full">${preview}</div></div></div>` : ""}
       ${lockHtml}
     `,
     );
@@ -496,20 +513,31 @@ export function createRenderCapture({
         .join("");
 
       rows.push(`
-        <div class="row${nearMissActive ? " capture-near-miss" : ""}">
-          <div class="row__left">
-            <div class="row__title">遭遇</div>
-            ${
-              enc
-                ? `<div class="encounter-showcase">
-                    <div class="encounter-showcase__art">${renderBeastIcon(enc.dex, enc.name, encIsShiny)}</div>
-                    <div class="encounter-showcase__info">
-                      <div class="row__title row__titleLine"><span>${escapeHtml(enc.name)}</span>${encTitleTag}<span class="badge">${tierText}</span>${encTypesHtml}</div>
-                      ${encDescHtml}
-                    </div>
-                  </div>`
-                : `<div class="row__desc">点击遭遇开始搜寻萌灵。</div>`
-            }
+        <div class="row bcard bcard--emerald${nearMissActive ? " capture-near-miss" : ""}">
+          <div class="row__left bcard__main">
+            <div class="bcard__head">
+              <div class="bcard__emblem bcard__emblem--emerald" aria-hidden="true">
+                <span class="bcard__icon">🧭</span>
+                <span class="bcard__lvlBadge">${encCharges}/100</span>
+              </div>
+              <div class="bcard__titleWrap">
+                <div class="bcard__titleLine">
+                  <div class="row__title">遭遇</div>
+                  <span class="bcard__tag">生态雷达控制台</span>
+                </div>
+                ${
+                  enc
+                    ? `<div class="encounter-showcase">
+                        <div class="encounter-showcase__art">${renderBeastIcon(enc.dex, enc.name, encIsShiny)}</div>
+                        <div class="encounter-showcase__info">
+                          <div class="row__title row__titleLine"><span>${escapeHtml(enc.name)}</span>${encTitleTag}<span class="badge">${tierText}</span>${encTypesHtml}</div>
+                          ${encDescHtml}
+                        </div>
+                      </div>`
+                    : `<div class="row__desc">点击上方实景草丛/浅滩潜行奇袭（捕获率+8%），或使用右侧按钮常规寻踪。</div>`
+                }
+              </div>
+            </div>
           </div>
           <div class="row__right">
             ${encFullBadge}
@@ -541,7 +569,7 @@ export function createRenderCapture({
       const luckyMul2 = enc ? luckyCatchMul(state, encTypes) : 1;
       const natureCatchMul = enc ? natureWildCatchMul(ui.encounterNature) : 1;
       const effChance = enc
-        ? clamp(baseCatchChanceByDex(enc.dex) * mult2 * ballMult2 * luckyMul2 * natureCatchMul + pity2, 0, 0.95)
+        ? clamp(baseCatchChanceByDex(enc.dex) * mult2 * ballMult2 * luckyMul2 * natureCatchMul + pity2 + tacticalAdd, 0, 0.95)
         : 0;
       const pityPctFill = Math.min(1, pity2 / 0.2);
       const pityBarHtml = `<div class="capture-pity" aria-label="保底进度"><div class="capture-pity__fill" style="width:${Math.round(pityPctFill * 100)}%"></div></div>`;
@@ -558,15 +586,24 @@ export function createRenderCapture({
       const selectedBall = ui.selectedBallType || "pokeball";
       
       const throwOk = Boolean(enc) && state.res[selectedBall]?.value >= 1;
-      const throw10Ok = Boolean(enc) && state.res[selectedBall]?.value >= 10;
-      const throw100Ok = Boolean(enc) && state.res[selectedBall]?.value >= 100;
       const autoThrowOn = Boolean(ui.captureAutoThrow);
       const mbOk = Boolean(enc) && mbVal >= 1;
       rows.push(`
-        <div class="row ${enc ? "" : "is-locked"}">
-          <div class="row__left">
-            <div class="row__title">选择灵球</div>
-            <div class="row__desc">不同灵球有不同效果。</div>
+        <div class="row bcard bcard--rose ${enc ? "" : "is-locked"}">
+          <div class="row__left bcard__main">
+            <div class="bcard__head">
+              <div class="bcard__emblem bcard__emblem--rose" aria-hidden="true">
+                <span class="bcard__icon">🎯</span>
+                <span class="bcard__lvlBadge">${enc ? `${Math.round(effChance * 100)}%` : "待命"}</span>
+              </div>
+              <div class="bcard__titleWrap">
+                <div class="bcard__titleLine">
+                  <div class="row__title">投掷灵球与自动捕猎</div>
+                  <span class="bcard__tag">星环锁定系统</span>
+                </div>
+                <div class="row__desc">${enc ? `对 ${escapeHtml(enc.name)} 发起捕捉（点击上方缩圈星环可触发最高 +15% 完美加成）。` : "先在上方猎场遭遇一只萌灵。"}</div>
+              </div>
+            </div>
           </div>
           <div class="row__right">
             <select class="input" data-ball-selector ${enc ? "" : "disabled"}>
@@ -577,26 +614,13 @@ export function createRenderCapture({
               ${nbVal > 0 ? `<option value="netball" ${selectedBall === "netball" ? "selected" : ""}>捕灵球 (${nbVal}) - 水/草x3</option>` : ""}
               ${dbVal > 0 ? `<option value="duskball" ${selectedBall === "duskball" ? "selected" : ""}>暗夜灵球 (${dbVal}) - 夜间x3</option>` : ""}
             </select>
-          </div>
-        </div>
-        <div class="row ${enc ? "" : "is-locked"}">
-          <div class="row__left">
-            <div class="row__title">投掷灵球</div>
-            <div class="row__desc">${enc ? `对 ${escapeHtml(enc.name)} 进行捕捉判定。` : "先遭遇一只萌灵。"}</div>
-          </div>
-          <div class="row__right">
-            ${enc ? `<div class="badge">成功率：${Math.round(effChance * 100)}%</div>` : ""}
+            ${enc ? `<div class="badge badge--ok">成功率：${Math.round(effChance * 100)}%</div>` : ""}
             ${enc && ui.lastCatchNearMiss?.pid === enc.id ? `<div class="badge badge--warning capture-near-miss-badge">差一点！上次约 ${ui.lastCatchNearMiss.pct}%</div>` : ""}
             <div class="badge capture-pity-row">${fails2 > 0 ? `失败 ${Math.max(0, Math.floor(fails2))} 次 · +${Math.round(pity2 * 100)}%` : "连续失败提升捕获率"} ${pityBarHtml}</div>
             <div class="badge">灵球：${pbVal}/${pbCap}</div>
             ${mbVal > 0 ? `<div class="badge">究极灵球：${mbVal}</div>` : ""}
-          </div>
-        </div>
-        <div class="row ${enc ? "" : "is-locked"}">
-          <div class="row__left"></div>
-          <div class="row__right">
-            <button class="btn btn--primary" data-capture-action="throw" ${throwOk ? "" : "disabled"}>捕捉</button>
-            ${mbVal > 0 ? `<button class="btn btn--small" data-capture-action="masterball" ${mbOk ? "" : "disabled"}>究极灵球捕捉</button>` : ""}
+            <button class="btn btn--primary" data-capture-action="throw" ${throwOk ? "" : "disabled"}>🎯 捕捉</button>
+            ${mbVal > 0 ? `<button class="btn btn--small" data-capture-action="masterball" ${mbOk ? "" : "disabled"}>🟣 究极灵球捕捉</button>` : ""}
             <label class="check" style="margin-left:8px">
               <input type="checkbox" data-auto-throw-toggle ${autoThrowOn ? "checked" : ""} />
               <span>自动捕捉${autoThrowOn ? "（开）" : "（关）"}</span>

@@ -192,38 +192,154 @@ export function initStageInteractions({
       return;
     }
 
-    // 6. 捕捉页：点击摇曳草丛/漫游灵兽直接扑击搜寻
-    if (act === "bush-rustle") {
+    // 6. 捕捉页：点击摇曳草丛/浅滩/晶洞直接潜行奇袭（先手捕获率 +8%）
+    if (act === "bush-rustle" || act === "field-hunt") {
       ev.preventDefault();
       btn.classList.remove("is-rustling");
       void btn.offsetWidth;
       btn.classList.add("is-rustling");
-      spawnStageParticles(btn, ["🌿", "🍃", "✨", "❗"]);
-      const encBtn = document.querySelector("#panel-capture [data-capture-action='encounter']");
+      const spot = btn.getAttribute("data-spot") || "bush";
+      const particles = spot === "stream" ? ["💧", "🌊", "✨", "❗"] : spot === "crystal" ? ["💎", "⚡", "✨", "❗"] : ["🌿", "🍃", "✨", "❗"];
+      spawnStageParticles(btn, particles);
+      const encBtn = document.querySelector("#captureActions [data-capture-action='encounter']");
       if (encBtn && !encBtn.disabled) {
-        spawnStageFloat(btn, "🌿 拨开草丛！发现野生灵兽踪迹", "emerald");
+        ui.encounterAmbushBonus = 0.08;
+        spawnStageFloat(btn, "⚡ 先手潜行奇袭！本次遭遇捕获率 +8%", "emerald");
         encBtn.click();
       } else {
-        spawnStageFloat(btn, "🌿 草丛沙沙作响…遭遇充能恢复中", "gold");
+        addRes("catnip", 2);
+        spawnStageFloat(btn, "🌿 拨开草丛拾得野生灵果 +2", "gold");
+        render();
       }
       return;
     }
 
-    // 7. 捕捉页遭遇战：投喂灵果安抚野生灵兽
-    if (act === "encounter-bait") {
+    // 6b. 捕捉页：点击星界灵脉祭坛发动高级定向寻踪（先手捕获率 +10%）
+    if (act === "field-hunt-plus") {
       ev.preventDefault();
+      spawnStageParticles(btn, ["🌌", "✨", "⭐", "🔮"]);
+      const advBtn = document.querySelector("#captureActions [data-capture-action='encounterPlus']");
+      if (advBtn && !advBtn.disabled) {
+        ui.encounterAmbushBonus = 0.1;
+        spawnStageFloat(btn, "🌌 灵脉祭坛共鸣！优先寻踪未收录 · 捕获率 +10%", "gold");
+        advBtn.click();
+      } else {
+        spawnStageFloat(btn, "🌌 高级寻踪充能恢复中", "cyan");
+      }
+      return;
+    }
+
+    // 6c. 捕捉页：撒播诱灵香果（3层诱饵，捕获率 +6%）
+    if (act === "field-lure") {
+      ev.preventDefault();
+      if ((ui.lureStacks || 0) >= 3) {
+        spawnStageFloat(btn, "🍯 诱灵香果已满 3 层生效中！", "gold");
+        return;
+      }
       const curCatnip = state.res?.catnip?.value ?? 0;
       if (curCatnip < 15) {
-        spawnStageFloat(btn, "🍓 灵果不足 15，无法投喂安抚", "cyan");
+        spawnStageFloat(btn, "🍓 灵果不足 15，无法调配诱灵香果", "cyan");
         return;
       }
       addRes("catnip", -15);
-      ui.captureBaitBonus = Math.min(0.15, (ui.captureBaitBonus || 0) + 0.05);
-      state.pity = Math.min(0.5, (state.pity || 0) + 0.04);
+      ui.lureStacks = 3;
       ui.captureDirty = true;
-      spawnStageFloat(btn, "🍓 投喂成功！野生灵兽警惕降低（捕获率提升）", "emerald");
+      spawnStageFloat(btn, "🍯 香果诱饵已布设！接下来 3 次遭遇捕获率 +6%", "gold");
+      spawnStageParticles(btn, ["🍯", "🍓", "✨", "🦋"]);
+      render();
+      return;
+    }
+
+    // 7. 捕捉页遭遇战：投喂浆果安抚野生灵兽（叠3层，每层 +4% 捕获率）
+    if (act === "encounter-bait") {
+      ev.preventDefault();
+      const stacks = Math.max(0, Math.floor(ui.encounterBaitStacks || 0));
+      if (stacks >= 3) {
+        spawnStageFloat(btn, "🍓 野生灵兽已吃饱安抚至满层 (+12%)", "gold");
+        return;
+      }
+      const curCatnip = state.res?.catnip?.value ?? 0;
+      if (curCatnip < 10) {
+        spawnStageFloat(btn, "🍓 灵果不足 10，无法投喂浆果", "cyan");
+        return;
+      }
+      addRes("catnip", -10);
+      ui.encounterBaitStacks = stacks + 1;
+      ui.captureDirty = true;
+      spawnStageFloat(btn, `🍓 浆果投喂 (${ui.encounterBaitStacks}/3)！捕获率 +${ui.encounterBaitStacks * 4}%`, "emerald");
       spawnStageParticles(btn, ["🍓", "💖", "✨", "🎵"]);
       render();
+      return;
+    }
+
+    // 7b. 捕捉页遭遇战：投掷泥团声东击西（叠2层，每层 +5% 捕获率且防止失败逃跑）
+    if (act === "encounter-mud") {
+      ev.preventDefault();
+      const stacks = Math.max(0, Math.floor(ui.encounterMudStacks || 0));
+      if (stacks >= 2) {
+        spawnStageFloat(btn, "💣 泥团封路已达满层 (+10% & 防逃跑)", "cyan");
+        return;
+      }
+      const curCatnip = state.res?.catnip?.value ?? 0;
+      if (curCatnip < 5) {
+        spawnStageFloat(btn, "💣 灵果不足 5，无法凝聚灵泥团", "cyan");
+        return;
+      }
+      addRes("catnip", -5);
+      ui.encounterMudStacks = stacks + 1;
+      ui.captureDirty = true;
+      spawnStageFloat(btn, `💣 泥团封路 (${ui.encounterMudStacks}/2)！捕获率 +${ui.encounterMudStacks * 5}% 且封锁逃跑`, "cyan");
+      spawnStageParticles(btn, ["💣", "💨", "⚡", "✨"]);
+      render();
+      return;
+    }
+
+    // 7c. 捕捉页：点击灵球战术腰带切换球种
+    if (act === "select-ball") {
+      ev.preventDefault();
+      const bType = btn.getAttribute("data-ball-type") || "pokeball";
+      ui.selectedBallType = bType;
+      const sel = document.querySelector("select[data-ball-selector]");
+      if (sel) {
+        sel.value = bType;
+        sel.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      ui.captureDirty = true;
+      spawnStageFloat(btn, "🎒 已切换战术灵球", "gold");
+      spawnStageParticles(btn, ["🔴", "✨", "⚡"]);
+      render();
+      return;
+    }
+
+    // 7d. 捕捉页：星环缩圈精准投球（根据缩圈相位判定 Nice / Great / Excellent 加成）
+    if (act === "reticle-throw") {
+      ev.preventDefault();
+      const throwBtn = document.querySelector("#captureActions [data-capture-action='throw']");
+      if (!throwBtn || throwBtn.disabled) {
+        spawnStageFloat(btn, "🔴 当前所选灵球不足，请先补充或切换灵球", "cyan");
+        return;
+      }
+      // 1800ms 缩圈周期：相位 0.68~0.94 为内圈 Bullseye (Excellent)，0.38~0.68 为中圈 (Great)
+      const phase = (Date.now() % 1800) / 1800;
+      let bonus = 0.04;
+      let label = "🎯 NICE THROW! 顺手一投 · 捕获率 +4%";
+      let tone = "cyan";
+      let emojis = ["🎯", "✨", "🔴"];
+      if (phase >= 0.65 && phase <= 0.95) {
+        bonus = 0.15;
+        label = "🌟 EXCELLENT!! 完美星环命中 · 捕获率 +15%!";
+        tone = "gold";
+        emojis = ["🌟", "🎯", "🔥", "✨", "💫", "⭐"];
+      } else if (phase >= 0.35 && phase < 0.65) {
+        bonus = 0.09;
+        label = "⚡ GREAT! 精准缩圈锁定 · 捕获率 +9%!";
+        tone = "emerald";
+        emojis = ["⚡", "🎯", "✨", "⭐"];
+      }
+      ui.throwTimingBonus = bonus;
+      spawnStageFloat(btn, label, tone);
+      spawnStageParticles(btn, emojis);
+      throwBtn.click();
       return;
     }
 

@@ -626,7 +626,15 @@ export function initCaptureTab({
         const caughtCount = caughtMap && typeof caughtMap[p.id] === "number" ? caughtMap[p.id] : 0;
         const ballMult = ballCatchMult(ballType, { types: getMonTypesForBias(p), caughtCount });
         
-        let chance = base * mult * ballMult * luckyCatchMul(state, getMonTypesForBias(p)) * natureWildCatchMul(ui.encounterNature) + pity;
+        const tacticalAdd =
+          Math.max(0, Number(ui.encounterAmbushBonus || 0)) +
+          (Math.max(0, Math.floor(ui.lureStacks || 0)) > 0 ? 0.06 : 0) +
+          Math.min(3, Math.max(0, Math.floor(ui.encounterBaitStacks || 0))) * 0.04 +
+          Math.min(2, Math.max(0, Math.floor(ui.encounterMudStacks || 0))) * 0.05 +
+          Math.max(0, Number(ui.throwTimingBonus || 0));
+        ui.throwTimingBonus = 0;
+
+        let chance = base * mult * ballMult * luckyCatchMul(state, getMonTypesForBias(p)) * natureWildCatchMul(ui.encounterNature) + pity + tacticalAdd;
         chance = clamp(chance, 0, 0.95);
 
         if (randFloat() > chance) {
@@ -639,6 +647,10 @@ export function initCaptureTab({
             ui.encounterPid = null;
             ui.encounterNature = null;
             ui.encounterIsShiny = false;
+            ui.encounterAmbushBonus = 0;
+            ui.encounterBaitStacks = 0;
+            ui.encounterMudStacks = 0;
+            if ((ui.lureStacks || 0) > 0) ui.lureStacks = Math.max(0, ui.lureStacks - 1);
             ui.shinyModalOpen = false;
             ui.mythicModalOpen = false;
             addLog(`捕捉失败：${p.name} 逃走了。`);
@@ -660,16 +672,26 @@ export function initCaptureTab({
 
           if (chance >= 0.35) addLog(`差一点！成功率约 ${Math.round(chance * 100)}%`);
 
-          const clearEncounter = randFloat() < 0.5;
-          if (clearEncounter) {
-            ui.encounterPid = null;
-            ui.encounterNature = null;
-            ui.encounterIsShiny = false;
-            ui.shinyModalOpen = false;
-            ui.mythicModalOpen = false;
-            addLog(`捕捉失败：${p.name} 逃走了。`);
+          const mudBlocked = Math.max(0, Math.floor(ui.encounterMudStacks || 0)) > 0;
+          if (mudBlocked) {
+            ui.encounterMudStacks = Math.max(0, Math.floor(ui.encounterMudStacks || 0) - 1);
+            addLog(`💣 泥团封路生效：${p.name} 被泥团绊住未能逃脱！可以继续投掷灵球。`);
           } else {
-            addLog(`捕捉失败：${p.name} 挣扎中！可以继续投掷灵球。`);
+            const clearEncounter = randFloat() < 0.5;
+            if (clearEncounter) {
+              ui.encounterPid = null;
+              ui.encounterNature = null;
+              ui.encounterIsShiny = false;
+              ui.encounterAmbushBonus = 0;
+              ui.encounterBaitStacks = 0;
+              ui.encounterMudStacks = 0;
+              if ((ui.lureStacks || 0) > 0) ui.lureStacks = Math.max(0, ui.lureStacks - 1);
+              ui.shinyModalOpen = false;
+              ui.mythicModalOpen = false;
+              addLog(`捕捉失败：${p.name} 逃走了。`);
+            } else {
+              addLog(`捕捉失败：${p.name} 挣扎中！可以继续投掷灵球。`);
+            }
           }
 
           markCaptureDirty();
@@ -682,6 +704,10 @@ export function initCaptureTab({
         clearCatchNearMiss(ui);
         ui.encounterPid = null;
         ui.encounterNature = null;
+        ui.encounterAmbushBonus = 0;
+        ui.encounterBaitStacks = 0;
+        ui.encounterMudStacks = 0;
+        if ((ui.lureStacks || 0) > 0) ui.lureStacks = Math.max(0, ui.lureStacks - 1);
         const isShiny = Boolean(ui.encounterIsShiny);
         ui.encounterIsShiny = false;
         ui.shinyModalOpen = false;

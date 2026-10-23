@@ -7,6 +7,42 @@ import { renderScienceStageHtml, setHtmlPreservingStage } from "./tab_stages.js"
 const TECH_PACING_BLURB =
   "研究耗时随投入分档：起步科技约数秒～半分钟，中期扩产约 1 分钟，后期飞跃链显著更长；建研究所可缩短耗时。";
 
+const RES_ICONS = {
+  catnip: "🍓",
+  wood: "🌲",
+  minerals: "💎",
+  science: "🔬",
+  pokeball: "🔴",
+  futurecoin: "🪙",
+  stardust: "✨",
+};
+
+function getTechVisualMeta(tid, tdef, stg) {
+  const id = String(tid || "").toLowerCase();
+  const nm = String(tdef?.name || "");
+  if (id.includes("ball") || nm.includes("球") || nm.includes("捕捉")) {
+    return { icon: "🔴", tone: "rose", tag: "灵球工艺" };
+  }
+  if (id.includes("berry") || id.includes("compost") || id.includes("field") || nm.includes("灵果") || nm.includes("堆肥")) {
+    return { icon: "🍓", tone: "emerald", tag: "灵植农学" };
+  }
+  if (id.includes("wood") || id.includes("carpent") || id.includes("lumber") || nm.includes("木") || nm.includes("锯")) {
+    return { icon: "🌲", tone: "amber", tag: "林木工程" };
+  }
+  if (id.includes("mine") || id.includes("mineral") || id.includes("quarry") || nm.includes("晶") || nm.includes("矿")) {
+    return { icon: "💎", tone: "cyan", tag: "晶脉勘探" };
+  }
+  if (id.includes("shiny") || id.includes("myth") || nm.includes("闪光") || nm.includes("幻")) {
+    return { icon: "✨", tone: "gold", tag: "星辉异象" };
+  }
+  if (id.includes("research") || id.includes("lib") || nm.includes("研究") || nm.includes("观测")) {
+    return { icon: "🔭", tone: "violet", tag: "星轨学派" };
+  }
+  if (stg === "early") return { icon: "🌱", tone: "emerald", tag: "营地起步" };
+  if (stg === "late") return { icon: "🚀", tone: "gold", tag: "飞跃奥秘" };
+  return { icon: "⚙️", tone: "cyan", tag: "中枢扩产" };
+}
+
 export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchMode, elResearchEff, defs, canAfford, computeResearchTimeSec, fmtDuration, getResearchEfficiency, getState, getResearchCost }) {
   return function renderTech() {
     const state = getState();
@@ -77,8 +113,18 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
       const costText = Object.entries(cost)
         .map(([rid, v]) => `${defs.resources[rid].name}${v}`)
         .join(" / ");
+      const costChipsHtml = Object.entries(cost)
+        .map(([rid, v]) => {
+          const curVal = state.res?.[rid]?.value ?? 0;
+          const enough = curVal >= v;
+          const rIcon = RES_ICONS[rid] || "";
+          const rName = defs.resources[rid]?.name || rid;
+          return `<span class="cost-chip ${enough ? "is-ok" : "is-short"}">${rIcon} ${rName}${v}</span>`;
+        })
+        .join("");
 
       const timeText = fmtDuration(computeResearchTimeSec(tdef));
+      const vis = getTechVisualMeta(tid, tdef, stg);
 
       let statusText = "可研究";
       let progressHtml = "";
@@ -92,7 +138,7 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
       } else if (researchBusy) statusText = "研究中";
       else if (!afford) statusText = "资源不足";
 
-      const btnText = isActive ? `剩余 ${fmtDuration(activeRemain)}` : "研究";
+      const btnText = isActive ? `⏳ ${fmtDuration(activeRemain)}` : canBuy ? "🔭 立项研究" : "研究";
 
       const missingPrereq = (tdef.prereq ?? []).filter((p) => !state.tech[p]);
       const depHint =
@@ -104,9 +150,11 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
 
       const rowClass = [
         "row",
+        "bcard",
+        `bcard--${vis.tone}`,
         locked ? "is-locked" : "",
         isActive ? "row--researching" : "",
-        canBuy ? "row--researchable" : "",
+        canBuy ? "row--researchable row--buildable" : "",
       ]
         .filter(Boolean)
         .join(" ");
@@ -120,16 +168,27 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
           : "";
       bucket.push(`
         <div class="${rowClass}">
-          <div class="row__left">
-            <div class="row__title">${tdef.name}</div>
-            <div class="row__desc">${descLine}${gateHint ? `<span class="tech-dep">${gateHint}</span>` : ""}</div>
+          <div class="row__left bcard__main">
+            <div class="bcard__head">
+              <div class="bcard__emblem bcard__emblem--${vis.tone}" aria-hidden="true">
+                <span class="bcard__icon">${vis.icon}</span>
+                <span class="bcard__lvlBadge">⏱${timeText}</span>
+              </div>
+              <div class="bcard__titleWrap">
+                <div class="bcard__titleLine">
+                  <span class="row__title">${tdef.name}</span>
+                  <span class="bcard__tag">${vis.tag}</span>
+                </div>
+                <div class="row__desc">${descLine}${gateHint ? `<span class="tech-dep">${gateHint}</span>` : ""}</div>
+              </div>
+            </div>
             ${progressHtml}
           </div>
-          <div class="row__right">
-            <div class="badge ${owned ? "badge--ok" : ""}${isActive && statusText.includes("即将完成") ? " badge--ok" : ""}">${statusText}</div>
-            <div class="badge">花费：${costText || "-"}</div>
+          <div class="row__right bcard__actions">
+            <div class="badge ${owned || canBuy ? "badge--ok" : ""}${isActive && statusText.includes("即将完成") ? " badge--ok" : ""}">${statusText}</div>
+            <div class="bcard__costs" title="花费：${costText || "-"}">${costChipsHtml || `<span class="badge">花费：-</span>`}</div>
             <div class="badge">耗时：${timeText}</div>
-            <button class="btn btn--primary" data-research="${tid}" ${canBuy ? "" : "disabled"}>${btnText}</button>
+            <button class="btn btn--primary btn--small bcard__btn" data-research="${tid}" ${canBuy ? "" : "disabled"}>${btnText}</button>
           </div>
         </div>
       `);
@@ -149,13 +208,13 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
             recommendTid = tid;
             recommendDef = tdef;
             recommendHtml = `
-              <div class="row row--researchable">
+              <div class="row row--researchable tech-recommend-banner">
                 <div class="row__left">
-                  <div class="row__title">推荐下一研究</div>
-                  <div class="row__desc">${tdef.name}${typeof tdef.desc === "string" && tdef.desc.trim() ? ` — ${tdef.desc}` : ""}</div>
+                  <div class="row__title">🌟 推荐下一研究：${tdef.name}</div>
+                  <div class="row__desc">${typeof tdef.desc === "string" && tdef.desc.trim() ? tdef.desc : ""}</div>
                 </div>
                 <div class="row__right">
-                  <button class="btn btn--primary" data-research="${tid}">立即研究</button>
+                  <button class="btn btn--primary" data-research="${tid}">🔭 立即研究</button>
                 </div>
               </div>
             `;
@@ -189,10 +248,10 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
       const tdef = defs.tech[activeResearchTid];
       const theater = researchProgressTheater(activeRemain, activeTotal || computeResearchTimeSec(tdef));
       recommendHtml = `
-        <div class="row row--researching">
+        <div class="row row--researching tech-recommend-banner">
           <div class="row__left">
-            <div class="row__title">正在研究：${tdef.name}</div>
-            <div class="row__desc">${theater.label} · ${theater.pct}%</div>
+            <div class="row__title">⏳ 正在研究：${tdef.name}</div>
+            <div class="row__desc">${theater.label} · ${theater.pct}%（点击上方星盘可手动凝星加速）</div>
             <div class="dex-progress" aria-label="研究进度 ${theater.pct}%"><div class="dex-progress__fill" style="width:${theater.pct}%"></div></div>
           </div>
         </div>
@@ -200,13 +259,25 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
     }
     if (recommendHtml) sections.push(recommendHtml);
 
+    const STAGE_ICONS = {
+      early: { icon: "🌱", sub: "营地开拓基石 · 快速解锁核心资源与灵球工艺", done: stageCounts.earlyDone, total: stageCounts.earlyTotal },
+      mid: { icon: "⚙️", sub: "中枢自动化扩产 · 大幅提升产能、球台与探索效率", done: stageCounts.midDone, total: stageCounts.midTotal },
+      late: { icon: "🚀", sub: "高阶星轨飞跃 · 突破产能极限与高维秘境法则", done: stageCounts.lateDone, total: stageCounts.lateTotal },
+    };
+
     for (const stage of TECH_STAGE_ORDER) {
       const rows = byStage.get(stage) ?? [];
       if (rows.length === 0) continue;
       const label = TECH_STAGE_LABELS[stage] ?? stage;
+      const meta = STAGE_ICONS[stage] || { icon: "🔭", sub: "", done: 0, total: rows.length };
       sections.push(`
         <div class="building-section tech-section" data-tech-stage-group="${stage}" role="group" aria-label="${label}">
-          <div class="building-section__title">${label}</div>
+          <div class="building-section__title">
+            <span class="building-section__icon">${meta.icon}</span>
+            <span>${label}</span>
+            <span class="building-section__meta">已点亮 ${meta.done}/${meta.total} · 待研 ${rows.length} 项</span>
+          </div>
+          ${meta.sub ? `<div class="building-section__sub">${meta.sub}</div>` : ""}
         </div>
       `);
       sections.push(...rows);

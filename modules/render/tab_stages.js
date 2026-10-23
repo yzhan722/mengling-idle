@@ -53,6 +53,11 @@ export function setHtmlPreservingStage(containerEl, fullHtmlString) {
   if (curHead && nextHead && curHead.innerHTML !== nextHead.innerHTML) {
     curHead.innerHTML = nextHead.innerHTML;
   }
+  const curRibbon = existingStage.querySelector(".capture-biome-ribbon");
+  const nextRibbon = nextStage.querySelector(".capture-biome-ribbon");
+  if (curRibbon && nextRibbon && curRibbon.innerHTML !== nextRibbon.innerHTML) {
+    curRibbon.innerHTML = nextRibbon.innerHTML;
+  }
   const curBody = existingStage.querySelector(".tab-stage__body");
   const nextBody = nextStage.querySelector(".tab-stage__body");
   if (curBody && nextBody) {
@@ -162,9 +167,10 @@ export function renderScienceStageHtml({
   `;
 }
 
-/** 2. 捕捉页：「九域生态实景猎场」 */
+/** 2. 捕捉页：「九域生态实景猎场与星环缩圈捕捉剧场」 */
 export function renderCaptureStageHtml({
   state,
+  ui,
   area,
   unlockedAreas,
   nextLockedArea,
@@ -191,15 +197,28 @@ export function renderCaptureStageHtml({
 }) {
   const biomeId = area?.id || "meadow";
   const pbVal = Math.max(0, Math.floor(state.res?.pokeball?.value ?? 0));
+  const ubVal = Math.max(0, Math.floor(state.res?.ultraball?.value ?? 0));
+  const qbVal = Math.max(0, Math.floor(state.res?.quickball?.value ?? 0));
+  const lbVal = Math.max(0, Math.floor(state.res?.luxuryball?.value ?? 0));
+  const nbVal = Math.max(0, Math.floor(state.res?.netball?.value ?? 0));
+  const dbVal = Math.max(0, Math.floor(state.res?.duskball?.value ?? 0));
+  const mbVal = Math.max(0, Math.floor(state.res?.masterball?.value ?? 0));
+  const selectedBall = ui?.selectedBallType || "pokeball";
+
+  const lureStacks = Math.max(0, Math.floor(ui?.lureStacks || 0));
+  const baitStacks = Math.max(0, Math.floor(ui?.encounterBaitStacks || 0));
+  const mudStacks = Math.max(0, Math.floor(ui?.encounterMudStacks || 0));
+  const ambushBonus = Math.max(0, Number(ui?.encounterAmbushBonus || 0));
+
   const BIOME_ICONS = {
     meadow: "🌿",
-    forest: "🌲",
-    lake: "💧",
-    cave: "🪨",
-    desert: "🏜️",
-    peak: "⛰️",
-    tundra: "❄️",
-    volcano: "🌋",
+    woods: "🍯",
+    brook: "💧",
+    plateau: "🎐",
+    dunes: "🏜️",
+    garden: "🌙",
+    ridge: "❄️",
+    hollow: "🐉",
     sanctum: "🌌",
   };
   const biomeRibbonHtml = Array.isArray(unlockedAreas) && unlockedAreas.length
@@ -212,8 +231,49 @@ export function renderCaptureStageHtml({
           })
           .join("")}
         ${nextLockedArea ? `<span class="biome-pill is-locked" title="集齐更多图鉴后解锁">🔒 ${escapeHtml(nextLockedArea.name)} (${nextLockedArea.unlockReq}图鉴)</span>` : ""}
+        <button type="button" class="biome-pill biome-pill--lure ${lureStacks > 0 ? "is-lured" : ""}" data-stage-act="field-lure" title="消耗 15 灵果撒播诱灵香果，接下来 3 次遭遇捕获率 +6%">
+          🍯 ${lureStacks > 0 ? `诱饵生效 ×${lureStacks}` : "撒播诱灵香果"}
+        </button>
       </div>`
     : "";
+
+  const BALL_BELT_DEFS = [
+    { id: "pokeball", icon: "🔴", name: "灵球", tag: "1.0x", count: pbVal, always: true },
+    { id: "ultraball", icon: "🔵", name: "高级灵球", tag: "2.0x", count: ubVal },
+    { id: "quickball", icon: "⚡", name: "迅捷灵球", tag: "首发5x", count: qbVal },
+    { id: "luxuryball", icon: "💛", name: "豪华灵球", tag: "亲密+20", count: lbVal },
+    { id: "netball", icon: "🕸️", name: "捕灵球", tag: "水草3x", count: nbVal },
+    { id: "duskball", icon: "🌙", name: "暗夜灵球", tag: "夜间3x", count: dbVal },
+  ];
+
+  const ballBeltHtml = `
+    <div class="capture-ball-belt" role="group" aria-label="灵球战术腰带">
+      <span class="capture-ball-belt__label">🎒 灵球战术腰带：</span>
+      <div class="capture-ball-belt__slots">
+        ${BALL_BELT_DEFS.filter((b) => b.always || b.count > 0 || selectedBall === b.id)
+          .map(
+            (b) => `
+          <button type="button" class="ball-slot ${selectedBall === b.id ? "is-selected" : ""} ${b.count <= 0 ? "is-empty" : ""}" data-stage-act="select-ball" data-ball-type="${b.id}" title="切换为 ${b.name}（库存 ${b.count}）">
+            <span class="ball-slot__icon">${b.icon}</span>
+            <span class="ball-slot__name">${b.name}</span>
+            <span class="ball-slot__tag">${b.tag}</span>
+            <span class="ball-slot__cnt">×${b.count}</span>
+          </button>`
+          )
+          .join("")}
+        ${
+          mbVal > 0
+            ? `<button type="button" class="ball-slot ball-slot--master" data-capture-action="masterball" ${enc ? "" : "disabled"} title="使用究极灵球 100% 必中捕获！">
+                <span class="ball-slot__icon">🟣</span>
+                <span class="ball-slot__name">究极灵球</span>
+                <span class="ball-slot__tag">100%必中</span>
+                <span class="ball-slot__cnt">×${mbVal}</span>
+              </button>`
+            : ""
+        }
+      </div>
+    </div>
+  `;
 
   let centerHtml = "";
   if (enc) {
@@ -222,15 +282,35 @@ export function renderCaptureStageHtml({
       .map((t) => `<span class="badge type type-${escapeHtml(t)}">${escapeHtml(typeZh(t))}</span>`)
       .join("");
     const pct = Math.round((effChance || 0) * 100);
+    const encCaughtN = caughtMap && typeof caughtMap[enc.id] === "number" ? caughtMap[enc.id] : 0;
+    const isNewDex = encCaughtN <= 0;
+
+    const tacticalTags = [];
+    if (ambushBonus > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--emerald">⚡ 先手奇袭 +${Math.round(ambushBonus * 100)}%</span>`);
+    if (lureStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--gold">🍯 香果诱饵 +6%</span>`);
+    if (baitStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--emerald">🍓 浆果安抚 +${baitStacks * 4}% (${baitStacks}/3)</span>`);
+    if (mudStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--cyan">💣 泥团封路 +${mudStacks * 5}% · 防逃逸 (${mudStacks}/2)</span>`);
+    if ((pity2 || 0) > 0) tacticalTags.push(`<span class="tactical-chip">🛡️ 失败保底 +${Math.round((pity2 || 0) * 100)}%</span>`);
+
     centerHtml = `
       <div class="capture-stage-encounter">
-        <div class="capture-stage-encounter__pedestal ${encIsShiny ? "is-shiny" : ""} ${encIsMythic ? "is-mythic" : ""}">
-          <div class="capture-stage-encounter__ring"></div>
+        <button type="button" class="capture-stage-encounter__pedestal capture-reticle-btn ${encIsShiny ? "is-shiny" : ""} ${encIsMythic ? "is-mythic" : ""}" data-stage-act="reticle-throw" title="待绿色星环收缩至中心时点击，触发【完美缩圈投球】额外提升 +15% 捕获率！">
+          <svg class="capture-reticle-svg" viewBox="0 0 140 140" aria-hidden="true">
+            <circle cx="70" cy="70" r="62" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <circle cx="70" cy="70" r="24" fill="none" stroke="rgba(250,204,21,0.45)" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <circle class="capture-reticle__shrinkRing" cx="70" cy="70" r="56" fill="none" stroke="#4ade80" stroke-width="2.8"/>
+            <line x1="70" y1="2" x2="70" y2="14" stroke="rgba(250,204,21,0.65)" stroke-width="1.6"/>
+            <line x1="70" y1="126" x2="70" y2="138" stroke="rgba(250,204,21,0.65)" stroke-width="1.6"/>
+            <line x1="2" y1="70" x2="14" y2="70" stroke="rgba(250,204,21,0.65)" stroke-width="1.6"/>
+            <line x1="126" y1="70" x2="138" y2="70" stroke="rgba(250,204,21,0.65)" stroke-width="1.6"/>
+          </svg>
           <div class="capture-stage-encounter__art">${renderBeastIcon(enc.dex, enc.name, encIsShiny)}</div>
-          <div class="capture-stage-encounter__tag">${encIsShiny ? "★ 闪光现身" : encIsMythic ? "✦ 幻灵降临" : `No.${pad3(enc.order || enc.dex)}`}</div>
-        </div>
+          <div class="capture-stage-encounter__tag">${encIsShiny ? "★ 闪光现身" : encIsMythic ? "✦ 幻灵降临" : isNewDex ? "★ 首次发现 NEW" : `No.${pad3(enc.order || enc.dex)}`}</div>
+          <span class="capture-reticle__hint">🎯 点击缩圈投球</span>
+        </button>
+
         <div class="capture-stage-encounter__hud">
-          <div class="tab-stage__eyebrow">🎯 野外实景遭遇 · ${escapeHtml(area.name)}</div>
+          <div class="tab-stage__eyebrow">🎯 野外实景遭遇 · ${escapeHtml(area.name)} ${isNewDex ? "· 【图鉴未收录！】" : `· 已捕获 ${encCaughtN} 次`}</div>
           <div class="tab-stage__title">
             ${escapeHtml(enc.name)}
             ${enc.title ? `<span class="beast-title-tag">【${escapeHtml(enc.title)}】</span>` : ""}
@@ -238,52 +318,94 @@ export function renderCaptureStageHtml({
             ${typeBadges}
           </div>
           <div class="tab-stage__desc">${escapeHtml(enc.desc || "栖息于秘境深处的奇异灵兽。")}</div>
+          <div class="capture-chance-meter">
+            <div class="capture-chance-meter__top">
+              <span>🎯 综合捕获率预估：<strong>${pct}%</strong>（缩圈完美命中可再 +15%）</span>
+              <span>当前球种：${selectedBall === "pokeball" ? "🔴 灵球" : selectedBall === "ultraball" ? "🔵 高级灵球" : selectedBall === "quickball" ? "⚡ 迅捷灵球" : selectedBall === "luxuryball" ? "💛 豪华灵球" : selectedBall === "netball" ? "🕸️ 捕灵球" : "🌙 暗夜灵球"}</span>
+            </div>
+            <div class="capture-chance-meter__bar">
+              <div class="capture-chance-meter__fill" style="width:${Math.max(6, pct)}%"></div>
+            </div>
+          </div>
           <div class="tab-stage__pills">
-            <span class="tab-stage__pill tab-stage__pill--gold">🎯 捕获成功率 ${pct}%</span>
-            <span class="tab-stage__pill">🛡️ 保底加成 +${Math.round((pity2 || 0) * 100)}%</span>
-            <span class="tab-stage__pill">🔴 灵球库存 ${pbVal}</span>
+            ${tacticalTags.length ? tacticalTags.join("") : `<span class="tab-stage__pill">💡 提示：投喂浆果或投掷泥团可大幅提高捕获率并防止逃跑</span>`}
           </div>
         </div>
-        <div class="tab-stage__cta">
-          <button type="button" class="btn btn--primary" data-capture-action="throw" ${throwOk ? "" : "disabled"}>🎯 投掷灵球</button>
-          <button type="button" class="btn btn--small" data-stage-act="encounter-bait" title="消耗 15 灵果安抚野生灵兽，提升捕获率">🍓 投喂安抚</button>
-          <button type="button" class="btn btn--small btn--ghost" data-capture-action="run">逃跑</button>
+
+        <div class="tab-stage__cta capture-stage-encounter__cta">
+          <button type="button" class="btn btn--primary capture-throw-hero-btn" data-stage-act="reticle-throw" ${throwOk ? "" : "disabled"}>🎯 缩圈精准投球</button>
+          <div class="capture-tactical-btns">
+            <button type="button" class="btn btn--small" data-stage-act="encounter-bait" title="消耗 10 灵果安抚野生灵兽，本场捕获率 +4%（最高3层）">🍓 浆果 (${baitStacks}/3)</button>
+            <button type="button" class="btn btn--small" data-stage-act="encounter-mud" title="消耗 5 灵果声东击西，本场捕获率 +5% 且防止失败逃跑（最高2层）">💣 泥团 (${mudStacks}/2)</button>
+            <button type="button" class="btn btn--small btn--ghost" data-capture-action="run">💨 撤离</button>
+          </div>
         </div>
       </div>
+      ${ballBeltHtml}
     `;
   } else {
-    // Pick up to 3 habitat creatures to display wandering in the biome clearing
+    // 探索模式：四象实景猎场热点 + 生态雷达扫描仪
     const sample = pool.slice(0, 3);
+    const SPOT_SPOTS = [
+      { spot: "bush", badge: "🌿 摇曳草丛", actionLabel: "潜行奇袭 (+8%捕获)", tone: "emerald" },
+      { spot: "stream", badge: "💧 星辉浅滩", actionLabel: "声波探测 (+8%捕获)", tone: "cyan" },
+      { spot: "crystal", badge: "💎 灵脉晶洞", actionLabel: "气味追踪 (+8%捕获)", tone: "gold" },
+    ];
     const wanderersHtml = sample
       .map((p, idx) => {
         const caughtN = caughtMap && typeof caughtMap[p.id] === "number" ? caughtMap[p.id] : 0;
         const seen = caughtN > 0;
         const iconHtml = renderBeastIcon(p.dex, seen ? p.name : "未知灵兽", false);
+        const meta = SPOT_SPOTS[idx % SPOT_SPOTS.length];
         return `
-          <button type="button" class="capture-wanderer capture-wanderer--slot${idx} ${seen ? "" : "is-silhouette"}" data-stage-act="bush-rustle" title="点击草丛直接扑击搜寻灵兽！">
-            <span class="capture-wanderer__spark">🌿 扑击</span>
+          <button type="button" class="capture-wanderer capture-wanderer--slot${idx} ${seen ? "" : "is-silhouette"}" data-stage-act="field-hunt" data-spot="${meta.spot}" title="点击直接潜行奇袭！触发遭遇并获得【先手奇袭：捕获率 +8%】">
+            <span class="capture-wanderer__spark">${meta.badge}</span>
             <div class="capture-wanderer__art">${iconHtml}</div>
-            <div class="capture-wanderer__tag">${seen ? escapeHtml(p.name) : "????"}</div>
+            <div class="capture-wanderer__tag">${seen ? escapeHtml(p.name) : "???? 未收录"}</div>
+            <span class="capture-wanderer__sub">${meta.actionLabel}</span>
           </button>
         `;
       })
       .join("");
 
+    const caughtInArea = pool.filter((p) => (caughtMap?.[p.id] || 0) > 0).length;
+
     centerHtml = `
       <div class="capture-stage-explore">
         <div class="capture-stage-explore__clearing">
           ${wanderersHtml || `<div class="camp-stage__emptyHint">当前生态区暂无灵兽出没</div>`}
+          <button type="button" class="capture-wanderer capture-wanderer--altar" data-stage-act="field-hunt-plus" ${advOk ? "" : "disabled"} title="催动高阶星界灵脉阵，优先引出本区未收录/高稀有度萌灵！">
+            <span class="capture-wanderer__spark">🌌 灵脉祭坛</span>
+            <div class="capture-wanderer__altarOrb">✨</div>
+            <div class="capture-wanderer__tag">高级定向寻踪</div>
+            <span class="capture-wanderer__sub">充能 ${advCharges}/${advMaxCharges} · 优先未收录</span>
+          </button>
         </div>
         <div class="capture-stage-explore__hud">
-          <div class="tab-stage__eyebrow">🌿 秘境探索待命 · 栖息物种 ${pool.length} 种</div>
-          <div class="tab-stage__title">${escapeHtml(area.name)}</div>
-          <div class="tab-stage__desc">消耗遭遇充能在秘境林间搜寻野生灵兽；集齐本区图鉴可解锁更高阶生态秘境。</div>
+          <div class="capture-radar-head">
+            <svg class="capture-radar-svg" viewBox="0 0 64 64" aria-hidden="true">
+              <circle cx="32" cy="32" r="28" fill="rgba(6, 78, 59, 0.45)" stroke="rgba(74, 222, 128, 0.55)" stroke-width="1.5"/>
+              <circle cx="32" cy="32" r="18" fill="none" stroke="rgba(74, 222, 128, 0.3)" stroke-width="1" stroke-dasharray="3 3"/>
+              <line x1="32" y1="4" x2="32" y2="60" stroke="rgba(74, 222, 128, 0.25)" stroke-width="1"/>
+              <line x1="4" y1="32" x2="60" y2="32" stroke="rgba(74, 222, 128, 0.25)" stroke-width="1"/>
+              <path class="capture-radar-sweep" d="M32 32 L32 4 A28 28 0 0 1 56 18 Z" fill="rgba(74, 222, 128, 0.32)"/>
+              <circle cx="22" cy="20" r="2.5" fill="#fde047"/>
+              <circle cx="44" cy="26" r="2.5" fill="#4ade80"/>
+              <circle cx="26" cy="44" r="2.2" fill="#38bdf8"/>
+            </svg>
+            <div>
+              <div class="tab-stage__eyebrow">📡 秘境生态雷达扫描中 · 已收录 ${caughtInArea}/${pool.length} 种</div>
+              <div class="tab-stage__title">${escapeHtml(area.name)}</div>
+            </div>
+          </div>
+          <div class="tab-stage__desc">点击左侧 <strong>草丛 / 浅滩 / 晶洞</strong> 可直接潜行奇袭（先手捕获率 +8%），或使用下方寻踪按钮搜索灵兽。</div>
           <div class="tab-stage__ctaRow">
-            <button type="button" class="btn btn--primary btn--small" data-capture-action="encounter" ${encOk ? "" : "disabled"}>🔍 搜寻灵兽 (${encCharges}/100)</button>
-            <button type="button" class="btn btn--small" data-capture-action="encounterPlus" ${advOk ? "" : "disabled"}>✨ 高级搜寻 (${advCharges}/${advMaxCharges})</button>
+            <button type="button" class="btn btn--primary btn--small" data-stage-act="field-hunt" ${encOk ? "" : "disabled"}>⚡ 潜行寻踪 (${encCharges}/100)</button>
+            <button type="button" class="btn btn--small" data-stage-act="field-hunt-plus" ${advOk ? "" : "disabled"}>🌟 灵脉高阶寻踪 (${advCharges}/${advMaxCharges})</button>
           </div>
         </div>
       </div>
+      ${ballBeltHtml}
     `;
   }
 
@@ -298,8 +420,8 @@ export function renderCaptureStageHtml({
         ${renderSparksSvg("#4ade80", "#fde047")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">🧭 ${escapeHtml(area.name)} · 生态实景猎场</span>
-        <span class="camp-stage__sub">${luckyBadge}${streakBadge} · 灵球 ${pbVal}</span>
+        <span class="camp-stage__badge">🧭 ${escapeHtml(area.name)} · 实景生态猎场与缩圈捕猎剧场</span>
+        <span class="camp-stage__sub">${luckyBadge}${streakBadge} · 灵球 ${pbVal} · 高级灵球 ${ubVal}</span>
       </div>
       ${biomeRibbonHtml}
       <div class="tab-stage__body">
