@@ -1,15 +1,15 @@
 ---
-description: 宝可梦挂机多窗口协作与模块依赖规范
+description: 萌灵挂机多窗口协作与模块依赖规范
 alwaysApply: true
 ---
 
-# 宝可梦挂机 — 多窗口协作规范
+# 萌灵挂机 — 多窗口协作规范
 
 ## 项目结构概览
 
 ```
-kittens-mvp-live/
-├── app.js                    ← 主入口（~3300行），组装与 SECTION 串联
+mengling-idle/
+├── app.js                    ← 组合根（~470行），组装与依赖注入
 ├── main.js                   ← 加载器（SW + 动态 import app.js）
 ├── index.html / styles.css
 ├── modules/

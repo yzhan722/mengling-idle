@@ -1,9 +1,9 @@
 ---
-description: kittens 马拉松开发 Loop — 开发到底
+description: 萌灵马拉松开发 Loop — 开发到底
 alwaysApply: true
 ---
 
-# kittens 开发 Loop（马拉松 · 开发到底）
+# 萌灵开发 Loop（马拉松 · 开发到底）
 
 ## 触发
 
@@ -19,7 +19,7 @@ alwaysApply: true
 
 ## 每条流程
 
-1. 读 `FINAL_LOOP_BACKLOG.md`、本规则、`kittens-collab.mdc`
+1. 读 `FINAL_LOOP_BACKLOG.md`、本规则、`mengling-collab.mdc`
 2. 选队首 `size:S/M` 且 deps 满足
 3. 实现 → 跑相关 selfcheck → 勾选 → 下一条
 

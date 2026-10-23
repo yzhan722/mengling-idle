@@ -1,7 +1,7 @@
 # Player Fun Loop Plan — 一次性推进
 
 > Date: 2026-07-13  
-> Source: `kittens-player-tab-eval-2026-07-13`（玩家视角全标签评估）  
+> Source: `mengling-player-tab-eval-2026-07-13`（玩家视角全标签评估）  
 > Mode: **马拉松一次推完** · 不做中间停顿 · 不 commit 除非你要求
 
 ## Goal

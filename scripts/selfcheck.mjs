@@ -433,47 +433,22 @@ assert(win.winner === 1 && win.rounds > 0, "pvp strong wins");
 }
 
 {
-  const {
-    ambientWorldLine,
-    ambientWorldBatch,
-    ghostRivalsForDay,
-    seasonGhostsForDay,
-    bossHudLine,
-    FAKE_TRAINERS,
-    padLeaderboard,
-    fakeSocialFeed,
-    displayTrainerId,
-    looksBrokenName,
-  } = await import("../modules/systems/world_presence.js");
-  assert(typeof ambientWorldLine() === "string" && ambientWorldLine().length > 4, "ambient line");
-  assert(ambientWorldBatch(1, 3).length === 0, "ambient batch default off");
-  assert(ambientWorldBatch(1, 3, { atmosphereFakes: true }).length === 3, "ambient batch opt-in");
-  const g1 = ghostRivalsForDay("2026-07-13", { atmosphereFakes: true });
-  const g2 = ghostRivalsForDay("2026-07-13", { atmosphereFakes: true });
-  const g3 = ghostRivalsForDay("2026-07-14", { atmosphereFakes: true });
-  assert(g1.length === 6 && g1[0].dex === g2[0].dex, "ghost day stable");
-  assert(g1[0].dex !== g3[0].dex || g1[0].power !== g3[0].power, "ghost day drifts");
-  const s1 = seasonGhostsForDay("2026-07-13", { atmosphereFakes: true });
-  assert(s1.length === 6 && s1[0].score > 0, "season ghosts");
+  const { bossHudLine, cleanLeaderboard, displayTrainerId, looksBrokenName } = await import(
+    "../modules/systems/world_presence.js"
+  );
   assert(bossHudLine(null).includes("Boss"), "boss hud empty");
   assert(bossHudLine({ hp: 50, maxHp: 100 }).includes("50/100"), "boss hud hp");
-  assert(FAKE_TRAINERS.length >= 20, "fake trainer roster");
-  assert(FAKE_TRAINERS.every((n) => /^[A-Za-z][A-Za-z0-9_]*$/.test(n)), "ascii trainer ids");
   assert(displayTrainerId("", "abcdef1234567890") === displayTrainerId("", "abcdef1234567890"), "display id stable");
   assert(!looksBrokenName("LeafGrove") && looksBrokenName(""), "broken name detect");
-  assert(padLeaderboard([], "dex", "2026-07-13").length === 0, "empty board honest");
-  const padded = padLeaderboard([], "dex", "2026-07-13", { atmosphereFakes: true });
-  assert(padded.length >= 12, "empty board padded when opted in");
-  assert(padded.every((x) => x.fake), "all fake when empty opt-in");
-  assert(padded[0].rank === 1 && padded[1].rank === 2, "ranks assigned");
-  assert(/^[A-Za-z]/.test(padded[0].attrs.ownerName), "padded names ascii");
-  const mixed = padLeaderboard([{ score: 999, name: "RealPlayer", attrs: { ownerName: "RealPlayer" } }], "dex", "2026-07-13", { atmosphereFakes: true });
-  assert(mixed.some((x) => x.attrs?.ownerName === "RealPlayer"), "real kept");
-  assert(mixed.some((x) => x.fake), "fakes still present when opted in");
-  const garbled = padLeaderboard([{ score: 10, attrs: { ownerName: "", uid: "deadbeefdeadbeef" } }], "dex", "2026-07-13");
-  assert(garbled.some((x) => !x.fake && /^[A-Za-z]/.test(x.attrs.ownerName)), "empty real name remapped");
-  assert(fakeSocialFeed("2026-07-13", 4).length === 0, "fake social feed default off");
-  assert(fakeSocialFeed("2026-07-13", 4, { atmosphereFakes: true }).length === 4, "fake social feed opt-in");
+  assert(cleanLeaderboard([]).length === 0, "empty board honest");
+  const cleaned = cleanLeaderboard([
+    { score: 999, name: "RealPlayer", attrs: { ownerName: "RealPlayer" } },
+    { score: 5, attrs: { ownerName: "Other" } },
+  ]);
+  assert(cleaned.length === 2 && cleaned[0].rank === 1 && cleaned[0].attrs.ownerName === "RealPlayer", "real ranked");
+  const garbled = cleanLeaderboard([{ score: 10, attrs: { ownerName: "", uid: "deadbeefdeadbeef" } }]);
+  assert(/^[A-Za-z]/.test(garbled[0].attrs.ownerName), "empty real name remapped");
+  assert(!("fake" in cleaned[0]) && !("fake" in cleaned[0].attrs), "no fake markers anywhere");
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

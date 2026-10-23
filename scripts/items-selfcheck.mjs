@@ -42,7 +42,7 @@ function makeHarness(overrides = {}) {
   const logs = [];
   let expGained = 0;
   const itemUsage = createItemUsage({
-    state,
+    getState: () => state,
     addRes: () => {},
     addLog: (msg) => logs.push(msg),
     addExpToMon: (_mon, amt) => {
@@ -237,7 +237,7 @@ function makeHarness(overrides = {}) {
 }
 
 // --- lucky-egg multiplier wiring (source contract; lives in mon_stats) ---
-const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
+const renderLoopSource = await readFile(new URL("../modules/app/render_loop.js", import.meta.url), "utf8");
 const monStatsSource = await readFile(new URL("../modules/systems/mon_stats.js", import.meta.url), "utf8");
 const monsSource = await readFile(new URL("../modules/tabs/mons_tab.js", import.meta.url), "utf8");
 assert.match(monStatsSource, /mon\.buffs\?\.luckyEgg.*Date\.now\(\)/, "lucky egg multiplier must check expiry");
@@ -254,8 +254,8 @@ assert.match(monsSource, /spdPotion:\s*"spd"/, "potion map must wire spdPotion")
 assert.match(monsSource, /spePotion:\s*"spe"/, "potion map must wire spePotion");
 assert.match(monsSource, /state\.res\[rid\]\.value = Math\.max\(0, have - 1\)/, "potions must consume resource");
 assert.match(monsSource, /inExpedition/, "potions must block expedition mons");
-assert.match(appSource, /tabRules\s*=\s*\{/, "tab unlock rules must exist in render");
-assert.match(appSource, /pve:\s*unique >= 5/, "pve tab unlocks at 5 unique dex");
-assert.match(appSource, /future:\s*unique >= 1/, "future tab unlocks at 1 unique dex");
+assert.match(renderLoopSource, /tabRules\s*=\s*\{/, "tab unlock rules must exist in render");
+assert.match(renderLoopSource, /pve:\s*unique >= 5/, "pve tab unlocks at 5 unique dex");
+assert.match(renderLoopSource, /future:\s*unique >= 1/, "future tab unlocks at 1 unique dex");
 
 console.log("items selfcheck passed");

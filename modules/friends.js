@@ -1,6 +1,6 @@
 // 好友系统模块
 
-const TOKEN_KEY = "kittens_mvp_cloud_token_v1";
+const TOKEN_KEY = "mengling_idle_cloud_token_v1";
 
 function getAuthToken() {
   try {

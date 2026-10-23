@@ -7,7 +7,7 @@
 | 模式 | 长跑到队列空 |
 | 可执行队列 | **空** |
 | commit | `273df87` |
-| 前端仓 | https://github.com/yzhan722/kittens-mvp-live |
+| 前端仓 | https://github.com/yzhan722/mengling-idle |
 
 ## 最近一次 · 2026-07-11 存档加固 SAVE-001…006
 

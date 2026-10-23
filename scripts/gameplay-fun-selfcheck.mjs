@@ -44,8 +44,6 @@ import {
   researchProgressTheater,
   resetCatchStreak,
   resetPveWinStreak,
-  seasonBarVsGhosts,
-  seasonLocalScore,
   sessionHighlightsLine,
   tryBallSave,
   canClaimDailySpin,
@@ -58,8 +56,6 @@ import {
   markItemsCareClaimed,
   canClaimDailyGoalsBundle,
   markDailyGoalsBundleClaimed,
-  canClaimLbRivalReward,
-  markLbRivalRewardClaimed,
   bumpLoginStreak,
   bumpGatherDaily,
   gatherDailyProgress,
@@ -387,16 +383,6 @@ import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS, isoW
 }
 
 {
-  assert.equal(seasonLocalScore(5, 2), 52, "season score");
-  const bar = seasonBarVsGhosts(50, [
-    { name: "短裤小子", score: 80 },
-    { name: "迷你裙", score: 220 },
-  ]);
-  assert.ok(bar.tip.includes("再登记") || bar.tip.includes("超过"), "season tip");
-  assert.ok(bar.topPct >= 0 && bar.topPct <= 100, "season pct");
-}
-
-{
   const state = { meta: {} };
   ensureSessionDay(state, "2099-06-01");
   bumpSessionCatch(state);
@@ -486,14 +472,6 @@ import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS, isoW
   assert.equal(canClaimDailyGoalsBundle(state, today), true, "goals bundle");
   assert.equal(markDailyGoalsBundleClaimed(state, today), true, "goals mark");
   assert.equal(canClaimDailyGoalsBundle(state, today), false, "goals claimed");
-}
-
-{
-  const meta = {};
-  assert.equal(canClaimLbRivalReward(meta, 0), false, "no beat");
-  assert.equal(canClaimLbRivalReward(meta, 2), true, "beat ok");
-  markLbRivalRewardClaimed(meta, localDateStr());
-  assert.equal(canClaimLbRivalReward(meta, 2), false, "rival claimed");
 }
 
 {

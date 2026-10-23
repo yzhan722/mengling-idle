@@ -34,7 +34,6 @@ import { createRenderPve } from "../tabs/pve_tab.js";
 import { createRenderHelp } from "../tabs/help_tab.js";
 import { createItemUsage } from "../item_usage.js";
 import { createTabController } from "../tabs/tabs_controller.js";
-import { createMonthlyCard } from "../monthly_card.js";
 import { createTick } from "../tick.js";
 import { createRenderResources } from "../render/resources.js";
 import { createRenderLog } from "../render/log.js";
@@ -323,19 +322,12 @@ export function initGameUi(ctx) {
     getState,
   });
 
-  const monthlyCard = createMonthlyCard({
-    getState,
-    addRes,
-    addLog,
-  });
-
   renders.renderFutureShop = createRenderFutureShop({
     elFutureShop: els.elFutureShop,
     ui,
     defs,
     fmt,
     getState,
-    monthlyCard,
   });
 
   const tick = createTick({
@@ -502,7 +494,6 @@ export function initGameUi(ctx) {
     addRes,
     addLog,
     render,
-    monthlyCard,
   });
 
   renders.renderDex = createRenderDex({
@@ -581,5 +572,5 @@ export function initGameUi(ctx) {
     claimBossBullyReward,
   });
 
-  return { renders, tabController, itemUsage, monthlyCard, tick };
+  return { renders, tabController, itemUsage, tick };
 }

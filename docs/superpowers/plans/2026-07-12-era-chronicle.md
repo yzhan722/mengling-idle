@@ -206,7 +206,7 @@ export function getEraDefByIndex(index) {
 - [ ] **Step 2: Sanity — file exports 9 eras**
 
 Run: `node -e "import { ERA_DEFS } from './modules/defs_eras.js'; console.log(ERA_DEFS.length)"`  
-Working directory: `d:\project\kittens-mvp-live`  
+Working directory: `d:\project\mengling-idle`  
 Expected: `9`
 
 ---

@@ -13,7 +13,6 @@ export const REMOTE_CONFIG_DEFAULTS = {
   },
   featureFlags: {
     analytics: true,
-    atmosphereFakes: false,
   },
 };
 

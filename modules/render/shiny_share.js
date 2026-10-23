@@ -30,7 +30,7 @@ export function drawShinyShareCard(payload) {
   }
 }
 
-export function downloadDataUrl(dataUrl, filename = "kittens-shiny-gallery.png") {
+export function downloadDataUrl(dataUrl, filename = "mengling-shiny-gallery.png") {
   if (typeof document === "undefined" || !dataUrl) return false;
   const a = document.createElement("a");
   a.href = dataUrl;

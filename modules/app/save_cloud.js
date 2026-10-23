@@ -89,7 +89,7 @@ export function createSaveCloud({ getState, setState, getAutosaveEnabled, ui, re
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `kittens-save-${formatLocalYmd()}.json`;
+      a.download = `mengling-save-${formatLocalYmd()}.json`;
       a.click();
       URL.revokeObjectURL(url);
       setCloudStatus("已导出存档文件");

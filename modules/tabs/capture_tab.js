@@ -49,7 +49,7 @@ export function initCaptureTab({
   getCaptureAreas,
   starterMonFactory,
 }) {
-  const CAPTURE_PREVIEW_KEY = "kittens_mvp_capture_preview_hidden_v1";
+  const CAPTURE_PREVIEW_KEY = "mengling_idle_capture_preview_hidden_v1";
   const rareWeight = (p, base, rareWeightMul) =>
     (p?.tier === "rare" || p?.tier === "epic") ? base * rareWeightMul : base;
   const getMonTypesForBias = (p) => {

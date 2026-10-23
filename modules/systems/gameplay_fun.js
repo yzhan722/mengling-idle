@@ -1,7 +1,6 @@
 // Gameplay fun helpers — abilities, lucky type-day, catch streak
 import { monPassive } from "../abilities.js";
 import { formatPvpSeasonStats } from "./pvp_narrative.js";
-import { seasonGhostsForDay } from "./world_presence.js";
 
 const TYPE_POOL = [
   "fire", "water", "grass", "electric", "wind", "stone", "light", "dark", "mystic",
@@ -493,50 +492,6 @@ export function pveDailyFirstWinMul(meta, today = localDateStr()) {
   return { mul: 1.5, isFirst: true };
 }
 
-/** Season score = dex*10 + pveWins; progress vs ghost rivals. */
-export function seasonLocalScore(dexUnique, pveWins) {
-  return Math.max(0, Math.floor(dexUnique || 0)) * 10 + Math.max(0, Math.floor(pveWins || 0));
-}
-
-export const SEASON_GHOST_RIVALS = [
-  { name: "短裤小子", score: 80 },
-  { name: "迷你裙", score: 220 },
-  { name: "精英阿哲", score: 900 },
-  { name: "试炼影子", score: 1800 },
-];
-
-/** Returns progress line vs next/top ghost (daily-drifting scores by default). */
-export function seasonBarVsGhosts(myScore, ghosts) {
-  const score = Math.max(0, Math.floor(myScore || 0));
-  const list = (Array.isArray(ghosts) ? ghosts : seasonGhostsForDay()).slice().sort((a, b) => a.score - b.score);
-  if (!list.length) {
-    return {
-      score,
-      topScore: 0,
-      topPct: 0,
-      beaten: 0,
-      total: 0,
-      needDex: 0,
-      tip: "榜上还没有其他育灵师 — 去捕捉提升图鉴",
-      nextName: null,
-    };
-  }
-  const top = list[list.length - 1];
-  const next = list.find((g) => g.score > score) || null;
-  const beaten = list.filter((g) => score >= g.score).length;
-  let needDex = 0;
-  let targetName = top.name;
-  if (next) {
-    needDex = Math.max(1, Math.ceil((next.score - score) / 10));
-    targetName = next.name;
-  }
-  const topPct = top.score > 0 ? Math.min(100, Math.round((score / top.score) * 100)) : 100;
-  const tip = next
-    ? `再登记 ${needDex} 种超过 ${targetName}`
-    : `已超过全部 ${list.length} 位幽灵育灵师`;
-  return { score, topScore: top.score, topPct, beaten, total: list.length, needDex, tip, nextName: next?.name || null };
-}
-
 /** Session day counters for options highlights. */
 export function ensureSessionDay(state, today = localDateStr()) {
   if (!state || typeof state !== "object") return null;
@@ -657,20 +612,6 @@ export function markDailyGoalsBundleClaimed(state, today = localDateStr()) {
   if (!canClaimDailyGoalsBundle(state, today)) return false;
   if (!state.meta || typeof state.meta !== "object") state.meta = {};
   state.meta.dailyGoalsClaimDate = today;
-  return true;
-}
-
-/** Leaderboard: once/day claim if beaten ≥1 season ghost. */
-export function canClaimLbRivalReward(meta, beaten, today = localDateStr()) {
-  const n = Math.max(0, Math.floor(beaten || 0));
-  if (n < 1) return false;
-  const last = meta && typeof meta.lbRivalClaimDate === "string" ? meta.lbRivalClaimDate : "";
-  return last !== today;
-}
-
-export function markLbRivalRewardClaimed(meta, today = localDateStr()) {
-  if (!meta || typeof meta !== "object") return false;
-  meta.lbRivalClaimDate = today;
   return true;
 }
 

@@ -1,10 +1,10 @@
 import { canClaimDailySpin, localDateStr, markDailySpinClaimed, rollDailySpin } from "../systems/gameplay_fun.js";
 import { buyPerk, LEGACY_PERKS } from "../systems/rebirth.js";
 
-export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog, render, monthlyCard }) {
+export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog, render }) {
   if (!elFutureShop) return;
 
-  const FUTURE_SHOP_FOLD_KEY = "kittens_mvp_future_shop_fold_v1";
+  const FUTURE_SHOP_FOLD_KEY = "mengling_idle_future_shop_fold_v1";
   if (!ui.futureShopFold || typeof ui.futureShopFold !== "object") {
     let saved = null;
     try {
@@ -77,54 +77,6 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
         addLog(`轮回加成升级：${LEGACY_PERKS[legacyBtn.getAttribute("data-legacy-perk")]?.name || ""} Lv.${result.level}（灵珀 -${result.cost}）`, true);
         ui.futureDirty = true;
         render();
-      }
-      return;
-    }
-
-    // 月卡购买
-    const monthlyBuyBtn = ev.target?.closest?.("button[data-monthly-buy]");
-    if (monthlyBuyBtn && elFutureShop.contains(monthlyBuyBtn)) {
-      if (monthlyBuyBtn.disabled) return;
-      if (monthlyCard) {
-        const result = monthlyCard.purchase();
-        if (result.success) {
-          ui.futureDirty = true;
-          render();
-        } else {
-          addLog(result.message, true);
-        }
-      }
-      return;
-    }
-
-    // 月卡续费
-    const monthlyRenewBtn = ev.target?.closest?.("button[data-monthly-renew]");
-    if (monthlyRenewBtn && elFutureShop.contains(monthlyRenewBtn)) {
-      if (monthlyRenewBtn.disabled) return;
-      if (monthlyCard) {
-        const result = monthlyCard.purchase();
-        if (result.success) {
-          ui.futureDirty = true;
-          render();
-        } else {
-          addLog(result.message, true);
-        }
-      }
-      return;
-    }
-
-    // 月卡每日领取
-    const monthlyClaimBtn = ev.target?.closest?.("button[data-monthly-claim]");
-    if (monthlyClaimBtn && elFutureShop.contains(monthlyClaimBtn)) {
-      if (monthlyClaimBtn.disabled) return;
-      if (monthlyCard) {
-        const result = monthlyCard.claimDaily();
-        if (result.success) {
-          ui.futureDirty = true;
-          render();
-        } else {
-          addLog(result.message, true);
-        }
       }
       return;
     }

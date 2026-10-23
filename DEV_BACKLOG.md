@@ -4,10 +4,10 @@
 
 ## 待做（GitHub）
 
-- [#2](https://github.com/yzhan722/kittens-mvp-live/issues/2) 部署 0.41.6 到 pokeauto.online，再重跑 live-health-smoke / retention-baseline
-- [#3](https://github.com/yzhan722/kittens-mvp-live/issues/3) D1 `analytics_events` 分事件计数（需 wrangler）
-- [#6](https://github.com/yzhan722/kittens-mvp-live/issues/6) 生产仍是 0.41.2 氛围假人；诚实空服要等 #2
-- [#8](https://github.com/yzhan722/kittens-mvp-live/issues/8) 闪光馆全屏秀（分享卡已在 0.41.6，全屏秀非 blocker）
+- [#2](https://github.com/yzhan722/mengling-idle/issues/2) 部署 0.41.6 到 pokeauto.online，再重跑 live-health-smoke / retention-baseline
+- [#3](https://github.com/yzhan722/mengling-idle/issues/3) D1 `analytics_events` 分事件计数（需 wrangler）
+- [#6](https://github.com/yzhan722/mengling-idle/issues/6) 生产仍是 0.41.2 氛围假人；诚实空服要等 #2
+- [#8](https://github.com/yzhan722/mengling-idle/issues/8) 闪光馆全屏秀（分享卡已在 0.41.6，全屏秀非 blocker）
 
 ## 已完成（本轮代码）
 

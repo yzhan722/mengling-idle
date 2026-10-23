@@ -2,7 +2,7 @@
 
 > 生产：v0.41.8 · 2026-09-11  
 > 状态：`已验证` = 本轮有证据 · `未做` = 仍缺 · `延期` = 明确不做直到条件满足  
-> 进度：[milestone v0.41.2](https://github.com/yzhan722/kittens-mvp-live/milestone/1) · [release](https://github.com/yzhan722/kittens-mvp-live/releases/tag/v0.41.2) · 不要只在本表勾完当队列空
+> 进度：[milestone v0.41.2](https://github.com/yzhan722/mengling-idle/milestone/1) · [release](https://github.com/yzhan722/mengling-idle/releases/tag/v0.41.2) · 不要只在本表勾完当队列空
 
 ## CI / 质量门
 
@@ -12,7 +12,7 @@
 | `api-contract` / `items` / `analytics` / `daily_tasks` / `era` / `gameplay-fun` / `migrations` | 已验证 | 本轮均 OK |
 | Playwright smoke | 已验证 | `playwright-smoke: OK` |
 | Player sim 6h | 已验证 | `player-sim: 0 FAIL` seed=1 720 steps |
-| GitHub Actions 全绿 | 已验证 | [#4](https://github.com/yzhan722/kittens-mvp-live/issues/4) closed；PR #5 run 34499396136 |
+| GitHub Actions 全绿 | 已验证 | [#4](https://github.com/yzhan722/mengling-idle/issues/4) closed；PR #5 run 34499396136 |
 
 ## D1 迁移
 
@@ -41,7 +41,7 @@
 | 项 | 状态 | 证据 |
 |----|------|------|
 | 四处版本一致 | 已验证 | `0.41.8`：index/main/sw/config + health |
-| 发版后清缓存 | 已验证 | `CACHE_VERSION` `kittens-v0.41.8`；SW JS `cache: no-store` |
+| 发版后清缓存 | 已验证 | `CACHE_VERSION` `mengling-v0.41.8`；SW JS `cache: no-store` |
 
 ## 部署
 

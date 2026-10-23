@@ -21,10 +21,12 @@ jobs:
         run: node scripts/items-selfcheck.mjs
       - name: Analytics selfcheck
         run: node scripts/analytics-selfcheck.mjs
-      - name: Daily tasks selfcheck
-        run: node scripts/daily_tasks-selfcheck.mjs
       - name: Era selfcheck
         run: node scripts/era-selfcheck.mjs
+      - name: Rebirth selfcheck
+        run: node scripts/rebirth-selfcheck.mjs
+      - name: Branding selfcheck
+        run: node scripts/branding-selfcheck.mjs
       - name: Gameplay fun selfcheck
         run: node scripts/gameplay-fun-selfcheck.mjs
       - name: Cloud save selfcheck

@@ -1,117 +1,7 @@
 /**
- * World presence helpers — optional atmosphere fakes + real-event pulse.
- * Atmosphere defaults OFF (honest empty boards). Pass { atmosphereFakes: true } to opt in.
+ * World presence helpers — real players only.
  * Trainer handles stay ASCII so CDN/encoding never turns them into mojibake.
  */
-
-import { REMOTE_CONFIG_DEFAULTS } from "../remote_config.js";
-
-export function atmosphereFakesEnabled(opts = null) {
-  if (opts && typeof opts.atmosphereFakes === "boolean") return opts.atmosphereFakes;
-  return REMOTE_CONFIG_DEFAULTS.featureFlags?.atmosphereFakes === true;
-}
-
-export const FAKE_TRAINERS = Object.freeze([
-  "LeafGrove",
-  "AshPro",
-  "MiniSkirt",
-  "ShortsKid",
-  "GymShadow",
-  "LimeSoda",
-  "SnorlaxFan",
-  "ShinyHunt",
-  "EggMaster",
-  "BallCraft",
-  "NightOwl",
-  "ForestRun",
-  "SandStorm",
-  "ThunderCloud",
-  "PidgeyScout",
-  "Slowpoke",
-  "CharmKid",
-  "Squirtle",
-  "BulbaFan",
-  "EeveeClub",
-  "SteelWall",
-  "GhostHouse",
-  "GymRookie",
-  "WeekendWar",
-  "IdleAce",
-  "DexCompulse",
-  "ExpeditionLead",
-  "BerryFarm",
-  "BallSpinner",
-  "TowerClimber",
-]);
-
-const AMBIENT_ACTIONS = [
-  "logged a new dex entry",
-  "came back from expedition",
-  "caught another mon",
-  "finished research and started crafting balls",
-  "climbed another tower floor",
-  "is still incubating an egg",
-  "watered the berry trees",
-  "unlocked a new catch area",
-  "evolved a partner",
-  "added a shiny to the gallery",
-  "refreshed leaderboard scores",
-  "bullied the server boss",
-  "claimed daily gifts",
-  "spun the shop wheel",
-];
-
-const BOARD_RANGES = {
-  dex: { min: 12, max: 220 },
-  power: { min: 600, max: 52000 },
-  contrib: { min: 5, max: 900 },
-  hatch: { min: 1, max: 80 },
-  shiny: { min: 0, max: 28 },
-  total_power: { min: 2000, max: 180000 },
-  totalPower: { min: 2000, max: 180000 },
-  gather: { min: 40, max: 12000 },
-  resource: { min: 500, max: 250000 },
-  catch: { min: 8, max: 900 },
-};
-
-const BASE_LB_GHOSTS = [
-  { name: "NPC_ShortsKid", dex: 18, power: 1200 },
-  { name: "NPC_MiniSkirt", dex: 42, power: 2800 },
-  { name: "NPC_LimeSoda", dex: 65, power: 6500 },
-  { name: "NPC_AshPro", dex: 95, power: 14000 },
-  { name: "NPC_GymShadow", dex: 130, power: 28000 },
-  { name: "NPC_IdleAce", dex: 160, power: 42000 },
-];
-
-const BASE_SEASON_GHOSTS = [
-  { name: "ShortsKid", score: 90 },
-  { name: "MiniSkirt", score: 240 },
-  { name: "LimeSoda", score: 520 },
-  { name: "AshPro", score: 980 },
-  { name: "GymShadow", score: 1600 },
-  { name: "IdleAce", score: 2400 },
-];
-
-function hashStr(s) {
-  let h = 2166136261;
-  const str = String(s || "");
-  for (let i = 0; i < str.length; i += 1) {
-    h ^= str.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function mulberry32(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 export function localDateStr(d = new Date()) {
   const y = d.getFullYear();
@@ -120,15 +10,11 @@ export function localDateStr(d = new Date()) {
   return `${y}-${m}-${day}`;
 }
 
-function pickTrainer(rnd) {
-  return FAKE_TRAINERS[Math.floor(rnd() * FAKE_TRAINERS.length) % FAKE_TRAINERS.length];
-}
-
 /** True if name looks empty, uid-like garbage, or encoding junk. */
 export function looksBrokenName(name) {
   const n = String(name || "").trim();
   if (!n) return true;
-  if (n.includes("\uFFFD")) return true;
+  if (n.includes("�")) return true;
   // classic mojibake markers from UTF-8 read as latin1
   if (/[ÃÂåæçðñòóô]/.test(n) && /[¤¥¦§¨©ª«]/.test(n)) return true;
   if (/^[\x00-\x1f\x7f-\x9f]+$/.test(n)) return true;
@@ -139,7 +25,7 @@ export function looksBrokenName(name) {
   return false;
 }
 
-/** Prefer a readable trainer handle for UI — never map onto the NPC roster. */
+/** Prefer a readable trainer handle for UI. */
 export function displayTrainerId(name, uid = "") {
   const n = String(name || "").trim();
   if (!looksBrokenName(n)) return n.slice(0, 32);
@@ -148,127 +34,10 @@ export function displayTrainerId(name, uid = "") {
   return `T_${compact}`;
 }
 
-/** Deterministic ambient ticker line for a time bucket (10 min). */
-export function ambientWorldLine(nowMs = Date.now(), salt = 0) {
-  const bucket = Math.floor(Math.max(0, Number(nowMs) || 0) / (10 * 60 * 1000));
-  const rnd = mulberry32(hashStr(`ambient:${bucket}:${salt}`));
-  if (rnd() < 0.18) {
-    return rnd() < 0.5 ? "Server: someone is bullying the boss" : "Server: leaderboard scores just refreshed";
-  }
-  const name = pickTrainer(rnd);
-  const action = AMBIENT_ACTIONS[Math.floor(rnd() * AMBIENT_ACTIONS.length) % AMBIENT_ACTIONS.length];
-  return `${name}: ${action}`;
-}
-
-/** Several ambient lines for padding an empty feed. */
-export function ambientWorldBatch(nowMs = Date.now(), count = 3, opts = null) {
-  if (!atmosphereFakesEnabled(opts)) return [];
-  const n = Math.max(1, Math.min(8, Math.floor(count) || 3));
-  const out = [];
-  for (let i = 0; i < n; i += 1) {
-    out.push({ type: "ambient", msg: ambientWorldLine(nowMs, i + 1) });
-  }
-  return out;
-}
-
-/** Soft social feed cards when real achievements are empty. */
-export function fakeSocialFeed(dateStr = localDateStr(), count = 5, opts = null) {
-  if (!atmosphereFakesEnabled(opts)) return [];
-  const rnd = mulberry32(hashStr(`social-feed:${dateStr}`));
-  const n = Math.max(1, Math.min(8, Math.floor(count) || 5));
-  const out = [];
-  for (let i = 0; i < n; i += 1) {
-    const name = pickTrainer(rnd);
-    const kind = Math.floor(rnd() * 4);
-    let text = "";
-    if (kind === 0) text = `Dex reached ${Math.floor(20 + rnd() * 120)} species`;
-    else if (kind === 1) text = `Caught another mon — team power up`;
-    else if (kind === 2) text = `Shiny gallery +${1 + Math.floor(rnd() * 2)}`;
-    else text = `Expedition return with a berry haul`;
-    out.push({
-      id: `fake-${dateStr}-${i}`,
-      username: name,
-      fake: true,
-      text,
-      created_at: Date.now() - Math.floor(rnd() * 6 * 3600 * 1000),
-    });
-  }
-  return out;
-}
-
-/** Daily-drifting leaderboard ghost rivals. */
-export function ghostRivalsForDay(dateStr = localDateStr(), opts = null) {
-  if (!atmosphereFakesEnabled(opts)) return [];
-  const rnd = mulberry32(hashStr(`lb-ghost:${dateStr}`));
-  return BASE_LB_GHOSTS.map((g, i) => {
-    const dexJitter = Math.floor((rnd() - 0.35) * (8 + i * 4));
-    const powJitter = Math.floor((rnd() - 0.4) * (400 + i * 1200));
-    return {
-      name: g.name,
-      dex: Math.max(5, g.dex + dexJitter),
-      power: Math.max(200, g.power + powJitter),
-    };
-  });
-}
-
-/** Daily-drifting season score ghosts. */
-export function seasonGhostsForDay(dateStr = localDateStr(), opts = null) {
-  if (!atmosphereFakesEnabled(opts)) return [];
-  const rnd = mulberry32(hashStr(`season-ghost:${dateStr}`));
-  return BASE_SEASON_GHOSTS.map((g, i) => {
-    const jitter = Math.floor((rnd() - 0.4) * (40 + i * 80));
-    return { name: g.name, score: Math.max(20, g.score + jitter) };
-  });
-}
-
-function boardRange(board) {
-  return BOARD_RANGES[board] || BOARD_RANGES.dex;
-}
-
-/** Generate fake leaderboard rows for one board (deterministic per day). */
-export function fakeBoardRows(board, dateStr = localDateStr(), count = 12) {
-  const rnd = mulberry32(hashStr(`board:${board}:${dateStr}`));
-  const range = boardRange(board);
-  const n = Math.max(1, Math.min(40, Math.floor(count) || 12));
-  const used = new Set();
-  const rows = [];
-  for (let i = 0; i < n; i += 1) {
-    let name = pickTrainer(rnd);
-    let guard = 0;
-    while (used.has(name) && guard < 20) {
-      name = pickTrainer(rnd);
-      guard += 1;
-    }
-    used.add(name);
-    const t = rnd();
-    const score = Math.max(
-      range.min,
-      Math.floor(range.min + (range.max - range.min) * (0.15 + t * 0.85) + (rnd() - 0.5) * range.min * 0.2)
-    );
-    rows.push({
-      rank: 0,
-      score,
-      name,
-      attrs: { ownerName: name, fake: true },
-      fake: true,
-    });
-  }
-  return rows;
-}
-
-/**
- * Merge real leaderboard items with daily fake trainers, re-rank.
- * Fakes are off unless { atmosphereFakes: true }.
- */
-export function padLeaderboard(items, board, dateStr = localDateStr(), opts = null) {
+/** Normalize real leaderboard rows: repair broken names, sort, re-rank. */
+export function cleanLeaderboard(items) {
   const real = Array.isArray(items) ? items.slice() : [];
-  const minRows = typeof opts?.minRows === "number" ? opts.minRows : 14;
-  const alwaysFake = typeof opts?.alwaysFake === "number" ? opts.alwaysFake : 6;
-  const need = Math.max(alwaysFake, minRows - real.length);
-  const fakes = atmosphereFakesEnabled(opts) ? fakeBoardRows(board, dateStr, need) : [];
-
-  const realNames = new Set();
-  const cleanedReal = real.map((it) => {
+  const cleaned = real.map((it) => {
     const rawName =
       typeof it?.attrs?.ownerName === "string"
         ? it.attrs.ownerName
@@ -277,31 +46,20 @@ export function padLeaderboard(items, board, dateStr = localDateStr(), opts = nu
           : "";
     const uid = typeof it?.uid === "string" ? it.uid : typeof it?.attrs?.uid === "string" ? it.attrs.uid : "";
     const ownerName = displayTrainerId(rawName, uid);
-    realNames.add(ownerName);
     return {
       ...it,
       name: ownerName,
-      fake: false,
       attrs: {
         ...(it.attrs && typeof it.attrs === "object" ? it.attrs : {}),
         ownerName,
-        fake: false,
         uid: uid || undefined,
       },
     };
   });
-
-  const merged = cleanedReal.slice();
-  for (const f of fakes) {
-    if (realNames.has(f.name)) continue;
-    merged.push(f);
-  }
-
-  merged.sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
-  return merged.slice(0, 100).map((it, idx) => ({
+  cleaned.sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+  return cleaned.slice(0, 100).map((it, idx) => ({
     ...it,
     rank: idx + 1,
-    fake: Boolean(it.fake || it?.attrs?.fake),
     attrs: {
       ...(it.attrs && typeof it.attrs === "object" ? it.attrs : {}),
       ownerName:
@@ -310,7 +68,6 @@ export function padLeaderboard(items, board, dateStr = localDateStr(), opts = nu
           : typeof it?.name === "string"
             ? it.name
             : "Trainer_Anon",
-      fake: Boolean(it.fake || it?.attrs?.fake),
     },
   }));
 }

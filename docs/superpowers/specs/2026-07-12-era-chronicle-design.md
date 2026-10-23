@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-12  
 **Status:** Draft for user review (not implemented)  
-**Game:** kittens-mvp-live  
+**Game:** mengling-idle  
 **Approach:** 方案 1 — 时代 = 规则层（不改地区 `unlockReq`）
 
 ## Goals

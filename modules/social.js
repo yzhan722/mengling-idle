@@ -1,6 +1,6 @@
 // 社交功能模块
 
-const TOKEN_KEY = "kittens_mvp_cloud_token_v1";
+const TOKEN_KEY = "mengling_idle_cloud_token_v1";
 const SOCIAL_DEGRADE_LOG_INTERVAL_MS = 60_000;
 
 function getAuthToken() {

@@ -27,9 +27,9 @@ export function createCloudSave({
   applyAutosaveRaw,
   refreshSaveUI,
 }) {
-  const TOKEN_KEY = "kittens_mvp_cloud_token_v1";
-  const USER_KEY = "kittens_mvp_cloud_user_v1";
-  const UID_KEY = "kittens_mvp_cloud_uid_v1";
+  const TOKEN_KEY = "mengling_idle_cloud_token_v1";
+  const USER_KEY = "mengling_idle_cloud_user_v1";
+  const UID_KEY = "mengling_idle_cloud_uid_v1";
 
   let syncTimer = 0;
   let lastPushedAutosaveAt = 0;
@@ -201,7 +201,7 @@ export function createCloudSave({
 
   function backupOnce() {
     const username = getUsername();
-    const markKey = `kittens_mvp_cloud_backup_done_v1_${keyPart(username)}`;
+    const markKey = `mengling_idle_cloud_backup_done_v1_${keyPart(username)}`;
     try {
       const done = localStorage.getItem(markKey);
       if (done) return;

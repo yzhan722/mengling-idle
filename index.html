@@ -297,7 +297,7 @@
             <div class="row futureShopIntro">
               <div class="row__left">
                 <div class="row__title">商店与合成</div>
-                <div class="row__desc">上方领取月卡与每日福利；首屏可兑换未来币，下方可展开增益、道具与合成。</div>
+                <div class="row__desc">每日福利与灵果/灵木兑未来币；下方可展开增益、道具与合成。</div>
               </div>
               <div class="row__right">
                 <div class="badge" id="futureCoinBadge">未来币 —</div>
@@ -492,24 +492,6 @@
             </div>
 
 
-
-            <div class="sidebar__divider"></div>
-
-            <div class="panel__title">支持开发者</div>
-
-            <p class="muted" style="margin:0 0 8px;font-size:12px;line-height:1.5">扫码赞助感谢支持。下方为即将上线的应用内购目录（月卡 / 未来币包）— <b>暂未开放购买</b>，不会扣款。</p>
-
-            <div id="iapComingSoon" class="list" hidden></div>
-
-            <div class="saveQrWrap" id="donateSection">
-
-              <div class="saveQr">
-
-                <img class="saveQr__img" id="donateQrImg" src="./assets/donate_qr.jpg" alt="赞助二维码" loading="lazy" width="100" height="100" onerror="this.closest('#donateSection').style.display='none';" />
-
-              </div>
-
-            </div>
 
           </div>
 
@@ -1009,36 +991,7 @@
 
 
 
-    <script src="./data/beasts_zh.js?v=0.1.0" defer></script>
-
     <script src="./data/beasts.js?v=0.1.0" defer></script>
-
-    <script type="module">
-      import { donateQrPath, getCatalog } from "./modules/iap_stub.js?v=0.1.0";
-
-      const qr = document.getElementById("donateQrImg");
-      if (qr) qr.src = donateQrPath();
-
-      const host = document.getElementById("iapComingSoon");
-      if (host) {
-        const render = (items) => {
-          host.innerHTML = items
-            .map(
-              (i) =>
-                `<div class="row"><div class="row__left"><div class="row__title">${i.title}</div><div class="row__desc muted">¥${i.priceCny}${i.futurecoin ? ` · ${i.futurecoin} 未来币` : ""} · 即将上线</div></div></div>`
-            )
-            .join("");
-          host.hidden = false;
-        };
-        render(getCatalog());
-        fetch("/api/iap/catalog")
-          .then((r) => (r.ok ? r.json() : null))
-          .then((data) => {
-            if (data?.items?.length) render(data.items);
-          })
-          .catch(() => {});
-      }
-    </script>
 
     <script type="module" src="./main.js?v=0.1.0"></script>
 

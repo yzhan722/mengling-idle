@@ -46,9 +46,9 @@
 
 跟踪在 GitHub，不要只改这段文字：
 
-- 真·10 仍 0：无真人热度 → [#6](https://github.com/yzhan722/kittens-mvp-live/issues/6)（生产 0.41.2 社交仍是 NPC padding；0.41.6 关假人待 [#2](https://github.com/yzhan722/kittens-mvp-live/issues/2)）
-- 无真 IAP → [#7](https://github.com/yzhan722/kittens-mvp-live/issues/7)（已关：延期到 v0.42）
-- 闪光馆无独立全屏秀 → [#8](https://github.com/yzhan722/kittens-mvp-live/issues/8)（分享卡已在 0.41.6 PR #5）  
+- 真·10 仍 0：无真人热度 → [#6](https://github.com/yzhan722/mengling-idle/issues/6)（生产 0.41.2 社交仍是 NPC padding；0.41.6 关假人待 [#2](https://github.com/yzhan722/mengling-idle/issues/2)）
+- 无真 IAP → [#7](https://github.com/yzhan722/mengling-idle/issues/7)（已关：延期到 v0.42）
+- 闪光馆无独立全屏秀 → [#8](https://github.com/yzhan722/mengling-idle/issues/8)（分享卡已在 0.41.6 PR #5）  
 
 ## Verify
 

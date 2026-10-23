@@ -37,7 +37,6 @@ export const PRESTIGE_KEEP_FIELDS = Object.freeze([
   "hatchCount",
   "gatherClicks",
   "resourceProduced",
-  "monthlyCard",
   "pve",
   "futurecoinSpent",
 ]);

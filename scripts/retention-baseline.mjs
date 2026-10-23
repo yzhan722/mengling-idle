@@ -43,7 +43,7 @@ try {
 }
 
 const dexItems = Array.isArray(dex.json?.items) ? dex.json.items : [];
-const realDex = dexItems.filter((it) => !it?.fake && !it?.attrs?.fake);
+const realDex = dexItems;
 const md = `# Retention baseline
 
 - Captured: ${capturedAt}

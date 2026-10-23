@@ -170,18 +170,6 @@ export const defaultState = () => ({
 
   resourceProduced: 0,
 
-  monthlyCard: {
-
-    active: false,
-
-    expiresAt: 0,
-
-    lastClaimDate: "",
-
-    totalClaimed: 0,
-
-  },
-
   rng: {
 
     catchFails: 0,
@@ -1455,38 +1443,6 @@ export function loadFromRaw(raw) {
   if (typeof data.totalPlayMs === "number" && Number.isFinite(data.totalPlayMs)) {
     s.totalPlayMs = Math.max(0, Math.floor(data.totalPlayMs));
   }
-
-  // 恢复月卡数据
-
-  if (data.monthlyCard && typeof data.monthlyCard === "object") {
-
-    if (typeof data.monthlyCard.active === "boolean") {
-
-      s.monthlyCard.active = data.monthlyCard.active;
-
-    }
-
-    if (typeof data.monthlyCard.expiresAt === "number" && Number.isFinite(data.monthlyCard.expiresAt)) {
-
-      s.monthlyCard.expiresAt = Math.max(0, Math.floor(data.monthlyCard.expiresAt));
-
-    }
-
-    if (typeof data.monthlyCard.lastClaimDate === "string") {
-
-      s.monthlyCard.lastClaimDate = data.monthlyCard.lastClaimDate;
-
-    }
-
-    if (typeof data.monthlyCard.totalClaimed === "number" && Number.isFinite(data.monthlyCard.totalClaimed)) {
-
-      s.monthlyCard.totalClaimed = Math.max(0, Math.floor(data.monthlyCard.totalClaimed));
-
-    }
-
-  }
-
-
 
   // 恢复 PvE 数据
 

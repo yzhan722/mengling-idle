@@ -14,7 +14,6 @@ const DEFAULT_CONFIG = {
   },
   featureFlags: {
     analytics: true,
-    atmosphereFakes: false,
   },
 };
 

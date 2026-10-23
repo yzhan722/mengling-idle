@@ -1,8 +1,8 @@
 // 新手引导：前 30 分钟核心路径（采集→球→捕捉→看世界→云账号）
 
-const GUIDE_KEY = "kittens_mvp_guide_done_v1";
-const HANDOFF_CATCH_KEY = "kittens_mvp_handoff_catch_v1";
-const HANDOFF_WORLD_KEY = "kittens_mvp_handoff_world_v1";
+const GUIDE_KEY = "mengling_idle_guide_done_v1";
+const HANDOFF_CATCH_KEY = "mengling_idle_handoff_catch_v1";
+const HANDOFF_WORLD_KEY = "mengling_idle_handoff_world_v1";
 
 const GUIDE_STEPS = [
   {

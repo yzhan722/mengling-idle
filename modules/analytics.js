@@ -1,6 +1,6 @@
 // Client analytics: localStorage queue, best-effort flush to /api/ops/ingest
-const QUEUE_KEY = "kittens_mvp_analytics_queue_v1";
-const FIRST_CAPTURE_KEY = "kittens_mvp_analytics_first_capture_v1";
+const QUEUE_KEY = "mengling_idle_analytics_queue_v1";
+const FIRST_CAPTURE_KEY = "mengling_idle_analytics_first_capture_v1";
 const MAX_QUEUE = 200;
 const MAX_BATCH = 50;
 const FLUSH_INTERVAL_MS = 15000;

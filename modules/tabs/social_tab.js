@@ -99,7 +99,7 @@ export function createSocialTab({
     // 初始化社交面板HTML
     const cloudTok = (() => {
       try {
-        return localStorage.getItem("kittens_mvp_cloud_token_v1") || "";
+        return localStorage.getItem("mengling_idle_cloud_token_v1") || "";
       } catch {
         return "";
       }
@@ -215,7 +215,7 @@ export function createSocialTab({
     setupSocialEvents();
   }
 
-  const PVP_SEEN_KEY = "kittens_mvp_pvp_seen_battles_v1";
+  const PVP_SEEN_KEY = "mengling_idle_pvp_seen_battles_v1";
 
   function readSeenBattleIds() {
     try {
@@ -247,7 +247,7 @@ export function createSocialTab({
       changed = true;
       const myUid = (() => {
         try {
-          return localStorage.getItem("kittens_mvp_cloud_uid_v1") || "";
+          return localStorage.getItem("mengling_idle_cloud_uid_v1") || "";
         } catch {
           return "";
         }

@@ -1,6 +1,6 @@
 import { LEGACY_PERK_ORDER, LEGACY_PERKS, canBuyPerk, perkCost, perkLevel } from "../systems/rebirth.js";
 
-export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, monthlyCard }) {
+export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }) {
   return function renderFutureShop() {
     const state = getState();
     if (!elFutureShop) return;
@@ -110,49 +110,6 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
           </div>
         </div>
       `);
-    }
-
-    // 月卡
-    if (monthlyCard) {
-      const cardInfo = monthlyCard.getInfo();
-      const rewardText = Object.entries(cardInfo.dailyReward)
-        .map(([k, v]) => {
-          const resName = defs.resources[k]?.name || k;
-          return `${resName} +${v}`;
-        })
-        .join("、");
-      const fc30 = cardInfo.totalFuturecoin30d ?? cardInfo.dailyFuturecoin * (cardInfo.durationDays ?? 30);
-      const expiringSoon = cardInfo.active && cardInfo.remainingDays <= 3;
-
-      if (cardInfo.active) {
-        dailyRows.push(`
-          <div class="row">
-            <div class="row__left">
-              <div class="row__title">月卡特权${expiringSoon ? ' <span class="hint--warn">即将到期</span>' : ""}</div>
-              <div class="row__desc">剩余 ${cardInfo.remainingDays} 天 · 已领取 ${cardInfo.totalClaimed} 次</div>
-              <div class="row__desc">每日奖励：${rewardText}</div>
-              <div class="row__desc"><span class="badge badge--ok">30天累计约 ${fc30} 未来币 + 道具</span></div>
-            </div>
-            <div class="row__right">
-              <button class="btn btn--primary" data-monthly-claim ${cardInfo.canClaim ? "" : "disabled"}>${cardInfo.canClaim ? "领取今日奖励" : "今日已领取"}</button>
-              <button class="btn btn--small" data-monthly-renew>续费 ${cardInfo.durationDays ?? 30} 天（${cardInfo.price}币）</button>
-            </div>
-          </div>
-        `);
-      } else {
-        dailyRows.push(`
-          <div class="row">
-            <div class="row__left">
-              <div class="row__title">月卡特权（未激活）</div>
-              <div class="row__desc">每日可领：${rewardText}</div>
-              <div class="row__desc"><span class="badge badge--ok">${cardInfo.durationDays ?? 30}天共 ${fc30} 未来币 + 道具 · 售价 ${cardInfo.price} 未来币</span></div>
-            </div>
-            <div class="row__right">
-              <button class="btn btn--primary" data-monthly-buy>开通月卡（${cardInfo.price}币）</button>
-            </div>
-          </div>
-        `);
-      }
     }
 
     for (const [rid, perCoin] of Object.entries(rates)) {
@@ -931,7 +888,7 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState, 
       </div>
     `);
 
-    rows.push(sectionHeader("daily", "每日福利（月卡）"));
+    rows.push(sectionHeader("daily", "每日福利"));
     if (!isFolded("daily")) rows.push(...dailyRows);
 
     if (state.era?.prestigeUnlocked) {

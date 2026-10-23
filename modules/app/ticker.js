@@ -2,7 +2,7 @@
 // 维护者窗口：B
 // 注：含 DOM/网络，放 modules/app/（非 systems 纯函数）
 
-import { ambientWorldBatch, ambientWorldLine, bossHudLine } from "../systems/world_presence.js?v=0.1.0";
+import { bossHudLine } from "../systems/world_presence.js?v=0.1.0";
 
 export function createTickerSystem({
   getElTicker,
@@ -14,7 +14,7 @@ export function createTickerSystem({
   readLocalStorage,
   writeLocalStorage,
 }) {
-  const TICKER_LAST_ID_KEY = "kittens_mvp_ticker_last_id_v1";
+  const TICKER_LAST_ID_KEY = "mengling_idle_ticker_last_id_v1";
   let TICKER_LAST_ID = 0;
   try {
     const raw = typeof readLocalStorage === "function" ? readLocalStorage(TICKER_LAST_ID_KEY) : null;
@@ -32,7 +32,6 @@ export function createTickerSystem({
   let TICKER_SEEN_EVENT_IDS = new Set();
   let TICKER_BASE_DUR_SEC = 0;
   let TICKER_TIMER_ID = null;
-  let TICKER_AMBIENT_TICK = 0;
   let TICKER_LAST_BOSS_LINE = "";
   let TICKER_LAST_REAL_MSG = "";
 
@@ -156,8 +155,7 @@ export function createTickerSystem({
     const text = String(msg || "").replace(/\s+/g, " ").trim();
     if (!text || shouldSuppressTickerMsg(text)) return;
     const ty = String(type || "event").slice(0, 32);
-    // ambient / fake padding never counts as "real" pulse
-    if (ty !== "ambient") TICKER_LAST_REAL_MSG = text;
+    TICKER_LAST_REAL_MSG = text;
     const repeat = ty === "mythic" || ty === "shiny" ? 2 : 1;
     for (let r = 0; r < repeat; r += 1) {
       TICKER_QUEUE.push({ qid: TICKER_QSEQ++, eventId: eventId || 0, msg: text, type: ty });
@@ -166,21 +164,13 @@ export function createTickerSystem({
     tryStartTicker();
   }
 
-  function injectAmbientIfQuiet() {
-    TICKER_AMBIENT_TICK += 1;
-    const busy = TICKER_LANE_BUSY.some((x) => x) || TICKER_QUEUE.length > 0;
-    // ~每 3 次轮询（约 12s）补一条氛围；队列空时更勤
-    const due = !busy || TICKER_AMBIENT_TICK % 3 === 0;
-    if (!due) return;
+  function injectBossHudLine() {
     const ui = typeof getUi === "function" ? getUi() : null;
     const bossLine = bossHudLine(ui?.bossBully);
     if (bossLine && bossLine !== TICKER_LAST_BOSS_LINE && ui?.bossBully) {
       TICKER_LAST_BOSS_LINE = bossLine;
       enqueueLocal("boss", `全服·${bossLine}`);
-      return;
     }
-    const batch = ambientWorldBatch(nowMs(), busy ? 1 : 2);
-    for (const it of batch) enqueueLocal(it.type, it.msg);
   }
 
   function syncWorldPulse() {
@@ -205,7 +195,7 @@ export function createTickerSystem({
       } catch {}
       return;
     }
-    // No boss + no real event: collapse pulse (ambient stays in ticker)
+    // No boss + no real event: collapse pulse
     el.hidden = true;
     el.textContent = "";
     try {
@@ -245,10 +235,7 @@ export function createTickerSystem({
       }
     } catch {
     }
-    // Real events first: ambient only when remote empty, or sparsely as floor
-    if (!gotRemote) injectAmbientIfQuiet();
-    else if (TICKER_AMBIENT_TICK % 8 === 0) injectAmbientIfQuiet();
-    else TICKER_AMBIENT_TICK += 1;
+    injectBossHudLine();
     syncWorldPulse();
   }
 
@@ -256,8 +243,8 @@ export function createTickerSystem({
     if (!elTicker()) return;
     if (TICKER_TIMER_ID) return;
     setTickerVisible(false);
-    // 首屏先灌氛围，避免空白跑马灯
-    injectAmbientIfQuiet();
+    // 首屏先灌 boss 行，避免空白跑马灯
+    injectBossHudLine();
     syncWorldPulse();
     pollTickerOnce();
     TICKER_TIMER_ID = window.setInterval(() => {

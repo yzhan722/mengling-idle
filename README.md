@@ -1,4 +1,4 @@
-# kittens-mvp-live
+# mengling-idle
 
 宝可梦放置冒险（idle）前端 + Cloudflare Pages Functions。
 
@@ -27,9 +27,9 @@
 下一轮冲刺以 GitHub 为准，不要把未完成项只勾在 backlog 里当「队列空」。
 
 - 生产：[v0.1.0](https://game.pokeauto.online/) live health 0.1.0（氛围假人关；乱码名不再映射 NPC 花名）
-- 历史标签：[v0.41.2](https://github.com/yzhan722/kittens-mvp-live/releases/tag/v0.41.2)
-- Milestone：[v0.41.2](https://github.com/yzhan722/kittens-mvp-live/milestone/1)
-- `feat/era-chronicle` 已删：[#9](https://github.com/yzhan722/kittens-mvp-live/issues/9)
+- 历史标签：[v0.41.2](https://github.com/yzhan722/mengling-idle/releases/tag/v0.41.2)
+- Milestone：[v0.41.2](https://github.com/yzhan722/mengling-idle/milestone/1)
+- `feat/era-chronicle` 已删：[#9](https://github.com/yzhan722/mengling-idle/issues/9)
 
 ## 版本
 

@@ -125,11 +125,11 @@ P1 去IP化 → P2 Prestige循环 → P3 PvE扩容 → P4 app.js拆解 → P5 �
 
 ## 6. P4 — app.js 拆解（技术债）
 
-**目标**：3,299 行 → < 800 行纯组装。28 个 `SECTION:` 注释分区下沉为真模块；`modules/state.js`（1,846 行）拆出 save/load/migrate。**行为不变**（`kittens-collab.mdc` 底线：refactor ≠ behavior-change）。
+**目标**：3,299 行 → < 800 行纯组装。28 个 `SECTION:` 注释分区下沉为真模块；`modules/state.js`（1,846 行）拆出 save/load/migrate。**行为不变**（`mengling-collab.mdc` 底线：refactor ≠ behavior-change）。
 
 - **顺序**：先抽无 DOM 依赖段（DEFS_AND_BALANCE→`defs_*`、ECONOMY→`systems/`、SAVE_CLOUD→`save_codec` 归位）→ 再抽 render 段 → 最后组装层只剩 import + boot + tick 接线。
 - **每步验收**：`selfcheck` + `api-contract-selfcheck` + `playwright-smoke` 三绿即过；单 PR 只搬 1–2 个 SECTION。
-- **顺带收益**：`kittens-collab.mdc` 的多窗口分工规则在拆解后自然弱化 —— SECTION 冲突消失。
+- **顺带收益**：`mengling-collab.mdc` 的多窗口分工规则在拆解后自然弱化 —— SECTION 冲突消失。
 
 **工作量**：M/L（分 5–8 个 PR）。**为什么排第 4**：P1–P3 都在加内容，先加完再拆，避免拆解与新功能互相 conflict。
 

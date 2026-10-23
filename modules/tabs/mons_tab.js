@@ -247,7 +247,7 @@ export function initMonsTab({
               uid = `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
               ui.lbUid = uid;
               try {
-                localStorage.setItem("kittens_mvp_lb_uid_v1", uid);
+                localStorage.setItem("mengling_idle_lb_uid_v1", uid);
               } catch {
               }
             }

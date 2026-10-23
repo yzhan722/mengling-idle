@@ -2,7 +2,7 @@
 
 > 生产：v0.1.0（`master` / live health 0.1.0）  
 > 最后更新：2026-09-11  
-> 未完成项：[milestone v0.41.2](https://github.com/yzhan722/kittens-mvp-live/milestone/1)，不要把进度只写在 markdown。
+> 未完成项：[milestone v0.41.2](https://github.com/yzhan722/mengling-idle/milestone/1)，不要把进度只写在 markdown。
 
 ## 整体架构
 
@@ -47,8 +47,8 @@
 
 | slot | 用途 |
 |------|------|
-| 0 | 自动存（`kittens_mvp_save_v1`） |
-| 1 | 可选手动键（`kittens_mvp_save_slot_1`，当前 UI 未暴露，仍参与云同步） |
+| 0 | 自动存（`mengling_idle_save_v1`） |
+| 1 | 可选手动键（`mengling_idle_save_slot_1`，当前 UI 未暴露，仍参与云同步） |
 | 2–3 | API 预留，前端未接线 |
 
 - 本机：localStorage + `_bak`；切后台/关页会 `keepalive` 推 slot0
@@ -89,18 +89,18 @@ node scripts/items-selfcheck.mjs
 部署：`deploy.ps1`（`wrangler pages deploy .`，会带上 `functions/`）。  
 `wrangler.toml` / `.env.local` 仍 gitignore。
 
-前端仓：https://github.com/yzhan722/kittens-mvp-live
+前端仓：https://github.com/yzhan722/mengling-idle
 
-CI：`.github/workflows/selfcheck.yml`（push/PR 跑 selfcheck；0.41.6 已绿见 [#4](https://github.com/yzhan722/kittens-mvp-live/issues/4)）。
+CI：`.github/workflows/selfcheck.yml`（push/PR 跑 selfcheck；0.41.6 已绿见 [#4](https://github.com/yzhan722/mengling-idle/issues/4)）。
 
-进度：生产是 v0.1.0。`feat/era-chronicle` 已删（[#9](https://github.com/yzhan722/kittens-mvp-live/issues/9)）。
+进度：生产是 v0.1.0。`feat/era-chronicle` 已删（[#9](https://github.com/yzhan722/mengling-idle/issues/9)）。
 
 ## 前端要点
 
 - `app.js` 组装层；`ui.fetch` 带 Bearer，供云存档与社交 API 使用
 - 道具使用：`modules/item_usage.js`（幸运蛋/王冠/糖果等）；药剂强化在 `modules/tabs/mons_tab.js`（`statBonus` 单项上限 +50）
 - 版本四处同步：`index.html` / `main.js` / `sw.js` / `modules/config.js`
-- 协作：`.cursor/rules/kittens-collab.mdc`
+- 协作：`.cursor/rules/mengling-collab.mdc`
 - 氛围假人：`REMOTE_CONFIG_DEFAULTS.featureFlags.atmosphereFakes` 默认 `false`；排行榜仍 remap 乱码名，但不垫 NPC。
 - 孵化：`modules/systems/breeding.js` 的 `hatchEgg`，`tick.js` 只接线。
 

@@ -48,7 +48,7 @@ import { createBoot } from "./modules/app/boot.js";
   installSpriteHandlers();
 
   try {
-    const STYLE_GUARD_KEY = "kittens_mvp_style_fix_v1";
+    const STYLE_GUARD_KEY = "mengling_idle_style_fix_v1";
     const isMobile = typeof window.matchMedia === "function" ? window.matchMedia("(max-width: 980px)").matches : false;
     const ua = typeof navigator !== "undefined" ? String(navigator.userAgent || "") : "";
     const isWeChat = /micromessenger/i.test(ua);

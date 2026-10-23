@@ -5,21 +5,21 @@ export const GAME_CONFIG = {
   
   // 存储键名
   STORAGE: {
-    SAVE_KEY: "kittens_mvp_save_v1",
-    SAVE_BACKUP_KEY: "kittens_mvp_save_v1_bak",
+    SAVE_KEY: "mengling_idle_save_v1",
+    SAVE_BACKUP_KEY: "mengling_idle_save_v1_bak",
     SAVE_SLOTS: [
       // Cloud slot1 only; API slots 2–3 reserved/unused
-      "kittens_mvp_save_slot_1"
+      "mengling_idle_save_slot_1"
     ],
-    DAILY_LOGIN_KEY: "kittens_mvp_daily_login_reward_v1",
-    LOG_COLLAPSE_KEY: "kittens_mvp_log_collapsed_v1",
-    BULLETIN_COLLAPSE_KEY: "kittens_mvp_bulletin_collapsed_v1",
-    CAPTURE_PREVIEW_KEY: "kittens_mvp_capture_preview_hidden_v1",
-    LB_UID_KEY: "kittens_mvp_lb_uid_v1",
-    LB_NAME_KEY: "kittens_mvp_lb_name_v1",
-    LB_AVATAR_KEY: "kittens_mvp_lb_avatar_v1",
-    STYLE_GUARD_KEY: "kittens_mvp_style_fix_v1",
-    BOSS_BULLY_SNOOZE_KEY: "kittens_mvp_boss_bully_snooze_until_v1",
+    DAILY_LOGIN_KEY: "mengling_idle_daily_login_reward_v1",
+    LOG_COLLAPSE_KEY: "mengling_idle_log_collapsed_v1",
+    BULLETIN_COLLAPSE_KEY: "mengling_idle_bulletin_collapsed_v1",
+    CAPTURE_PREVIEW_KEY: "mengling_idle_capture_preview_hidden_v1",
+    LB_UID_KEY: "mengling_idle_lb_uid_v1",
+    LB_NAME_KEY: "mengling_idle_lb_name_v1",
+    LB_AVATAR_KEY: "mengling_idle_lb_avatar_v1",
+    STYLE_GUARD_KEY: "mengling_idle_style_fix_v1",
+    BOSS_BULLY_SNOOZE_KEY: "mengling_idle_boss_bully_snooze_until_v1",
   },
   
   // 服务器 Buff 配置

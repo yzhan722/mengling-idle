@@ -2,7 +2,6 @@
 
 import { getExpeditionSeasonBlurb, pickExpeditionEventCard, resolveSeasonId } from "../systems/expedition.js";
 import { formatPvpSeasonStats, formatPvpSeasonHeadline } from "../systems/pvp_narrative.js";
-import { fakeSocialFeed, localDateStr } from "../systems/world_presence.js?v=0.1.0";
 
 export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, getState }) {
   function socialUnavailableRow(title) {
@@ -156,9 +155,7 @@ export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, g
     }
 
     if (!achievements || achievements.length === 0) {
-      const fakes = fakeSocialFeed(localDateStr(), 5);
-      if (!fakes.length) {
-        elFeed.innerHTML = `
+      elFeed.innerHTML = `
         <div class="row">
           <div class="row__left">
             <div class="row__title">还没有好友动态</div>
@@ -166,28 +163,6 @@ export function createRenderSocial({ ui, escapeHtml, socialSystem, formatTime, g
           </div>
         </div>
       `;
-        return;
-      }
-      let html = `
-        <div class="row">
-          <div class="row__left">
-            <div class="row__title">育灵师动态</div>
-            <div class="row__desc">还没有好友分享 — 先用 NPC 垫场；登录后可见真实好友动态。</div>
-          </div>
-        </div>
-      `;
-      for (const it of fakes) {
-        html += `
-          <div class="row achievement-card">
-            <div class="row__left">
-              <div class="row__title">${escapeHtml(it.username)} <span class="badge badge--muted">NPC</span></div>
-              <div class="row__desc">${escapeHtml(it.text)}</div>
-              <div class="row__meta">${formatTime(it.created_at)}</div>
-            </div>
-          </div>
-        `;
-      }
-      elFeed.innerHTML = html;
       return;
     }
 
