@@ -6,6 +6,7 @@ import {
 } from "../systems/collection_fun.js";
 import { typeZh } from "../systems/gameplay_fun.js";
 import { ZONE_IDS, ZONE_LABELS } from "../beast_defs.js";
+import { renderDexStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
 
 export function createRenderDex({
   elDexSummary,
@@ -104,7 +105,23 @@ export function createRenderDex({
           </div>`
         : `<div class="row__desc muted">闪光馆空空如也 — 捕捉或孵出闪光后会出现在这里，并可开启全屏星芒陈列秀。</div>`;
 
-    elDexSummary.innerHTML = `
+    const dexStageHtml = renderDexStageHtml({
+      state,
+      defs,
+      unique,
+      totalSpecies,
+      dexPct,
+      shinyUnique,
+      dexEff,
+      gallery,
+      renderBeastIcon,
+      escapeHtml,
+    });
+
+    setHtmlPreservingStage(
+      elDexSummary,
+      `
+      ${dexStageHtml}
       <div class="row dex-summary">
         <div class="row__left">
           <div class="row__title">完成度</div>
@@ -120,7 +137,8 @@ export function createRenderDex({
           <div class="badge">灵晶产量 x${dexEff.mineralsRateMul.toFixed(2)}</div>
         </div>
       </div>
-    `;
+    `,
+    );
 
     const caught = state.dex.caught;
     const q = (ui.dexQuery || "").trim();

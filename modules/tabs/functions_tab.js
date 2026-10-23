@@ -14,6 +14,7 @@ import { expeditionNatureTimeMul, natureTrainExpMul, expeditionDailyProgress, ma
 import { seasonRelicLines } from "../systems/collection_fun.js";
 import { getAbilityInfo, monPassive } from "../abilities.js";
 import { beastZone, ZONE_IDS, ZONE_LABELS } from "../beast_defs.js";
+import { renderFunctionsStageHtml, setHtmlPreservingStage } from "../render/tab_stages.js";
 
 export function createRenderFunctions({
   elFunctionsTraining,
@@ -105,6 +106,18 @@ export function createRenderFunctions({
       : expDaily.done
         ? "今日远征完成 → 可领 +10 未来币"
         : "今日远征任务：完成 1 次远征 → +10 未来币";
+
+    rows.push(
+      renderFunctionsStageHtml({
+        state,
+        activeTrain: active,
+        slotSize,
+        renderBeastIcon,
+        fmtDuration,
+        escapeHtml,
+      }),
+    );
+
     rows.push(`
       <div class="row">
         <div class="row__left">
@@ -915,7 +928,7 @@ export function createRenderFunctions({
 
     if (trainingModalHtml) rows.push(trainingModalHtml);
     if (breedingModalHtml) rows.push(breedingModalHtml);
-    elFunctionsTraining.innerHTML = rows.join("");
+    setHtmlPreservingStage(elFunctionsTraining, rows.join(""));
 
     try {
       const body = elFunctionsTraining.querySelector('.modalOverlay[data-train-modal-overlay="1"] .modal__body');

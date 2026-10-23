@@ -13,6 +13,7 @@ import { createRenderSocial } from "../render/social.js";
 import { createSocialTab } from "../tabs/social_tab.js";
 import { createPvpBattle } from "../pvp_battle.js";
 import { DAILY_LOGIN_REWARD_KEY, readLocalStorage } from "./storage.js";
+import { initStageInteractions } from "../ui/stage_interactions.js";
 
 export function createBoot({
   ui,
@@ -77,6 +78,9 @@ export function createBoot({
 
     // 新手引导系统（前 30 分钟：采集→球→捕捉→榜→云）
     initGuideSystem({ getState, activateTab, addLog });
+
+    // 全场景可交互热点与粒子反馈引擎
+    initStageInteractions({ ui, getState, defs, addRes, addLog, hint, render });
 
     // Tab 红点系统
     const elTabsEl = document.querySelector(".tabs");

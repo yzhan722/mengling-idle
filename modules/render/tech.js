@@ -1,6 +1,8 @@
 import { techReqHint } from "../tech_req_hint.js";
 import { getTechStage, TECH_STAGE_LABELS, TECH_STAGE_ORDER } from "../tech_defs.js";
 import { researchProgressTheater } from "../systems/gameplay_fun.js";
+import { escapeHtml } from "../utils.js";
+import { renderScienceStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
 
 const TECH_PACING_BLURB =
   "研究耗时随投入分档：起步科技约数秒～半分钟，中期扩产约 1 分钟，后期飞跃链显著更长；建研究所可缩短耗时。";
@@ -9,6 +11,8 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
   return function renderTech() {
     const state = getState();
     const byStage = new Map(TECH_STAGE_ORDER.map((s) => [s, []]));
+
+    const researchEff = typeof getResearchEfficiency === "function" ? getResearchEfficiency() : { n: 0, reduce: 0 };
 
     if (elAutoResearchToggle) {
       const unlocked = Boolean(state.unlocks?.autoResearch);
@@ -24,8 +28,7 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
     }
 
     if (elResearchEff) {
-      const { n, reduce } = getResearchEfficiency();
-      elResearchEff.textContent = `研究效率提高：研究时间-${Math.round(reduce * 100)}%（研究建筑×${n}）`;
+      elResearchEff.textContent = `研究效率提高：研究时间-${Math.round(researchEff.reduce * 100)}%（研究建筑×${researchEff.n}）`;
     }
 
     const activeResearchTid =
@@ -37,8 +40,26 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
         ? state.research.totalSec
         : 0;
 
+    const stageCounts = {
+      earlyDone: 0, earlyTotal: 0,
+      midDone: 0, midTotal: 0,
+      lateDone: 0, lateTotal: 0,
+    };
+
     for (const [tid, tdef] of Object.entries(defs.tech)) {
+      const stg = getTechStage(tid);
       const owned = Boolean(state.tech[tid]);
+      if (stg === "early") {
+        stageCounts.earlyTotal += 1;
+        if (owned) stageCounts.earlyDone += 1;
+      } else if (stg === "late") {
+        stageCounts.lateTotal += 1;
+        if (owned) stageCounts.lateDone += 1;
+      } else {
+        stageCounts.midTotal += 1;
+        if (owned) stageCounts.midDone += 1;
+      }
+
       if (owned) continue;
       const prereqOk = (tdef.prereq ?? []).every((p) => Boolean(state.tech[p]));
       const reqOk = typeof tdef.req === "function" ? Boolean(tdef.req(state)) : true;
@@ -90,8 +111,7 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
         .filter(Boolean)
         .join(" ");
 
-      const stage = getTechStage(tid);
-      const bucket = byStage.get(stage) ?? byStage.get("mid");
+      const bucket = byStage.get(stg) ?? byStage.get("mid");
       const descLine =
         typeof tdef.desc === "string" && tdef.desc.trim()
           ? locked || !canBuy
@@ -115,9 +135,8 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
       `);
     }
 
-    const sections = [`<p class="tech-pacing muted">${TECH_PACING_BLURB}</p>`];
-
-    // Pin recommended next research for dopamine / clarity
+    let recommendTid = "";
+    let recommendDef = null;
     let recommendHtml = "";
     for (const stage of TECH_STAGE_ORDER) {
       const rows = byStage.get(stage) ?? [];
@@ -127,6 +146,8 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
           const tid = m ? m[1] : "";
           const tdef = tid ? defs.tech[tid] : null;
           if (tdef) {
+            recommendTid = tid;
+            recommendDef = tdef;
             recommendHtml = `
               <div class="row row--researchable">
                 <div class="row__left">
@@ -144,6 +165,26 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
       }
       if (recommendHtml) break;
     }
+
+    const stageHeroHtml = renderScienceStageHtml({
+      state,
+      defs,
+      activeResearchTid,
+      activeRemain,
+      activeTotal,
+      recommendTid,
+      recommendDef,
+      researchEff,
+      stageCounts,
+      fmtDuration,
+      escapeHtml,
+    });
+
+    const sections = [
+      stageHeroHtml,
+      `<p class="tech-pacing muted">${TECH_PACING_BLURB}</p>`,
+    ];
+
     if (activeResearchTid && defs.tech[activeResearchTid]) {
       const tdef = defs.tech[activeResearchTid];
       const theater = researchProgressTheater(activeRemain, activeTotal || computeResearchTimeSec(tdef));
@@ -164,13 +205,13 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
       if (rows.length === 0) continue;
       const label = TECH_STAGE_LABELS[stage] ?? stage;
       sections.push(`
-        <div class="building-section tech-section" role="group" aria-label="${label}">
+        <div class="building-section tech-section" data-tech-stage-group="${stage}" role="group" aria-label="${label}">
           <div class="building-section__title">${label}</div>
         </div>
       `);
       sections.push(...rows);
     }
 
-    elTech.innerHTML = sections.join("");
+    setHtmlPreservingStage(elTech, sections.join(""));
   };
 }

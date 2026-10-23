@@ -5,6 +5,7 @@ import { getEraDefById } from "../defs_eras.js";
 import { natureIncomingDamageMul, abilityOutgoingDamageMul, bumpPveWinStreak, resetPveWinStreak, pveDailyFirstWinMul, bumpSessionPveWin, localDateStr } from "../systems/gameplay_fun.js";
 import { ensureEra } from "../systems/era.js";
 import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS } from "../systems/pve_tower.js";
+import { renderPveStageHtml } from "../render/tab_stages.js";
 
 // ponytail: blurbs live here — pve_defs is data-only, no chapter copy field yet
 const PVE_CHAPTER_BLURBS = {
@@ -142,6 +143,37 @@ export function createRenderPve({
       : towerDone
         ? `本周已通关全部 ${PVE_TOWER_FLOORS.length} 层 · 最佳 ${tower.best}F`
         : `本周进度 ${tower.floor}/${PVE_TOWER_FLOORS.length}F · 最佳 ${tower.best}F · ${escapeHtml(towerFloor?.name || "")}`;
+
+    const selChapterPre = typeof ui.pveChapter === "string" ? ui.pveChapter : PVE_CHAPTERS[0]?.id ?? "";
+    const chapterPre = PVE_CHAPTERS.find((c) => c.id === selChapterPre) ?? PVE_CHAPTERS[0];
+    const selStagePre = typeof ui.pveStage === "string" ? ui.pveStage : "";
+    const stageObjPre =
+      (selStagePre && getStageById(selStagePre)?.stage) ||
+      chapterPre?.stages?.find((st) => isStageUnlocked(st.id, progress) && !progress[st.id]) ||
+      chapterPre?.stages?.[0] ||
+      null;
+    const selTeamIdsPre = Array.isArray(state.pve.selectedIds) ? state.pve.selectedIds : [];
+    const teamMonsPre =
+      selTeamIdsPre.length > 0
+        ? selTeamIdsPre.map((id) => list.find((m) => m && m.id === id)).filter(Boolean)
+        : list.slice().sort((a, b) => monPower(b) - monPower(a)).slice(0, 3);
+
+    rows.unshift(
+      renderPveStageHtml({
+        chapter: chapterPre,
+        stage: stageObjPre,
+        teamMons: teamMonsPre,
+        tower,
+        towerDone,
+        TYPE_ZH: typeMap,
+        renderBeastIcon,
+        monPower,
+        estimateStageEnemyPower,
+        recommendedTypes,
+        escapeHtml,
+      }),
+    );
+
     rows.push(`
       <div class="row">
         <div class="row__left">

@@ -6,6 +6,7 @@ import {
   localDateStr,
   markItemsCareClaimed,
 } from "../systems/gameplay_fun.js";
+import { renderItemsStageHtml } from "../render/tab_stages.js";
 
 export function createRenderItems({ defs, getState, itemUsage, ui, render, markMonsDirty, addLog }) {
   const failMsg = (msg) => {
@@ -476,7 +477,10 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       ? `今日护理已领 · 使用 ${Math.min(care.uses, care.goal)}/${care.goal}`
       : `护理进度 ${Math.min(care.uses, care.goal)}/${care.goal}（喂食/用药）→ +8 未来币`;
 
+    const itemsStageHtml = renderItemsStageHtml({ state, care });
+
     let html = `
+      ${itemsStageHtml}
       <div class="row">
         <div class="row__left">
           <div class="row__title">今日推荐</div>

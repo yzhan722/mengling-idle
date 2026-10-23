@@ -87,6 +87,15 @@ export function initCaptureTab({
 
   if (elCaptureInfo) {
     elCaptureInfo.addEventListener("click", (ev) => {
+      const stageActBtn = ev.target?.closest?.("button[data-capture-action]");
+      if (stageActBtn && elCaptureInfo.contains(stageActBtn)) {
+        if (stageActBtn.disabled) return;
+        const act = stageActBtn.getAttribute("data-capture-action");
+        const targetBtn = elCaptureActions?.querySelector?.(`button[data-capture-action="${act}"]`);
+        if (targetBtn && !targetBtn.disabled) targetBtn.click();
+        return;
+      }
+
       const eraAdvanceBtn = ev.target?.closest?.("button[data-era-advance]");
       if (eraAdvanceBtn && elCaptureInfo.contains(eraAdvanceBtn)) {
         if (eraAdvanceBtn.disabled) return;

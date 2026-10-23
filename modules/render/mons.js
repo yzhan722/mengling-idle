@@ -12,6 +12,7 @@ import {
   listActiveSkillBuffs,
 } from "../type_skills.js";
 import { beastZone, ZONE_INDEX } from "../beast_defs.js";
+import { renderMonsStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
 
 export function createRenderMons({
   elMonList,
@@ -245,6 +246,18 @@ export function createRenderMons({
       }
       if (elMonPrev) elMonPrev.disabled = ui.monPage <= 0;
       if (elMonNext) elMonNext.disabled = ui.monPage >= totalPages - 1;
+
+      rows.push(
+        renderMonsStageHtml({
+          list,
+          evoReadyCount,
+          hungryCount,
+          skillReadyCount,
+          renderBeastIcon,
+          monPower,
+          escapeHtml,
+        }),
+      );
 
       if (total > 80) {
         rows.push(`
@@ -484,7 +497,7 @@ export function createRenderMons({
       }
 
       if (starUpModalHtml) rows.push(starUpModalHtml);
-      elMonList.innerHTML = rows.join("");
+      setHtmlPreservingStage(elMonList, rows.join(""));
       if (ui.monSearchFocus) {
         const searchInput = elMonList.querySelector("input[data-mon-search]");
         if (searchInput) {

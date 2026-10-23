@@ -4418,3 +4418,1149 @@ body {
 .encounter-showcase__info .row__titleLine {
   flex-wrap: wrap;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   全页沉浸式实景舞台系统 (.tab-stage — v0.4.0 全标签页美术升级)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.tab-stage {
+  position: relative;
+  margin-bottom: 16px;
+  min-height: 276px;
+  padding: 16px 20px 18px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(250, 204, 21, 0.38);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  background: #0b101d;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  isolation: isolate;
+}
+
+.tab-stage--compact {
+  min-height: 168px;
+  padding: 14px 18px;
+}
+
+.tab-stage__artWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center 38%;
+  background-repeat: no-repeat;
+}
+
+.tab-stage--science .tab-stage__artWrap,
+.tab-stage--dex .tab-stage__artWrap,
+.tab-stage--help .tab-stage__artWrap {
+  background-image: url("./assets/ui/stage_science.jpg");
+}
+
+.tab-stage--capture .tab-stage__artWrap {
+  background-image: url("./assets/ui/stage_capture.jpg");
+}
+
+.tab-stage--mons .tab-stage__artWrap,
+.tab-stage--functions .tab-stage__artWrap,
+.tab-stage--options .tab-stage__artWrap {
+  background-image: url("./assets/ui/stage_sanctuary.jpg");
+}
+
+.tab-stage--future .tab-stage__artWrap,
+.tab-stage--items .tab-stage__artWrap {
+  background-image: url("./assets/ui/stage_bazaar.jpg");
+}
+
+.tab-stage--pve .tab-stage__artWrap,
+.tab-stage--social .tab-stage__artWrap,
+.tab-stage--leaderboard .tab-stage__artWrap {
+  background-image: url("./assets/ui/stage_arena.jpg");
+}
+
+.tab-stage__bgImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+  filter: saturate(1.18) contrast(1.06) brightness(0.95);
+  transition: transform 0.6s ease, filter 0.45s ease;
+}
+
+.tab-stage:hover .tab-stage__bgImg {
+  transform: scale(1.02);
+}
+
+.tab-stage__sparksSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.85;
+}
+
+.tab-stage__aura {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(7, 11, 22, 0.36) 0%, rgba(10, 15, 29, 0.12) 45%, rgba(7, 11, 22, 0.78) 100%),
+    radial-gradient(circle at 50% 35%, rgba(250, 204, 21, 0.14), transparent 70%);
+  pointer-events: none;
+}
+
+.tab-stage__aura--cyan {
+  background:
+    linear-gradient(180deg, rgba(6, 14, 28, 0.36) 0%, rgba(10, 22, 42, 0.12) 45%, rgba(6, 12, 24, 0.78) 100%),
+    radial-gradient(circle at 50% 38%, rgba(56, 189, 248, 0.18), transparent 68%);
+}
+
+.tab-stage__aura--gold {
+  background:
+    linear-gradient(180deg, rgba(20, 14, 8, 0.34) 0%, rgba(32, 22, 10, 0.12) 45%, rgba(12, 10, 18, 0.78) 100%),
+    radial-gradient(circle at 50% 38%, rgba(250, 204, 21, 0.18), transparent 68%);
+}
+
+.tab-stage__aura--emerald {
+  background:
+    linear-gradient(180deg, rgba(6, 20, 18, 0.34) 0%, rgba(10, 32, 26, 0.12) 45%, rgba(6, 14, 18, 0.78) 100%),
+    radial-gradient(circle at 50% 38%, rgba(52, 211, 153, 0.18), transparent 68%);
+}
+
+.tab-stage__aura--violet {
+  background:
+    linear-gradient(180deg, rgba(16, 10, 30, 0.36) 0%, rgba(28, 16, 52, 0.14) 45%, rgba(10, 8, 22, 0.8) 100%),
+    radial-gradient(circle at 50% 38%, rgba(167, 139, 250, 0.2), transparent 68%);
+}
+
+.tab-stage__aura--arena {
+  background:
+    linear-gradient(180deg, rgba(24, 10, 22, 0.36) 0%, rgba(38, 16, 32, 0.14) 45%, rgba(10, 8, 20, 0.8) 100%),
+    radial-gradient(circle at 50% 38%, rgba(248, 113, 113, 0.18), transparent 68%);
+}
+
+/* 九域生态滤镜动态色调 */
+.tab-stage--biome-meadow .tab-stage__aura,
+.tab-stage--biome-grass .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(6, 22, 16, 0.52) 0%, rgba(12, 34, 24, 0.2) 45%, rgba(7, 16, 14, 0.84) 100%),
+    radial-gradient(circle at 50% 40%, rgba(74, 222, 128, 0.22), transparent 68%);
+}
+.tab-stage--biome-forest .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(6, 22, 26, 0.54) 0%, rgba(10, 32, 32, 0.22) 45%, rgba(6, 15, 18, 0.86) 100%),
+    radial-gradient(circle at 50% 40%, rgba(45, 212, 191, 0.24), transparent 68%);
+}
+.tab-stage--biome-lake .tab-stage__aura,
+.tab-stage--biome-ocean .tab-stage__aura,
+.tab-stage--biome-water .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(6, 18, 38, 0.56) 0%, rgba(10, 34, 64, 0.24) 45%, rgba(6, 14, 28, 0.86) 100%),
+    radial-gradient(circle at 50% 40%, rgba(56, 189, 248, 0.28), transparent 68%);
+}
+.tab-stage--biome-cave .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(18, 10, 34, 0.62) 0%, rgba(28, 16, 52, 0.28) 45%, rgba(10, 8, 22, 0.88) 100%),
+    radial-gradient(circle at 50% 40%, rgba(168, 85, 247, 0.28), transparent 68%);
+}
+.tab-stage--biome-desert .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(36, 22, 8, 0.56) 0%, rgba(56, 34, 12, 0.24) 45%, rgba(22, 14, 6, 0.86) 100%),
+    radial-gradient(circle at 50% 40%, rgba(251, 191, 36, 0.28), transparent 68%);
+}
+.tab-stage--biome-peak .tab-stage__aura,
+.tab-stage--biome-mountain .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(20, 20, 32, 0.58) 0%, rgba(36, 32, 54, 0.26) 45%, rgba(12, 12, 22, 0.86) 100%),
+    radial-gradient(circle at 50% 40%, rgba(129, 140, 248, 0.25), transparent 68%);
+}
+.tab-stage--biome-tundra .tab-stage__aura,
+.tab-stage--biome-snow .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(10, 24, 42, 0.54) 0%, rgba(18, 42, 68, 0.22) 45%, rgba(8, 18, 32, 0.84) 100%),
+    radial-gradient(circle at 50% 40%, rgba(186, 230, 253, 0.3), transparent 68%);
+}
+.tab-stage--biome-volcano .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(42, 10, 10, 0.6) 0%, rgba(68, 18, 12, 0.28) 45%, rgba(24, 6, 8, 0.88) 100%),
+    radial-gradient(circle at 50% 40%, rgba(249, 115, 22, 0.32), transparent 68%);
+}
+.tab-stage--biome-celestial .tab-stage__aura,
+.tab-stage--biome-sky .tab-stage__aura {
+  background:
+    linear-gradient(180deg, rgba(16, 12, 42, 0.56) 0%, rgba(32, 22, 72, 0.24) 45%, rgba(10, 8, 28, 0.86) 100%),
+    radial-gradient(circle at 50% 40%, rgba(244, 114, 182, 0.28), transparent 68%);
+}
+
+/* 舞台顶部标题栏 */
+.tab-stage__header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tab-stage__body {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+}
+
+.tab-stage__focal {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.tab-stage__eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fde047;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+.tab-stage__title {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.92);
+}
+
+.tab-stage__desc {
+  font-size: 12px;
+  color: rgba(241, 245, 249, 0.9);
+  line-height: 1.45;
+  max-width: 68ch;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.88);
+}
+
+.tab-stage__cta,
+.tab-stage__ctaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab-stage__pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.tab-stage__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(11, 17, 30, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(241, 245, 249, 0.94);
+  backdrop-filter: blur(6px);
+}
+
+.tab-stage__pill--gold {
+  border-color: rgba(250, 204, 21, 0.65);
+  color: #fef08a;
+  background: rgba(113, 63, 18, 0.68);
+}
+
+/* ── 1. 研究与图鉴舞台：星轨天象罗盘 (.tab-stage__body--science / --dex) ──── */
+.tab-stage__body--science,
+.tab-stage__body--dex {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(9, 14, 26, 0.64);
+  border: 1px solid rgba(125, 211, 252, 0.26);
+  backdrop-filter: blur(8px);
+}
+
+.science-astrolabe {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.science-astrolabe__svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
+}
+
+.science-astrolabe__orbit {
+  transform-origin: 50px 50px;
+  animation: spin 24s linear infinite;
+}
+
+.science-astrolabe__core {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.science-astrolabe__pct {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fde047;
+  line-height: 1.05;
+}
+
+.science-astrolabe__label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #7dd3fc;
+}
+
+/* ── 2. 捕捉舞台：生态寻踪与实景遭遇台 (.capture-stage-*) ────────────────── */
+.capture-stage-explore {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(8, 15, 26, 0.62);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.capture-stage-explore__clearing {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.capture-wanderer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(11, 19, 34, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  text-align: center;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.capture-wanderer:hover {
+  transform: translateY(-2px);
+  border-color: rgba(250, 204, 21, 0.55);
+}
+
+.capture-wanderer__art .mon-icon {
+  width: 56px;
+  height: 56px;
+  animation: companionIdleBob 3.2s ease-in-out infinite;
+}
+
+.capture-wanderer.is-silhouette .capture-wanderer__art .mon-icon__img {
+  filter: brightness(0.22) saturate(0.3) contrast(1.4) drop-shadow(0 0 6px rgba(56, 189, 248, 0.55));
+}
+
+.capture-wanderer__tag {
+  font-size: 11px;
+  font-weight: 800;
+  color: #e2e8f0;
+}
+
+.capture-stage-explore__hud {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.capture-stage-encounter {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(11, 17, 30, 0.74);
+  border: 1px solid rgba(250, 204, 21, 0.58);
+  box-shadow: 0 0 28px rgba(250, 204, 21, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+.capture-stage-encounter__pedestal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 14px;
+  background: radial-gradient(circle, rgba(250, 204, 21, 0.24) 0%, rgba(15, 23, 42, 0.78) 72%);
+  border: 1px solid rgba(250, 204, 21, 0.45);
+}
+
+.capture-stage-encounter__art .mon-icon {
+  width: 78px;
+  height: 78px;
+  animation: companionIdleBob 2.6s ease-in-out infinite;
+}
+
+.capture-stage-encounter__tag {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fde047;
+}
+
+.capture-stage-encounter__hud {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+/* ── 3. 萌灵舞台：首席六灵星阵检阅台 (.tab-stage__body--squad) ────────────── */
+.tab-stage__body--squad {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.squad-pedestal {
+  appearance: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px 8px;
+  border-radius: 14px;
+  background: rgba(11, 17, 30, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f8fafc;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.squad-pedestal:hover {
+  transform: translateY(-3px);
+  border-color: rgba(250, 204, 21, 0.7);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), 0 0 16px rgba(250, 204, 21, 0.24);
+}
+
+.squad-pedestal__art .mon-icon {
+  width: 62px;
+  height: 62px;
+  animation: companionIdleBob 3s ease-in-out infinite;
+}
+
+.squad-pedestal__name {
+  font-size: 12px;
+  font-weight: 800;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.squad-pedestal__meta {
+  font-size: 10px;
+  color: #fde047;
+  font-weight: 700;
+}
+
+.squad-pedestal__sat {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.squad-pedestal__sat > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4ade80, #facc15);
+}
+
+/* ── 4. 功能舞台：育灵圣域三联实景台 (.tab-stage__body--triptych) ─────────── */
+.tab-stage__body--triptych {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.sanctuary-diorama {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(11, 17, 30, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+}
+
+.sanctuary-diorama__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.sanctuary-diorama__title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fde047;
+}
+
+.sanctuary-diorama__stage {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.diorama-mini-mon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fde047;
+}
+
+.diorama-mini-mon .mon-icon {
+  width: 48px;
+  height: 48px;
+  animation: companionIdleBob 2.8s ease-in-out infinite;
+}
+
+.diorama-empty {
+  font-size: 12px;
+  color: rgba(203, 213, 225, 0.78);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.spirit-egg-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.45));
+  animation: companionIdleBob 2.4s ease-in-out infinite;
+}
+
+.sanctuary-diorama__foot {
+  font-size: 11px;
+  color: rgba(226, 232, 240, 0.88);
+  text-align: center;
+}
+
+/* ── 5. 商店与道具舞台：星辉奇珍柜 (.tab-stage__body--bazaar) ────────────── */
+.tab-stage__body--bazaar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.bazaar-vault {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.bazaar-vault__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  background: rgba(11, 17, 30, 0.74);
+  border: 1px solid rgba(250, 204, 21, 0.32);
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.bazaar-vault__label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(226, 232, 240, 0.9);
+}
+
+.bazaar-vault__val {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fef08a;
+}
+
+.bazaar-wheel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── 6. 图鉴舞台：万灵星图殿堂展台 (.dex-stage-pedestals) ────────────────── */
+.dex-stage-pedestals {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dex-stage-pedestal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.76);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  text-align: center;
+}
+
+.dex-stage-pedestal__art .mon-icon {
+  width: 48px;
+  height: 48px;
+  animation: companionIdleBob 3s ease-in-out infinite;
+}
+
+.dex-stage-pedestal__name {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fef08a;
+  white-space: nowrap;
+}
+
+/* ── 7. 试炼、演武与排行榜舞台 (.tab-stage__body--arena) ─────────────────── */
+.tab-stage__body--arena {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(10, 15, 28, 0.68);
+  border: 1px solid rgba(250, 204, 21, 0.34);
+  backdrop-filter: blur(8px);
+  flex-wrap: wrap;
+}
+
+.arena-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.arena-side--enemy {
+  align-items: flex-end;
+}
+
+.arena-side__title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #7dd3fc;
+}
+
+.arena-side--enemy .arena-side__title {
+  color: #fda4af;
+}
+
+.arena-side__fighters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.arena-fighter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  text-align: center;
+}
+
+.arena-fighter--enemy {
+  border-color: rgba(244, 63, 94, 0.42);
+}
+
+.arena-fighter__art .mon-icon {
+  width: 52px;
+  height: 52px;
+  animation: companionIdleBob 2.9s ease-in-out infinite;
+}
+
+.arena-fighter__tag {
+  font-size: 11px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.arena-vs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.arena-vs__badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 900;
+  color: #fef08a;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.48) 0%, rgba(15, 23, 42, 0.92) 75%);
+  border: 1px solid rgba(250, 204, 21, 0.7);
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.35);
+}
+
+.arena-vs__stage {
+  font-size: 12px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.arena-vs__rec {
+  font-size: 11px;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 860px) {
+  .tab-stage__body--science,
+  .tab-stage__body--dex,
+  .capture-stage-explore,
+  .capture-stage-encounter {
+    grid-template-columns: 1fr;
+  }
+  .tab-stage__body--squad {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .tab-stage__body--triptych {
+    grid-template-columns: 1fr;
+  }
+  .bazaar-vault {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   全场景微交互热点、粒子反馈与双列 RPG 卡阵系统 (v0.4.0 Interactive Upgrade)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. 全局浮动反馈文字与爆散粒子 */
+.stage-float {
+  position: fixed;
+  z-index: 10005;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fef08a;
+  background: rgba(11, 17, 30, 0.92);
+  border: 1px solid rgba(250, 204, 21, 0.65);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55), 0 0 14px rgba(250, 204, 21, 0.3);
+  white-space: nowrap;
+  animation: stageFloatRise 1.02s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stage-float--emerald {
+  color: #bbf7d0;
+  border-color: rgba(74, 222, 128, 0.65);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55), 0 0 14px rgba(74, 222, 128, 0.3);
+}
+
+.stage-float--cyan {
+  color: #bae6fd;
+  border-color: rgba(56, 189, 248, 0.65);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55), 0 0 14px rgba(56, 189, 248, 0.3);
+}
+
+@keyframes stageFloatRise {
+  0% { opacity: 0; transform: translate(-50%, 8px) scale(0.86); }
+  18% { opacity: 1; transform: translate(-50%, -6px) scale(1.04); }
+  100% { opacity: 0; transform: translate(-50%, -42px) scale(0.96); }
+}
+
+.stage-particle {
+  position: fixed;
+  z-index: 10004;
+  pointer-events: none;
+  font-size: 15px;
+  transform: translate(-50%, -50%);
+  animation: stageParticleBurst 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes stageParticleBurst {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.7); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 20px)), calc(-50% + var(--dy, -24px))) scale(1.25); }
+}
+
+/* 2. 篝火主页：实景采集与添柴热点 (.camp-stage__hotspots) */
+.camp-stage__hotspots {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 14px 0;
+  flex-wrap: wrap;
+}
+
+.camp-hotspot {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fef08a;
+  background: rgba(11, 17, 30, 0.78);
+  border: 1px solid rgba(250, 204, 21, 0.42);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.camp-hotspot:hover {
+  transform: translateY(-2px) scale(1.04);
+  border-color: #fde047;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55), 0 0 14px rgba(250, 204, 21, 0.35);
+}
+
+.camp-hotspot:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.camp-hotspot--fire {
+  background: linear-gradient(135deg, rgba(124, 45, 18, 0.85) 0%, rgba(15, 23, 42, 0.88) 100%);
+  border-color: rgba(251, 146, 60, 0.7);
+  color: #ffedd5;
+}
+
+#campStage.is-stoked .camp-stage__fireGlow {
+  transform: translateX(-50%) scale(1.38);
+  filter: brightness(1.4);
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+/* 3. 研究页：可交互星盘与胶囊按钮 */
+.science-astrolabe--interactive {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.science-astrolabe--interactive:hover {
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.65));
+}
+
+.science-astrolabe--interactive.is-pulsing {
+  animation: levelUp 0.55s ease;
+}
+
+.tab-stage__pill--btn {
+  appearance: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.tab-stage__pill--btn:hover {
+  transform: translateY(-1px);
+  border-color: #38bdf8;
+  background: rgba(14, 116, 144, 0.55);
+}
+
+/* 4. 捕捉页：可点击摇曳草丛与漫游灵兽热点 */
+button.capture-wanderer {
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+  min-width: 92px;
+}
+
+.capture-wanderer__spark {
+  font-size: 10px;
+  font-weight: 800;
+  color: #4ade80;
+  background: rgba(6, 78, 59, 0.78);
+  border: 1px solid rgba(74, 222, 128, 0.45);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+button.capture-wanderer.is-rustling {
+  animation: captureFail 0.4s ease;
+}
+
+.capture-biome-ribbon {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.biome-pill {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(241, 245, 249, 0.9);
+  background: rgba(11, 17, 30, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.biome-pill:hover:not(.is-locked) {
+  transform: translateY(-1px);
+  border-color: rgba(74, 222, 128, 0.65);
+}
+
+.biome-pill.is-active {
+  color: #fef08a;
+  background: rgba(20, 83, 45, 0.72);
+  border-color: #4ade80;
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+}
+
+.biome-pill.is-locked {
+  opacity: 0.6;
+  cursor: default;
+  border-style: dashed;
+}
+
+/* 5. 萌灵页：首席六灵底座双微交互按钮 */
+.squad-pedestal {
+  cursor: default;
+  justify-content: space-between;
+}
+
+.squad-pedestal__mainBtn {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.squad-pedestal__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: 4px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.squad-micro-btn {
+  appearance: none;
+  flex: 1;
+  padding: 3px 4px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #f8fafc;
+  background: rgba(30, 41, 59, 0.82);
+  border: 1px solid rgba(250, 204, 21, 0.32);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.squad-micro-btn:hover {
+  background: rgba(250, 204, 21, 0.22);
+  border-color: #fde047;
+  transform: translateY(-1px);
+}
+
+/* 6. 功能页：三联实景微缩景观可交互底座 */
+.sanctuary-diorama__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.sanctuary-diorama__btn {
+  padding: 3px 9px !important;
+  font-size: 11px !important;
+  border-color: rgba(250, 204, 21, 0.45) !important;
+}
+
+.spirit-egg-visual--btn {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.spirit-egg-visual--btn:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 18px rgba(250, 204, 21, 0.8));
+}
+
+.spirit-egg-visual--btn.is-wiggling {
+  animation: captureFail 0.45s ease;
+}
+
+/* 7. 商店与竞技场：炼金鼎与开战徽章 */
+.bazaar-cauldron-row {
+  display: flex;
+  gap: 6px;
+}
+
+.arena-vs__badge--btn {
+  appearance: none;
+  width: auto;
+  min-width: 68px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.arena-vs__badge--btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 24px rgba(250, 204, 21, 0.65);
+}
+
+/* 8. 告别单列死板文字列表：全站核心面板双列 RPG 视觉卡阵升级 */
+@media (min-width: 860px) {
+  #buildings,
+  #tech,
+  #techList {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  #buildings > .row:first-child,
+  #buildings > .compass-card,
+  #buildings > .building-section,
+  #buildings > .tab-stage,
+  #tech > .tab-stage,
+  #tech .tab-stage-rows > .tech-pacing,
+  #tech .tab-stage-rows > .row--researching,
+  #tech .tab-stage-rows > .tech-section,
+  #techList > .tab-stage,
+  #techList .tab-stage-rows > .tech-pacing,
+  #techList .tab-stage-rows > .row--researching,
+  #techList .tab-stage-rows > .tech-section {
+    grid-column: 1 / -1;
+  }
+
+  #buildings > .row,
+  #tech .tab-stage-rows > .row,
+  #techList .tab-stage-rows > .row {
+    margin: 0;
+    height: 100%;
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(17, 24, 39, 0.84) 0%, rgba(11, 15, 25, 0.92) 100%);
+    border: 1px solid rgba(250, 204, 21, 0.24);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.34);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  #buildings > .row:hover,
+  #tech .tab-stage-rows > .row:hover,
+  #techList .tab-stage-rows > .row:hover {
+    transform: translateY(-2px);
+    border-color: rgba(250, 204, 21, 0.55);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(250, 204, 21, 0.14);
+  }
+}
+
+

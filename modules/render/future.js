@@ -1,4 +1,5 @@
 import { LEGACY_PERK_ORDER, LEGACY_PERKS, canBuyPerk, perkCost, perkLevel } from "../systems/rebirth.js";
+import { renderFutureStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
 
 export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }) {
   return function renderFutureShop() {
@@ -66,6 +67,23 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     const boostRows = [];
     const permanentRows = [];
     const itemRows = [];
+
+    const todayStr = (() => {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    })();
+    if (!state.meta || typeof state.meta !== "object") state.meta = {};
+    const claimedDailyFree = state.meta.dailyFreeFcDate === todayStr;
+    const claimedDailySpin = state.meta.dailySpinDate === todayStr;
+
+    rows.push(
+      renderFutureStageHtml({
+        state,
+        fmt,
+        claimedDailyFree,
+        claimedDailySpin,
+      }),
+    );
 
     rows.push(`
       <div class="row">
@@ -943,7 +961,7 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     rows.push(sectionHeader("craft", "合成"));
     if (!isFolded("craft")) rows.push(...craftRows);
 
-    elFutureShop.innerHTML = rows.join("");
+    setHtmlPreservingStage(elFutureShop, rows.join(""));
     ui.futureDirty = false;
   };
 }

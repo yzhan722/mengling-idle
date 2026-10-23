@@ -19,6 +19,7 @@ import {
 } from "../systems/gameplay_fun.js";
 import { getNatureInfo } from "../mons.js";
 import { ballCatchMult } from "../systems/ball_catch.js";
+import { renderCaptureStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
 
 const MUTATOR_LABELS = {
   berryYield_12: "灵果 +12%",
@@ -253,7 +254,62 @@ export function createRenderCapture({
     const poolEmptyHint = pool.length === 0 ? "本区域暂无可遭遇萌灵，请切换其他区域或推进时代。" : "";
     const tierSummary = `常见 ${counts.common} · 少见 ${counts.uncommon} · 稀有 ${counts.rare} · 史诗 ${counts.epic}`;
 
-    elCaptureInfo.innerHTML = `
+    const stageEncPid = typeof ui.encounterPid === "string" ? ui.encounterPid : null;
+    const stageEnc = stageEncPid ? getSpeciesByPid(stageEncPid) : null;
+    const stageEncIsShiny = Boolean(ui.encounterIsShiny);
+    const stageEncIsMythic = Boolean(stageEnc && stageEnc.tier === "epic");
+    const stageEncTypes = stageEnc && Array.isArray(globalThis.BEAST_TYPES?.[stageEnc.dex]) ? globalThis.BEAST_TYPES[stageEnc.dex] : [];
+    const stageTechEff = computeTechEffects();
+    const stageAdd = (typeof stageTechEff.catchChanceAdd === "number" ? stageTechEff.catchChanceAdd : 0) + abilityCatchRateAdd(state);
+    const stageFails = typeof state.rng?.catchFails === "number" ? state.rng.catchFails : 0;
+    const stagePity = Math.min(0.02 * Math.max(0, Math.floor(stageFails)), 0.2);
+    const stageBall = ui.selectedBallType || "pokeball";
+    const stageCaughtN = stageEnc && caughtMap && typeof caughtMap[stageEnc.id] === "number" ? caughtMap[stageEnc.id] : 0;
+    const stageBallMult = ballCatchMult(stageBall, { types: stageEncTypes, caughtCount: stageCaughtN });
+    const stageLuckyMul = stageEnc ? luckyCatchMul(state, stageEncTypes) : 1;
+    const stageNatureMul = stageEnc ? natureWildCatchMul(ui.encounterNature) : 1;
+    const stageEffChance = stageEnc
+      ? clamp(baseCatchChanceByDex(stageEnc.dex) * Math.max(0, 1 + stageAdd) * stageBallMult * stageLuckyMul * stageNatureMul + stagePity, 0, 0.95)
+      : 0;
+    const stageEncCharges = Math.max(0, Math.min(100, Math.floor(typeof state.encounterCharges === "number" ? state.encounterCharges : 100)));
+    const stageAdvMax = 10 + (typeof state.permanentBoosts?.encPlusMax === "number" ? Math.max(0, Math.min(20, Math.floor(state.permanentBoosts.encPlusMax))) : 0);
+    const stageAdvCharges = Math.max(0, Math.min(stageAdvMax, Math.floor(typeof state.encounterPlusCharges === "number" ? state.encounterPlusCharges : 1)));
+    const stageCanMakeBall = Boolean(state.unlocks?.pokeball);
+    const stageEncOk = stageCanMakeBall && !stageEnc && stageEncCharges > 0 && pool.length > 0;
+    const stageAdvOk = stageCanMakeBall && !stageEnc && stageAdvCharges > 0 && pool.length > 0;
+    const stageThrowOk = stageCanMakeBall && Boolean(stageEnc) && (state.res?.[stageBall]?.value ?? 0) >= 1;
+
+    const stageHeroHtml = renderCaptureStageHtml({
+      state,
+      area,
+      unlockedAreas: unlocked,
+      nextLockedArea: nextArea,
+      pool,
+      caughtMap,
+      enc: stageEnc,
+      encIsShiny: stageEncIsShiny,
+      encIsMythic: stageEncIsMythic,
+      encTypes: stageEncTypes,
+      effChance: stageEffChance,
+      pity2: stagePity,
+      encCharges: stageEncCharges,
+      advCharges: stageAdvCharges,
+      advMaxCharges: stageAdvMax,
+      encOk: stageEncOk,
+      advOk: stageAdvOk,
+      throwOk: stageThrowOk,
+      lucky,
+      week,
+      streak,
+      renderBeastIcon,
+      typeZh,
+      escapeHtml,
+    });
+
+    setHtmlPreservingStage(
+      elCaptureInfo,
+      `
+      ${stageHeroHtml}
       ${sessionHtml}
       ${eraPanelHtml}
       ${luckyHtml}
@@ -270,7 +326,8 @@ export function createRenderCapture({
       </div>
       ${preview && !previewHiddenEffective ? `<div class="row"><div class="row__left"><div class="row__title">本区域预览</div></div><div class="row__right" style="justify-content:flex-start;flex:1 1 auto;width:100%;"><div class="iconGrid iconGrid--full">${preview}</div></div></div>` : ""}
       ${lockHtml}
-    `;
+    `,
+    );
 
     const rows = [];
     const canMakeBall = state.unlocks.pokeball;

@@ -1,6 +1,7 @@
 import { liveGoalsChecklist, liveNextGoalLine, canClaimDailyGoalsBundle, markDailyGoalsBundleClaimed, localDateStr } from "../systems/gameplay_fun.js";
 import { ensureEra, questLabel, syncEraQuests } from "../systems/era.js";
 import { PVE_CHAPTERS, isStageUnlocked } from "../pve_defs.js";
+import { renderHelpStageHtml } from "../render/tab_stages.js";
 
 export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureAreas, dexCaughtUnique, defs, addRes, addLog, render }) {
   return function renderHelp() {
@@ -33,6 +34,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
     let checklistHtml = "";
     let canBundle = false;
     let bundleClaimed = false;
+    let dexPctVal = 0;
     try {
       const state = typeof getState === "function" ? getState() : null;
       if (state) {
@@ -64,6 +66,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         const caught = state.dex?.caught || {};
         for (const v of Object.values(caught)) if (typeof v === "number" && v > 0) unique += 1;
         const dexPct = totalSpecies > 0 ? Math.round((unique / totalSpecies) * 100) : 0;
+        dexPctVal = dexPct;
         nextGoal = liveNextGoalLine(state, { dexPct, eraQuest, pveNext });
         const goals = liveGoalsChecklist(state, { dexPct, eraQuest, pveNext });
         checklistHtml = goals
@@ -75,6 +78,8 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
     } catch {
       // keep default
     }
+
+    rows.unshift(renderHelpStageHtml({ nextGoal, dexPct: dexPctVal, escapeHtml }));
 
     rows.push(block("前30分钟路线", `
       <div style="line-height:1.9">

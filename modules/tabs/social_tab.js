@@ -1,5 +1,7 @@
 // 社交标签页
 import { escapeHtml } from "../utils.js";
+import { renderBeastIcon } from "../sprites.js";
+import { renderSocialStageHtml } from "../render/tab_stages.js";
 import { summarizePvpBattle, bumpPvpSeasonStats, normalizePvpRecent } from "../systems/pvp_narrative.js";
 import {
   listNpcTrainers,
@@ -106,8 +108,16 @@ export function createSocialTab({
     })();
     const needCloud = !cloudTok;
 
+    const socialStageHtml = renderSocialStageHtml({
+      state: typeof getState === "function" ? getState() : null,
+      selectedTeam,
+      renderBeastIcon,
+      escapeHtml,
+    });
+
     panelSocial.innerHTML = `
       <div class="social-container">
+        ${socialStageHtml}
         <div class="social-section">
           <h3>育灵师对战（离线）</h3>
           <div class="row">

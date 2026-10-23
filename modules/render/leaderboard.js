@@ -2,6 +2,7 @@
 // 维护者窗口：C（渲染）/ 数据刷新仍在 app.js SECTION:LEADERBOARD_DATA
 
 import { cleanLeaderboard } from "../systems/world_presence.js?v=0.1.0";
+import { renderLeaderboardStageHtml } from "./tab_stages.js";
 
 export function createRenderLeaderboard({
   elLeaderboard,
@@ -99,6 +100,18 @@ export function createRenderLeaderboard({
     const catchNow = Math.max(0, Math.floor(Number.isFinite(state.catchCount) ? state.catchCount : 0));
 
     const rows = [];
+    rows.push(
+      renderLeaderboardStageHtml({
+        ui,
+        dexNow,
+        teamNow,
+        totalPowerNow,
+        shinyNow,
+        topMons: typeof calcTopMons === "function" ? calcTopMons(3) : [],
+        renderBeastIcon,
+        escapeHtml,
+      }),
+    );
     rows.push(`
       <div class="row">
         <div class="row__left">
