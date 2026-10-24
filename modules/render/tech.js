@@ -171,7 +171,7 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
           <div class="row__left bcard__main">
             <div class="bcard__head">
               <div class="bcard__emblem bcard__emblem--${vis.tone}" aria-hidden="true">
-                <span class="bcard__icon">${renderTechSvg(vis.svgKind, 26)}</span>
+                <span class="bcard__icon">${renderTechSvg(vis.svgKind, 34)}</span>
                 <span class="bcard__lvlBadge">⏱${timeText}</span>
               </div>
               <div class="bcard__titleWrap">
@@ -260,9 +260,9 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
     if (recommendHtml) sections.push(recommendHtml);
 
     const STAGE_ICONS = {
-      early: { icon: "🌱", sub: "营地开拓基石 · 快速解锁核心资源与灵球工艺", done: stageCounts.earlyDone, total: stageCounts.earlyTotal },
-      mid: { icon: "⚙️", sub: "中枢自动化扩产 · 大幅提升产能、球台与探索效率", done: stageCounts.midDone, total: stageCounts.midTotal },
-      late: { icon: "🚀", sub: "高阶星轨飞跃 · 突破产能极限与高维秘境法则", done: stageCounts.lateDone, total: stageCounts.lateTotal },
+      early: { icon: renderTechSvg("berry", 22), sub: "营地开拓基石 · 快速解锁核心资源与灵球工艺", done: stageCounts.earlyDone, total: stageCounts.earlyTotal },
+      mid: { icon: renderTechSvg("ball", 22), sub: "中枢自动化扩产 · 大幅提升产能、球台与探索效率", done: stageCounts.midDone, total: stageCounts.midTotal },
+      late: { icon: renderTechSvg("shiny", 22), sub: "高阶星轨飞跃 · 突破产能极限与高维秘境法则", done: stageCounts.lateDone, total: stageCounts.lateTotal },
     };
 
     for (const stage of TECH_STAGE_ORDER) {

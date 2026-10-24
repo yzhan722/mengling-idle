@@ -24,13 +24,13 @@ const BUILDING_VISUALS = {
 };
 
 const CATEGORY_META = {
-  "灵果": { icon: "🍓", sub: "营地生机之源 · 供给采集、投喂与基础扩建" },
-  "灵木": { icon: "🌲", sub: "营地构筑栋梁 · 支撑仓储、工坊与制球产线" },
-  "灵晶": { icon: "💎", sub: "高阶灵脉结晶 · 驱动科研院与育灵圣域" },
-  "研究": { icon: "🔭", sub: "星轨推演中枢 · 大幅缩短全科技树研发耗时" },
-  "灵球": { icon: "🔴", sub: "秘境捕猎储备 · 扩充灵球携带与搓球容量" },
-  "功能建筑": { icon: "⛩️", sub: "解锁萌灵特训、繁育生蛋与跨界秘境远征" },
-  "存储": { icon: "🏛️", sub: "大型战略储备仓库 · 突破资源囤积上限" },
+  "灵果": { icon: renderBuildingSvg("field", 22), sub: "营地生机之源 · 供给采集、投喂与基础扩建" },
+  "灵木": { icon: renderBuildingSvg("hut", 22), sub: "营地构筑栋梁 · 支撑仓储、工坊与制球产线" },
+  "灵晶": { icon: renderBuildingSvg("workshop", 22), sub: "高阶灵脉结晶 · 驱动科研院与育灵圣域" },
+  "研究": { icon: renderBuildingSvg("researchLab", 22), sub: "星轨推演中枢 · 大幅缩短全科技树研发耗时" },
+  "灵球": { icon: renderBuildingSvg("ballBench", 22), sub: "秘境捕猎储备 · 扩充灵球携带与搓球容量" },
+  "功能建筑": { icon: renderBuildingSvg("trainingGround", 22), sub: "解锁萌灵特训、繁育生蛋与跨界秘境远征" },
+  "存储": { icon: renderBuildingSvg("commandCenter", 22), sub: "大型战略储备仓库 · 突破资源囤积上限" },
 };
 
 const RES_ICONS = {
@@ -100,7 +100,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
           <div class="row__left bcard__main">
             <div class="bcard__head">
               <div class="bcard__emblem bcard__emblem--${vis.tone}" aria-hidden="true">
-                <span class="bcard__icon">${renderBuildingSvg(bid, 26)}</span>
+                <span class="bcard__icon">${renderBuildingSvg(bid, 34)}</span>
                 <span class="bcard__lvlBadge">Lv.${owned}</span>
               </div>
               <div class="bcard__titleWrap">

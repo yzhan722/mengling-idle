@@ -3,7 +3,7 @@
 // 都拥有与「篝火主页」同等级别的 16:9 手绘场景原画 + 动态 SVG 光效 + 实时数据交互舞台。
 
 import { pad3 } from "../utils.js";
-import { renderOrbSvg, renderResSvg, renderBuildingSvg } from "./rpg_svg_icons.js";
+import { renderOrbSvg, renderResSvg, renderBuildingSvg, renderUiIcon } from "./rpg_svg_icons.js";
 
 /**
  * 将全景舞台 (stageHtml) 与列表内容 (rowsHtml) 挂载到容器，
@@ -376,8 +376,8 @@ export function renderCaptureStageHtml({
         <div class="capture-stage-explore__clearing">
           ${wanderersHtml || `<div class="camp-stage__emptyHint">当前生态区暂无灵兽出没</div>`}
           <button type="button" class="capture-wanderer capture-wanderer--altar" data-stage-act="field-hunt-plus" ${advOk ? "" : "disabled"} title="催动高阶星界灵脉阵，优先引出本区未收录/高稀有度萌灵！">
-            <span class="capture-wanderer__spark">🌌 灵脉祭坛</span>
-            <div class="capture-wanderer__altarOrb">✨</div>
+            <span class="capture-wanderer__spark">${renderResSvg("evolutionStone", 14)} 灵脉祭坛</span>
+            <div class="capture-wanderer__altarOrb">${renderResSvg("megaStone", 46)}</div>
             <div class="capture-wanderer__tag">高级定向寻踪</div>
             <span class="capture-wanderer__sub">充能 ${advCharges}/${advMaxCharges} · 优先未收录</span>
           </button>
@@ -537,53 +537,41 @@ export function renderFunctionsStageHtml({
       <div class="tab-stage__body tab-stage__body--triptych">
         <div class="sanctuary-diorama">
           <div class="sanctuary-diorama__head">
-            <span class="sanctuary-diorama__title">⚔️ 灵兽训练场</span>
+            <span class="sanctuary-diorama__title">${renderBuildingSvg("trainingGround", 20)} 灵兽训练场</span>
             <span class="badge">${activeTrain.length}/${slotSize} 槽</span>
           </div>
           <div class="sanctuary-diorama__stage">${trainIcons}</div>
           <div class="sanctuary-diorama__foot">
             <span>${slotSize > 0 ? "受训灵兽经验获取 ×10" : "建造「训练场」后开启"}</span>
-            <button type="button" class="btn btn--small sanctuary-diorama__btn" data-stage-act="train-cheer">🥁 擂鼓助威</button>
+            <button type="button" class="btn btn--small sanctuary-diorama__btn" data-stage-act="train-cheer">${renderUiIcon("tab_pve", 14)} 擂鼓助威</button>
           </div>
         </div>
 
         <div class="sanctuary-diorama">
           <div class="sanctuary-diorama__head">
-            <span class="sanctuary-diorama__title">🥚 星露育灵屋</span>
+            <span class="sanctuary-diorama__title">${renderBuildingSvg("breedingHouse", 20)} 星露育灵屋</span>
             <span class="badge ${eggOn ? "badge--ok" : ""}">${eggOn ? `孵化 ${eggPct}%` : breedLvl > 0 ? `Lv.${breedLvl}` : "未建造"}</span>
           </div>
           <div class="sanctuary-diorama__stage">
             <button type="button" class="spirit-egg-visual spirit-egg-visual--btn ${eggOn ? "is-hatching" : ""}" data-stage-act="egg-warm" title="点击温养灵蛋（每次孵化耗时 -5秒）">
-              <svg viewBox="0 0 64 64" width="52" height="52" aria-hidden="true">
-                <defs>
-                  <radialGradient id="eggGlow" cx="45%" cy="38%" r="58%">
-                    <stop offset="0%" stop-color="#fef08a" />
-                    <stop offset="55%" stop-color="#f59e0b" />
-                    <stop offset="100%" stop-color="#7c2d12" />
-                  </radialGradient>
-                </defs>
-                <ellipse cx="32" cy="54" rx="18" ry="5" fill="rgba(250,204,21,0.28)" />
-                <path d="M32 8 C19 8 14 26 14 39 C14 50 22 56 32 56 C42 56 50 50 50 39 C50 26 45 8 32 8 Z" fill="url(#eggGlow)" stroke="#fde047" stroke-width="2" />
-                <circle cx="26" cy="26" r="3" fill="#fffbeb" opacity="0.85" />
-                <circle cx="38" cy="36" r="2.2" fill="#fffbeb" opacity="0.7" />
-              </svg>
+              ${renderResSvg("luckyEgg", 54)}
             </button>
           </div>
           <div class="sanctuary-diorama__foot">
             <span>${eggOn ? `剩余 ${escapeHtml(fmtDuration(eggRem))}` : breedLvl > 0 ? "双亲配对继承高个体值" : "建造「育灵屋」后开启"}</span>
-            <button type="button" class="btn btn--small sanctuary-diorama__btn" data-stage-act="egg-warm">🥚 灵温抚育</button>
+            <button type="button" class="btn btn--small sanctuary-diorama__btn" data-stage-act="egg-warm">${renderResSvg("luckyEgg", 14)} 灵温抚育</button>
           </div>
         </div>
 
         <div class="sanctuary-diorama">
           <div class="sanctuary-diorama__head">
-            <span class="sanctuary-diorama__title">🗺️ 次元远征门</span>
+            <span class="sanctuary-diorama__title">${renderBuildingSvg("expeditionPost", 20)} 次元远征门</span>
             <span class="badge ${expOn ? "badge--ok" : ""}">${expOn ? "远征中" : expLvl > 0 ? `Lv.${expLvl}` : "未建造"}</span>
           </div>
           <div class="sanctuary-diorama__stage">${expIcons}</div>
           <div class="sanctuary-diorama__foot">
             <span>${expOn ? `归来剩余 ${escapeHtml(fmtDuration(expRem))}` : expLvl > 0 ? "派遣编队赢取未来币与经验" : "建造「远征所」后开启"}</span>
-            <button type="button" class="btn btn--small sanctuary-diorama__btn" data-stage-act="exp-boost">🧭 星门共鸣</button>
+            <button type="button" class="btn btn--small sanctuary-diorama__btn" data-stage-act="exp-boost">${renderUiIcon("tab_capture", 14)} 星门共鸣</button>
           </div>
         </div>
       </div>

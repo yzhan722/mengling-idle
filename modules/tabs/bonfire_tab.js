@@ -13,6 +13,7 @@ import {
   selectCampCompanions,
 } from "../systems/newbie_compass.js";
 import { renderBeastIcon } from "../sprites.js";
+import { renderResSvg, renderUiIcon } from "../render/rpg_svg_icons.js";
 import { escapeHtml } from "../utils.js";
 
 function renderCampStageSvg(fireTier) {
@@ -139,24 +140,24 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
           <div class="camp-stage__backdrop">
             ${renderCampStageSvg(fireInfo.tier)}
             <div class="camp-stage__header">
-              <span class="camp-stage__badge">🔥 ${escapeHtml(fireInfo.label)}</span>
+              <span class="camp-stage__badge">${renderUiIcon("tab_bonfire", 18)} ${escapeHtml(fireInfo.label)}</span>
               <span class="camp-stage__sub">点击营地热点或伙伴可直接互动 · 灵果与建筑越丰盛，火光越明亮</span>
             </div>
             <div class="camp-stage__hotspots">
               <button type="button" class="camp-hotspot camp-hotspot--berry" data-stage-act="camp-node" data-res="catnip" title="点击采摘林间灵果">
-                <span class="camp-hotspot__icon">🍓</span>
+                <span class="camp-hotspot__icon">${renderResSvg("catnip", 18)}</span>
                 <span class="camp-hotspot__label">采摘灵果</span>
               </button>
               <button type="button" class="camp-hotspot camp-hotspot--fire" data-stage-act="bonfire-stoke" title="点击添柴旺火，凝聚全营地灵气">
-                <span class="camp-hotspot__icon">🔥</span>
+                <span class="camp-hotspot__icon">${renderUiIcon("tab_bonfire", 18)}</span>
                 <span class="camp-hotspot__label">添柴聚灵</span>
               </button>
               <button type="button" class="camp-hotspot camp-hotspot--wood" data-stage-act="camp-node" data-res="wood" title="点击拾取干枯灵木">
-                <span class="camp-hotspot__icon">🌲</span>
+                <span class="camp-hotspot__icon">${renderResSvg("wood", 18)}</span>
                 <span class="camp-hotspot__label">拾取灵木</span>
               </button>
               <button type="button" class="camp-hotspot camp-hotspot--mineral" data-stage-act="camp-node" data-res="minerals" title="点击勘探微光灵晶">
-                <span class="camp-hotspot__icon">💎</span>
+                <span class="camp-hotspot__icon">${renderResSvg("minerals", 18)}</span>
                 <span class="camp-hotspot__label">勘探灵晶</span>
               </button>
             </div>

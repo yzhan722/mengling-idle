@@ -5626,19 +5626,32 @@ button.capture-wanderer.is-rustling {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 -2px 0 #facc15;
 }
 
-.tab[data-tab="bonfire"]::before { content: "🔥 "; }
-.tab[data-tab="science"]::before { content: "🔭 "; }
-.tab[data-tab="capture"]::before { content: "🧭 "; }
-.tab[data-tab="mons"]::before { content: "🐾 "; }
-.tab[data-tab="functions"]::before { content: "⛩️ "; }
-.tab[data-tab="future"]::before { content: "⚗️ "; }
-.tab[data-tab="dex"]::before { content: "📖 "; }
-.tab[data-tab="pve"]::before { content: "⚔️ "; }
-.tab[data-tab="items"]::before { content: "🎒 "; }
-.tab[data-tab="social"]::before { content: "🤝 "; }
-.tab[data-tab="leaderboard"]::before { content: "🏆 "; }
-.tab[data-tab="help"]::before { content: "📜 "; }
-.tab[data-tab="options"]::before { content: "⚙️ "; }
+.tab[data-tab]::before {
+  content: "";
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-right: 5px;
+  vertical-align: -3px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
+}
+
+.tab[data-tab="bonfire"]::before { background-image: url("./assets/ui_icons/tab_bonfire.webp"); }
+.tab[data-tab="science"]::before { background-image: url("./assets/ui_icons/science.webp"); }
+.tab[data-tab="capture"]::before { background-image: url("./assets/ui_icons/tab_capture.webp"); }
+.tab[data-tab="mons"]::before { background-image: url("./assets/ui_icons/tab_mons.webp"); }
+.tab[data-tab="functions"]::before { background-image: url("./assets/ui_icons/expeditionPost.webp"); }
+.tab[data-tab="future"]::before { background-image: url("./assets/ui_icons/tab_future.webp"); }
+.tab[data-tab="dex"]::before { background-image: url("./assets/ui_icons/tab_dex.webp"); }
+.tab[data-tab="pve"]::before { background-image: url("./assets/ui_icons/tab_pve.webp"); }
+.tab[data-tab="items"]::before { background-image: url("./assets/ui_icons/mineralSilo.webp"); }
+.tab[data-tab="social"]::before { background-image: url("./assets/ui_icons/friendshipBracelet.webp"); }
+.tab[data-tab="leaderboard"]::before { background-image: url("./assets/ui_icons/tab_trophy.webp"); }
+.tab[data-tab="help"]::before { background-image: url("./assets/ui_icons/library.webp"); }
+.tab[data-tab="options"]::before { background-image: url("./assets/ui_icons/commandCenter.webp"); }
 
 .main {
   position: relative;
@@ -6159,14 +6172,16 @@ button.capture-wanderer.is-rustling {
    v0.6.0 商业级多图层 SVG 图标体系、置顶全景舞台与全站双列 RPG 典藏卡阵
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* 1. 定制矢量 SVG 图标光影与对齐 */
+/* 1. 定制 AI 手绘游戏图标光影与对齐 */
+.rpg-ai-icon,
 .rpg-svg-orb,
 .rpg-svg-res,
 .rpg-svg-bldg {
   display: inline-block;
   vertical-align: middle;
+  object-fit: contain;
   flex-shrink: 0;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
 }
 
 .resrow__left {
@@ -6229,15 +6244,27 @@ select.select,
   font-weight: 700;
 }
 
+.building-section,
 #items .building-section {
   align-items: stretch;
   text-align: left;
 }
 
+.building-section__title,
 #items .building-section__title {
   justify-content: flex-start;
   text-align: left;
   width: 100%;
+}
+
+.building-section__sub {
+  text-align: left;
+  padding-left: 30px;
+}
+
+.bcard__emblem {
+  width: 56px;
+  height: 60px;
 }
 
 /* 3. 萌灵、图鉴、商店、道具双列商业级 RPG 典藏卡阵 */
