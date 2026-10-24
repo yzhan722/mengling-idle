@@ -6267,6 +6267,354 @@ select.select,
   height: 60px;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   v0.7.1 全景画卷无遮挡模式：背景原画 100% 完整露出（画中仅留精灵，功能栏全部下沉停靠）
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. 篝火主页：画中仅留围炉萌灵精灵，热点与标题下沉至底部停靠栏 (.camp-stage__deck) */
+.camp-stage {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(250, 204, 21, 0.36);
+  background: rgba(9, 13, 22, 0.96);
+}
+
+.camp-stage__backdrop {
+  position: relative;
+  min-height: 245px !important;
+  height: 245px !important;
+  padding: 12px 20px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.camp-stage__bgImg {
+  opacity: 1 !important;
+  filter: saturate(1.08) contrast(1.03) brightness(1.02) !important;
+}
+
+/* 隐藏大面积遮挡画面的常驻黑色对话气泡，改为鼠标悬停精灵时浮现 */
+.camp-companion__bubble {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+
+.camp-companion:hover .camp-companion__bubble {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.camp-stage__deck {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(13, 19, 33, 0.96) 0%, rgba(9, 13, 22, 0.98) 100%);
+  border-top: 1px solid rgba(250, 204, 21, 0.32);
+}
+
+.camp-stage__deck .camp-stage__header {
+  padding: 0;
+  margin: 0;
+}
+
+.camp-stage__deck .camp-stage__hotspots {
+  padding: 0;
+  margin: 0;
+}
+
+/* 2. 全部子页面舞台 (.tab-stage)：上方 240px 独立原画视窗 + 下方停靠式功能甲板 */
+.tab-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(13, 19, 33, 0.96) 0%, rgba(9, 13, 22, 0.98) 100%) !important;
+  border: 1px solid rgba(250, 204, 21, 0.36);
+}
+
+.tab-stage > .tab-stage__artWrap {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: 240px !important;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(250, 204, 21, 0.32);
+}
+
+.tab-stage__bgImg {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 42% !important;
+  opacity: 1 !important;
+  filter: saturate(1.08) contrast(1.03) brightness(1.02) !important;
+}
+
+.tab-stage__aura {
+  opacity: 0.12 !important;
+}
+
+.tab-stage > .tab-stage__header {
+  padding: 10px 16px 4px !important;
+  background: transparent !important;
+}
+
+.tab-stage > .capture-biome-ribbon {
+  padding: 4px 16px 6px !important;
+}
+
+.tab-stage > .tab-stage__body {
+  position: static !important;
+  margin-top: 0 !important;
+  padding: 8px 16px 14px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.capture-stage-explore,
+.capture-stage-encounter,
+.arena-side {
+  position: static !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+/* 3. 画中精灵透明悬浮层（除精灵本体与脚底迷你名牌外，绝无黑底卡片遮挡背景画） */
+.capture-stage-explore__clearing,
+.tab-stage > .tab-stage__body.tab-stage__body--squad,
+.stage-scene-actors,
+.dex-stage-pedestals {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 240px !important;
+  z-index: 4 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-around !important;
+  padding: 0 20px 12px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  pointer-events: none;
+}
+
+.capture-stage-explore__clearing > *,
+.tab-stage__body--squad > *,
+.stage-scene-actors button,
+.dex-stage-pedestals > * {
+  pointer-events: auto;
+}
+
+/* 捕捉页：探索态野生精灵透明立于林间草地 */
+.capture-stage-explore {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.capture-stage-encounter {
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+button.capture-wanderer,
+.capture-wanderer--altar {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 4px 8px !important;
+}
+
+button.capture-wanderer:hover {
+  transform: translateY(-4px) scale(1.06);
+}
+
+.capture-wanderer__art .mon-icon {
+  width: 68px !important;
+  height: 68px !important;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.85));
+}
+
+.capture-wanderer__tag {
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(9, 13, 22, 0.78);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  font-size: 11px;
+}
+
+.capture-wanderer__sub {
+  display: none;
+}
+
+/* 捕捉页：遭遇态目标精灵与缩圈环透明立于画中中央 */
+.capture-stage-encounter__pedestal.capture-reticle-btn {
+  position: absolute !important;
+  top: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 176px !important;
+  height: 208px !important;
+  z-index: 4 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.capture-stage-encounter__pedestal.capture-reticle-btn:hover {
+  transform: translateX(-50%) scale(1.05) !important;
+}
+
+.capture-stage-encounter__art .mon-icon {
+  width: 92px !important;
+  height: 92px !important;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.88));
+}
+
+/* 萌灵页：首席六灵透明立于圣域草坪，去除高大黑框底座 */
+.squad-pedestal {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 2px 6px !important;
+  gap: 2px !important;
+}
+
+.squad-pedestal__art .mon-icon {
+  width: 66px !important;
+  height: 66px !important;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.85));
+}
+
+.squad-pedestal__name {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(9, 13, 22, 0.78);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  font-size: 11px;
+}
+
+.squad-pedestal__meta,
+.squad-pedestal__sat {
+  display: none !important;
+}
+
+.squad-pedestal__actions {
+  border-top: none !important;
+  margin-top: 2px !important;
+  padding-top: 0 !important;
+}
+
+/* 功能页与图鉴页：画中精灵与灵蛋透明悬浮 */
+.scene-actor-group {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  min-width: 90px;
+}
+
+.scene-actor-group .diorama-empty {
+  display: none;
+}
+
+.diorama-mini-mon,
+.dex-stage-pedestal {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.diorama-mini-mon .mon-icon,
+.dex-stage-pedestal__art .mon-icon {
+  width: 64px !important;
+  height: 64px !important;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.85));
+}
+
+.dex-stage-pedestal__name {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(9, 13, 22, 0.78);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+}
+
+.tab-stage__body--dex {
+  grid-template-columns: auto 1fr !important;
+}
+
+/* 竞技场/社交/排行榜：对战双方精灵透明立于竞技场画中左右两侧 */
+.tab-stage--pve .arena-side__fighters,
+.tab-stage--social .arena-side__fighters,
+.tab-stage--leaderboard .arena-side__fighters {
+  position: absolute !important;
+  top: 36px !important;
+  height: 190px !important;
+  z-index: 4 !important;
+  align-items: flex-end !important;
+  pointer-events: none;
+}
+
+.tab-stage--pve .arena-side--ally .arena-side__fighters,
+.tab-stage--social .arena-side--ally .arena-side__fighters {
+  left: 24px !important;
+}
+
+.tab-stage--pve .arena-side--enemy .arena-side__fighters,
+.tab-stage--social .arena-side--enemy .arena-side__fighters,
+.tab-stage--leaderboard .arena-side--ally .arena-side__fighters {
+  right: 24px !important;
+}
+
+.arena-fighter {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.arena-fighter__art .mon-icon {
+  width: 66px !important;
+  height: 66px !important;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.85));
+}
+
+.arena-fighter__tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(9, 13, 22, 0.78);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+}
+
+
 /* 3. 萌灵、图鉴、商店、道具双列商业级 RPG 典藏卡阵 */
 @media (min-width: 860px) {
   #monList:not([hidden]),

@@ -535,12 +535,20 @@ export function renderFunctionsStageHtml({
         <span class="camp-stage__sub">离线挂机全自动结算经验、灵蛋孵化与次元远征战利品</span>
       </div>
       <div class="tab-stage__body tab-stage__body--triptych">
+        <div class="stage-scene-actors stage-scene-actors--triptych">
+          <div class="scene-actor-group">${trainIcons}</div>
+          <div class="scene-actor-group">
+            <button type="button" class="spirit-egg-visual spirit-egg-visual--btn ${eggOn ? "is-hatching" : ""}" data-stage-act="egg-warm" title="点击温养灵蛋（每次孵化耗时 -5秒）">
+              ${renderResSvg("luckyEgg", 62)}
+            </button>
+          </div>
+          <div class="scene-actor-group">${expIcons}</div>
+        </div>
         <div class="sanctuary-diorama">
           <div class="sanctuary-diorama__head">
             <span class="sanctuary-diorama__title">${renderBuildingSvg("trainingGround", 20)} 灵兽训练场</span>
             <span class="badge">${activeTrain.length}/${slotSize} 槽</span>
           </div>
-          <div class="sanctuary-diorama__stage">${trainIcons}</div>
           <div class="sanctuary-diorama__foot">
             <span>${slotSize > 0 ? "受训灵兽经验获取 ×10" : "建造「训练场」后开启"}</span>
             <button type="button" class="btn btn--small sanctuary-diorama__btn" data-stage-act="train-cheer">${renderUiIcon("tab_pve", 14)} 擂鼓助威</button>
@@ -551,11 +559,6 @@ export function renderFunctionsStageHtml({
           <div class="sanctuary-diorama__head">
             <span class="sanctuary-diorama__title">${renderBuildingSvg("breedingHouse", 20)} 星露育灵屋</span>
             <span class="badge ${eggOn ? "badge--ok" : ""}">${eggOn ? `孵化 ${eggPct}%` : breedLvl > 0 ? `Lv.${breedLvl}` : "未建造"}</span>
-          </div>
-          <div class="sanctuary-diorama__stage">
-            <button type="button" class="spirit-egg-visual spirit-egg-visual--btn ${eggOn ? "is-hatching" : ""}" data-stage-act="egg-warm" title="点击温养灵蛋（每次孵化耗时 -5秒）">
-              ${renderResSvg("luckyEgg", 54)}
-            </button>
           </div>
           <div class="sanctuary-diorama__foot">
             <span>${eggOn ? `剩余 ${escapeHtml(fmtDuration(eggRem))}` : breedLvl > 0 ? "双亲配对继承高个体值" : "建造「育灵屋」后开启"}</span>
@@ -568,7 +571,6 @@ export function renderFunctionsStageHtml({
             <span class="sanctuary-diorama__title">${renderBuildingSvg("expeditionPost", 20)} 次元远征门</span>
             <span class="badge ${expOn ? "badge--ok" : ""}">${expOn ? "远征中" : expLvl > 0 ? `Lv.${expLvl}` : "未建造"}</span>
           </div>
-          <div class="sanctuary-diorama__stage">${expIcons}</div>
           <div class="sanctuary-diorama__foot">
             <span>${expOn ? `归来剩余 ${escapeHtml(fmtDuration(expRem))}` : expLvl > 0 ? "派遣编队赢取未来币与经验" : "建造「远征所」后开启"}</span>
             <button type="button" class="btn btn--small sanctuary-diorama__btn" data-stage-act="exp-boost">${renderUiIcon("tab_capture", 14)} 星门共鸣</button>

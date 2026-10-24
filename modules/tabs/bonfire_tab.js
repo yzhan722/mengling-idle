@@ -139,9 +139,14 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
         <div class="camp-stage" id="campStage">
           <div class="camp-stage__backdrop">
             ${renderCampStageSvg(fireInfo.tier)}
+            <div class="camp-stage__companions">
+              ${companionSlotsHtml}
+            </div>
+          </div>
+          <div class="camp-stage__deck">
             <div class="camp-stage__header">
               <span class="camp-stage__badge">${renderUiIcon("tab_bonfire", 18)} ${escapeHtml(fireInfo.label)}</span>
-              <span class="camp-stage__sub">点击营地热点或伙伴可直接互动 · 灵果与建筑越丰盛，火光越明亮</span>
+              <span class="camp-stage__sub">点击营地伙伴或下方热点互动 · 灵果与建筑越丰盛，火光越明亮</span>
             </div>
             <div class="camp-stage__hotspots">
               <button type="button" class="camp-hotspot camp-hotspot--berry" data-stage-act="camp-node" data-res="catnip" title="点击采摘林间灵果">
@@ -160,9 +165,6 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
                 <span class="camp-hotspot__icon">${renderResSvg("minerals", 18)}</span>
                 <span class="camp-hotspot__label">勘探灵晶</span>
               </button>
-            </div>
-            <div class="camp-stage__companions">
-              ${companionSlotsHtml}
             </div>
           </div>
         </div>
