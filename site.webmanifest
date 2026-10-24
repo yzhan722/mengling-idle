@@ -1,0 +1,26 @@
+{
+  "name": "萌灵放置冒险 · 星野灵兽录",
+  "short_name": "萌灵放置冒险",
+  "description": "奇幻星野灵兽收集与营地建造放置 RPG",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#0b0f17",
+  "icons": [
+    {
+      "src": "./assets/ui/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/ui/favicon-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/ui/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

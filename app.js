@@ -43,7 +43,7 @@ import { createBoot } from "./modules/app/boot.js";
 
 (() => {
   setupGlobalErrorHandling();
-  const analytics = createAnalytics({ gameVersion: "0.7.2" });
+  const analytics = createAnalytics({ gameVersion: "0.7.3" });
 
   installSpriteHandlers();
 

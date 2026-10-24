@@ -1,5 +1,21 @@
 const PRIMARY_TABS = new Set(["bonfire", "science", "capture", "mons", "functions", "future"]);
 
+const TAB_TITLES = {
+  bonfire: "萌灵放置冒险 · 星火营地",
+  science: "萌灵放置冒险 · 星象研习",
+  capture: "萌灵放置冒险 · 九域猎场",
+  mons: "萌灵放置冒险 · 灵兽圣域",
+  functions: "萌灵放置冒险 · 育灵中枢",
+  future: "萌灵放置冒险 · 奇珍炼金",
+  dex: "萌灵放置冒险 · 万灵图鉴",
+  pve: "萌灵放置冒险 · 星穹试炼",
+  items: "萌灵放置冒险 · 星辉百宝",
+  social: "萌灵放置冒险 · 演武会馆",
+  leaderboard: "萌灵放置冒险 · 荣耀圣坛",
+  help: "萌灵放置冒险 · 冒险百科",
+  options: "萌灵放置冒险 · 云端档案",
+};
+
 export function createTabController({
   ui,
   elTabs,
@@ -117,6 +133,9 @@ export function createTabController({
     if (!elTabs || !elPanels) return;
 
     ui.activeTab = name;
+    if (typeof document !== "undefined") {
+      document.title = TAB_TITLES[name] || "萌灵放置冒险 · 星野灵兽录";
+    }
     if (name === "dex") ui.dexDirty = true;
     if (name === "capture") ui.captureDirty = true;
     if (name === "future") ui.futureDirty = true;
