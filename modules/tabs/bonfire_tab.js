@@ -57,11 +57,9 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
         ? charges <= 0
           ? `采集 0${cd > 0 ? ` · ${fmtRemain(cd)}` : ""}`
           : `采集 ${charges}${combo >= 2 ? ` x${combo}` : ""}`
-        : charges >= 1000
-          ? `采集 ${charges}/1000${combo >= 2 ? ` · 连击 x${combo}` : ""}`
-          : cd > 0
-            ? `采集 ${charges}/1000（+1 ${fmtRemain(cd)}）${combo >= 2 ? ` · 连击 x${combo}` : ""}`
-            : `采集 ${charges}/1000${combo >= 2 ? ` · 连击 x${combo}` : ""}`;
+        : charges <= 0
+          ? `采集 0${cd > 0 ? ` (${fmtRemain(cd)})` : ""}`
+          : `采集 ${charges}${combo >= 2 ? ` · 连击x${combo}` : ""}`;
       elBtnGather.textContent = text;
       elBtnGather.title =
         charges <= 0

@@ -1,15 +1,12 @@
 // ponytail: 产能摘要已由各资源筹码 .resrow__meta 承担，不再往顶栏插重复 #prodHint
 import { renderResSvg } from "./rpg_svg_icons.js";
 
-// 将速率转为更直观的文本：速率很低时显示「约Xs/个」
+// 将速率转为紧凑单行文本
 function fmtRate(perSec) {
-  if (perSec <= 0) return "0/秒";
-  if (perSec < 0.5) {
-    const secPer = Math.round(1 / perSec);
-    return `约${secPer}s/个`;
-  }
-  if (perSec < 1) return `${perSec.toFixed(2)}/秒`;
-  return `${Math.floor(perSec)}/秒`;
+  if (perSec <= 0) return "+0/秒";
+  if (perSec < 0.1) return `+${perSec.toFixed(2)}/秒`;
+  if (perSec < 10) return `+${perSec.toFixed(1).replace(/\.0$/, "")}/秒`;
+  return `+${Math.floor(perSec)}/秒`;
 }
 
 // 根据图鉴数量计算育灵师等级（适配 160 图鉴与 9 大生态区解锁节奏）
@@ -46,11 +43,15 @@ export function createRenderResources({ elResources, defs, fmt, getState }) {
       row.className = "resrow";
       row.dataset.rid = it.id;
 
-      const left = document.createElement("div");
-      left.className = "resrow__left";
       const iconEl = document.createElement("span");
       iconEl.className = "resrow__icon";
-      iconEl.innerHTML = renderResSvg(it.id, 18);
+      iconEl.innerHTML = renderResSvg(it.id, 22);
+
+      const body = document.createElement("div");
+      body.className = "resrow__body";
+
+      const head = document.createElement("div");
+      head.className = "resrow__head";
       const nameEl = document.createElement("div");
       nameEl.className = "resrow__k";
       nameEl.textContent = it.name;
@@ -59,7 +60,7 @@ export function createRenderResources({ elResources, defs, fmt, getState }) {
       metaEl.className = "resrow__meta";
       metaEl.textContent = it.meta;
 
-      left.append(iconEl, nameEl, metaEl);
+      head.append(nameEl, metaEl);
 
       const valueEl = document.createElement("div");
       valueEl.className = "resrow__v";
@@ -75,7 +76,8 @@ export function createRenderResources({ elResources, defs, fmt, getState }) {
       fill.style.width = `${pct}%`;
       track.append(fill);
 
-      row.append(left, valueEl, track);
+      body.append(head, valueEl, track);
+      row.append(iconEl, body);
       frag.append(row);
       rowMap.set(it.id, {
         row,

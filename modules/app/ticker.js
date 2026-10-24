@@ -181,7 +181,8 @@ export function createTickerSystem({
     const tip = TICKER_LAST_REAL_MSG || "";
     if (ui?.bossBully && boss) {
       el.hidden = false;
-      el.textContent = tip ? `${boss} · ${tip}` : boss;
+      const showTip = tip && !tip.includes(boss) && !tip.includes("Boss HP");
+      el.textContent = showTip ? `${boss} · ${tip}` : boss;
       try {
         document.documentElement.style.setProperty("--world-pulse-h", "22px");
       } catch {}

@@ -135,12 +135,12 @@ body {
 .topbar__inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 8px 18px;
+  padding: 10px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px 16px;
-  flex-wrap: wrap;
+  gap: 10px 14px;
+  flex-wrap: nowrap;
 }
 
 /* 左簇：品牌 + 育灵师横排 */
@@ -148,7 +148,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex: 0 1 auto;
   min-width: 0;
 }
@@ -179,12 +179,12 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  gap: 6px;
-  align-items: center;
+  gap: 8px;
+  align-items: stretch;
   justify-content: flex-end;
   margin-left: 0;
-  width: max-content;
-  max-width: min(100%, 460px);
+  width: auto;
+  max-width: none;
   min-width: 0;
 }
 
@@ -192,89 +192,106 @@ body {
   position: relative;
   overflow: hidden;
   flex: 0 0 auto;
-  width: 122px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto auto;
-  align-content: center;
+  min-width: 152px;
+  height: 52px;
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 1px 8px;
-  padding: 5px 10px 7px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 220, 160, 0.14);
-  background: rgba(255, 236, 200, 0.045);
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 220, 160, 0.18);
+  background: rgba(15, 23, 42, 0.85);
 }
 
-.resources--top .resrow__left {
-  grid-column: 1;
-  grid-row: 1 / span 2;
+.resources--top .resrow__bar {
+  display: none !important;
+}
+
+.resources--top .resrow__body {
+  flex: 1 1 auto;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.resources--top .resrow__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .resources--top .resrow__k {
   font-size: 12px;
-  font-weight: 700;
-  color: rgba(255, 236, 200, 0.88);
+  font-weight: 800;
+  color: #fef3c7;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.15;
 }
 
 .resources--top .resrow__meta {
-  font-size: 11px;
-  color: rgba(52, 211, 153, 0.82);
-  line-height: 1.2;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #6ee7b7;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  line-height: 1.25;
+  white-space: nowrap;
+  margin: 0;
 }
 
 .resources--top .resrow__v {
-  grid-column: 2;
-  grid-row: 1 / span 2;
   font-family: "Rajdhani", "Noto Sans SC", sans-serif;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 700;
-  letter-spacing: 0.2px;
-  color: rgba(255, 255, 255, 0.96);
+  letter-spacing: 0.25px;
+  line-height: 1.1;
+  color: #f8fafc;
   white-space: nowrap;
 }
 
 .resources--top .resrow__track {
-  grid-column: 1 / -1;
-  grid-row: 3;
-  height: 3px;
-  margin-top: 3px;
+  width: 100%;
+  height: 4px;
+  margin-top: 2px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.10);
   overflow: hidden;
 }
 
 .resources--top .resrow__fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.45), rgba(250, 204, 21, 0.95));
+  background: linear-gradient(90deg, rgba(250, 204, 21, 0.5), rgba(250, 204, 21, 0.98));
   transition: width 0.35s ease;
 }
 
 .resources--top .resrow[data-rid="catnip"] {
-  border-color: rgba(250, 204, 21, 0.22);
+  border-color: rgba(250, 204, 21, 0.28);
 }
 .resources--top .resrow[data-rid="catnip"] .resrow__fill {
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.4), rgba(250, 204, 21, 0.95));
+  background: linear-gradient(90deg, rgba(52, 211, 153, 0.65), rgba(250, 204, 21, 0.98));
 }
 .resources--top .resrow[data-rid="wood"] {
-  border-color: rgba(251, 146, 60, 0.24);
+  border-color: rgba(251, 146, 60, 0.30);
 }
 .resources--top .resrow[data-rid="wood"] .resrow__fill {
-  background: linear-gradient(90deg, rgba(251, 146, 60, 0.4), rgba(251, 146, 60, 0.95));
+  background: linear-gradient(90deg, rgba(251, 146, 60, 0.5), rgba(251, 191, 36, 0.98));
 }
 .resources--top .resrow[data-rid="minerals"] {
-  border-color: rgba(125, 211, 252, 0.24);
+  border-color: rgba(56, 189, 248, 0.32);
 }
 .resources--top .resrow[data-rid="minerals"] .resrow__fill {
-  background: linear-gradient(90deg, rgba(56, 189, 248, 0.4), rgba(125, 211, 252, 0.95));
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.5), rgba(125, 211, 252, 0.98));
 }
 
 /* 中宽屏：右簇可换行，避免挤压身份 */
-@media (max-width: 1100px) {
+@media (max-width: 1040px) {
   .topbar__inner {
     flex-wrap: wrap;
   }
@@ -3368,12 +3385,12 @@ body::before {
 
 .topbar__action #btnGather {
   border-radius: 999px;
-  min-height: 40px;
-  min-width: 132px;
-  padding: 8px 18px;
+  min-height: 42px;
+  min-width: 112px;
+  padding: 8px 15px;
   font-weight: 800;
-  letter-spacing: 0.3px;
-  font-size: 14px;
+  letter-spacing: 0.2px;
+  font-size: 13px;
   box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.14), 0 8px 22px rgba(0, 0, 0, 0.28);
   white-space: nowrap;
 }
@@ -6110,23 +6127,27 @@ button.capture-wanderer.is-rustling {
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
 }
 
-.resrow__left {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
 .resrow__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 7px;
-  background: radial-gradient(circle at 35% 30%, rgba(250, 204, 21, 0.22), rgba(15, 23, 42, 0.9));
-  border: 1px solid rgba(250, 204, 21, 0.35);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: radial-gradient(circle at 35% 30%, rgba(250, 204, 21, 0.24), rgba(15, 23, 42, 0.94));
+  border: 1px solid rgba(250, 204, 21, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.resources--top .resrow[data-rid="wood"] .resrow__icon {
+  background: radial-gradient(circle at 35% 30%, rgba(251, 146, 60, 0.26), rgba(15, 23, 42, 0.94));
+  border-color: rgba(251, 146, 60, 0.45);
+}
+
+.resources--top .resrow[data-rid="minerals"] .resrow__icon {
+  background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.26), rgba(15, 23, 42, 0.94));
+  border-color: rgba(56, 189, 248, 0.48);
 }
 
 /* 2. 全页面舞台置顶净化：消除舞台上方的冗余说明框与顺序错位 */
