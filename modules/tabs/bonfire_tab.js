@@ -339,10 +339,10 @@ export function initBonfireTab({
       const tierFast = Math.floor((clicks - 1) / 100);
       const tier = tierFast <= 9 ? tierFast : 9 + Math.floor((clicks - 1 - 9 * 100) / 1000);
 
-      // Early clicks are fatter so the first research isn't a click marathon
-      const cat = Math.min(100, 3 + tier * 2);
-      const wood = Math.min(100, 1 + tier * 0.75);
-      const min = Math.min(100, 0.5 + tier * 0.35);
+      // Moderated click yield to keep early game smooth without explosive resource inflation
+      const cat = Math.min(60, 2 + tier * 1.2);
+      const wood = Math.min(50, 0.6 + tier * 0.5);
+      const min = Math.min(40, 0.3 + tier * 0.25);
 
       const parts = [];
       const catBefore = state?.res?.catnip?.value ?? 0;

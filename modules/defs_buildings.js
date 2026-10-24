@@ -10,8 +10,8 @@ export const BUILDING_DEFS = {
     effects: (state) => {
       const n = state.buildings.field.owned;
       return {
-        // 0.15 raw → ×0.5 finalize ≈ 0.075/s/田（原约 0.031）
-        catnipPerSec: 0.15 * n,
+        // 0.10 raw → ×0.5 finalize ≈ 0.05/s/田（慢节奏休闲标定）
+        catnipPerSec: 0.10 * n,
       };
     },
     visible: () => true,
@@ -19,15 +19,15 @@ export const BUILDING_DEFS = {
   hut: {
     name: "灵木营",
     category: "灵木",
-    desc: "解锁灵木。增加灵木产出。",
+    desc: "解锁灵木。增加灵木产出与上限。",
     baseCost: { catnip: 5 },      // 原20 × 0.25
     costMul: 1.18,
     effects: (state) => {
       const n = state.buildings.hut.owned;
       return {
         unlockWood: n > 0,
-        woodPerSec: 0.025 * n,    // 原0.1 × 0.25
-        capWoodAdd: 10 * n,       // 原40 × 0.25
+        woodPerSec: 0.016 * n,
+        capWoodAdd: 25 * n,
       };
     },
     visible: (state) => state.res.catnip.value >= 5 || state.buildings.hut.owned > 0,
@@ -42,7 +42,7 @@ export const BUILDING_DEFS = {
       const n = state.buildings.workshop.owned;
       return {
         unlockMinerals: n > 0,
-        mineralsPerSec: 0.03 * n,
+        mineralsPerSec: 0.02 * n,
       };
     },
     visible: (state) => state.unlocks.wood || state.buildings.workshop.owned > 0,
@@ -65,7 +65,7 @@ export const BUILDING_DEFS = {
     effects: (state) => {
       const n = state.buildings.granary.owned;
       return {
-        capCatnipAdd: 35 * n,
+        capCatnipAdd: 90 * n,
       };
     },
     visible: (state) => state.unlocks.wood || state.tech.berryCultivation || state.buildings.granary.owned > 0,
@@ -79,7 +79,7 @@ export const BUILDING_DEFS = {
     effects: (state) => {
       const n = state.buildings.berryPress.owned;
       return {
-        catnipPerSec: 0.1125 * n, // 原0.45 × 0.25
+        catnipPerSec: 0.075 * n,
       };
     },
     visible: (state) => state.tech.composting || state.buildings.berryPress.owned > 0,
@@ -93,7 +93,7 @@ export const BUILDING_DEFS = {
     effects: (state) => {
       const n = state.buildings.storehouse.owned;
       return {
-        capWoodAdd: 50 * n,
+        capWoodAdd: 120 * n,
       };
     },
     visible: (state) => state.unlocks.wood || state.buildings.storehouse.owned > 0,
@@ -101,14 +101,14 @@ export const BUILDING_DEFS = {
   lumberYard: {
     name: "灵木堆场",
     category: "灵木",
-    desc: "增加灵木自动产出。",
+    desc: "增加灵木自动产出与上限。",
     baseCost: { catnip: 65, wood: 30 }, // 原260×0.25, 120×0.25
     costMul: 1.1604,
     effects: (state) => {
       const n = state.buildings.lumberYard.owned;
       return {
-        woodPerSec: 0.045 * n,    // 原0.18 × 0.25
-        capWoodAdd: 15 * n,       // 原60 × 0.25
+        woodPerSec: 0.03 * n,
+        capWoodAdd: 35 * n,
       };
     },
     visible: (state) => state.tech.carpentry || state.buildings.lumberYard.owned > 0,
@@ -116,13 +116,13 @@ export const BUILDING_DEFS = {
   mineralSilo: {
     name: "灵晶储藏箱",
     category: "灵晶",
-    desc: "提升灵晶碎片上限。",
+    desc: "大幅提升灵晶碎片上限。",
     baseCost: { catnip: 4, wood: 3 }, // 原15×0.25, 10×0.25
     costMul: 1.19,
     effects: (state) => {
       const n = state.buildings.mineralSilo.owned;
       return {
-        capMineralsAdd: 50 * n,
+        capMineralsAdd: 120 * n,
       };
     },
     visible: (state) => state.unlocks.minerals || state.buildings.mineralSilo.owned > 0,
@@ -136,7 +136,7 @@ export const BUILDING_DEFS = {
     effects: (state) => {
       const n = state.buildings.ballBench.owned;
       return {
-        capPokeballAdd: 5 * n,
+        capPokeballAdd: 10 * n,
       };
     },
     visible: (state) => state.tech.pokeballBasics || state.buildings.ballBench.owned > 0,

@@ -212,13 +212,13 @@ export function computeUnlockedResourceRates(state, techEff) {
         0.0025 * (b.workshop?.owned ?? 0) +
         0.015 * (b.lumberYard?.owned ?? 0)) *
       (techEff?.woodRateMul ?? 1) *
-      2;
+      1.3;
   }
   if (mineralsUnlocked) {
     mineralsPerSec =
       (0.0125 * (b.workshop?.owned ?? 0) + 0.0075 * (b.quarry?.owned ?? 0)) *
       (techEff?.mineralsRateMul ?? 1) *
-      2;
+      1.3;
   }
   return { woodPerSec, mineralsPerSec };
 }

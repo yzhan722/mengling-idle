@@ -95,7 +95,7 @@ export const defaultState = () => ({
 
   res: {
 
-    catnip: { value: 12, cap: 80 },
+    catnip: { value: 12, cap: 200 },
 
     wood: { value: 0, cap: 0 },
 

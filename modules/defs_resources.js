@@ -1,19 +1,19 @@
 export const RESOURCE_DEFS = {
   catnip: {
     name: "灵果",
-    baseCap: 80,
+    baseCap: 200,
   },
   wood: {
     name: "灵木",
-    baseCap: 40,
+    baseCap: 120,
   },
   minerals: {
     name: "灵晶碎片",
-    baseCap: 30,
+    baseCap: 90,
   },
   pokeball: {
     name: "灵球",
-    baseCap: 10,
+    baseCap: 20,
   },
   bigBerry: {
     name: "大灵果",
