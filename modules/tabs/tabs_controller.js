@@ -141,7 +141,13 @@ export function createTabController({
             ? "options"
             : rawName;
 
+    const prevTab = ui.activeTab;
     ui.activeTab = name;
+    if (prevTab !== name && elPanels) {
+      try {
+        elPanels.scrollTop = 0;
+      } catch {}
+    }
     if (typeof document !== "undefined") {
       document.title = TAB_TITLES[name] || "萌灵放置冒险 · 星野灵兽录";
     }
