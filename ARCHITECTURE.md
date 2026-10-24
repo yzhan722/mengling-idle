@@ -1,7 +1,7 @@
-# 宝可梦挂机 — 代码架构说明
+# 萌灵放置冒险 — 代码架构说明
 
-> 生产：v0.1.0（`master` / live health 0.1.0）  
-> 最后更新：2026-09-11  
+> 生产：v0.7.2（`master` / live health 0.7.2）  
+> 最后更新：2026-10-24  
 > 未完成项：[milestone v0.41.2](https://github.com/yzhan722/mengling-idle/milestone/1)，不要把进度只写在 markdown。
 
 ## 整体架构

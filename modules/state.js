@@ -6,7 +6,7 @@ import { ensureMonAbility } from "./abilities.js";
 
 import { BUILDING_DEFS } from "./defs_buildings.js";
 
-import { EXTRA_TECH_FLAGS } from "./tech_defs.js?v=0.31.4";
+import { EXTRA_TECH_FLAGS } from "./tech_defs.js";
 
 import { ensureEraState } from "./systems/era.js";
 import { normalizeLegacy } from "./systems/rebirth.js";

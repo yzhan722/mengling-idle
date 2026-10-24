@@ -1,5 +1,5 @@
 import { clamp, randFloat } from "./utils.js";
-import { runAutomation } from "./automation.js?v=0.31.4";
+import { runAutomation } from "./automation.js";
 import { eraEncounterRechargeMul } from "./systems/era.js";
 import {
   pickExpeditionEventCard,

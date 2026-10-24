@@ -1,7 +1,7 @@
-// Service Worker v0.7.1
+// Service Worker v0.7.2
 // 策略：HTML/JS/CSS Network First（确保F5刷新时强制获取最新版本），数据文件 Cache First
 
-const CACHE_VERSION = 'mengling-v0.7.1';
+const CACHE_VERSION = 'mengling-v0.7.2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DATA_CACHE = `${CACHE_VERSION}-data`;
 
@@ -12,12 +12,11 @@ const PRECACHE_URLS = [
   './styles.css',
   './main.js',
   './app.js',
-  './assets/donate_qr.jpg',
+  './assets/ui/camp_stage_night.jpg',
 ];
 
-// 萌灵数据文件单独缓存，版本更新时一并清除
+// 萌灵数据文件单独缓存，版本更新时一并清除（仅缓存浏览器运行时需要的编译产物 beasts.js）
 const DATA_URLS = [
-  './data/beasts_zh.js',
   './data/beasts.js',
 ];
 

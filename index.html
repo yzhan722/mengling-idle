@@ -1,49 +1,30 @@
 <!doctype html>
-
 <html lang="zh-CN">
-
   <head>
-
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
     <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
-
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
     <meta name="theme-color" content="#0b0f17" />
-
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-
     <meta http-equiv="Pragma" content="no-cache" />
-
     <meta http-equiv="Expires" content="0" />
-
-    <title>萌灵放置冒险 v0.7.1</title>
+    <title>萌灵放置冒险 v0.7.2</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&family=Rajdhani:wght@600;700&display=swap" />
-
-    <link rel="stylesheet" href="./styles.css?v=0.7.1" />
-
+    <link rel="stylesheet" href="./styles.css?v=0.7.2" />
   </head>
-
   <body>
-
     <a class="skip-link" href="#mainStage">跳到主要内容</a>
-
     <div id="ticker" class="ticker" aria-live="polite"></div>
-
     <header class="topbar">
       <div class="topbar__inner">
         <div class="topbar__identity">
           <div class="brand">
             <div class="brand__title">萌灵放置冒险</div>
-            <div class="brand__subtitle" id="topbarStatus">v0.7.1 · 挂机冒险</div>
+            <div class="brand__subtitle" id="topbarStatus">v0.7.2 · 挂机冒险</div>
           </div>
           <div id="trainerHost" class="topbar__trainer" aria-label="育灵师等级"></div>
         </div>
@@ -56,11 +37,7 @@
       </div>
       <div id="worldPulse" class="worldPulse" aria-live="polite" hidden></div>
     </header>
-
-
-
     <main class="shell">
-
       <aside class="sidebar sidebar--log">
         <details class="bulletin bulletin--inline">
           <summary class="bulletin__summary">最新公告</summary>
@@ -88,212 +65,105 @@
             </details>
           </div>
         </details>
-
         <div id="serverBuffBar" class="serverBuffBar serverBuffBar--inline is-collapsed" aria-label="服务器Buff">
           <button type="button" class="serverBuffBar__toggle" id="serverBuffToggle" aria-expanded="false">全服 Buff</button>
           <div class="serverBuffBar__body" id="serverBuffBody"></div>
         </div>
-
         <div class="hint" id="hint" hidden></div>
-
         <div class="sidebar__sectionTitleRow sidebar__sectionTitleRow--log">
           <div class="sidebar__sectionTitle">日志</div>
           <button id="logToggle" class="btn btn--small btn--ghost" type="button">展开</button>
         </div>
-
         <div id="log" class="log"></div>
       </aside>
-
-
-
       <section class="main" id="mainStage">
-
         <div class="tabs" role="tablist" aria-label="主界面">
-
           <button class="tab is-active" id="tab-bonfire" data-tab="bonfire" role="tab" aria-selected="true" aria-controls="panel-bonfire">篝火</button>
-
           <button class="tab" id="tab-science" data-tab="science" role="tab" aria-selected="false" aria-controls="panel-science">研究</button>
-
           <button class="tab" id="tab-capture" data-tab="capture" role="tab" aria-selected="false" aria-controls="panel-capture">捕捉</button>
-
           <button class="tab" id="tab-mons" data-tab="mons" role="tab" aria-selected="false" aria-controls="panel-mons">萌灵</button>
-
           <button class="tab" id="tab-functions" data-tab="functions" role="tab" aria-selected="false" aria-controls="panel-functions">功能</button>
-
           <button class="tab" id="tab-future" data-tab="future" role="tab" aria-selected="false" aria-controls="panel-future">商店与合成</button>
-
           <button class="tab" id="tab-dex" data-tab="dex" role="tab" aria-selected="false" aria-controls="panel-dex">图鉴</button>
-
           <button class="tab" id="tab-pve" data-tab="pve" role="tab" aria-selected="false" aria-controls="panel-pve">挑战</button>
-
           <button class="tab" id="tab-items" data-tab="items" role="tab" aria-selected="false" aria-controls="panel-items">道具</button>
-
           <button class="tab" id="tab-social" data-tab="social" role="tab" aria-selected="false" aria-controls="panel-social">社交</button>
-
           <button class="tab" id="tab-help" data-tab="help" role="tab" aria-selected="false" aria-controls="panel-help">帮助</button>
-
           <button class="tab" id="tab-options" data-tab="options" role="tab" aria-selected="false" aria-controls="panel-options">设置</button>
-
           <button class="tab" id="tab-leaderboard" data-tab="leaderboard" role="tab" aria-selected="false" aria-controls="panel-leaderboard">排行榜</button>
-
         </div>
-
-
-
         <div class="panels">
-
           <div class="panel is-active" id="panel-bonfire" role="tabpanel" aria-labelledby="tab-bonfire">
-
             <div id="bonfireActions" class="list"></div>
-
             <div id="buildings" class="list"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-science" role="tabpanel" aria-labelledby="tab-science" hidden>
-
             <div class="actions">
-
               <span id="researchEff" class="muted"></span>
-
               <select id="autoResearchMode" class="input">
-
                 <option value="time">优先研究时间短</option>
-
                 <option value="cost">优先研究成本低</option>
-
               </select>
-
               <label class="check">
-
                 <input id="autoResearchToggle" type="checkbox" />
-
               <span>自动研究</span>
-
               </label>
-
             </div>
-
             <div id="tech" class="list"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-capture" role="tabpanel" aria-labelledby="tab-capture" hidden>
-
             <div class="actions">
-
               <select id="captureArea" class="input"></select>
-
               <span id="captureChance" class="muted"></span>
-
             </div>
-
             <div id="captureInfo" class="list"></div>
-
             <div id="captureActions" class="list"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-mons" role="tabpanel" aria-labelledby="tab-mons" hidden>
-
             <div class="actions">
-
               <select id="monRegion" class="input">
-
                 <option value="all">全部区域</option>
-
                 <option value="meadow">芽芽草甸</option>
-
                 <option value="woods">蜜露林径</option>
-
                 <option value="brook">溪光浅滩</option>
-
                 <option value="plateau">风铃高原</option>
-
                 <option value="dunes">星砂荒漠</option>
-
                 <option value="garden">月见花园</option>
-
                 <option value="ridge">霜晶山脊</option>
-
                 <option value="hollow">龙眠幽谷</option>
-
                 <option value="sanctum">幻梦秘境</option>
-
               </select>
-
               <select id="monType" class="input">
-
                 <option value="all">全部属性</option>
-
                 <option value="fire">火</option>
-
                 <option value="water">水</option>
-
                 <option value="grass">草</option>
-
                 <option value="electric">电</option>
-
                 <option value="wind">风</option>
-
                 <option value="stone">岩</option>
-
                 <option value="light">光</option>
-
                 <option value="dark">暗</option>
-
                 <option value="mystic">幻</option>
-
               </select>
-
               <select id="monSort" class="input">
-
                 <option value="created">获取时间</option>
-
                 <option value="dex">图鉴编号</option>
-
                 <option value="lvl">等级</option>
-
                 <option value="power">战斗力</option>
-
                 <option value="satiety">饱腹度</option>
-
               </select>
-
               <button id="monPrev" class="btn btn--small">上一页</button>
-
               <button id="monNext" class="btn btn--small">下一页</button>
-
               <span id="monPageInfo" class="muted"></span>
-
               <button id="monBack" class="btn btn--small" hidden>返回列表</button>
-
             </div>
-
             <div id="monList" class="list"></div>
-
             <div id="monDetail" class="list" hidden></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-functions" role="tabpanel" aria-labelledby="tab-functions" hidden>
-
             <div class="list" id="functionsTraining"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-future" role="tabpanel" aria-labelledby="tab-future" hidden>
-
             <div class="row futureShopIntro">
               <div class="row__left">
                 <div class="row__title">商店与合成</div>
@@ -303,100 +173,47 @@
                 <div class="badge" id="futureCoinBadge">未来币 —</div>
               </div>
             </div>
-
             <div class="sidebar__divider"></div>
             <div class="panel__title">未来币商店</div>
-
             <div id="futureShop" class="list"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-dex" role="tabpanel" aria-labelledby="tab-dex" hidden>
-
             <div class="actions">
-
               <select id="dexArea" class="select"></select>
-
               <input id="dexSearch" class="input" placeholder="搜索名称/编号" />
-
               <label class="check">
-
                 <input id="dexOnlyCaught" type="checkbox" />
-
               <span>只显示已捕捉</span>
-
               </label>
-
               <label class="check">
-
                 <input id="dexOnlyMissing" type="checkbox" />
-
               <span>只显示未捕捉</span>
-
               </label>
-
               <label class="check">
-
                 <input id="dexOnlyShiny" type="checkbox" />
-
               <span>闪光收藏</span>
-
               </label>
-
               <button id="dexPrev" class="btn btn--small">上一页</button>
-
               <button id="dexNext" class="btn btn--small">下一页</button>
-
               <span id="dexPageInfo" class="muted"></span>
-
               <span id="dexRegionInfo" class="muted"></span>
-
             </div>
-
             <div id="dexSummary" class="list"></div>
-
             <div id="dexList" class="list"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-pve" role="tabpanel" aria-labelledby="tab-pve" hidden>
-
             <div id="pveList" class="list"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-items" role="tabpanel" aria-labelledby="tab-items" hidden>
-
             <div id="items" class="list"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-social" role="tabpanel" aria-labelledby="tab-social" hidden>
-
             <!-- 社交功能由 social_tab.js 渲染 -->
-
           </div>
-
-
-
           <div class="panel" id="panel-help" role="tabpanel" aria-labelledby="tab-help" hidden>
-
             <div id="help" class="list"></div>
-
           </div>
-
-
-
           <div class="panel" id="panel-options" role="tabpanel" aria-labelledby="tab-options" hidden>
-
             <div class="tab-stage tab-stage--options" aria-label="星轨时空档案室">
               <div class="tab-stage__artWrap">
                 <img class="tab-stage__bgImg" src="./assets/ui/stage_science.jpg" alt="" loading="eager" decoding="async" onerror="this.style.display='none'" />
@@ -414,622 +231,236 @@
                 </div>
               </div>
             </div>
-
             <div class="sidebar__divider"></div>
-
             <div class="panel__title">今日目标</div>
             <div class="list" id="dailyGoalsList"></div>
-
             <div class="sidebar__divider"></div>
-
             <div class="panel__title">手动存档槽</div>
             <div class="muted" style="font-size:12px;line-height:1.5;margin:0 0 8px">槽 1：本机手动快照（登录后也会参与云同步）。与自动存档（槽 0）分开。</div>
             <div class="actions">
               <button class="btn btn--small" id="btnSaveSlot1" type="button">写入槽1</button>
               <button class="btn btn--small" id="btnLoadSlot1" type="button">读取槽1</button>
             </div>
-
             <div class="sidebar__divider"></div>
-
             <div class="panel__title">云存档</div>
             <div class="muted" style="font-size:12px;line-height:1.55;margin:0 0 8px">
               注册云账号：换设备不丢档；登录后可在「好友」加友、约战。本地也能玩，云账号是可选加速。
             </div>
-
             <div class="actions">
-
               <label class="sr-only" for="cloudUsername">用户名</label><input class="input" id="cloudUsername" placeholder="用户名" autocomplete="username" />
-
               <label class="sr-only" for="cloudPassword">密码</label><input class="input" id="cloudPassword" placeholder="密码" type="password" autocomplete="current-password" />
-
               <button class="btn btn--small" id="btnCloudLogin">登录</button>
-
               <button class="btn btn--small" id="btnCloudRegister">注册</button>
-
               <button class="btn btn--small" id="btnCloudLogout">退出</button>
-
               <button class="btn btn--small" id="btnCloudSyncNow">立即同步</button>
-
               <button class="btn btn--small" id="btnSaveExport">导出存档</button>
-
               <button class="btn btn--small" id="btnSaveImport">导入存档</button>
-
               <input type="file" id="saveImportFile" accept="application/json,.json" hidden />
-
               <span class="muted" id="cloudStatus"></span>
-
             </div>
-
-
-
             <div class="cloudSlots" id="cloudSlotPanel" hidden>
-
               <div class="panel__title" style="margin-top:10px">云端存档槽</div>
-
               <div id="cloudSlotList" class="list"></div>
-
             </div>
-
-
-
             <details id="cloudPasswordRecovery" class="cloudRecoverHint" open>
               <summary>忘记密码 / 换机必读</summary>
               <p class="muted">本游戏暂不支持自助找回密码。换设备前请先点「导出存档」备份；忘记密码请联系管理员重置，或用导出档重新注册后导入。</p>
             </details>
-
-
-
             <div class="modalOverlay" id="cloudConflictOverlay" hidden>
-
               <div class="modal" role="dialog" aria-labelledby="cloudConflictTitle" aria-modal="true">
-
                 <div class="modal__header">
-
                   <div class="modal__title" id="cloudConflictTitle">存档冲突</div>
-
                 </div>
-
                 <div class="modal__desc" id="cloudConflictDesc"></div>
-
                 <div class="modal__body">
-
                   <div class="actions">
-
                     <button class="btn btn--small" type="button" id="btnConflictKeepLocal">保留本地</button>
-
                     <button class="btn btn--small" type="button" id="btnConflictKeepServer">保留云端</button>
-
                     <button class="btn btn--small" type="button" id="btnConflictCancel">取消</button>
-
                   </div>
-
                 </div>
-
               </div>
-
             </div>
-
-
-
           </div>
-
-
-
           <div class="panel" id="panel-leaderboard" role="tabpanel" aria-labelledby="tab-leaderboard" hidden>
-
             <div class="list" id="leaderboard"></div>
-
           </div>
-
         </div>
-
       </section>
-
     </main>
-
-
-
     <div id="overlays"></div>
-
-
-
-    <footer class="footer">
-
-    </footer>
-
-
-
+    <footer class="footer"></footer>
     <script>
-
-      // ========== UX 澧炲己灞?==========
-
-
-
-      // Toast 閫氱煡绯荤粺
-
+      // ========== UX 增强层 ==========
+      // Toast 通知系统
       (function() {
-
         var container = null;
-
         function getContainer() {
-
           if (!container) {
-
             container = document.createElement('div');
-
             container.className = 'toast-container';
-
             document.body.appendChild(container);
-
           }
-
           return container;
-
         }
-
         var ICONS = { ok: '✅', danger: '❌', warn: '⚠️', info: 'ℹ️', shiny: '✨' };
-
         window.showToast = function(msg, type, ttl) {
-
           type = type || 'info';
-
           ttl = typeof ttl === 'number' ? ttl : (type === 'shiny' ? 5000 : 2800);
-
           var c = getContainer();
-
           var el = document.createElement('div');
-
           el.className = 'toast toast--' + type;
-
           el.innerHTML = '<span class="toast__icon">' + (ICONS[type] || '❓') + '</span><span class="toast__body">' + String(msg) + '</span>';
-
           c.appendChild(el);
-
           var tid = setTimeout(function() { dismiss(el); }, ttl);
-
           el.addEventListener('click', function() { dismiss(el); });
-
           function dismiss(t) {
-
             clearTimeout(tid);
-
             t.classList.add('is-hiding');
-
             setTimeout(function() { if (t.parentNode) t.parentNode.removeChild(t); }, 220);
-
           }
-
           var toasts = c.querySelectorAll('.toast');
-
           if (toasts.length > 5) dismiss(toasts[0]);
-
         };
-
       })();
-
-
-
       // Tab 滚动位置记忆
-
       (function() {
-
         var scrollMap = {};
-
         var panels = null;
-
         function getPanels() { if (!panels) panels = document.querySelector('.panels'); return panels; }
-
         document.addEventListener('click', function(e) {
-
           var tab = e.target.closest('.tab');
-
           if (!tab) return;
-
           var p = getPanels(); if (!p) return;
-
           var activePanel = p.querySelector('.panel.is-active');
-
           if (activePanel) scrollMap[activePanel.id] = p.scrollTop;
-
         });
-
         var mo = new MutationObserver(function(mutations) {
-
           mutations.forEach(function(m) {
-
             if (m.type === 'attributes' && m.attributeName === 'class') {
-
               var el = m.target;
-
               if (el.classList.contains('panel') && el.classList.contains('is-active')) {
-
                 var p = getPanels();
-
                 if (p) p.scrollTop = scrollMap[el.id] || 0;
-
               }
-
             }
-
           });
-
         });
-
         window.addEventListener('load', function() {
-
           var p = getPanels(); if (!p) return;
-
           p.querySelectorAll('.panel').forEach(function(panel) {
-
             mo.observe(panel, { attributes: true, attributeFilter: ['class'] });
-
           });
-
         });
-
       })();
-
-
-
       // 键盘快捷键
-
       (function() {
-
         var TAB_KEYS = { '1':'bonfire','2':'capture','3':'mons','4':'science','5':'dex','6':'pve','7':'items','8':'social','9':'help' };
-
         document.addEventListener('keydown', function(e) {
-
           var tag = document.activeElement && document.activeElement.tagName;
-
           if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-
           if (e.altKey && TAB_KEYS[e.key]) {
-
             e.preventDefault();
-
             var btn = document.querySelector('.tab[data-tab="' + TAB_KEYS[e.key] + '"]');
-
             if (btn) btn.click(); return;
-
           }
-
           var activeTab = document.querySelector('.tab.is-active');
-
           if (activeTab && activeTab.getAttribute('data-tab') === 'capture') {
-
             if (e.key === 'e' || e.key === 'E') { var b = document.querySelector('[data-capture-action="encounter"]:not(:disabled)'); if (b) { b.click(); e.preventDefault(); } }
-
             else if (e.key === 't' || e.key === 'T') { var b = document.querySelector('[data-capture-action="throw"]:not(:disabled)'); if (b) { b.click(); e.preventDefault(); } }
-
             else if (e.key === 'r' || e.key === 'R') { var b = document.querySelector('[data-capture-action="run"]:not(:disabled)'); if (b) { b.click(); e.preventDefault(); } }
-
           }
-
         });
-
       })();
-
-
-
       // 资源进度条动态更新
-
       (function() {
-
         function updateResBars() {
-
           document.querySelectorAll('.resrow').forEach(function(row) {
-
             var vEl = row.querySelector('.resrow__v'); if (!vEl) return;
-
             var m = (vEl.textContent || '').match(/([\d,]+)\s*\/\s*([\d,]+)/);
-
             if (!m) return;
-
             var pct = Math.min(1, parseFloat(m[1].replace(/,/g,'')) / parseFloat(m[2].replace(/,/g,'')));
-
             if (!row.querySelector('.resrow__bar')) {
-
               var bar = document.createElement('div'); bar.className = 'resrow__bar';
-
               row.insertBefore(bar, row.firstChild);
-
             }
-
             row.style.setProperty('--res-pct', pct);
-
             row.classList.toggle('is-near-full', pct >= 0.8 && pct < 1);
-
             row.classList.toggle('is-full', pct >= 1);
-
           });
-
         }
-
         window.addEventListener('load', function() {
-
           var resEl = document.getElementById('resources'); if (!resEl) return;
-
           updateResBars();
-
           new MutationObserver(updateResBars).observe(resEl, { childList: true, subtree: true, characterData: true });
-
         });
-
       })();
-
-
-
-      // 公告已用 <details> 默认折叠；旧移动端 toggle 不再注入
-
-
-
       // 移动端：日志折叠
-
       (function() {
-
         var logToggle = document.getElementById('logToggle');
-
         var log = document.getElementById('log');
-
         if (!logToggle || !log) return;
-
         function applyMobileLog() {
-
           if (window.innerWidth <= 768 && !log.classList.contains('is-expanded-mobile')) {
-
             log.style.maxHeight = '100px'; log.style.overflow = 'hidden';
-
           } else if (window.innerWidth > 768) {
-
             log.style.maxHeight = ''; log.style.overflow = '';
-
           }
-
         }
-
         applyMobileLog();
-
         window.addEventListener('resize', applyMobileLog);
-
         logToggle.addEventListener('click', function() {
-
           if (window.innerWidth <= 768) {
-
             var exp = log.classList.toggle('is-expanded-mobile');
-
             log.style.maxHeight = exp ? '260px' : '100px';
-
             log.style.overflow = exp ? 'auto' : 'hidden';
-
             logToggle.textContent = exp ? '收起' : '展开';
-
           }
-
         });
-
       })();
-
-    </script>
-
-
-
-    <script>
-
-      // ========== 视觉游戏感激活层 ==========
-
-
-
-      // --- 日志彩色分类 ---
-
+      // 日志彩色分类
       (function() {
-
         var PATTERNS = [
-
-          { re: /闪光|shiny/i,            cls: 'log-line--shiny'    },
-
+          { re: /闪光|shiny/i,              cls: 'log-line--shiny'    },
           { re: /幻灵|传说|幻之/,           cls: 'log-line--mythic'   },
-
-          { re: /进化|evolution/i,         cls: 'log-line--evo'      },
-
-          { re: /升级|level.?up|lv\./i,  cls: 'log-line--level'    },
-
-          { re: /捕草|捕获|caught|capture/i, cls: 'log-line--catch'  },
-
-          { re: /战斗|挑战|pve|pvp|boss/i, cls: 'log-line--battle'   },
-
+          { re: /进化|evolution/i,          cls: 'log-line--evo'      },
+          { re: /升级|level.?up|lv\./i,     cls: 'log-line--level'    },
+          { re: /捕草|捕获|caught|capture/i, cls: 'log-line--catch'   },
+          { re: /战斗|挑战|pve|pvp|boss/i,  cls: 'log-line--battle'   },
           { re: /采集|资源|produce|gather/i, cls: 'log-line--resource'},
-
         ];
-
         function classifyLine(text) {
-
           for (var i = 0; i < PATTERNS.length; i++) {
-
             if (PATTERNS[i].re.test(text)) return PATTERNS[i].cls;
-
           }
-
           return null;
-
         }
-
         function colorizeLog() {
-
           var log = document.getElementById('log');
-
           if (!log) return;
-
           var divs = log.querySelectorAll('div:not(.log-line)');
-
           divs.forEach(function(d) {
-
             d.classList.add('log-line');
-
             var cls = classifyLine(d.textContent || '');
-
             if (cls) d.classList.add(cls);
-
           });
-
         }
-
         window.addEventListener('load', function() {
-
           var log = document.getElementById('log');
-
           if (!log) return;
-
           colorizeLog();
-
           new MutationObserver(colorizeLog).observe(log, { childList: true, subtree: false });
-
         });
-
       })();
-
-
-
-      // --- 建筑等级进度条：已由 buildings.js 直出；旧 inject 已移除（属性/编码损坏）---
-
-      // --- 科技行状态类注入 ---
-
-      (function() {
-
-        function injectTechClasses() {
-
-          var tech = document.getElementById('tech');
-
-          if (!tech) return;
-
-          tech.querySelectorAll('.row').forEach(function(row) {
-
-            row.classList.remove('row--researching', 'row--researchable', 'row--researched');
-
-            var badges = row.querySelectorAll('.badge');
-
-            badges.forEach(function(b) {
-
-              var t = b.textContent.trim();
-
-              if (t === '已研究') row.classList.add('row--researched');
-
-              else if (t === '研究中') {
-
-                row.classList.add('row--researching');
-
-                // 注入进度条
-
-                if (!row.querySelector('.research-progress')) {
-
-                  var pg = document.createElement('div');
-
-                  pg.className = 'research-progress';
-
-                  pg.innerHTML = '<div class="research-progress__bar" style="--research-pct:60%"></div>';
-
-                  var left = row.querySelector('.row__left');
-
-                  if (left) left.appendChild(pg);
-
-                }
-
-              }
-
-              else if (/可研究/.test(t)) row.classList.add('row--researchable');
-
-            });
-
-          });
-
-        }
-
-        window.addEventListener('load', function() {
-
-          var tech = document.getElementById('tech');
-
-          if (!tech) return;
-
-          injectTechClasses();
-
-          new MutationObserver(injectTechClasses).observe(tech, { childList: true, subtree: false });
-
-        });
-
-      })();
-
-
-
-      // --- 萌灵行 shiny/mythic 标识 ---
-
-      (function() {
-
-        function injectMonClasses() {
-
-          var monList = document.getElementById('monList');
-
-          if (!monList) return;
-
-          monList.querySelectorAll('.row').forEach(function(row) {
-
-            row.classList.remove('row--shiny-mon', 'row--mythic-mon');
-
-            var text = row.textContent || '';
-
-            // 检查闪光标识
-
-            var shinyBadge = row.querySelector('.mon-icon--shiny');
-
-            if (shinyBadge || /闪光/.test(text)) row.classList.add('row--shiny-mon');
-
-            // 检查幻灵标识
-
-            if (/幻灵|传说|幻之/.test(text)) row.classList.add('row--mythic-mon');
-
-          });
-
-        }
-
-        window.addEventListener('load', function() {
-
-          var monList = document.getElementById('monList');
-
-          if (!monList) return;
-
-          injectMonClasses();
-
-          new MutationObserver(injectMonClasses).observe(monList, { childList: true, subtree: true });
-
-        });
-
-      })();
-
-
-
     </script>
-
-
-
-    <script src="./data/beasts.js?v=0.7.1" defer></script>
-
-    <script type="module" src="./main.js?v=0.7.1"></script>
-
+    <script src="./data/beasts.js?v=0.7.2" defer></script>
+    <script type="module" src="./main.js?v=0.7.2"></script>
     <script>
-
-          // 注册 Service Worker 在 activate 后强制刷新页面缓存
-
       if ('serviceWorker' in navigator) {
-
         window.addEventListener('load', function() {
-
-          navigator.serviceWorker.register('./sw.js?v=0.7.1', { updateViaCache: 'none' });
-
+          navigator.serviceWorker.register('./sw.js?v=0.7.2', { updateViaCache: 'none' });
         });
-
       }
-
     </script>
-
   </body>
-
 </html>
-

@@ -3,7 +3,7 @@
 
 import { setupGlobalErrorHandling } from "./modules/error_handler.js";
 import { createAnalytics } from "./modules/analytics.js";
-import { installSpriteHandlers } from "./modules/sprites.js?v=0.1.0";
+import { installSpriteHandlers } from "./modules/sprites.js";
 import { escapeHtml, nowMs, randFloat } from "./modules/utils.js";
 import { buildDefs } from "./modules/defs_core.js";
 import { createBeastDataClient } from "./modules/beast_data.js";
@@ -25,7 +25,7 @@ import {
   createPowerCalcs,
   createLeaderboardAutoRefresh,
 } from "./modules/app/leaderboard_core.js";
-import { createTickerSystem } from "./modules/app/ticker.js?v=0.1.0";
+import { createTickerSystem } from "./modules/app/ticker.js";
 import { createLogUiSystem } from "./modules/app/log_ui.js";
 import { createCoreHelpers } from "./modules/app/core_helpers.js";
 import { createMonHelpers } from "./modules/app/mon_helpers.js";
@@ -34,7 +34,7 @@ import { createSaveCloud } from "./modules/app/save_cloud.js";
 import { createCaptureSystem } from "./modules/app/capture_system.js";
 import { createCaptureFlow } from "./modules/app/capture_flow.js";
 import { createServerBuffsUi } from "./modules/app/server_buffs_ui.js";
-import { createBossBullySystem } from "./modules/app/boss_bully.js?v=0.1.0";
+import { createBossBullySystem } from "./modules/app/boss_bully.js";
 import { createLeaderboardData } from "./modules/app/leaderboard_data.js";
 import { createOptionsGoals } from "./modules/app/options_goals.js";
 import { initGameUi } from "./modules/app/wiring.js";
@@ -43,7 +43,7 @@ import { createBoot } from "./modules/app/boot.js";
 
 (() => {
   setupGlobalErrorHandling();
-  const analytics = createAnalytics({ gameVersion: "0.1.0" });
+  const analytics = createAnalytics({ gameVersion: "0.7.2" });
 
   installSpriteHandlers();
 

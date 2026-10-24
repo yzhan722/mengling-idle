@@ -1,7 +1,7 @@
 // 排行榜渲染（只写 DOM，不改业务 state）
 // 维护者窗口：C（渲染）/ 数据刷新仍在 app.js SECTION:LEADERBOARD_DATA
 
-import { cleanLeaderboard } from "../systems/world_presence.js?v=0.1.0";
+import { cleanLeaderboard } from "../systems/world_presence.js";
 import { renderLeaderboardStageHtml } from "./tab_stages.js";
 
 export function createRenderLeaderboard({
