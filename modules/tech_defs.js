@@ -59,11 +59,11 @@ export function buildExtraTechDefs() {
     "灵果飞跃",
     "greenhouse",
     (state) => state.buildings.field.owned >= 3,
-    12,
-    (i) => ({ catnip: Math.ceil(1400 * Math.pow(1.8, i - 1)), wood: Math.ceil(180 * Math.pow(1.7, i - 1)) }),
-    (i) => ({ catnipPerSecMul: 1 + 0.18 + 0.02 * i }),
-    (i) => `灵果产量提升，阶段越高提升越明显。`,
-    10
+    3,
+    (i) => ({ catnip: Math.ceil(1400 * Math.pow(2.2, i - 1)), wood: Math.ceil(180 * Math.pow(2.0, i - 1)) }),
+    (i) => ({ catnipPerSecMul: 1 + 0.5 * i }),
+    () => `灵果产量大幅跃升，阶段越高提升越显著。`,
+    8
   );
 
   chain(
@@ -71,11 +71,11 @@ export function buildExtraTechDefs() {
     "灵木飞跃",
     "carpentry",
     (state) => (state.buildings.lumberYard?.owned ?? 0) >= 2,
-    12,
-    (i) => ({ catnip: Math.ceil(1000 * Math.pow(1.65, i - 1)), wood: Math.ceil(1800 * Math.pow(1.85, i - 1)) }),
-    (i) => ({ woodRateMul: 1 + 0.20 + 0.02 * i }),
-    (i) => `灵木产量提升，逐步进入指数增长。`,
-    10
+    3,
+    (i) => ({ catnip: Math.ceil(1000 * Math.pow(2.0, i - 1)), wood: Math.ceil(1800 * Math.pow(2.2, i - 1)) }),
+    (i) => ({ woodRateMul: 1 + 0.55 * i }),
+    () => `灵木产量大幅跃升，进入高产阶段。`,
+    8
   );
 
   chain(
@@ -83,19 +83,19 @@ export function buildExtraTechDefs() {
     "灵晶飞跃",
     "excavationTools",
     (state) => (state.buildings.workshop?.owned ?? 0) >= 2 || (state.buildings.mineralSilo?.owned ?? 0) >= 2,
-    12,
-    (i) => ({ wood: Math.ceil(1300 * Math.pow(1.75, i - 1)), minerals: Math.ceil(1500 * Math.pow(1.9, i - 1)) }),
-    (i) => ({ mineralsRateMul: 1 + 0.22 + 0.02 * i }),
-    (i) => `灵晶产量提升，后期增长更陡峭。`,
-    10
+    3,
+    (i) => ({ wood: Math.ceil(1300 * Math.pow(2.1, i - 1)), minerals: Math.ceil(1500 * Math.pow(2.2, i - 1)) }),
+    (i) => ({ mineralsRateMul: 1 + 0.6 * i }),
+    () => `灵晶产量大幅跃升，满足高阶建造与合成。`,
+    8
   );
 
-  for (let i = 1; i <= 5; i += 1) {
+  for (let i = 1; i <= 3; i += 1) {
     const tid = `catnipStorageBoost${i}`;
-    const r = i <= 4 ? 0.75 : 2 / 3;
+    const r = 0.75;
     tech[tid] = {
       name: `仓储飞跃·灵果 ${roman(i)}`,
-      desc: i <= 4 ? "灵果上限 ×1.5。" : "灵果上限 ×2。",
+      desc: i < 3 ? "灵果上限 ×1.8。" : "灵果上限 ×2.5。",
       cost: {
         catnip: Math.ceil(2200 * r * Math.pow(2.2, i - 1)),
         wood: Math.ceil(600 * r * Math.pow(2.05, i - 1)),
@@ -103,8 +103,8 @@ export function buildExtraTechDefs() {
       },
       prereq: i === 1 ? ["ultraStorage"] : [`catnipStorageBoost${i - 1}`],
       req: () => true,
-      effects: { capCatnipMul: i <= 4 ? 1.5 : 2 },
-      timeMul: 12,
+      effects: { capCatnipMul: i < 3 ? 1.8 : 2.5 },
+      timeMul: 10,
     };
   }
 
@@ -112,7 +112,7 @@ export function buildExtraTechDefs() {
     const tid = `woodStorageBoost${i}`;
     tech[tid] = {
       name: `仓储飞跃·灵木 ${roman(i)}`,
-      desc: "灵木上限 ×1.5。",
+      desc: "灵木上限 ×1.8。",
       cost: {
         catnip: Math.ceil(1800 * 0.75 * Math.pow(2.2, i - 1)),
         wood: Math.ceil(2200 * 0.75 * Math.pow(2.2, i - 1)),
@@ -120,8 +120,8 @@ export function buildExtraTechDefs() {
       },
       prereq: i === 1 ? ["ultraStorage"] : [`woodStorageBoost${i - 1}`],
       req: () => true,
-      effects: { capWoodMul: 1.5 },
-      timeMul: 12,
+      effects: { capWoodMul: 1.8 },
+      timeMul: 10,
     };
   }
 
@@ -129,7 +129,7 @@ export function buildExtraTechDefs() {
     const tid = `mineralsStorageBoost${i}`;
     tech[tid] = {
       name: `仓储飞跃·灵晶 ${roman(i)}`,
-      desc: "灵晶上限 ×1.5。",
+      desc: "灵晶上限 ×1.8。",
       cost: {
         catnip: Math.ceil(1600 * 0.75 * Math.pow(2.25, i - 1)),
         wood: Math.ceil(1600 * 0.75 * Math.pow(2.2, i - 1)),
@@ -137,8 +137,8 @@ export function buildExtraTechDefs() {
       },
       prereq: i === 1 ? ["ultraStorage"] : [`mineralsStorageBoost${i - 1}`],
       req: () => true,
-      effects: { capMineralsMul: 1.5 },
-      timeMul: 12,
+      effects: { capMineralsMul: 1.8 },
+      timeMul: 10,
     };
   }
 
@@ -147,42 +147,27 @@ export function buildExtraTechDefs() {
     "指数引擎",
     "ultraStorage",
     allOtherTechResearched,
-    8,
+    3,
     (i) => ({
-      catnip: Math.ceil(4000 * Math.pow(2.1, i - 1)),
-      wood: Math.ceil(2500 * Math.pow(2.1, i - 1)),
-      minerals: Math.ceil(2000 * Math.pow(2.15, i - 1)),
+      catnip: Math.ceil(8000 * Math.pow(2.5, i - 1)),
+      wood: Math.ceil(5000 * Math.pow(2.5, i - 1)),
+      minerals: Math.ceil(4000 * Math.pow(2.5, i - 1)),
     }),
     (i) => {
-      const m = i <= 2 ? 1.6 : i === 3 ? 2.0 : i === 4 ? 2.6 : i === 5 ? 3.4 : i === 6 ? 4.6 : i === 7 ? 6.2 : 8.5;
+      const m = i === 1 ? 2.5 : i === 2 ? 5.0 : 10.0;
       return {
         catnipPerSecMul: m,
         woodRateMul: m,
         mineralsRateMul: m,
-        capCatnipAdd: 800 * i,
-        capWoodAdd: 900 * i,
-        capMineralsAdd: 840 * i,
-        catchChanceAdd: 0.01 * i,
+        capCatnipAdd: 1500 * i,
+        capWoodAdd: 1500 * i,
+        capMineralsAdd: 1500 * i,
+        catchChanceAdd: 0.03 * i,
       };
     },
-    (i) => `大幅提升资源增长，让后期体验更有坡度。`
+    () => `大幅提升全资源增长与上限，轻松迈入终局。`,
+    8
   );
-
-  if (tech.hyperGrowth1) {
-    tech.hyperGrowth1.cost = {
-      catnip: Math.ceil(4000 * 10),
-      wood: Math.ceil(2500 * 10),
-      minerals: Math.ceil(2000 * 10),
-    };
-    tech.hyperGrowth1.timeMul = 10;
-    // 修复：从突兀的×10降为×2.5，与chain中hyperGrowth2(×1.6→×2.5)形成平滑过渡
-    tech.hyperGrowth1.effects = {
-      ...tech.hyperGrowth1.effects,
-      catnipPerSecMul: 2.5,
-      woodRateMul: 2.5,
-      mineralsRateMul: 2.5,
-    };
-  }
 
   return tech;
 }

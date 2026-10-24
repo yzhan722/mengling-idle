@@ -4,22 +4,18 @@ const BUILDING_MAX_LEVEL = 50;
 
 const BUILDING_VISUALS = {
   field: { icon: "🍓", tone: "emerald", tag: "自动产果", perLvl: "灵果 +0.15/秒" },
-  granary: { icon: "🏺", tone: "emerald", tag: "果仓扩容", perLvl: "灵果上限 +20" },
+  granary: { icon: "🏺", tone: "emerald", tag: "果仓扩容", perLvl: "灵果上限 +35" },
   berryPress: { icon: "🍷", tone: "emerald", tag: "精酿增产", perLvl: "灵果 +0.11/秒" },
   hut: { icon: "🌲", tone: "amber", tag: "伐木营地", perLvl: "灵木 +0.025/秒 · 上限 +10" },
-  storehouse: { icon: "🛖", tone: "amber", tag: "原木仓储", perLvl: "灵木上限 +28" },
+  storehouse: { icon: "🛖", tone: "amber", tag: "原木仓储", perLvl: "灵木上限 +50" },
   lumberYard: { icon: "🪓", tone: "amber", tag: "重型锯木", perLvl: "灵木 +0.045/秒 · 上限 +15" },
   workshop: { icon: "🔮", tone: "cyan", tag: "晶石精炼", perLvl: "灵晶 +0.03/秒" },
-  mineralSilo: { icon: "💎", tone: "cyan", tag: "晶簇秘库", perLvl: "灵晶上限 +45" },
-  rangerPost: { icon: "🏹", tone: "cyan", tag: "勘探哨塔", perLvl: "灵晶上限 +18" },
+  mineralSilo: { icon: "💎", tone: "cyan", tag: "晶簇秘库", perLvl: "灵晶上限 +50" },
   researchLab: { icon: "🔭", tone: "violet", tag: "星轨科研", perLvl: "科研耗时 -2%" },
-  ballBench: { icon: "🔴", tone: "rose", tag: "手工球台", perLvl: "灵球上限 +3" },
-  ballFactory: { icon: "⚙️", tone: "rose", tag: "自动球厂", perLvl: "灵球上限 +6" },
+  ballBench: { icon: "🔴", tone: "rose", tag: "制球工台", perLvl: "灵球上限 +5" },
   trainingGround: { icon: "🥋", tone: "gold", tag: "演武圣域", perLvl: "训练槽位 +1" },
   breedingHouse: { icon: "🥚", tone: "gold", tag: "温养灵巢", perLvl: "孵蛋效率提升" },
   expeditionPost: { icon: "🧭", tone: "gold", tag: "星门远征", perLvl: "解锁高阶远征" },
-  library: { icon: "📚", tone: "violet", tag: "古籍典藏", perLvl: "灵果上限 +28" },
-  commandCenter: { icon: "🏰", tone: "gold", tag: "中枢要塞", perLvl: "灵木上限 +80" },
 };
 
 const CATEGORY_META = {
@@ -29,7 +25,6 @@ const CATEGORY_META = {
   "研究": { icon: renderBuildingSvg("researchLab", 22), sub: "星轨推演中枢 · 大幅缩短全科技树研发耗时" },
   "灵球": { icon: renderBuildingSvg("ballBench", 22), sub: "秘境捕猎储备 · 扩充灵球携带与搓球容量" },
   "功能建筑": { icon: renderBuildingSvg("trainingGround", 22), sub: "解锁萌灵特训、繁育生蛋与跨界秘境远征" },
-  "存储": { icon: renderBuildingSvg("commandCenter", 22), sub: "大型战略储备仓库 · 突破资源囤积上限" },
 };
 
 const RES_ICONS = {
@@ -53,7 +48,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
 
     const groups = new Map();
     const groupLevels = new Map();
-    const groupOrder = ["灵果", "灵木", "灵晶", "研究", "灵球", "功能建筑", "存储"];
+    const groupOrder = ["灵果", "灵木", "灵晶", "研究", "灵球", "功能建筑"];
     for (const k of groupOrder) {
       groups.set(k, []);
       groupLevels.set(k, 0);

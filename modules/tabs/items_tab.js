@@ -329,31 +329,20 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
     const items = [
       { rid: "pokeball", category: "捕捉" },
       { rid: "ultraball", category: "捕捉" },
-      { rid: "quickball", category: "捕捉" },
-      { rid: "luxuryball", category: "捕捉" },
-      { rid: "netball", category: "捕捉" },
-      { rid: "duskball", category: "捕捉" },
       { rid: "masterball", category: "捕捉" },
       { rid: "futurecoin", category: "货币" },
       { rid: "evolutionStone", category: "进化" },
       { rid: "megaStone", category: "进化" },
       { rid: "linkRope", category: "进化" },
       { rid: "rareCandy", category: "培养" },
-      { rid: "expCandyS", category: "培养" },
       { rid: "expCandy", category: "培养" },
-      { rid: "expCandyL", category: "培养" },
-      { rid: "expCandyXL", category: "培养" },
       { rid: "affectionTreat", category: "培养" },
       { rid: "friendshipBracelet", category: "培养" },
-      { rid: "sootheBell", category: "培养" },
       { rid: "luckyEgg", category: "培养" },
       { rid: "bottleCap", category: "培养" },
       { rid: "goldBottleCap", category: "培养" },
       { rid: "bigBerry", category: "消耗品" },
       { rid: "hugeBerry", category: "消耗品" },
-      { rid: "energyDrink", category: "消耗品" },
-      { rid: "searchFlare", category: "消耗品" },
-      { rid: "advSearchCell", category: "消耗品" },
       { rid: "shinyCharm", category: "特殊" },
       { rid: "hpPotion", category: "药剂" },
       { rid: "atkPotion", category: "药剂" },
@@ -492,7 +481,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       ? `今日护理已领 · 使用 ${Math.min(care.uses, care.goal)}/${care.goal}`
       : `护理进度 ${Math.min(care.uses, care.goal)}/${care.goal}（喂食/用药）→ +8 未来币`;
 
-    const itemsStageHtml = renderItemsStageHtml({ state, care });
+    const itemsStageHtml = ui.activeTab === "items" ? renderItemsStageHtml({ state, care }) : "";
 
     let html = `
       ${itemsStageHtml}

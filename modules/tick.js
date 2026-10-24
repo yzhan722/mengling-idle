@@ -541,49 +541,49 @@ export function createTick(ctx) {
               return !(on0 || on1);
             };
 
-            if (autoCfg.evolutionEnergy && canStartEnergy()) {
+            if ((autoCfg.evolutionEnergy || autoCfg.evolutionStone) && canStartEnergy()) {
               const made0 =
                 typeof state.evolutionStoneMade === "number" && Number.isFinite(state.evolutionStoneMade)
                   ? Math.max(0, Math.floor(state.evolutionStoneMade))
                   : 0;
-              const stoneCost = Math.min(10000, 500 + made0 * 10);
-              const stoneTime = 1800;
+              const stoneCost = Math.min(5000, 300 + made0 * 10);
+              const stoneTime = 600;
               if ((state.res.minerals?.value ?? 0) >= stoneCost) {
                 state.res.minerals.value = Math.max(0, (state.res.minerals?.value ?? 0) - stoneCost);
                 startTask("evolutionEnergy", stoneTime);
-                addLog("自动合成：灵源（30分钟）");
+                addLog("自动合成：灵晶石（10分钟）");
               }
             }
 
             if (autoCfg.linkRope && canStart("linkRope")) {
               const ropeCostStone = 3;
-              const ropeTime = 3600;
+              const ropeTime = 900;
               if ((state.res.evolutionStone?.value ?? 0) >= ropeCostStone) {
                 state.res.evolutionStone.value = Math.max(0, (state.res.evolutionStone?.value ?? 0) - ropeCostStone);
                 startTask("linkRope", ropeTime);
-                addLog("自动合成：灵契绳（60分钟）");
+                addLog("自动合成：灵契绳（15分钟）");
               }
             }
 
             if (autoCfg.megaStone && canStart("megaStone")) {
               const megaCostStone = 10;
-              const megaTime = 7200;
+              const megaTime = 1200;
               if ((state.res.evolutionStone?.value ?? 0) >= megaCostStone) {
                 state.res.evolutionStone.value = Math.max(0, (state.res.evolutionStone?.value ?? 0) - megaCostStone);
                 startTask("megaStone", megaTime);
-                addLog("自动合成：觉醒石（2小时）");
+                addLog("自动合成：觉醒石（20分钟）");
               }
             }
 
             if (autoCfg.hugeBerry && canStart("hugeBerry")) {
               const hugeCostCatnip = 5000;
               const hugeCostBig = 30;
-              const hugeTime = 7200;
+              const hugeTime = 900;
               if ((state.res.catnip?.value ?? 0) >= hugeCostCatnip && (state.res.bigBerry?.value ?? 0) >= hugeCostBig) {
                 state.res.catnip.value = Math.max(0, (state.res.catnip?.value ?? 0) - hugeCostCatnip);
                 state.res.bigBerry.value = Math.max(0, (state.res.bigBerry?.value ?? 0) - hugeCostBig);
                 startTask("hugeBerry", hugeTime);
-                addLog("自动合成：巨大灵果（2小时）");
+                addLog("自动合成：巨大灵果（15分钟）");
               }
             }
           }
@@ -597,26 +597,11 @@ export function createTick(ctx) {
           const rem1 = rem0 - dtSec;
           stone.remainingSec = rem1;
           if (rem1 <= 0) {
-            addRes("evolutionEnergy", 1);
-            addLog("合成完成：灵源 +1", true);
+            addRes("evolutionStone", 1);
+            addLog("合成完成：灵晶石 +1", true);
             state.evolutionStoneMade = Math.max(0, (state.evolutionStoneMade ?? 0) + 1);
             craftObj[stoneKey] = null;
             if (ui.activeTab === "future") ui.futureDirty = true;
-          }
-        }
-
-        if (state.unlocks?.autoCraft) {
-          const autoCfg = state.auto?.autoCraft && typeof state.auto.autoCraft === "object" ? state.auto.autoCraft : null;
-          if (autoCfg && autoCfg.evolutionStone) {
-            const costEnergy = 10;
-            const haveEnergy = Math.max(0, Math.floor(state.res.evolutionEnergy?.value ?? 0));
-            const n = Math.max(0, Math.floor(haveEnergy / costEnergy));
-            if (n > 0) {
-              state.res.evolutionEnergy.value = Math.max(0, haveEnergy - n * costEnergy);
-              addRes("evolutionStone", n);
-              addLog(`自动合成：灵晶石 +${n}`);
-              if (ui.activeTab === "future") ui.futureDirty = true;
-            }
           }
         }
 
@@ -812,45 +797,14 @@ export function createTick(ctx) {
               m.affection = aff1;
               if (Math.floor(aff0) !== Math.floor(aff1)) affectionUiChanged = true;
             }
-          } else {
-            m.affectionCarry = affCarry0;
-            const decayCarry0 =
-              typeof m.affectionDecayCarry === "number" && Number.isFinite(m.affectionDecayCarry) ? Math.max(0, m.affectionDecayCarry) : 0;
-            const decayCarry1 = decayCarry0 + affRate;
-            const affSub = Math.floor(decayCarry1);
-            m.affectionDecayCarry = decayCarry1 - affSub;
-            if (affSub > 0 && aff0 > 0) {
-              const aff1 = clamp(aff0 - affSub, 0, 100);
-              m.affection = aff1;
-              if (aff1 <= 0) m.affectionDecayCarry = 0;
-              if (Math.floor(aff0) !== Math.floor(aff1)) affectionUiChanged = true;
-            }
-          }
-
-          const affNow0 = clamp(typeof m.affection === "number" && Number.isFinite(m.affection) ? m.affection : 0, 0, 100);
-          const highRatio = Math.max(0, (affNow0 - 50) / 50);
-          const highDecayRate = affRateBase * 4 * highRatio * highRatio;
-          if (highDecayRate > 0 && affNow0 > 0) {
-            const highCarry0 =
-              typeof m.affectionHighDecayCarry === "number" && Number.isFinite(m.affectionHighDecayCarry)
-                ? Math.max(0, m.affectionHighDecayCarry)
-                : 0;
-            const highCarry1 = highCarry0 + highDecayRate;
-            const highSub = Math.floor(highCarry1);
-            m.affectionHighDecayCarry = highCarry1 - highSub;
-            if (highSub > 0) {
-              const affNow1 = clamp(affNow0 - highSub, 0, 100);
-              m.affection = affNow1;
-              if (affNow1 <= 0) m.affectionHighDecayCarry = 0;
-              if (Math.floor(affNow0) !== Math.floor(affNow1)) affectionUiChanged = true;
-            }
           }
         }
 
-        if (sat1 > 0) {
+        if (sat1 >= 0) {
           const carry0 = typeof m.autoExpCarry === "number" && Number.isFinite(m.autoExpCarry) ? Math.max(0, m.autoExpCarry) : 0;
           const natureMul = isTraining ? natureTrainExpMul(m, trainingIds.length) : 1;
-          const expMul = isBreeding ? 50 : isTraining ? trainExpMul * natureMul : 1;
+          const satBonus = sat1 >= 50 ? 1.25 : 1;
+          const expMul = (isBreeding ? 50 : isTraining ? trainExpMul * natureMul : 1) * satBonus;
           const carry1 = carry0 + (dtSec / 300) * expMul;
           const add = Math.floor(carry1);
           m.autoExpCarry = carry1 - add;

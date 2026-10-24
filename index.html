@@ -14,15 +14,15 @@
     <meta name="application-name" content="萌灵放置冒险" />
     <meta name="apple-mobile-web-app-title" content="萌灵放置冒险" />
     <title>萌灵放置冒险 · 星野灵兽录</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="./assets/ui/favicon-64.png?v=0.7.5" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32.png?v=0.7.5" />
-    <link rel="shortcut icon" href="./favicon.ico?v=0.7.5" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/ui/apple-touch-icon.png?v=0.7.5" />
-    <link rel="manifest" href="./site.webmanifest?v=0.7.5" />
+    <link rel="icon" type="image/png" sizes="64x64" href="./assets/ui/favicon-64.png?v=0.7.6" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32.png?v=0.7.6" />
+    <link rel="shortcut icon" href="./favicon.ico?v=0.7.6" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/ui/apple-touch-icon.png?v=0.7.6" />
+    <link rel="manifest" href="./site.webmanifest?v=0.7.6" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&family=Rajdhani:wght@600;700&display=swap" />
-    <link rel="stylesheet" href="./styles.css?v=0.7.5" />
+    <link rel="stylesheet" href="./styles.css?v=0.7.6" />
   </head>
   <body>
     <a class="skip-link" href="#mainStage">跳到主要内容</a>
@@ -34,7 +34,7 @@
             <img class="brand__logo" src="./assets/ui/app_logo.webp" width="42" height="42" alt="" aria-hidden="true" />
             <div class="brand__text">
               <div class="brand__title">萌灵放置冒险 <span class="brand__tag">星野灵兽录</span></div>
-              <div class="brand__subtitle" id="topbarStatus"><span class="brand__ver">v0.7.5</span> · 星火围炉 · 奇幻灵兽收集 RPG</div>
+              <div class="brand__subtitle" id="topbarStatus"><span class="brand__ver">v0.7.6</span> · 星火围炉 · 奇幻灵兽收集 RPG</div>
             </div>
           </div>
           <div id="trainerHost" class="topbar__trainer" aria-label="育灵师等级"></div>
@@ -97,11 +97,8 @@
           <button class="tab" id="tab-future" data-tab="future" role="tab" aria-selected="false" aria-controls="panel-future">商店与合成</button>
           <button class="tab" id="tab-dex" data-tab="dex" role="tab" aria-selected="false" aria-controls="panel-dex">图鉴</button>
           <button class="tab" id="tab-pve" data-tab="pve" role="tab" aria-selected="false" aria-controls="panel-pve">挑战</button>
-          <button class="tab" id="tab-items" data-tab="items" role="tab" aria-selected="false" aria-controls="panel-items">道具</button>
-          <button class="tab" id="tab-social" data-tab="social" role="tab" aria-selected="false" aria-controls="panel-social">社交</button>
-          <button class="tab" id="tab-help" data-tab="help" role="tab" aria-selected="false" aria-controls="panel-help">帮助</button>
-          <button class="tab" id="tab-options" data-tab="options" role="tab" aria-selected="false" aria-controls="panel-options">设置</button>
           <button class="tab" id="tab-leaderboard" data-tab="leaderboard" role="tab" aria-selected="false" aria-controls="panel-leaderboard">排行榜</button>
+          <button class="tab" id="tab-options" data-tab="options" role="tab" aria-selected="false" aria-controls="panel-options">设置</button>
         </div>
         <div class="panels">
           <div class="panel is-active" id="panel-bonfire" role="tabpanel" aria-labelledby="tab-bonfire">
@@ -187,6 +184,11 @@
             <div class="sidebar__divider"></div>
             <div class="panel__title">未来币商店</div>
             <div id="futureShop" class="list"></div>
+            <div class="sidebar__divider"></div>
+            <details class="cloudRecoverHint" open>
+              <summary>背包与道具护理（展开/收起）</summary>
+              <div id="items" class="list" style="margin-top:8px"></div>
+            </details>
           </div>
           <div class="panel" id="panel-dex" role="tabpanel" aria-labelledby="tab-dex" hidden>
             <div class="actions">
@@ -214,15 +216,6 @@
           </div>
           <div class="panel" id="panel-pve" role="tabpanel" aria-labelledby="tab-pve" hidden>
             <div id="pveList" class="list"></div>
-          </div>
-          <div class="panel" id="panel-items" role="tabpanel" aria-labelledby="tab-items" hidden>
-            <div id="items" class="list"></div>
-          </div>
-          <div class="panel" id="panel-social" role="tabpanel" aria-labelledby="tab-social" hidden>
-            <!-- 社交功能由 social_tab.js 渲染 -->
-          </div>
-          <div class="panel" id="panel-help" role="tabpanel" aria-labelledby="tab-help" hidden>
-            <div id="help" class="list"></div>
           </div>
           <div class="panel" id="panel-options" role="tabpanel" aria-labelledby="tab-options" hidden>
             <div class="tab-stage tab-stage--options" aria-label="星轨时空档案室">
@@ -285,6 +278,11 @@
               <summary>忘记密码 / 换机必读</summary>
               <p class="muted">本游戏暂不支持自助找回密码。换设备前请先点「导出存档」备份；忘记密码请联系管理员重置，或用导出档重新注册后导入。</p>
             </details>
+            <div class="sidebar__divider"></div>
+            <details class="cloudRecoverHint" open>
+              <summary>冒险百科与新手路线（展开/收起）</summary>
+              <div id="help" class="list" style="margin-top:8px"></div>
+            </details>
             <div class="modalOverlay" id="cloudConflictOverlay" hidden>
               <div class="modal" role="dialog" aria-labelledby="cloudConflictTitle" aria-modal="true">
                 <div class="modal__header">
@@ -303,6 +301,11 @@
           </div>
           <div class="panel" id="panel-leaderboard" role="tabpanel" aria-labelledby="tab-leaderboard" hidden>
             <div class="list" id="leaderboard"></div>
+            <div class="sidebar__divider"></div>
+            <details class="cloudRecoverHint" open>
+              <summary>演武会馆与好友切磋（展开/收起）</summary>
+              <div id="panel-social" style="margin-top:8px"></div>
+            </details>
           </div>
         </div>
       </section>
@@ -481,12 +484,12 @@
         });
       })();
     </script>
-    <script src="./data/beasts.js?v=0.7.5" defer></script>
-    <script type="module" src="./main.js?v=0.7.5"></script>
+    <script src="./data/beasts.js?v=0.7.6" defer></script>
+    <script type="module" src="./main.js?v=0.7.6"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('./sw.js?v=0.7.5', { updateViaCache: 'none' });
+          navigator.serviceWorker.register('./sw.js?v=0.7.6', { updateViaCache: 'none' });
         });
       }
     </script>

@@ -6,7 +6,7 @@ import { renderHelpStageHtml } from "../render/tab_stages.js";
 export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureAreas, dexCaughtUnique, defs, addRes, addLog, render }) {
   return function renderHelp() {
     if (!elHelp) return;
-    if (ui.activeTab !== "help") return;
+    if (ui.activeTab !== "help" && ui.activeTab !== "options") return;
     if (!ui.helpDirty) return;
 
     const block = (title, bodyHtml, open = false) =>
@@ -25,7 +25,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
       <div class="row">
         <div class="row__left">
           <div class="row__title">帮助文档</div>
-          <div class="row__desc muted">版本 v0.7.5 · 时代纪元 / PvE / 道具 / 社交鉴权 · 点击各节标题展开详情</div>
+          <div class="row__desc muted">版本 v0.7.6 · 时代纪元 / PvE / 道具 / 社交鉴权 · 点击各节标题展开详情</div>
         </div>
       </div>
     `);
@@ -79,7 +79,9 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
       // keep default
     }
 
-    rows.unshift(renderHelpStageHtml({ nextGoal, dexPct: dexPctVal, escapeHtml }));
+    if (ui.activeTab === "help") {
+      rows.unshift(renderHelpStageHtml({ nextGoal, dexPct: dexPctVal, escapeHtml }));
+    }
 
     rows.push(block("前30分钟路线", `
       <div style="line-height:1.9">

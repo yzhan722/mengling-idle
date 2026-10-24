@@ -421,8 +421,8 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           typeof state.evolutionStoneMade === "number" && Number.isFinite(state.evolutionStoneMade)
             ? Math.max(0, Math.floor(state.evolutionStoneMade))
             : 0;
-        const stoneCost = Math.min(10000, 500 + made0 * 10);
-        const stoneTime = 1800; // 30分钟
+        const stoneCost = Math.min(5000, 300 + made0 * 10);
+        const stoneTime = 600; // 10分钟
         if ((state.res.minerals?.value ?? 0) < stoneCost) {
           addLog("合成失败：灵晶碎片不足。", true);
           return;
@@ -432,7 +432,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           remainingSec: stoneTime,
           totalSec: stoneTime,
         };
-        addLog("开始合成：灵源（30分钟）", true);
+        addLog("开始合成：灵晶石（10分钟）", true);
         ui.futureDirty = true;
         render();
         return;
@@ -440,7 +440,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
 
       if (craftType === "linkRope") {
         const ropeCostStone = 3;
-        const ropeTime = 3600; // 60分钟
+        const ropeTime = 900; // 15分钟
         if ((state.res.evolutionStone?.value ?? 0) < ropeCostStone) {
           addLog("合成失败：灵晶石不足。", true);
           return;
@@ -450,7 +450,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           remainingSec: ropeTime,
           totalSec: ropeTime,
         };
-        addLog("开始合成：灵契绳（60分钟）", true);
+        addLog("开始合成：灵契绳（15分钟）", true);
         ui.futureDirty = true;
         render();
         return;
@@ -459,7 +459,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
       if (craftType === "hugeBerry") {
         const hugeCostCatnip = 5000;
         const hugeCostBig = 30;
-        const hugeTime = 7200; // 2小时
+        const hugeTime = 900; // 15分钟
         if ((state.res.catnip?.value ?? 0) < hugeCostCatnip) {
           addLog("合成失败：灵果不足。", true);
           return;
@@ -474,7 +474,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           remainingSec: hugeTime,
           totalSec: hugeTime,
         };
-        addLog("开始合成：巨大灵果（2小时）", true);
+        addLog("开始合成：巨大灵果（15分钟）", true);
         ui.futureDirty = true;
         render();
         return;
@@ -482,7 +482,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
 
       if (craftType === "megaStone") {
         const megaCostStone = 10;
-        const megaTime = 7200; // 2小时
+        const megaTime = 1200; // 20分钟
         if ((state.res.evolutionStone?.value ?? 0) < megaCostStone) {
           addLog("合成失败：灵晶石不足。", true);
           return;
@@ -492,7 +492,7 @@ export function initFutureTab({ elFutureShop, ui, defs, getState, addRes, addLog
           remainingSec: megaTime,
           totalSec: megaTime,
         };
-        addLog("开始合成：觉醒石（2小时）", true);
+        addLog("开始合成：觉醒石（20分钟）", true);
         ui.futureDirty = true;
         render();
         return;

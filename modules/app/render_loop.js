@@ -52,7 +52,13 @@ export function createRenderLoop({ ui, getState, computeDerived, renders, elLog,
       if (ui.activeTab === "capture") renders.renderCapture();
       if (ui.activeTab === "functions") renders.renderFunctions();
       if (ui.activeTab === "leaderboard") renders.renderLeaderboard();
-      if (ui.activeTab === "future") renders.renderFutureShop();
+      if (ui.activeTab === "future") {
+        renders.renderFutureShop();
+        if (typeof renders.renderItems === "function") renders.renderItems();
+      }
+      if (ui.activeTab === "options" && typeof renders.renderHelp === "function") {
+        renders.renderHelp();
+      }
       if (ui.activeTab === "mons") renders.renderMons();
       if (ui.activeTab === "dex") renders.renderDex();
       if (ui.activeTab === "pve") renders.renderPve();

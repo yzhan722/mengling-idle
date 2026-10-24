@@ -98,6 +98,13 @@ export function createRenderPve({
     ensurePveState(state);
 
     const list = Array.isArray(state.mons?.list) ? state.mons.list : [];
+    if ((!Array.isArray(state.pve.selectedIds) || state.pve.selectedIds.length === 0) && list.length > 0) {
+      state.pve.selectedIds = list
+        .slice()
+        .sort((a, b) => monPower(b) - monPower(a))
+        .slice(0, 3)
+        .map((m) => m.id);
+    }
     const progress = state.pve.progress;
     const dexCount = typeof dexCaughtUnique === "function" ? dexCaughtUnique() : 0;
     const typeMap = TYPE_ZH && typeof TYPE_ZH === "object" ? TYPE_ZH : {};
@@ -107,42 +114,19 @@ export function createRenderPve({
     const rows = [];
 
     // 每日次数
-    const practiceOn = Boolean(ui.pvePracticeMode);
-    const practiceHalf = Boolean(ui.pvePracticeHalf);
-    const practiceDesc = practiceOn
-      ? practiceHalf
-        ? " · 练习+半奖（不扣次数、半奖励、不改通关进度）"
-        : " · 练习模式（不扣次数、无奖励）"
-      : "";
+    const practiceOn = false;
+    const practiceHalf = false;
     rows.push(`
       <div class="row">
         <div class="row__left">
           <div class="row__title">PvE 关卡挑战</div>
-          <div class="row__desc">今日剩余次数：${Math.max(0, PVE_DAILY_MAX - state.pve.dailyAttempts)} / ${PVE_DAILY_MAX}${practiceDesc}</div>
-        </div>
-        <div class="row__right">
-          <label class="check">
-            <input type="checkbox" data-pve-practice ${practiceOn ? "checked" : ""} />
-            <span>练习模式</span>
-          </label>
-          <label class="check" style="margin-left:8px">
-            <input type="checkbox" data-pve-practice-half ${practiceHalf ? "checked" : ""} ${practiceOn ? "" : "disabled"} />
-            <span>半奖励</span>
-          </label>
+          <div class="row__desc">今日剩余次数：${Math.max(0, PVE_DAILY_MAX - state.pve.dailyAttempts)} / ${PVE_DAILY_MAX} · 自动编入战力最高萌灵，随时可调整队伍</div>
         </div>
       </div>
     `);
 
-    // 每周试炼塔
     const tower = ensureTowerState(state);
     const towerDone = isTowerCleared(tower);
-    const towerFloor = towerDone ? null : getTowerFloor(tower.floor);
-    const towerLocked = dexCount < 10;
-    const towerDesc = towerLocked
-      ? "图鉴≥10 解锁。"
-      : towerDone
-        ? `本周已通关全部 ${PVE_TOWER_FLOORS.length} 层 · 最佳 ${tower.best}F`
-        : `本周进度 ${tower.floor}/${PVE_TOWER_FLOORS.length}F · 最佳 ${tower.best}F · ${escapeHtml(towerFloor?.name || "")}`;
 
     const selChapterPre = typeof ui.pveChapter === "string" ? ui.pveChapter : PVE_CHAPTERS[0]?.id ?? "";
     const chapterPre = PVE_CHAPTERS.find((c) => c.id === selChapterPre) ?? PVE_CHAPTERS[0];
@@ -173,18 +157,6 @@ export function createRenderPve({
         escapeHtml,
       }),
     );
-
-    rows.push(`
-      <div class="row">
-        <div class="row__left">
-          <div class="row__title">每周试炼塔</div>
-          <div class="row__desc">${towerDesc}</div>
-        </div>
-        <div class="row__right">
-          <button class="btn btn--primary btn--small" data-pve-tower-fight ${towerLocked || towerDone || !towerFloor || !(state.pve.selectedIds && state.pve.selectedIds.length) ? "disabled" : ""}>${towerDone ? "本周通关" : "挑战本层"}</button>
-        </div>
-      </div>
-    `);
 
     if (eraDef?.pveHint) {
       rows.push(`
@@ -292,7 +264,7 @@ export function createRenderPve({
       const rewardText = Object.entries(rewards).map(([k, v]) => {
         if (k === "exp") return `经验 +${v}（每只）`;
         if (k === "futurecoin") return `未来币 +${v}`;
-        if (k === "evolutionEnergy") return `灵源 +${v}`;
+        if (k === "evolutionEnergy") return `灵晶石 +${v}`;
         if (k === "evolutionStone") return `灵晶石 +${v}`;
         if (k === "linkRope") return `灵契绳 +${v}`;
         return `${k} +${v}`;
@@ -580,8 +552,8 @@ export function createRenderPve({
       }
       if (rewards.evolutionEnergy) {
         const v = Math.floor(rewards.evolutionEnergy * mul);
-        if (typeof addRes === "function") addRes("evolutionEnergy", v);
-        rewardParts.push(`灵源 +${v}`);
+        if (typeof addRes === "function") addRes("evolutionStone", v);
+        rewardParts.push(`灵晶石 +${v}`);
       }
       if (rewards.evolutionStone) {
         const v = Math.floor(rewards.evolutionStone * mul);

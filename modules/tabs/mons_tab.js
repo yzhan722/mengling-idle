@@ -959,8 +959,7 @@ export function initMonsTab({
         const needRope = typeof isTradeEvo === "function" ? isTradeEvo(m.pid, toPid) : false;
         const needAff = !needRope && (typeof isAffectionEvo === "function" ? isAffectionEvo(m.pid, toPid) : false);
         if (needAff && !(typeof m.affection === "number" && m.affection >= 20)) return;
-        const isStoneEvo = reqLvl === 0 && !needRope && !needAff;
-        const reqRid = needRope ? "linkRope" : isStoneEvo ? "evolutionStone" : "evolutionEnergy";
+        const reqRid = needRope ? "linkRope" : "evolutionStone";
         if ((state.res?.[reqRid]?.value ?? 0) < 1) return;
         state.res[reqRid].value = Math.max(0, (state.res?.[reqRid]?.value ?? 0) - 1);
 

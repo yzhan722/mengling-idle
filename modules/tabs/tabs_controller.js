@@ -1,4 +1,4 @@
-const PRIMARY_TABS = new Set(["bonfire", "science", "capture", "mons", "functions", "future"]);
+const PRIMARY_TABS = new Set(["bonfire", "science", "capture", "mons", "functions", "future", "dex"]);
 
 const TAB_TITLES = {
   bonfire: "萌灵放置冒险 · 星火营地",
@@ -129,8 +129,17 @@ export function createTabController({
     }
   }
 
-  function activateTab(name) {
+  function activateTab(rawName) {
     if (!elTabs || !elPanels) return;
+
+    const name =
+      rawName === "items"
+        ? "future"
+        : rawName === "social"
+          ? "leaderboard"
+          : rawName === "help"
+            ? "options"
+            : rawName;
 
     ui.activeTab = name;
     if (typeof document !== "undefined") {
@@ -141,15 +150,24 @@ export function createTabController({
     } catch {}
     if (name === "dex") ui.dexDirty = true;
     if (name === "capture") ui.captureDirty = true;
-    if (name === "future") ui.futureDirty = true;
+    if (name === "future") {
+      ui.futureDirty = true;
+      ui.itemsDirty = true;
+    }
     if (name === "mons") ui.monsDirty = true;
     if (name === "functions") ui.functionsDirty = true;
-    if (name === "leaderboard") ui.leaderboardDirty = true;
+    if (name === "leaderboard") {
+      ui.leaderboardDirty = true;
+      ui.socialDirty = true;
+    }
     if (name === "help") ui.helpDirty = true;
     if (name === "bonfire") ui.bonfireDirty = true;
     if (name === "pve") ui.pveDirty = true;
     if (name === "social") ui.socialDirty = true;
-    if (name === "options") ui.optionsDirty = true;
+    if (name === "options") {
+      ui.optionsDirty = true;
+      ui.helpDirty = true;
+    }
     if (name === "items") ui.itemsDirty = true;
 
     elTabs.querySelectorAll(".tab[data-tab]").forEach((t) => {
@@ -172,11 +190,16 @@ export function createTabController({
 
     if (name === "dex") renderDex();
     if (name === "capture") renderCapture();
-    if (name === "items") renderItems();
+    if (name === "items" || name === "future") {
+      if (typeof renderItems === "function") renderItems();
+    }
     if (name === "mons") renderMons();
     if (name === "functions" && typeof renderFunctions === "function") renderFunctions();
-    if (name === "leaderboard" && typeof renderLeaderboard === "function") renderLeaderboard();
-    if (name === "help" && typeof renderHelp === "function") renderHelp();
+    if (name === "leaderboard") {
+      if (typeof renderLeaderboard === "function") renderLeaderboard();
+      if (typeof renderSocial === "function") renderSocial();
+    }
+    if ((name === "help" || name === "options") && typeof renderHelp === "function") renderHelp();
     if (name === "pve" && typeof renderPve === "function") renderPve();
     if (name === "options" && typeof renderOptions === "function") renderOptions();
     if (name === "social" && typeof renderSocial === "function") renderSocial();

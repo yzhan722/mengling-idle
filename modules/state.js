@@ -601,7 +601,37 @@ export function loadFromRaw(raw) {
 
   }
 
-
+  // 旧存档冗余道具自动折算迁移
+  if ((s.res.evolutionEnergy?.value ?? 0) > 0) {
+    s.res.evolutionStone.value = (s.res.evolutionStone?.value ?? 0) + Math.floor(s.res.evolutionEnergy.value);
+    s.res.evolutionEnergy.value = 0;
+  }
+  const extraCandies =
+    Math.floor(s.res.expCandyS?.value ?? 0) +
+    Math.floor(s.res.expCandyL?.value ?? 0) * 5 +
+    Math.floor(s.res.expCandyXL?.value ?? 0) * 20;
+  if (extraCandies > 0) {
+    s.res.expCandy.value = (s.res.expCandy?.value ?? 0) + extraCandies;
+    s.res.expCandyS.value = 0;
+    s.res.expCandyL.value = 0;
+    s.res.expCandyXL.value = 0;
+  }
+  const extraBalls =
+    Math.floor(s.res.quickball?.value ?? 0) +
+    Math.floor(s.res.luxuryball?.value ?? 0) +
+    Math.floor(s.res.netball?.value ?? 0) +
+    Math.floor(s.res.duskball?.value ?? 0);
+  if (extraBalls > 0) {
+    s.res.ultraball.value = (s.res.ultraball?.value ?? 0) + extraBalls;
+    s.res.quickball.value = 0;
+    s.res.luxuryball.value = 0;
+    s.res.netball.value = 0;
+    s.res.duskball.value = 0;
+  }
+  if ((s.res.sootheBell?.value ?? 0) > 0) {
+    s.res.affectionTreat.value = (s.res.affectionTreat?.value ?? 0) + Math.floor(s.res.sootheBell.value);
+    s.res.sootheBell.value = 0;
+  }
 
   if (typeof data.pokeballMade === "number" && Number.isFinite(data.pokeballMade)) {
 
@@ -675,11 +705,27 @@ export function loadFromRaw(raw) {
 
     }
 
-    // 采晶场与灵晶储藏箱合并后，旧存档采晶场等级自动迁移并入灵晶储藏箱
-    const legacyQuarry = Math.max(0, Math.floor(Number(data.buildings.quarry?.owned) || 0));
+    // 冗余建筑合并后，旧存档建筑等级自动迁移并入对应基础建筑
+    const legacyQuarry =
+      Math.max(0, Math.floor(Number(data.buildings.quarry?.owned) || 0)) +
+      Math.max(0, Math.floor(Number(data.buildings.rangerPost?.owned) || 0));
     if (legacyQuarry > 0) {
       s.buildings.mineralSilo.owned = clamp((s.buildings.mineralSilo?.owned ?? 0) + legacyQuarry, 0, BUILDING_MAX_LEVEL);
       if (s.buildings.quarry) s.buildings.quarry.owned = 0;
+      if (s.buildings.rangerPost) s.buildings.rangerPost.owned = 0;
+    }
+    const legacyLibrary = Math.max(0, Math.floor(Number(data.buildings.library?.owned) || 0));
+    if (legacyLibrary > 0) {
+      s.buildings.granary.owned = clamp((s.buildings.granary?.owned ?? 0) + legacyLibrary, 0, BUILDING_MAX_LEVEL);
+    }
+    const legacyCommand = Math.max(0, Math.floor(Number(data.buildings.commandCenter?.owned) || 0));
+    if (legacyCommand > 0) {
+      s.buildings.storehouse.owned = clamp((s.buildings.storehouse?.owned ?? 0) + legacyCommand, 0, BUILDING_MAX_LEVEL);
+    }
+    const legacyBallFactory = Math.max(0, Math.floor(Number(data.buildings.ballFactory?.owned) || 0));
+    if (legacyBallFactory > 0) {
+      s.buildings.ballBench.owned = clamp((s.buildings.ballBench?.owned ?? 0) + legacyBallFactory, 0, BUILDING_MAX_LEVEL);
+      if (s.buildings.ballFactory) s.buildings.ballFactory.owned = 0;
     }
 
   }

@@ -108,12 +108,12 @@ export function createSocialTab({
     })();
     const needCloud = !cloudTok;
 
-    const socialStageHtml = renderSocialStageHtml({
+    const socialStageHtml = ui.activeTab === "social" ? renderSocialStageHtml({
       state: typeof getState === "function" ? getState() : null,
       selectedTeam,
       renderBeastIcon,
       escapeHtml,
-    });
+    }) : "";
 
     panelSocial.innerHTML = `
       <div class="social-container">

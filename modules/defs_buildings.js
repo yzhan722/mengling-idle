@@ -65,7 +65,7 @@ export const BUILDING_DEFS = {
     effects: (state) => {
       const n = state.buildings.granary.owned;
       return {
-        capCatnipAdd: 20 * n,     // 原80 × 0.25
+        capCatnipAdd: 35 * n,
       };
     },
     visible: (state) => state.unlocks.wood || state.tech.berryCultivation || state.buildings.granary.owned > 0,
@@ -87,13 +87,13 @@ export const BUILDING_DEFS = {
   storehouse: {
     name: "灵木储藏棚",
     category: "灵木",
-    desc: "提升灵木上限。",
+    desc: "大幅提升灵木上限。",
     baseCost: { catnip: 50, wood: 10 }, // 原200×0.25, 40×0.25
     costMul: 1.12,
     effects: (state) => {
       const n = state.buildings.storehouse.owned;
       return {
-        capWoodAdd: 28 * n,       // 原110 × 0.25 = 27.5 → 28
+        capWoodAdd: 50 * n,
       };
     },
     visible: (state) => state.unlocks.wood || state.buildings.storehouse.owned > 0,
@@ -101,7 +101,7 @@ export const BUILDING_DEFS = {
   lumberYard: {
     name: "灵木堆场",
     category: "灵木",
-    desc: "增加灵木产出与上限。",
+    desc: "增加灵木自动产出。",
     baseCost: { catnip: 65, wood: 30 }, // 原260×0.25, 120×0.25
     costMul: 1.1604,
     effects: (state) => {
@@ -122,52 +122,24 @@ export const BUILDING_DEFS = {
     effects: (state) => {
       const n = state.buildings.mineralSilo.owned;
       return {
-        capMineralsAdd: 45 * n,   // 原180 × 0.25
+        capMineralsAdd: 50 * n,
       };
     },
     visible: (state) => state.unlocks.minerals || state.buildings.mineralSilo.owned > 0,
   },
-  rangerPost: {
-    name: "巡林哨",
-    category: "灵晶",
-    desc: "提升灵晶碎片上限。",
-    baseCost: { catnip: 81, wood: 28, minerals: 10 }, // 原325×0.25, 110×0.25, 40×0.25
-    costMul: 1.11,
-    effects: (state) => {
-      const n = state.buildings.rangerPost.owned;
-      return {
-        capMineralsAdd: 18 * n,   // 原70 × 0.25 = 17.5 → 18
-      };
-    },
-    visible: (state) => state.tech.fieldGuide || state.buildings.rangerPost.owned > 0,
-  },
   ballBench: {
     name: "灵球台",
     category: "灵球",
-    desc: "提升灵球上限。",
+    desc: "提升灵球携带与制作上限。",
     baseCost: { catnip: 30, wood: 18 }, // 原120×0.25, 70×0.25
     costMul: 1.13,
     effects: (state) => {
       const n = state.buildings.ballBench.owned;
       return {
-        capPokeballAdd: 3 * n,    // 原10 × 0.25 = 2.5 → 3（略微提升）
+        capPokeballAdd: 5 * n,
       };
     },
     visible: (state) => state.tech.pokeballBasics || state.buildings.ballBench.owned > 0,
-  },
-  ballFactory: {
-    name: "灵球厂",
-    category: "灵球",
-    desc: "大幅提升灵球上限。",
-    baseCost: { catnip: 88, wood: 40, minerals: 15 }, // 原350×0.25, 160×0.25, 60×0.25
-    costMul: 1.11,
-    effects: (state) => {
-      const n = state.buildings.ballFactory.owned;
-      return {
-        capPokeballAdd: 6 * n,    // 原20 × 0.25 = 5 → 6（略微提升）
-      };
-    },
-    visible: (state) => state.tech.reinforcedBalls || state.buildings.ballFactory.owned > 0,
   },
   trainingGround: {
     name: "训练场",
@@ -200,33 +172,5 @@ export const BUILDING_DEFS = {
     effects: () => ({}),
     visible: (state) =>
       (state.buildings.trainingGround.owned > 0 && state.buildings.breedingHouse.owned > 0) || state.buildings.expeditionPost.owned > 0,
-  },
-  library: {
-    name: "图书室",
-    category: "灵果",
-    desc: "提升灵果上限。",
-    baseCost: { catnip: 200, wood: 85 }, // 原800×0.25, 340×0.25
-    costMul: 1.1283,
-    effects: (state) => {
-      const n = state.buildings.library.owned;
-      return {
-        capCatnipAdd: 28 * n,     // 原110 × 0.25 = 27.5 → 28
-      };
-    },
-    visible: (state) => state.tech.researchMethod || state.buildings.library.owned > 0,
-  },
-  commandCenter: {
-    name: "指挥中心",
-    category: "存储",
-    desc: "显著提升灵木上限。",
-    baseCost: { catnip: 550, wood: 225, minerals: 175 }, // 原2200×0.25, 900×0.25, 700×0.25
-    costMul: 1.1001,
-    effects: (state) => {
-      const n = state.buildings.commandCenter.owned;
-      return {
-        capWoodAdd: 80 * n,       // 原320 × 0.25
-      };
-    },
-    visible: (state) => state.buildings.storehouse.owned > 0 || state.buildings.commandCenter.owned > 0,
   },
 };

@@ -561,15 +561,12 @@ export function createRenderMons({
         const needRope = typeof isTradeEvo === "function" ? isTradeEvo(selected.pid, toPid) : false;
         const needAff = !needRope && (typeof isAffectionEvo === "function" ? isAffectionEvo(selected.pid, toPid) : false);
         const reqLvl = getEvoReqLevel(selected.pid, toPid);
-        const isStoneEvo = reqLvl === 0 && !needRope && !needAff;
-        const reqRid = needRope ? "linkRope" : isStoneEvo ? "evolutionStone" : "evolutionEnergy";
+        const reqRid = needRope ? "linkRope" : "evolutionStone";
         const reqText = needRope
           ? "灵契绳 x1"
           : needAff
-            ? "亲密度20+ · 灵源 x1"
-            : isStoneEvo
-              ? "灵晶石 x1"
-              : "灵源 x1";
+            ? "亲密度20+ · 灵晶石 x1"
+            : "灵晶石 x1";
         const evoOkRes = (state.res?.[reqRid]?.value ?? 0) >= 1;
         const evoOkAff = !needAff || (typeof selected.affection === "number" && selected.affection >= 20);
 
@@ -679,10 +676,6 @@ export function createRenderMons({
           <div class="badge badge--muted">x${candyHave}</div>
           <button class="btn btn--small" data-mon-exp="${selected.id}" data-exp="expCandy" ${(state.res.expCandy?.value ?? 0) >= 1 ? "" : "disabled"}>历练糖丸+1000</button>
           <div class="badge badge--muted">x${state.res.expCandy?.value ?? 0}</div>
-          <button class="btn btn--small" data-mon-exp="${selected.id}" data-exp="expCandyL" ${(state.res.expCandyL?.value ?? 0) >= 1 ? "" : "disabled"}>L+5000</button>
-          <div class="badge badge--muted">x${state.res.expCandyL?.value ?? 0}</div>
-          <button class="btn btn--small" data-mon-exp="${selected.id}" data-exp="expCandyXL" ${(state.res.expCandyXL?.value ?? 0) >= 1 ? "" : "disabled"}>XL+20000</button>
-          <div class="badge badge--muted">x${state.res.expCandyXL?.value ?? 0}</div>
         </div>
       </div>
 
