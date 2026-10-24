@@ -1,7 +1,7 @@
 // 游戏配置常量集中管理
 export const GAME_CONFIG = {
   // 版本信息
-  VERSION: "0.7.4",
+  VERSION: "0.7.5",
   
   // 存储键名
   STORAGE: {

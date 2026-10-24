@@ -82,7 +82,7 @@ export function buildExtraTechDefs() {
     "miningBoost",
     "灵晶飞跃",
     "excavationTools",
-    (state) => (state.buildings.quarry?.owned ?? 0) >= 2,
+    (state) => (state.buildings.workshop?.owned ?? 0) >= 2 || (state.buildings.mineralSilo?.owned ?? 0) >= 2,
     12,
     (i) => ({ wood: Math.ceil(1300 * Math.pow(1.75, i - 1)), minerals: Math.ceil(1500 * Math.pow(1.9, i - 1)) }),
     (i) => ({ mineralsRateMul: 1 + 0.22 + 0.02 * i }),

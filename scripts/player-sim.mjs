@@ -330,7 +330,6 @@ function tryBuyBuilding() {
     "granary",
     "workshop",
     "researchLab",
-    "quarry",
     "mineralSilo",
     "berryPress",
     "trainingGround",

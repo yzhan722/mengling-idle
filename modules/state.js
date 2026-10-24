@@ -675,6 +675,13 @@ export function loadFromRaw(raw) {
 
     }
 
+    // 采晶场与灵晶储藏箱合并后，旧存档采晶场等级自动迁移并入灵晶储藏箱
+    const legacyQuarry = Math.max(0, Math.floor(Number(data.buildings.quarry?.owned) || 0));
+    if (legacyQuarry > 0) {
+      s.buildings.mineralSilo.owned = clamp((s.buildings.mineralSilo?.owned ?? 0) + legacyQuarry, 0, BUILDING_MAX_LEVEL);
+      if (s.buildings.quarry) s.buildings.quarry.owned = 0;
+    }
+
   }
 
 

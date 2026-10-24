@@ -216,7 +216,7 @@ export function computeUnlockedResourceRates(state, techEff) {
   }
   if (mineralsUnlocked) {
     mineralsPerSec =
-      (0.005 * (b.workshop?.owned ?? 0) + 0.0075 * (b.quarry?.owned ?? 0)) *
+      (0.0125 * (b.workshop?.owned ?? 0) + 0.0075 * (b.quarry?.owned ?? 0)) *
       (techEff?.mineralsRateMul ?? 1) *
       2;
   }

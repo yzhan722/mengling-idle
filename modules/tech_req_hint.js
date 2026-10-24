@@ -30,7 +30,7 @@ const TID_RULES = {
 const PREFIX_RULES = [
   { prefix: "agroBoost", bid: "field", need: 3 },
   { prefix: "forestryBoost", bid: "lumberYard", need: 2 },
-  { prefix: "miningBoost", bid: "quarry", need: 2 },
+  { prefix: "miningBoost", bid: "workshop", need: 2 },
 ];
 
 /** Human-readable building gate when tech.req(state) is false. */

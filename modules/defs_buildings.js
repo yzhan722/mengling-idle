@@ -35,14 +35,14 @@ export const BUILDING_DEFS = {
   workshop: {
     name: "灵晶工坊",
     category: "灵晶",
-    desc: "解锁灵晶碎片，并提供少量灵晶产出。",
+    desc: "解锁灵晶碎片，并提供灵晶自动产出。",
     baseCost: { catnip: 30, wood: 8 }, // 原120×0.25, 30×0.25
     costMul: 1.1831,
     effects: (state) => {
       const n = state.buildings.workshop.owned;
       return {
         unlockMinerals: n > 0,
-        mineralsPerSec: 0.015 * n, // 新增：少量灵晶产出
+        mineralsPerSec: 0.03 * n,
       };
     },
     visible: (state) => state.unlocks.wood || state.buildings.workshop.owned > 0,
@@ -112,21 +112,6 @@ export const BUILDING_DEFS = {
       };
     },
     visible: (state) => state.tech.carpentry || state.buildings.lumberYard.owned > 0,
-  },
-  quarry: {
-    name: "采晶场",
-    category: "灵晶",
-    desc: "增加灵晶碎片产出与上限。",
-    baseCost: { wood: 45, minerals: 18 }, // 原180×0.25, 70×0.25
-    costMul: 1.1712,
-    effects: (state) => {
-      const n = state.buildings.quarry.owned;
-      return {
-        mineralsPerSec: 0.03 * n, // 原0.12 × 0.25
-        capMineralsAdd: 13 * n,   // 原50 × 0.25 = 12.5 → 13
-      };
-    },
-    visible: (state) => state.unlocks.minerals || state.buildings.quarry.owned > 0,
   },
   mineralSilo: {
     name: "灵晶储藏箱",
