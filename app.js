@@ -4,6 +4,7 @@
 import { setupGlobalErrorHandling } from "./modules/error_handler.js";
 import { createAnalytics } from "./modules/analytics.js";
 import { installSpriteHandlers } from "./modules/sprites.js";
+import { installGlobalAudioWiring } from "./modules/audio/sound_engine.js";
 import { escapeHtml, nowMs, randFloat } from "./modules/utils.js";
 import { buildDefs } from "./modules/defs_core.js";
 import { createBeastDataClient } from "./modules/beast_data.js";
@@ -43,9 +44,10 @@ import { createBoot } from "./modules/app/boot.js";
 
 (() => {
   setupGlobalErrorHandling();
-  const analytics = createAnalytics({ gameVersion: "0.7.3" });
+  const analytics = createAnalytics({ gameVersion: "0.7.4" });
 
   installSpriteHandlers();
+  installGlobalAudioWiring();
 
   try {
     const STYLE_GUARD_KEY = "mengling_idle_style_fix_v1";

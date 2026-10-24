@@ -14,15 +14,15 @@
     <meta name="application-name" content="萌灵放置冒险" />
     <meta name="apple-mobile-web-app-title" content="萌灵放置冒险" />
     <title>萌灵放置冒险 · 星野灵兽录</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="./assets/ui/favicon-64.png?v=0.7.3" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32.png?v=0.7.3" />
-    <link rel="shortcut icon" href="./favicon.ico?v=0.7.3" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/ui/apple-touch-icon.png?v=0.7.3" />
-    <link rel="manifest" href="./site.webmanifest?v=0.7.3" />
+    <link rel="icon" type="image/png" sizes="64x64" href="./assets/ui/favicon-64.png?v=0.7.4" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32.png?v=0.7.4" />
+    <link rel="shortcut icon" href="./favicon.ico?v=0.7.4" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/ui/apple-touch-icon.png?v=0.7.4" />
+    <link rel="manifest" href="./site.webmanifest?v=0.7.4" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&family=Rajdhani:wght@600;700&display=swap" />
-    <link rel="stylesheet" href="./styles.css?v=0.7.3" />
+    <link rel="stylesheet" href="./styles.css?v=0.7.4" />
   </head>
   <body>
     <a class="skip-link" href="#mainStage">跳到主要内容</a>
@@ -34,7 +34,7 @@
             <img class="brand__logo" src="./assets/ui/app_logo.webp" width="42" height="42" alt="" aria-hidden="true" />
             <div class="brand__text">
               <div class="brand__title">萌灵放置冒险 <span class="brand__tag">星野灵兽录</span></div>
-              <div class="brand__subtitle" id="topbarStatus"><span class="brand__ver">v0.7.3</span> · 星火围炉 · 奇幻灵兽收集 RPG</div>
+              <div class="brand__subtitle" id="topbarStatus"><span class="brand__ver">v0.7.4</span> · 星火围炉 · 奇幻灵兽收集 RPG</div>
             </div>
           </div>
           <div id="trainerHost" class="topbar__trainer" aria-label="育灵师等级"></div>
@@ -231,16 +231,24 @@
                 <div class="tab-stage__aura tab-stage__aura--violet"></div>
               </div>
               <div class="tab-stage__header">
-                <span class="camp-stage__badge">⚙️ 星轨时空档案室 · 云端同步与日程中枢</span>
+                <span class="camp-stage__badge"><img class="rpg-ai-icon" src="./assets/ui_icons/commandCenter.webp" width="16" height="16" alt="" aria-hidden="true" /> 星轨时空档案室 · 云端同步与日程中枢</span>
                 <span class="camp-stage__sub">本机双槽快照 + 云端跨设备实时同步</span>
               </div>
               <div class="tab-stage__body">
                 <div class="tab-stage__focal">
-                  <div class="tab-stage__eyebrow">☁️ 存档安全与今日活跃</div>
+                  <div class="tab-stage__eyebrow"><img class="rpg-ai-icon" src="./assets/ui_icons/advSearchCell.webp" width="15" height="15" alt="" aria-hidden="true" /> 存档安全与今日活跃</div>
                   <div class="tab-stage__title">今日目标与云端时空刻印</div>
                   <div class="tab-stage__desc">完成下方日常目标可领取未来币奖励；注册登录云账号即可跨设备无缝接力冒险并开启好友约战。</div>
                 </div>
               </div>
+            </div>
+            <div class="sidebar__divider"></div>
+            <div class="panel__title">音乐与声效氛围</div>
+            <div class="muted" style="font-size:12px;line-height:1.5;margin:0 0 8px">星野围炉环境音乐（竖琴 / 钢片琴 / 暖弦铺底）与全操作声效反馈，也可随时在顶栏一键切换。</div>
+            <div class="actions" id="optionsAudioControls">
+              <button class="btn btn--small" type="button" data-set-audio-mode="all">舒缓音乐 + 音效</button>
+              <button class="btn btn--small" type="button" data-set-audio-mode="sfx">仅保留操作音效</button>
+              <button class="btn btn--small" type="button" data-set-audio-mode="mute">全部静音</button>
             </div>
             <div class="sidebar__divider"></div>
             <div class="panel__title">今日目标</div>
@@ -314,14 +322,23 @@
           }
           return container;
         }
-        var ICONS = { ok: '✅', danger: '❌', warn: '⚠️', info: 'ℹ️', shiny: '✨' };
+        var ICONS = {
+          ok: '<img class="rpg-ai-icon" src="./assets/ui_icons/shinyCharm.webp" width="16" height="16" alt="" />',
+          danger: '<img class="rpg-ai-icon" src="./assets/ui_icons/searchFlare.webp" width="16" height="16" alt="" />',
+          warn: '<img class="rpg-ai-icon" src="./assets/ui_icons/energyDrink.webp" width="16" height="16" alt="" />',
+          info: '<img class="rpg-ai-icon" src="./assets/ui_icons/science.webp" width="16" height="16" alt="" />',
+          shiny: '<img class="rpg-ai-icon" src="./assets/ui_icons/megaStone.webp" width="16" height="16" alt="" />'
+        };
         window.showToast = function(msg, type, ttl) {
           type = type || 'info';
           ttl = typeof ttl === 'number' ? ttl : (type === 'shiny' ? 5000 : 2800);
+          if (window.GameAudio && window.GameAudio.playOutcomeSfxFromText) {
+            window.GameAudio.playOutcomeSfxFromText(msg, type);
+          }
           var c = getContainer();
           var el = document.createElement('div');
           el.className = 'toast toast--' + type;
-          el.innerHTML = '<span class="toast__icon">' + (ICONS[type] || '❓') + '</span><span class="toast__body">' + String(msg) + '</span>';
+          el.innerHTML = '<span class="toast__icon">' + (ICONS[type] || ICONS.info) + '</span><span class="toast__body">' + String(msg) + '</span>';
           c.appendChild(el);
           var tid = setTimeout(function() { dismiss(el); }, ttl);
           el.addEventListener('click', function() { dismiss(el); });
@@ -464,12 +481,12 @@
         });
       })();
     </script>
-    <script src="./data/beasts.js?v=0.7.3" defer></script>
-    <script type="module" src="./main.js?v=0.7.3"></script>
+    <script src="./data/beasts.js?v=0.7.4" defer></script>
+    <script type="module" src="./main.js?v=0.7.4"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('./sw.js?v=0.7.3', { updateViaCache: 'none' });
+          navigator.serviceWorker.register('./sw.js?v=0.7.4', { updateViaCache: 'none' });
         });
       }
     </script>

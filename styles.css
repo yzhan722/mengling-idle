@@ -395,6 +395,41 @@ body {
   border: 1px solid rgba(56, 189, 248, 0.35);
 }
 
+.audio-pill {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fef08a;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.85));
+  border: 1px solid rgba(250, 204, 21, 0.42);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+  white-space: nowrap;
+}
+
+.audio-pill:hover {
+  transform: translateY(-1px);
+  border-color: #fde047;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), 0 0 12px rgba(250, 204, 21, 0.3);
+}
+
+.audio-pill[data-audio-mode="sfx"] {
+  color: #bae6fd;
+  border-color: rgba(56, 189, 248, 0.45);
+}
+
+.audio-pill[data-audio-mode="mute"] {
+  color: rgba(148, 163, 184, 0.85);
+  border-color: rgba(148, 163, 184, 0.3);
+  opacity: 0.78;
+}
+
 .shell {
   max-width: 1200px;
   margin: 0 auto;

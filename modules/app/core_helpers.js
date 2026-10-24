@@ -35,6 +35,9 @@ export function createCoreHelpers({ ui, elHint, getState, getRenders, getCapture
     state.log.unshift(line);
     state.log = state.log.slice(0, 30);
     ui.logDirty = true;
+    try {
+      window.GameAudio?.playOutcomeSfxFromText?.(msg);
+    } catch {}
     if (important) {
       hint(msg, 2800);
       try {

@@ -136,6 +136,9 @@ export function createTabController({
     if (typeof document !== "undefined") {
       document.title = TAB_TITLES[name] || "萌灵放置冒险 · 星野灵兽录";
     }
+    try {
+      window.GameAudio?.setSceneMood?.(name);
+    } catch {}
     if (name === "dex") ui.dexDirty = true;
     if (name === "capture") ui.captureDirty = true;
     if (name === "future") ui.futureDirty = true;
