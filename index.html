@@ -14,15 +14,15 @@
     <meta name="application-name" content="萌灵放置冒险" />
     <meta name="apple-mobile-web-app-title" content="萌灵放置冒险" />
     <title>萌灵放置冒险 · 星野灵兽录</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="./assets/ui/favicon-64.png?v=0.7.7" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32.png?v=0.7.7" />
-    <link rel="shortcut icon" href="./favicon.ico?v=0.7.7" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/ui/apple-touch-icon.png?v=0.7.7" />
-    <link rel="manifest" href="./site.webmanifest?v=0.7.7" />
+    <link rel="icon" type="image/png" sizes="64x64" href="./assets/ui/favicon-64.png?v=0.7.8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32.png?v=0.7.8" />
+    <link rel="shortcut icon" href="./favicon.ico?v=0.7.8" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/ui/apple-touch-icon.png?v=0.7.8" />
+    <link rel="manifest" href="./site.webmanifest?v=0.7.8" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&family=Rajdhani:wght@600;700&display=swap" />
-    <link rel="stylesheet" href="./styles.css?v=0.7.7" />
+    <link rel="stylesheet" href="./styles.css?v=0.7.8" />
   </head>
   <body>
     <a class="skip-link" href="#mainStage">跳到主要内容</a>
@@ -34,7 +34,7 @@
             <img class="brand__logo" src="./assets/ui/app_logo.webp" width="42" height="42" alt="" aria-hidden="true" />
             <div class="brand__text">
               <div class="brand__title">萌灵放置冒险 <span class="brand__tag">星野灵兽录</span></div>
-              <div class="brand__subtitle" id="topbarStatus"><span class="brand__ver">v0.7.7</span> · 星火围炉 · 奇幻灵兽收集 RPG</div>
+              <div class="brand__subtitle" id="topbarStatus"><span class="brand__ver">v0.7.8</span> · 星火围炉 · 奇幻灵兽收集 RPG</div>
             </div>
           </div>
           <div id="trainerHost" class="topbar__trainer" aria-label="育灵师等级"></div>
@@ -46,7 +46,7 @@
           <div id="resources" class="resources resources--top" aria-label="核心资源"></div>
         </div>
       </div>
-      <div id="worldPulse" class="worldPulse" aria-live="polite" hidden></div>
+      <div id="worldPulse" class="worldPulse" aria-live="polite">星火围炉 · 营地灵脉平稳运转中</div>
     </header>
     <main class="shell">
       <aside class="sidebar sidebar--log">
@@ -484,12 +484,12 @@
         });
       })();
     </script>
-    <script src="./data/beasts.js?v=0.7.7" defer></script>
-    <script type="module" src="./main.js?v=0.7.7"></script>
+    <script src="./data/beasts.js?v=0.7.8" defer></script>
+    <script type="module" src="./main.js?v=0.7.8"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('./sw.js?v=0.7.7', { updateViaCache: 'none' });
+          navigator.serviceWorker.register('./sw.js?v=0.7.8', { updateViaCache: 'none' });
         });
       }
     </script>

@@ -38,6 +38,7 @@ const RES_ICONS = {
 };
 
 export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildingCost, getState }) {
+  let lastBuildingsSig = "";
   return function renderBuildings() {
     const state = getState();
 
@@ -58,6 +59,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
     const autoOn = Boolean(auto && auto.autoBuildOn);
     const autoMode = typeof auto?.autoBuildMode === "string" && auto.autoBuildMode ? auto.autoBuildMode : "prod";
     const autoUnlocked = Boolean(state.unlocks?.autoBuild);
+    const sigParts = [`${autoUnlocked ? 1 : 0}:${autoOn ? 1 : 0}:${autoMode}`];
 
     for (const [bid, bdef] of Object.entries(defs.buildings)) {
       if (!bdef.visible(state)) continue;
@@ -69,14 +71,17 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
       const pct = isMax ? 100 : Math.min(100, Math.round((owned / maxLvl) * 100));
 
       const vis = BUILDING_VISUALS[bid] || { icon: "🏛️", tone: "gold", tag: bdef.category || "建筑", perLvl: bdef.desc };
+      const chipStates = [];
       const costChipsHtml = Object.entries(cost)
         .map(([rid, v]) => {
           const curVal = state.res?.[rid]?.value ?? 0;
           const enough = curVal >= v;
+          chipStates.push(`${rid}:${v}:${enough ? 1 : 0}`);
           const rName = defs.resources[rid]?.name || rid;
-          return `<span class="cost-chip ${enough ? "is-ok" : "is-short"}" title="当前 ${Math.floor(curVal)} / 需要 ${v}">${renderResSvg(rid, 14)} ${rName}${v}</span>`;
+          return `<span class="cost-chip ${enough ? "is-ok" : "is-short"}" title="需要 ${rName} ${v}">${renderResSvg(rid, 14)} ${rName}${v}</span>`;
         })
         .join("");
+      sigParts.push(`${bid}:${owned}:${ok ? 1 : 0}:${isMax ? 1 : 0}:${chipStates.join(",")}`);
 
       const costText = Object.entries(cost)
         .map(([rid, v]) => `${defs.resources[rid].name}${v}`)
@@ -182,6 +187,11 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
       pushCat(cat, rows);
     }
 
+    const sig = sigParts.join("|");
+    if (sig === lastBuildingsSig && elBuildings && elBuildings.childElementCount > 0) {
+      return;
+    }
+    lastBuildingsSig = sig;
     elBuildings.innerHTML = sections.join("");
   };
 }

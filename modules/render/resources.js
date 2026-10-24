@@ -133,35 +133,29 @@ export function createRenderResources({ elResources, defs, fmt, getState }) {
     // 育灵师等级始终刷新（不受 signature 缓存影响）
     renderTrainerLevel(state);
 
-    const items = [];
-
-    items.push({
-      id: "catnip",
-      name: defs.resources.catnip.name,
-      value: state.res.catnip.value,
-      cap: state.res.catnip.cap,
-      meta: fmtRate(eff.catnipPerSec),
-    });
-
-    if (state.unlocks.wood || state.res.wood.value > 0) {
-      items.push({
+    const items = [
+      {
+        id: "catnip",
+        name: defs.resources.catnip.name,
+        value: state.res.catnip.value,
+        cap: state.res.catnip.cap,
+        meta: fmtRate(eff.catnipPerSec),
+      },
+      {
         id: "wood",
         name: defs.resources.wood.name,
         value: state.res.wood.value,
         cap: state.res.wood.cap,
         meta: fmtRate(eff.woodPerSec),
-      });
-    }
-
-    if (state.unlocks.minerals || state.res.minerals.value > 0) {
-      items.push({
+      },
+      {
         id: "minerals",
         name: defs.resources.minerals.name,
         value: state.res.minerals.value,
         cap: state.res.minerals.cap,
         meta: fmtRate(eff.mineralsPerSec),
-      });
-    }
+      },
+    ];
 
     const signature = items
       .map((it) => `${it.id}:${fmtInt(it.value)}:${fmtInt(it.cap)}:${it.meta}:${it.noCap ? 1 : 0}`)

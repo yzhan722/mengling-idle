@@ -79,14 +79,14 @@ export function createTickerSystem({
     return escapeHtml(String(s || "").replace(/\s+/g, " ").trim());
   }
 
-  function setTickerVisible(on) {
+  function setTickerVisible(_on) {
     const el = elTicker();
     if (!el) return;
     try {
-      document.documentElement.style.setProperty("--ticker-h", on ? `${TICKER_LANE_H * TICKER_LANE_COUNT}px` : "0px");
+      document.documentElement.style.setProperty("--ticker-h", "0px");
     } catch {
     }
-    el.style.display = on ? "flex" : "none";
+    el.style.display = "none";
   }
 
   function ensureTickerLanes() {
@@ -196,11 +196,10 @@ export function createTickerSystem({
       } catch {}
       return;
     }
-    // No boss + no real event: collapse pulse
-    el.hidden = true;
-    el.textContent = "";
+    el.hidden = false;
+    el.textContent = "星火围炉 · 营地灵脉平稳运转中";
     try {
-      document.documentElement.style.setProperty("--world-pulse-h", "0px");
+      document.documentElement.style.setProperty("--world-pulse-h", "22px");
     } catch {}
   }
 

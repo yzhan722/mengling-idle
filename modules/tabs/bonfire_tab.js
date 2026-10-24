@@ -35,6 +35,7 @@ function renderCampStageSvg(fireTier) {
 
 export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, getState }) {
   let lastBonfireSig = "";
+  let lastStageSig = "";
   const fmtRemain = (sec) => {
     const s = Math.max(0, Math.ceil(typeof sec === "number" && Number.isFinite(sec) ? sec : 0));
     const mm = Math.floor(s / 60);
@@ -52,15 +53,13 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
       const cd0 = typeof state.gatherCdSec === "number" && Number.isFinite(state.gatherCdSec) ? state.gatherCdSec : 0;
       const cd = Math.max(0, Math.ceil(cd0));
       const combo = Math.max(0, Math.floor(state.fun?.gatherCombo || 0));
-      const narrow = typeof window !== "undefined" && window.innerWidth < 520;
-      const text = narrow
-        ? charges <= 0
-          ? `采集 0${cd > 0 ? ` · ${fmtRemain(cd)}` : ""}`
-          : `采集 ${charges}${combo >= 2 ? ` x${combo}` : ""}`
-        : charges <= 0
+      const text =
+        charges <= 0
           ? `采集 0${cd > 0 ? ` (${fmtRemain(cd)})` : ""}`
-          : `采集 ${charges}${combo >= 2 ? ` · 连击x${combo}` : ""}`;
-      elBtnGather.textContent = text;
+          : `采集 ${charges}`;
+      if (elBtnGather.textContent !== text) {
+        elBtnGather.textContent = text;
+      }
       elBtnGather.title =
         charges <= 0
           ? cd > 0
@@ -94,6 +93,12 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
       const companions = selectCampCompanions(state);
       const fireInfo = getCampfireVisualTier(state);
 
+      const stageSig = [
+        fireInfo.tier,
+        fireInfo.label,
+        companions.map((c) => `${c.id}:${c.lvl}:${c.isShiny ? 1 : 0}:${c.mood}`).join(","),
+      ].join("|");
+
       const sig = [
         charges,
         cd,
@@ -104,14 +109,63 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
         compass.progressCur,
         compass.progressMax,
         compass.title,
-        fireInfo.tier,
-        companions.map((c) => `${c.id}:${c.lvl}:${c.isShiny ? 1 : 0}:${c.mood}`).join(","),
+        stageSig,
       ].join("|");
 
       if (!ui?.bonfireDirty && sig === lastBonfireSig && elBonfireActions.childElementCount > 0) {
         return;
       }
       lastBonfireSig = sig;
+
+      const stepDotsHtml = Array.from({ length: compass.totalSteps }, (_, i) => {
+        const sNum = i + 1;
+        const cls = sNum < compass.stepIndex ? "is-done" : sNum === compass.stepIndex ? "is-active" : "";
+        return `<span class="compass-dot ${cls}" title="阶段 ${sNum}"></span>`;
+      }).join("");
+
+      const gatherLine1 = `顶栏【采集】消耗次数换灵果。当前 ${charges}/1000 · ${cdText} · 累计 ${clicks} 次`;
+      const gatherLine2 = `${mileText} · ${dailyText}`;
+
+      if (stageSig === lastStageSig && elBonfireActions.querySelector("#campStage")) {
+        const cardEl = elBonfireActions.querySelector(".compass-card");
+        if (cardEl) {
+          cardEl.setAttribute("data-compass-step", compass.id);
+          const badgeEl = cardEl.querySelector(".compass-card__badge");
+          if (badgeEl) badgeEl.textContent = compass.badge;
+          const dotsEl = cardEl.querySelector(".compass-card__dots");
+          if (dotsEl) dotsEl.innerHTML = stepDotsHtml;
+          const titleEl = cardEl.querySelector(".compass-card__title");
+          if (titleEl) titleEl.textContent = compass.title;
+          const descEl = cardEl.querySelector("[data-compass-desc]");
+          if (descEl) descEl.textContent = compass.desc;
+          const whyEl = cardEl.querySelector(".compass-card__why");
+          if (whyEl) whyEl.textContent = compass.whyText;
+          const fillEl = cardEl.querySelector(".compass-bar__fill");
+          if (fillEl) fillEl.style.width = `${compass.pct}%`;
+          const labelEl = cardEl.querySelector(".compass-bar__label");
+          if (labelEl) labelEl.textContent = `${compass.progressCur} / ${compass.progressMax}（${compass.pct}%）`;
+          const ctaEl = cardEl.querySelector(".compass-card__cta");
+          if (ctaEl) {
+            ctaEl.setAttribute("data-compass-action", compass.ctaAction);
+            ctaEl.textContent = `${compass.ctaLabel} →`;
+          }
+        }
+        const g1 = elBonfireActions.querySelector("[data-bonfire-gather-line1]");
+        if (g1) g1.textContent = gatherLine1;
+        const g2 = elBonfireActions.querySelector("[data-bonfire-gather-line2]");
+        if (g2) g2.textContent = gatherLine2;
+        const qBtn = elBonfireActions.querySelector("button[data-camp-quick-gather]");
+        if (qBtn) qBtn.disabled = charges <= 0;
+        const cBtn = elBonfireActions.querySelector("button[data-gather-daily-claim]");
+        if (cBtn) {
+          cBtn.disabled = !daily.canClaim;
+          cBtn.textContent = daily.claimed ? "今日已领" : "领取 +6";
+        }
+        if (ui) ui.bonfireDirty = false;
+        return;
+      }
+
+      lastStageSig = stageSig;
 
       const companionSlotsHtml =
         companions.length > 0
@@ -126,12 +180,6 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
               )
               .join("")
           : `<div class="camp-stage__emptyHint">🔥 篝火正暖 · 完成第 3 步抓获萌灵后，伙伴们会围坐在火堆旁陪伴你</div>`;
-
-      const stepDotsHtml = Array.from({ length: compass.totalSteps }, (_, i) => {
-        const sNum = i + 1;
-        const cls = sNum < compass.stepIndex ? "is-done" : sNum === compass.stepIndex ? "is-active" : "";
-        return `<span class="compass-dot ${cls}" title="阶段 ${sNum}"></span>`;
-      }).join("");
 
       elBonfireActions.innerHTML = `
         <div class="camp-stage" id="campStage">
@@ -174,7 +222,7 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
               <div class="compass-card__dots" aria-label="主线阶段进度">${stepDotsHtml}</div>
             </div>
             <div class="row__title compass-card__title">${escapeHtml(compass.title)}</div>
-            <div class="row__desc">${escapeHtml(compass.desc)}</div>
+            <div class="row__desc" data-compass-desc>${escapeHtml(compass.desc)}</div>
             <div class="compass-card__why">${escapeHtml(compass.whyText)}</div>
             <div class="compass-bar" aria-label="当前目标进度 ${compass.pct}%">
               <div class="compass-bar__fill" style="width:${compass.pct}%"></div>
@@ -186,11 +234,11 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
           </div>
         </div>
 
-        <div class="row">
+        <div class="row bonfire-gather-row">
           <div class="row__left">
             <div class="row__title">营地采集</div>
-            <div class="row__desc">顶栏【采集】消耗次数换灵果。当前 ${charges}/1000 · ${cdText}${clicks > 0 ? ` · 累计 ${clicks} 次` : ""}</div>
-            <div class="row__desc">${mileText} · ${dailyText}</div>
+            <div class="row__desc" data-bonfire-gather-line1>${escapeHtml(gatherLine1)}</div>
+            <div class="row__desc" data-bonfire-gather-line2>${escapeHtml(gatherLine2)}</div>
           </div>
           <div class="row__right">
             <button type="button" class="btn btn--small" data-camp-quick-gather ${charges <= 0 ? "disabled" : ""}>采集一次</button>

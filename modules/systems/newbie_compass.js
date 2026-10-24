@@ -40,7 +40,7 @@ export function computeNewbieCompass(state) {
   }
 
   // 第 1 步：采集满 30 灵果（或已点亮灵球基础）
-  if (!hasBallTech && !researchingBall && catnip < 30 && catchCount === 0) {
+  if (!hasBallTech && !researchingBall && catnip < 30 && clicks < 8 && catchCount === 0) {
     const cur = Math.min(30, catnip);
     return {
       stepIndex: 1,
@@ -207,7 +207,7 @@ export function selectCampCompanions(state) {
   });
 
   return scored.slice(0, 3).map((m, idx) => {
-    const seed = (Number(m.id) || idx + 1) + Math.floor((state?.gatherClicks || 0) / 5);
+    const seed = (Number(m.id) || idx + 1) + idx * 3;
     const mood = COMPANION_MOODS[seed % COMPANION_MOODS.length];
     return {
       id: m.id,
