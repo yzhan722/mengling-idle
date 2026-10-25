@@ -13,7 +13,7 @@ import {
 } from "../type_skills.js";
 import { beastZone, ZONE_INDEX } from "../beast_defs.js";
 import { renderMonsStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
-import { renderResSvg } from "./rpg_svg_icons.js";
+import { renderResSvg, renderUiIcon } from "./rpg_svg_icons.js";
 
 export function createRenderMons({
   elMonList,
@@ -290,9 +290,9 @@ export function createRenderMons({
             ${filterChips.length ? `<div class="filter-chips">${filterChips.map((c) => `<span class="filter-chip">${escapeHtml(c)}</span>`).join("")}</div>` : ""}
           </div>
           <div class="row__right">
-            <button class="btn btn--small${evoReadyCount > 0 ? ' btn--warning' : ''}" data-mons-focus-evo="1" ${evoReadyCount > 0 ? "" : "disabled"}>查看可进化${evoReadyCount > 0 ? `（${evoReadyCount}）` : ""}</button>
-            <button class="btn btn--small" data-mon-batch-candy="1" ${canBatchCandy ? "" : "disabled"}>各喂1糖${canBatchCandy ? `（${batchCandyCount}只）` : ""}</button>
-            <button class="btn btn--small btn--danger" data-mon-batch-release="1" ${canBatchRelease ? "" : "disabled"}>批量放生弱宠${canBatchRelease ? `（${batchReleaseIds.length}只）` : ""}</button>
+            <button class="btn btn--small${evoReadyCount > 0 ? ' btn--warning' : ''}" data-mons-focus-evo="1" ${evoReadyCount > 0 ? "" : "disabled"}>${renderUiIcon("shinySparkle", 14)} 查看可进化${evoReadyCount > 0 ? `（${evoReadyCount}）` : ""}</button>
+            <button class="btn btn--small" data-mon-batch-candy="1" ${canBatchCandy ? "" : "disabled"}>${renderResSvg("rareCandy", 14)} 各喂1糖${canBatchCandy ? `（${batchCandyCount}只）` : ""}</button>
+            <button class="btn btn--small btn--danger" data-mon-batch-release="1" ${canBatchRelease ? "" : "disabled"}>${renderUiIcon("speciesTag", 14)} 批量放生弱宠${canBatchRelease ? `（${batchReleaseIds.length}只）` : ""}</button>
           </div>
         </div>
       `);
@@ -613,7 +613,7 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderResSvg("shinyCharm", 18)}<span>性格 / 特性</span></div>
+          <div class="row__title row__titleLine">${renderResSvg("shinyCharm", 18)}<span>性格 / 特性</span><span class="tag">天赋与权能</span></div>
           <div class="row__desc">性格只影响六维；特性影响挂机/捕捉/挑战等玩法。</div>
         </div>
         <div class="row__right">
@@ -627,7 +627,7 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderResSvg("energyDrink", 18)}<span>能力值</span></div>
+          <div class="row__title row__titleLine">${renderResSvg("energyDrink", 18)}<span>能力值</span><span class="tag">当前六维</span></div>
           <div class="row__desc">HP/攻击/防御/特攻/特防/速度</div>
         </div>
         <div class="row__right">
@@ -642,7 +642,7 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderResSvg("hpPotion", 18)}<span>药剂强化</span></div>
+          <div class="row__title row__titleLine">${renderResSvg("hpPotion", 18)}<span>药剂强化</span><span class="tag">单项上限 +50</span></div>
           <div class="row__desc">消耗药剂：对应六维永久 +5（单项上限 +50）</div>
         </div>
         <div class="row__right">
@@ -657,7 +657,7 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderResSvg("megaStone", 18)}<span>属性</span></div>
+          <div class="row__title row__titleLine">${renderResSvg("megaStone", 18)}<span>属性</span><span class="tag">元素共鸣</span></div>
           <div class="row__desc">星野元素属性共鸣 · 影响属性技能与试炼克制</div>
         </div>
         <div class="row__right">
@@ -667,7 +667,7 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderResSvg("science", 18)}<span>种族值</span></div>
+          <div class="row__title row__titleLine">${renderResSvg("science", 18)}<span>种族值</span><span class="tag">本源潜能</span></div>
           <div class="row__desc">星野灵兽本源六维潜能</div>
         </div>
         <div class="row__right">

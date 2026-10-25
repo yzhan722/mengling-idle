@@ -138,7 +138,7 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
       } else if (researchBusy) statusText = "研究中";
       else if (!afford) statusText = "资源不足";
 
-      const btnText = isActive ? `⏳ ${fmtDuration(activeRemain)}` : canBuy ? "🔭 立项研究" : "研究";
+      const btnText = isActive ? `${renderResSvg("science", 14)} ${fmtDuration(activeRemain)}` : canBuy ? `${renderResSvg("science", 14)} 立项研究` : "研究";
 
       const missingPrereq = (tdef.prereq ?? []).filter((p) => !state.tech[p]);
       const depHint =
@@ -209,12 +209,12 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
             recommendHtml = `
               <div class="row row--researchable tech-recommend-banner">
                 <div class="row__left">
-                  <div class="row__title row__titleLine">${renderResSvg("science", 18)}<span>🌟 推荐下一研究：${tdef.name}</span><span class="tag">耗时 ${fmtDuration(computeResearchTimeSec(tdef))}</span></div>
+                  <div class="row__title row__titleLine">${renderResSvg("science", 18)}<span>推荐下一研究：${tdef.name}</span><span class="tag">耗时 ${fmtDuration(computeResearchTimeSec(tdef))}</span></div>
                   <div class="row__desc">${typeof tdef.desc === "string" && tdef.desc.trim() ? tdef.desc : ""}</div>
                   <div class="row__desc muted">${TECH_PACING_BLURB}</div>
                 </div>
                 <div class="row__right">
-                  <button class="btn btn--primary" data-research="${tid}">🔭 立即研究</button>
+                  <button class="btn btn--primary" data-research="${tid}">${renderResSvg("science", 14)} 立即研究</button>
                 </div>
               </div>
             `;

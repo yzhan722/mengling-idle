@@ -223,28 +223,28 @@ export function renderCaptureStageHtml({
   const ambushBonus = Math.max(0, Number(ui?.encounterAmbushBonus || 0));
 
   const BIOME_ICONS = {
-    meadow: "🌿",
-    woods: "🍯",
-    brook: "💧",
-    plateau: "🎐",
-    dunes: "🏜️",
-    garden: "🌙",
-    ridge: "❄️",
-    hollow: "🐉",
-    sanctum: "🌌",
+    meadow: renderResSvg("catnip", 14),
+    woods: renderResSvg("sweetBerry", 14),
+    brook: renderResSvg("crystal", 14),
+    plateau: renderResSvg("feather", 14),
+    dunes: renderResSvg("minerals", 14),
+    garden: renderResSvg("moonStone", 14),
+    ridge: renderResSvg("iceStone", 14),
+    hollow: renderResSvg("dragonScale", 14),
+    sanctum: renderResSvg("megaStone", 14),
   };
   const biomeRibbonHtml = Array.isArray(unlockedAreas) && unlockedAreas.length
     ? `<div class="capture-biome-ribbon" role="tablist" aria-label="生态秘境地图切换">
         ${unlockedAreas
           .map((a) => {
             const active = a.id === area?.id;
-            const ico = BIOME_ICONS[a.id] || "🧭";
+            const ico = BIOME_ICONS[a.id] || renderUiIcon("tab_capture", 14);
             return `<button type="button" class="biome-pill ${active ? "is-active" : ""}" data-stage-act="biome-switch" data-area-id="${escapeHtml(a.id)}">${ico} ${escapeHtml(a.name)}</button>`;
           })
           .join("")}
-        ${nextLockedArea ? `<span class="biome-pill is-locked" title="集齐更多图鉴后解锁">🔒 ${escapeHtml(nextLockedArea.name)} (${nextLockedArea.unlockReq}图鉴)</span>` : ""}
+        ${nextLockedArea ? `<span class="biome-pill is-locked" title="集齐更多图鉴后解锁">${renderUiIcon("tab_capture", 13)} ${escapeHtml(nextLockedArea.name)} (${nextLockedArea.unlockReq}图鉴)</span>` : ""}
         <button type="button" class="biome-pill biome-pill--lure ${lureStacks > 0 ? "is-lured" : ""}" data-stage-act="field-lure" title="消耗 15 灵果撒播诱灵香果，接下来 3 次遭遇捕获率 +6%">
-          🍯 ${lureStacks > 0 ? `诱饵生效 ×${lureStacks}` : "撒播诱灵香果"}
+          ${renderResSvg("sweetBerry", 14)} ${lureStacks > 0 ? `诱饵生效 ×${lureStacks}` : "撒播诱灵香果"}
         </button>
       </div>`
     : "";
@@ -298,11 +298,11 @@ export function renderCaptureStageHtml({
     const isNewDex = encCaughtN <= 0;
 
     const tacticalTags = [];
-    if (ambushBonus > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--emerald">⚡ 先手奇袭 +${Math.round(ambushBonus * 100)}%</span>`);
-    if (lureStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--gold">🍯 香果诱饵 +6%</span>`);
-    if (baitStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--emerald">🍓 浆果安抚 +${baitStacks * 4}% (${baitStacks}/3)</span>`);
-    if (mudStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--cyan">💣 泥团封路 +${mudStacks * 5}% · 防逃逸 (${mudStacks}/2)</span>`);
-    if ((pity2 || 0) > 0) tacticalTags.push(`<span class="tactical-chip">🛡️ 失败保底 +${Math.round((pity2 || 0) * 100)}%</span>`);
+    if (ambushBonus > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--emerald">${renderUiIcon("shinySparkle", 13)} 先手奇袭 +${Math.round(ambushBonus * 100)}%</span>`);
+    if (lureStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--gold">${renderResSvg("sweetBerry", 13)} 香果诱饵 +6%</span>`);
+    if (baitStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--emerald">${renderResSvg("bigBerry", 13)} 浆果安抚 +${baitStacks * 4}% (${baitStacks}/3)</span>`);
+    if (mudStacks > 0) tacticalTags.push(`<span class="tactical-chip tactical-chip--cyan">${renderResSvg("minerals", 13)} 泥团封路 +${mudStacks * 5}% · 防逃逸 (${mudStacks}/2)</span>`);
+    if ((pity2 || 0) > 0) tacticalTags.push(`<span class="tactical-chip">${renderResSvg("everstone", 13)} 失败保底 +${Math.round((pity2 || 0) * 100)}%</span>`);
 
     centerHtml = `
       <div class="capture-stage-encounter">
@@ -359,9 +359,9 @@ export function renderCaptureStageHtml({
     // 探索模式：四象实景猎场热点 + 生态雷达扫描仪
     const sample = pool.slice(0, 3);
     const SPOT_SPOTS = [
-      { spot: "bush", badge: "🌿 摇曳草丛", actionLabel: "潜行奇袭 (+8%捕获)", tone: "emerald" },
-      { spot: "stream", badge: "💧 星辉浅滩", actionLabel: "声波探测 (+8%捕获)", tone: "cyan" },
-      { spot: "crystal", badge: "💎 灵脉晶洞", actionLabel: "气味追踪 (+8%捕获)", tone: "gold" },
+      { spot: "bush", badge: `${renderResSvg("catnip", 13)} 摇曳草丛`, actionLabel: "潜行奇袭 (+8%捕获)", tone: "emerald" },
+      { spot: "stream", badge: `${renderResSvg("crystal", 13)} 星辉浅滩`, actionLabel: "声波探测 (+8%捕获)", tone: "cyan" },
+      { spot: "crystal", badge: `${renderResSvg("minerals", 13)} 灵脉晶洞`, actionLabel: "气味追踪 (+8%捕获)", tone: "gold" },
     ];
     const wanderersHtml = sample
       .map((p, idx) => {
@@ -406,14 +406,14 @@ export function renderCaptureStageHtml({
               <circle cx="26" cy="44" r="2.2" fill="#38bdf8"/>
             </svg>
             <div>
-              <div class="tab-stage__eyebrow">📡 秘境生态雷达扫描中 · 已收录 ${caughtInArea}/${pool.length} 种</div>
+              <div class="tab-stage__eyebrow">${renderUiIcon("tab_capture", 14)} 秘境生态雷达扫描中 · 已收录 ${caughtInArea}/${pool.length} 种</div>
               <div class="tab-stage__title">${escapeHtml(area.name)}</div>
             </div>
           </div>
           <div class="tab-stage__desc">点击左侧 <strong>草丛 / 浅滩 / 晶洞</strong> 可直接潜行奇袭（先手捕获率 +8%），或使用下方寻踪按钮搜索灵兽。</div>
           <div class="tab-stage__ctaRow">
-            <button type="button" class="btn btn--primary btn--small" data-stage-act="field-hunt" ${encOk ? "" : "disabled"}>⚡ 潜行寻踪 (${encCharges}/100)</button>
-            <button type="button" class="btn btn--small" data-stage-act="field-hunt-plus" ${advOk ? "" : "disabled"}>🌟 灵脉高阶寻踪 (${advCharges}/${advMaxCharges})</button>
+            <button type="button" class="btn btn--primary btn--small" data-stage-act="field-hunt" ${encOk ? "" : "disabled"}>${renderUiIcon("tab_capture", 14)} 潜行寻踪 (${encCharges}/100)</button>
+            <button type="button" class="btn btn--small" data-stage-act="field-hunt-plus" ${advOk ? "" : "disabled"}>${renderResSvg("megaStone", 14)} 灵脉高阶寻踪 (${advCharges}/${advMaxCharges})</button>
           </div>
         </div>
       </div>
@@ -469,11 +469,11 @@ export function renderMonsStageHtml({
               <button type="button" class="squad-pedestal__mainBtn" data-mon-open="${m.id}" title="点击查看 ${escapeHtml(m.name)} 详情">
                 <div class="squad-pedestal__art">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}</div>
                 <div class="squad-pedestal__name">${escapeHtml(m.name)}${m.isShiny ? " ✨" : ""}</div>
-                <div class="squad-pedestal__meta">Lv.${m.lvl} · 战力 ${monPower(m)} · 💖${aff}</div>
+                <div class="squad-pedestal__meta">Lv.${m.lvl} · 战力 ${monPower(m)} · ${renderResSvg("affection", 12)}${aff}</div>
                 <div class="squad-pedestal__sat"><span style="width:${sat}%"></span></div>
               </button>
               <div class="squad-pedestal__actions">
-                <button type="button" class="squad-micro-btn" data-stage-act="mon-pet" data-mon-id="${m.id}" title="抚摸互动（亲密度 +2）">💖 抚摸</button>
+                <button type="button" class="squad-micro-btn" data-stage-act="mon-pet" data-mon-id="${m.id}" title="抚摸互动（亲密度 +2）">${renderResSvg("affection", 12)} 抚摸</button>
               </div>
             </div>
           `;
@@ -512,7 +512,7 @@ export function renderFunctionsStageHtml({
   const trainSamples = (activeTrain || []).slice(0, 3);
   const trainIcons = trainSamples.length
     ? trainSamples.map((m) => `<div class="diorama-mini-mon">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>Lv.${m.lvl}</span></div>`).join("")
-    : `<div class="diorama-empty">⚔️ 暂无受训灵兽</div>`;
+    : `<div class="diorama-empty">${renderBuildingSvg("trainingGround", 14)} 暂无受训灵兽</div>`;
 
   // 2) Breeding Diorama
   const breedLvl = Math.max(0, Math.floor(state.buildings?.breedingHouse?.owned ?? 0));
@@ -531,7 +531,7 @@ export function renderFunctionsStageHtml({
     : [];
   const expIcons = expMons.length
     ? expMons.map((m) => `<div class="diorama-mini-mon">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}</div>`).join("")
-    : `<div class="diorama-empty">🗺️ 远征门待命</div>`;
+    : `<div class="diorama-empty">${renderBuildingSvg("expeditionPost", 14)} 远征门待命</div>`;
 
   return `
     <div class="tab-stage tab-stage--functions" aria-label="育灵圣域三联实景台">

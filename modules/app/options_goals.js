@@ -29,9 +29,9 @@ export function createOptionsGoals({ ui, getState, addRes, addLog, activateTab }
       <div class="row">
         <div class="row__left">
           <div class="row__title row__titleLine">${renderResSvg("futurecoin", 18)}<span>今日指挥部</span><span class="tag">${escapeHtml(streakLine)}</span><span class="tag">悬赏 +12 未来币</span></div>
-          <div class="row__desc">${items
-            .map((g) => `${g.done ? "☑" : "☐"} ${escapeHtml(g.label)}`)
-            .join(" · ")}</div>
+          <div class="row__desc daily-goal-chips">${items
+            .map((g) => `<span class="goal-chip ${g.done ? "is-done" : ""}"><span class="goal-chip__mark">${g.done ? "✓" : "○"}</span><span>${escapeHtml(g.label)}</span></span>`)
+            .join("")}</div>
           ${highlights ? `<div class="row__desc muted">${escapeHtml(highlights)}</div>` : ""}
         </div>
         <div class="row__right">

@@ -56,6 +56,14 @@ const RES_ICON_MAP = {
   pokedexshard: "megaStone",
   badgetoken: "goldBottleCap",
   rebirthessence: "megaStone",
+  affection: "affectionTreat",
+  sweetberry: "bigBerry",
+  crystal: "minerals",
+  feather: "spePotion",
+  moonstone: "evolutionStone",
+  icestone: "minerals",
+  dragonscale: "megaStone",
+  everstone: "defPotion",
 };
 
 const BUILDING_ICON_MAP = {
@@ -138,10 +146,12 @@ const UI_ICON_MAP = {
   pveSwords: "tab_pve",
   compass: "tab_capture",
   observatory: "researchLab",
+  shinySparkle: "shinyCharm",
+  speciesTag: "tab_dex",
 };
 
 export function renderUiIcon(iconKey = "tab_bonfire", size = 20) {
   const raw = String(iconKey || "tab_bonfire");
-  const key = UI_ICON_MAP[raw] || BUILDING_ICON_MAP[raw] || RES_ICON_MAP[raw.toLowerCase()] || raw;
+  const key = UI_ICON_MAP[raw] || BUILDING_ICON_MAP[raw] || RES_ICON_MAP[raw.toLowerCase()] || "shinyCharm";
   return renderIconImg(key, size, "rpg-svg-res");
 }

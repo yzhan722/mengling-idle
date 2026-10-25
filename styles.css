@@ -7746,6 +7746,76 @@ details.capture-tools[open] > summary.capture-tools__summary {
   gap: 5px;
 }
 
+/* =========================================================================
+   v0.7.28: Bcard Footer Right-Aligned Button, Biome/Spot RPG Icons & Goal Chips
+   ========================================================================= */
+.bcard__actions > .bcard__btn {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.bcard .cost-chip {
+  padding: 2px 7px;
+  font-size: 11px;
+  gap: 3px;
+}
+
+.biome-pill,
+.capture-wanderer__spark,
+.squad-pedestal__meta,
+.squad-micro-btn,
+.diorama-empty,
+.tactical-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.daily-goal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.goal-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #cbd5e1;
+}
+
+.goal-chip__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(148, 163, 184, 0.16);
+  color: #94a3b8;
+}
+
+.goal-chip.is-done {
+  background: rgba(6, 78, 59, 0.55);
+  border-color: rgba(52, 211, 153, 0.45);
+  color: #a7f3d0;
+}
+
+.goal-chip.is-done .goal-chip__mark {
+  background: rgba(16, 185, 129, 0.28);
+  color: #34d399;
+}
+
+
 
 
 
