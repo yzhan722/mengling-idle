@@ -138,24 +138,19 @@ export function createAvatarTools({ ui, markLeaderboardDirty, render }) {
   }
 
   function trainerIconSrc() {
-    ensureTrainerIconDataUrl();
-    return TRAINER_ICON_DATA_URL || "./assets/trainer_pixel.svg";
+    return "./assets/ui_icons/shinyCharm.webp";
   }
 
   function renderOwnerIcon(avatarDataUrl) {
     const isAvatar = typeof avatarDataUrl === "string" && avatarDataUrl;
     const src = isAvatar ? avatarDataUrl : trainerIconSrc();
-    const style = isAvatar
-      ? "margin-left:6px;border-radius:6px;object-fit:cover"
-      : "margin-left:6px;image-rendering:pixelated";
-    return `<img src="${escapeHtml(src)}" width="18" height="18" alt="" loading="eager" decoding="async" style="${style}" />`;
+    return `<img class="lb-avatar-badge" src="${escapeHtml(src)}" width="24" height="24" alt="" loading="eager" decoding="async" />`;
   }
 
   function renderSelfAvatarPreview() {
     const isAvatar = typeof ui.lbAvatar === "string" && ui.lbAvatar;
     const src = isAvatar ? ui.lbAvatar : trainerIconSrc();
-    const style = isAvatar ? "border-radius:8px;object-fit:cover" : "image-rendering:pixelated";
-    return `<img src="${escapeHtml(src)}" width="22" height="22" alt="" loading="eager" decoding="async" style="${style}" />`;
+    return `<img class="lb-avatar-badge lb-avatar-badge--self" src="${escapeHtml(src)}" width="32" height="32" alt="" loading="eager" decoding="async" />`;
   }
 
   async function avatarFileToDataUrl(file) {

@@ -6707,9 +6707,14 @@ button.capture-wanderer:hover {
 }
 
 .tab-stage--pve .arena-side--enemy .arena-side__fighters,
-.tab-stage--social .arena-side--enemy .arena-side__fighters,
-.tab-stage--leaderboard .arena-side--ally .arena-side__fighters {
+.tab-stage--social .arena-side--enemy .arena-side__fighters {
   right: 24px !important;
+}
+
+.tab-stage--leaderboard .arena-side--ally .arena-side__fighters {
+  left: 24px !important;
+  right: 24px !important;
+  justify-content: space-around !important;
 }
 
 .arena-fighter {
@@ -7178,10 +7183,16 @@ button.capture-wanderer:hover {
   }
 
   .tab-stage--pve .arena-side--enemy .arena-side__fighters,
-  .tab-stage--social .arena-side--enemy .arena-side__fighters,
-  .tab-stage--leaderboard .arena-side--ally .arena-side__fighters {
+  .tab-stage--social .arena-side--enemy .arena-side__fighters {
     right: 4px !important;
     max-width: 48% !important;
+  }
+
+  .tab-stage--leaderboard .arena-side--ally .arena-side__fighters {
+    left: 12px !important;
+    right: 12px !important;
+    max-width: none !important;
+    justify-content: space-around !important;
   }
 
   .tab-stage--pve .arena-fighter,
@@ -7560,6 +7571,53 @@ input.chk[type="checkbox"]:disabled {
   opacity: 0.42;
   cursor: not-allowed;
 }
+
+.lb-avatar-badge {
+  width: 28px;
+  height: 28px;
+  padding: 2px;
+  border-radius: 8px;
+  background: radial-gradient(circle at 50% 35%, rgba(250, 204, 21, 0.24), rgba(15, 23, 42, 0.94));
+  border: 1px solid rgba(250, 204, 21, 0.48);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 2px 6px rgba(0, 0, 0, 0.42);
+  object-fit: cover;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.lb-avatar-badge--self {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+details.cloudRecoverHint {
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(250, 204, 21, 0.26);
+  padding: 8px 12px;
+}
+
+details.cloudRecoverHint > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  cursor: pointer;
+  font-weight: 700;
+  color: #fef08a;
+  list-style: none;
+  user-select: none;
+}
+
+details.cloudRecoverHint > summary::-webkit-details-marker {
+  display: none;
+}
+
+details.cloudRecoverHint > summary .tag {
+  margin-left: auto;
+}
+
 
 
 

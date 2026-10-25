@@ -3,7 +3,7 @@
 
 import { cleanLeaderboard } from "../systems/world_presence.js";
 import { renderLeaderboardStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
-import { renderResSvg } from "./rpg_svg_icons.js";
+import { renderResSvg, renderUiIcon } from "./rpg_svg_icons.js";
 
 export function createRenderLeaderboard({
   elLeaderboard,
@@ -31,7 +31,7 @@ export function createRenderLeaderboard({
 
   function renderScoreBoard(items, scoreLabel) {
     if (!items || items.length === 0) {
-      return `<div class="row"><div class="row__left"><div class="row__desc muted">暂无数据</div></div></div>`;
+      return `<div class="row"><div class="row__left"><div class="row__desc muted">暂无上榜记录 · 点击上方「上传并刷新榜单」即可争夺全服席位</div></div><div class="row__right"><span class="tag">虚位以待</span></div></div>`;
     }
     return items
       .map((it) => {
@@ -71,12 +71,26 @@ export function createRenderLeaderboard({
       if (k === "rebirths") return Boolean(ui.lbRebirthFolded);
       return false;
     };
-    const sectionHeader = (k, title) => {
+    const lbIconMap = {
+      dex: () => renderUiIcon("tab_dex", 18),
+      hatch: () => renderResSvg("luckyEgg", 18),
+      shiny: () => renderResSvg("shinyCharm", 18),
+      totalPower: () => renderUiIcon("tab_pve", 18),
+      gather: () => renderResSvg("catnip", 18),
+      resource: () => renderResSvg("wood", 18),
+      catch: () => renderResSvg("pokeball", 18),
+      rebirths: () => renderResSvg("megaStone", 18),
+      power: () => renderUiIcon("tab_mons", 18),
+      contrib: () => renderResSvg("futurecoin", 18),
+    };
+    const sectionHeader = (k, title, items = []) => {
       const folded = isFolded(k);
       const icon = folded ? "▸" : "▾";
+      const iconHtml = lbIconMap[k] ? lbIconMap[k]() : renderResSvg("futurecoin", 18);
+      const countTag = Array.isArray(items) && items.length > 0 ? `<span class="tag">已上榜 ${items.length} 人</span>` : `<span class="tag">虚位以待</span>`;
       return `
         <div class="sidebar__sectionTitleRow">
-          <div class="sidebar__sectionTitle">${title}</div>
+          <div class="sidebar__sectionTitle">${iconHtml}<span>${title}</span>${countTag}</div>
           <button class="btn btn--small btn--ghost" data-lb-fold="${k}">${icon}</button>
         </div>
       `;
@@ -153,55 +167,55 @@ export function createRenderLeaderboard({
 
     const dexItems = boardRows("dex", ui.lbDexItems);
     if (dexItems) {
-      rows.push(sectionHeader("dex", "图鉴榜 Top100"));
+      rows.push(sectionHeader("dex", "图鉴榜 Top100", dexItems));
       if (!isFolded("dex")) rows.push(renderScoreBoard(dexItems, "图鉴"));
     }
 
     const hatchItems = boardRows("hatch", ui.lbHatchItems);
     if (hatchItems) {
-      rows.push(sectionHeader("hatch", "孵蛋数量榜 Top100"));
+      rows.push(sectionHeader("hatch", "孵蛋数量榜 Top100", hatchItems));
       if (!isFolded("hatch")) rows.push(renderScoreBoard(hatchItems, "孵蛋"));
     }
 
     const shinyItems = boardRows("shiny", ui.lbShinyItems);
     if (shinyItems) {
-      rows.push(sectionHeader("shiny", "闪光收集榜 Top100"));
+      rows.push(sectionHeader("shiny", "闪光收集榜 Top100", shinyItems));
       if (!isFolded("shiny")) rows.push(renderScoreBoard(shinyItems, "闪光"));
     }
 
     const totalPowerItems = boardRows("totalPower", ui.lbTotalPowerItems);
     if (totalPowerItems) {
-      rows.push(sectionHeader("totalPower", "总战力榜 Top100"));
+      rows.push(sectionHeader("totalPower", "总战力榜 Top100", totalPowerItems));
       if (!isFolded("totalPower")) rows.push(renderScoreBoard(totalPowerItems, "总战力"));
     }
 
     const gatherItems = boardRows("gather", ui.lbGatherItems);
     if (gatherItems) {
-      rows.push(sectionHeader("gather", "累计采集次数榜 Top100"));
+      rows.push(sectionHeader("gather", "累计采集次数榜 Top100", gatherItems));
       if (!isFolded("gather")) rows.push(renderScoreBoard(gatherItems, "采集"));
     }
 
     const resourceItems = boardRows("resource", ui.lbResourceItems);
     if (resourceItems) {
-      rows.push(sectionHeader("resource", "累计资源产出榜 Top100"));
+      rows.push(sectionHeader("resource", "累计资源产出榜 Top100", resourceItems));
       if (!isFolded("resource")) rows.push(renderScoreBoard(resourceItems, "产出"));
     }
 
     const catchItems = boardRows("catch", ui.lbCatchItems);
     if (catchItems) {
-      rows.push(sectionHeader("catch", "捕获大师榜 Top100"));
+      rows.push(sectionHeader("catch", "捕获大师榜 Top100", catchItems));
       if (!isFolded("catch")) rows.push(renderScoreBoard(catchItems, "捕获"));
     }
 
     const rebirthItems = boardRows("rebirths", ui.lbRebirthItems);
     if (rebirthItems) {
-      rows.push(sectionHeader("rebirths", "轮回榜 Top100"));
+      rows.push(sectionHeader("rebirths", "轮回榜 Top100", rebirthItems));
       if (!isFolded("rebirths")) rows.push(renderScoreBoard(rebirthItems, "轮回"));
     }
 
     const powerItems = boardRows("power", ui.lbPowerItems);
     if (powerItems) {
-      rows.push(sectionHeader("power", "队伍战力榜 Top100"));
+      rows.push(sectionHeader("power", "队伍战力榜 Top100", powerItems));
       if (!isFolded("power")) {
         rows.push(
           powerItems
@@ -247,7 +261,7 @@ export function createRenderLeaderboard({
 
     const contribItems = boardRows("contrib", ui.lbContribItems);
     if (contribItems) {
-      rows.push(sectionHeader("contrib", "贡献榜 Top100"));
+      rows.push(sectionHeader("contrib", "贡献榜 Top100", contribItems));
       if (!isFolded("contrib")) {
         rows.push(
           contribItems

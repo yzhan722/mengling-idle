@@ -14,11 +14,11 @@
     <meta name="application-name" content="萌灵放置冒险" />
     <meta name="apple-mobile-web-app-title" content="萌灵放置冒险" />
     <title>萌灵放置冒险 · 星野灵兽录</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="./assets/ui/favicon-64.png?v=0.7.21" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32.png?v=0.7.21" />
-    <link rel="shortcut icon" href="./favicon.ico?v=0.7.21" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/ui/apple-touch-icon.png?v=0.7.21" />
-    <link rel="manifest" href="./site.webmanifest?v=0.7.21" />
+    <link rel="icon" type="image/png" sizes="64x64" href="./assets/ui/favicon-64.png?v=0.7.25" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32.png?v=0.7.25" />
+    <link rel="shortcut icon" href="./favicon.ico?v=0.7.25" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/ui/apple-touch-icon.png?v=0.7.25" />
+    <link rel="manifest" href="./site.webmanifest?v=0.7.25" />
     <link rel="preload" as="image" href="./assets/ui/camp_stage_night.jpg" />
     <link rel="preload" as="image" href="./assets/ui/stage_science.jpg" />
     <link rel="preload" as="image" href="./assets/ui/stage_capture.jpg" />
@@ -28,7 +28,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&family=Rajdhani:wght@600;700&display=swap" />
-    <link rel="stylesheet" href="./styles.css?v=0.7.21" />
+    <link rel="stylesheet" href="./styles.css?v=0.7.25" />
   </head>
   <body>
     <a class="skip-link" href="#mainStage">跳到主要内容</a>
@@ -40,7 +40,7 @@
             <img class="brand__logo" src="./assets/ui/app_logo.webp" width="42" height="42" alt="" aria-hidden="true" />
             <div class="brand__text">
               <div class="brand__title">萌灵放置冒险 <span class="brand__tag">星野灵兽录</span></div>
-              <div class="brand__subtitle" id="topbarStatus"><span class="brand__ver">v0.7.24</span> · 星火围炉 · 奇幻灵兽收集 RPG</div>
+              <div class="brand__subtitle" id="topbarStatus"><span class="brand__ver">v0.7.25</span> · 星火围炉 · 奇幻灵兽收集 RPG</div>
             </div>
           </div>
           <div id="trainerHost" class="topbar__trainer" aria-label="育灵师等级"></div>
@@ -191,7 +191,7 @@
             <div id="futureShop" class="list"></div>
             <div class="sidebar__divider"></div>
             <details class="cloudRecoverHint" open>
-              <summary>背包与道具护理（展开/收起）</summary>
+              <summary><img class="rpg-ai-icon" src="./assets/ui_icons/storehouse.webp" width="18" height="18" alt="" aria-hidden="true" /><span>背包与道具护理</span><span class="tag">展开 / 收起</span></summary>
               <div id="items" class="list" style="margin-top:8px"></div>
             </details>
           </div>
@@ -303,18 +303,18 @@
               <div id="cloudSlotList" class="list"></div>
             </div>
             <details id="cloudPasswordRecovery" class="cloudRecoverHint" open>
-              <summary>忘记密码 / 换机必读</summary>
+              <summary><img class="rpg-ai-icon" src="./assets/ui_icons/commandCenter.webp" width="18" height="18" alt="" aria-hidden="true" /><span>忘记密码 / 换机必读</span><span class="tag">存档安全指南</span></summary>
               <p class="muted">本游戏暂不支持自助找回密码。换设备前请先点「导出存档」备份；忘记密码请联系管理员重置，或用导出档重新注册后导入。</p>
             </details>
             <div class="sidebar__divider"></div>
             <details class="cloudRecoverHint" open>
-              <summary>冒险百科与新手路线（展开/收起）</summary>
+              <summary><img class="rpg-ai-icon" src="./assets/ui_icons/library.webp" width="18" height="18" alt="" aria-hidden="true" /><span>冒险百科与新手路线</span><span class="tag">展开 / 收起</span></summary>
               <div id="help" class="list" style="margin-top:8px"></div>
             </details>
             <div class="modalOverlay" id="cloudConflictOverlay" hidden>
               <div class="modal" role="dialog" aria-labelledby="cloudConflictTitle" aria-modal="true">
                 <div class="modal__header">
-                  <div class="modal__title" id="cloudConflictTitle">存档冲突</div>
+                  <div class="modal__title" id="cloudConflictTitle"><img class="rpg-ai-icon" src="./assets/ui_icons/commandCenter.webp" width="18" height="18" alt="" aria-hidden="true" /><span>存档冲突</span><span class="tag">版本核验</span></div>
                 </div>
                 <div class="modal__desc" id="cloudConflictDesc"></div>
                 <div class="modal__body">
@@ -331,7 +331,7 @@
             <div class="list" id="leaderboard"></div>
             <div class="sidebar__divider"></div>
             <details class="cloudRecoverHint" open>
-              <summary>演武会馆与好友切磋（展开/收起）</summary>
+              <summary><img class="rpg-ai-icon" src="./assets/ui_icons/trainingGround.webp" width="18" height="18" alt="" aria-hidden="true" /><span>演武会馆与好友切磋</span><span class="tag">展开 / 收起</span></summary>
               <div id="panel-social" style="margin-top:8px"></div>
             </details>
           </div>
@@ -514,12 +514,12 @@
         });
       })();
     </script>
-    <script src="./data/beasts.js?v=0.7.21" defer></script>
-    <script type="module" src="./main.js?v=0.7.21"></script>
+    <script src="./data/beasts.js?v=0.7.25" defer></script>
+    <script type="module" src="./main.js?v=0.7.25"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('./sw.js?v=0.7.21', { updateViaCache: 'none' });
+          navigator.serviceWorker.register('./sw.js?v=0.7.25', { updateViaCache: 'none' });
         });
       }
     </script>
