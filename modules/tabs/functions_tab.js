@@ -135,7 +135,7 @@ export function createRenderFunctions({
       <div class="row">
         <div class="row__left">
           <div class="row__title">训练场</div>
-          <div class="row__desc">训练中的萌灵：经验获取 ×10，饱腹度消耗 ×2。</div>
+          <div class="row__desc">训练中的萌灵：持续获取 10 倍实战经验，加速突破等级瓶颈。</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small btn--ghost" data-func-toggle="training">${hideTraining ? "▸" : "▾"}</button>
@@ -181,7 +181,6 @@ export function createRenderFunctions({
 
         if (active.length > 0) {
           for (const m of active) {
-            const sat = Math.floor(clamp(typeof m.satiety === "number" ? m.satiety : 100, 0, 100));
             const exp = Math.max(0, Math.floor(typeof m.exp === "number" && Number.isFinite(m.exp) ? m.exp : 0));
             const needExp = m.lvl >= 100 ? 0 : Math.max(0, Math.floor(expNeedForLevel0(m.lvl)));
             const expText = needExp > 0 ? `${exp}/${needExp}` : `${exp}/MAX`;
@@ -195,12 +194,12 @@ export function createRenderFunctions({
                   ? ` · 特性「${escapeHtml(getAbilityInfo(m.ability)?.name || "")}」`
                   : "";
             rows.push(`
-              <div class="row">
+              <div class="row func-mon-row">
                 <div class="row__left">
-                  <div class="row__title">训练中：${escapeHtml(m.name)} <span class="row__desc">Lv.${m.lvl} · 饱腹${sat}/100 · 经验${expText}${nHint}</span></div>
+                  <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>训练中：${escapeHtml(m.name)}</span> <span class="tag">Lv.${m.lvl}</span></div>
+                  <div class="row__desc">经验进度：${expText}${nHint}</div>
                 </div>
                 <div class="row__right">
-                  <button class="btn btn--small" data-train-feed="${m.id}" ${sat >= 100 ? "disabled" : ""}>喂食</button>
                   <button class="btn btn--danger btn--small" data-train-cancel="${m.id}">取消训练</button>
                 </div>
               </div>
@@ -218,7 +217,7 @@ export function createRenderFunctions({
       <div class="row">
         <div class="row__left">
           <div class="row__title">育灵屋</div>
-          <div class="row__desc">饲养中的萌灵：经验获取 ×50，饱腹度每分钟 +1（至 100），消耗灵果 10/秒。</div>
+          <div class="row__desc">饲养中的萌灵：双亲配对温养灵蛋（经验获取 ×50，消耗灵果 10/秒）。</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small btn--ghost" data-func-toggle="breeding">${hideBreeding ? "▸" : "▾"}</button>
@@ -292,14 +291,14 @@ export function createRenderFunctions({
       `);
 
           if (aMon) {
-            const satA = Math.floor(clamp(typeof aMon.satiety === "number" ? aMon.satiety : 100, 0, 100));
             const expA = Math.max(0, Math.floor(typeof aMon.exp === "number" && Number.isFinite(aMon.exp) ? aMon.exp : 0));
             const needExpA = aMon.lvl >= 100 ? 0 : Math.max(0, Math.floor(expNeedForLevel0(aMon.lvl)));
             const expTextA = needExpA > 0 ? `${expA}/${needExpA}` : `${expA}/MAX`;
             rows.push(`
-          <div class="row">
+          <div class="row func-mon-row">
             <div class="row__left">
-              <div class="row__title">饲养萌灵 A：${escapeHtml(aMon.name)} <span class="row__desc">Lv.${aMon.lvl} · 饱腹${satA}/100 · 经验${expTextA}</span></div>
+              <div class="row__title row__titleLine">${renderBeastIcon(aMon.dex, aMon.name, Boolean(aMon.isShiny))}<span>饲养伙伴 A：${escapeHtml(aMon.name)}</span> <span class="tag">Lv.${aMon.lvl}</span></div>
+              <div class="row__desc">经验进度：${expTextA}</div>
             </div>
             <div class="row__right">
               <button class="btn btn--danger btn--small" data-breed-cancel="1">取消饲养</button>
@@ -308,14 +307,14 @@ export function createRenderFunctions({
         `);
           }
           if (bMon) {
-            const satB = Math.floor(clamp(typeof bMon.satiety === "number" ? bMon.satiety : 100, 0, 100));
             const expB = Math.max(0, Math.floor(typeof bMon.exp === "number" && Number.isFinite(bMon.exp) ? bMon.exp : 0));
             const needExpB = bMon.lvl >= 100 ? 0 : Math.max(0, Math.floor(expNeedForLevel0(bMon.lvl)));
             const expTextB = needExpB > 0 ? `${expB}/${needExpB}` : `${expB}/MAX`;
             rows.push(`
-          <div class="row">
+          <div class="row func-mon-row">
             <div class="row__left">
-              <div class="row__title">饲养萌灵 B：${escapeHtml(bMon.name)} <span class="row__desc">Lv.${bMon.lvl} · 饱腹${satB}/100 · 经验${expTextB}</span></div>
+              <div class="row__title row__titleLine">${renderBeastIcon(bMon.dex, bMon.name, Boolean(bMon.isShiny))}<span>饲养伙伴 B：${escapeHtml(bMon.name)}</span> <span class="tag">Lv.${bMon.lvl}</span></div>
+              <div class="row__desc">经验进度：${expTextB}</div>
             </div>
             <div class="row__right">
               <button class="btn btn--danger btn--small" data-breed-cancel="1">取消饲养</button>

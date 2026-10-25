@@ -5,7 +5,7 @@ import { getEraDefById } from "../defs_eras.js";
 import { natureIncomingDamageMul, abilityOutgoingDamageMul, bumpPveWinStreak, resetPveWinStreak, pveDailyFirstWinMul, bumpSessionPveWin, localDateStr } from "../systems/gameplay_fun.js";
 import { ensureEra } from "../systems/era.js";
 import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS } from "../systems/pve_tower.js";
-import { renderPveStageHtml } from "../render/tab_stages.js";
+import { renderPveStageHtml, setHtmlPreservingStage } from "../render/tab_stages.js";
 
 // ponytail: blurbs live here — pve_defs is data-only, no chapter copy field yet
 const PVE_CHAPTER_BLURBS = {
@@ -113,17 +113,8 @@ export function createRenderPve({
 
     const rows = [];
 
-    // 每日次数
     const practiceOn = false;
     const practiceHalf = false;
-    rows.push(`
-      <div class="row">
-        <div class="row__left">
-          <div class="row__title">PvE 关卡挑战</div>
-          <div class="row__desc">今日剩余次数：${Math.max(0, PVE_DAILY_MAX - state.pve.dailyAttempts)} / ${PVE_DAILY_MAX} · 自动编入战力最高萌灵，随时可调整队伍</div>
-        </div>
-      </div>
-    `);
 
     const tower = ensureTowerState(state);
     const towerDone = isTowerCleared(tower);
@@ -158,17 +149,6 @@ export function createRenderPve({
       }),
     );
 
-    if (eraDef?.pveHint) {
-      rows.push(`
-        <div class="row">
-          <div class="row__left">
-            <div class="row__title">时代提示</div>
-            <div class="row__desc">${escapeHtml(eraDef.pveHint)}</div>
-          </div>
-        </div>
-      `);
-    }
-
     // 当前选中的章节/关卡
     const selChapter = typeof ui.pveChapter === "string" ? ui.pveChapter : PVE_CHAPTERS[0]?.id ?? "";
     const selStage = typeof ui.pveStage === "string" ? ui.pveStage : "";
@@ -179,10 +159,19 @@ export function createRenderPve({
       return `<option value="${ch.id}" ${selChapter === ch.id ? "selected" : ""} ${locked ? "disabled" : ""}>${escapeHtml(ch.name)}${locked ? `（需${ch.unlockDex}图鉴）` : ""}</option>`;
     }).join("");
 
+    const chapter = PVE_CHAPTERS.find((c) => c.id === selChapter) ?? PVE_CHAPTERS[0];
+    const chapterBlurb = chapter ? (PVE_CHAPTER_BLURBS[chapter.id] || "") : "";
+    const eraHintText = eraDef?.pveHint ? ` · ${eraDef.pveHint}` : "";
+
     rows.push(`
-      <div class="row">
+      <div class="row pve-chapter-bar">
         <div class="row__left">
-          <div class="row__title">选择章节</div>
+          <div class="row__title row__titleLine">
+            <span>${escapeHtml(chapter ? chapter.name : "PvE 关卡挑战")}</span>
+            <span class="tag">今日剩余 ${Math.max(0, PVE_DAILY_MAX - state.pve.dailyAttempts)}/${PVE_DAILY_MAX}</span>
+          </div>
+          ${chapterBlurb ? `<div class="row__desc">${escapeHtml(chapterBlurb)}</div>` : ""}
+          <div class="row__desc muted">自动编入最高战力萌灵，随时可调换队伍${escapeHtml(eraHintText)}</div>
         </div>
         <div class="row__right">
           <select class="input" data-pve-chapter>${chapterOptions}</select>
@@ -190,34 +179,21 @@ export function createRenderPve({
       </div>
     `);
 
-    const chapter = PVE_CHAPTERS.find((c) => c.id === selChapter) ?? PVE_CHAPTERS[0];
     if (!chapter) {
-      elPveList.innerHTML = rows.join("");
+      setHtmlPreservingStage(elPveList, rows.join(""));
       return;
     }
 
     const chapterLocked = dexCount < chapter.unlockDex;
     if (chapterLocked) {
       rows.push(`<div class="row is-locked"><div class="row__left"><div class="row__title">章节未解锁</div><div class="row__desc">需要图鉴登记 ${chapter.unlockDex} 种。</div></div></div>`);
-      elPveList.innerHTML = rows.join("");
+      setHtmlPreservingStage(elPveList, rows.join(""));
       bindEvents(elPveList, state);
       return;
     }
 
-    const chapterBlurb = PVE_CHAPTER_BLURBS[chapter.id];
-    if (chapterBlurb) {
-      rows.push(`
-        <div class="row">
-          <div class="row__left">
-            <div class="row__title">${escapeHtml(chapter.name)}</div>
-            <div class="row__desc">${escapeHtml(chapterBlurb)}</div>
-          </div>
-        </div>
-      `);
-    }
-
-    // 关卡列表
-    rows.push(`<div class="sidebar__divider"></div>`);
+    // 关卡列表（2列网格）
+    const stageCards = [];
     for (const st of chapter.stages) {
       const unlocked = isStageUnlocked(st.id, progress);
       const cleared = Boolean(progress[st.id]);
@@ -227,28 +203,30 @@ export function createRenderPve({
       const selected = selStage === st.id;
 
       if (!unlocked) {
-        rows.push(`
-          <div class="row is-locked">
+        stageCards.push(`
+          <div class="row is-locked pve-stage-row">
             <div class="row__left">
-              <div class="row__title">[锁] ${escapeHtml(st.name)}</div>
-              <div class="row__desc">通关 ${escapeHtml(st.unlockReq ?? "")} 后解锁</div>
+              <div class="row__title row__titleLine"><span class="tag">未解锁</span><span>${escapeHtml(st.name)}</span></div>
+              <div class="row__desc">通关 ${escapeHtml(st.unlockReq ?? "")} 后开启</div>
             </div>
           </div>
         `);
       } else {
-        rows.push(`
-          <div class="row ${selected ? "is-active" : ""}">
+        const enemyIcons = st.enemies.slice(0, 2).map((e) => renderBeastIcon(e.dex, e.name)).join("");
+        stageCards.push(`
+          <div class="row pve-stage-row ${selected ? "is-active" : ""}">
             <div class="row__left">
-              <div class="row__title">${escapeHtml(st.name)} <span class="muted">[${escapeHtml(typeZh)}]</span> ${cleared ? starIcons : ""}</div>
-              <div class="row__desc">敌人：${st.enemies.map((e) => `${escapeHtml(e.name)} Lv.${e.lvl}`).join("、")}</div>
+              <div class="row__title row__titleLine">${enemyIcons}<span>${escapeHtml(st.name)}</span> <span class="tag tag--type-${escapeHtml(st.type)}">${escapeHtml(typeZh)}系</span> ${cleared ? starIcons : ""}</div>
+              <div class="row__desc">守关：${st.enemies.map((e) => `${escapeHtml(e.name)} Lv.${e.lvl}`).join("、")}</div>
             </div>
             <div class="row__right">
-              <button class="btn btn--small ${selected ? "btn--primary" : ""}" data-pve-select="${st.id}">${selected ? "已选择" : "选择"}</button>
+              <button class="btn btn--small ${selected ? "btn--primary" : ""}" data-pve-select="${st.id}">${selected ? "已选定" : "选定"}</button>
             </div>
           </div>
         `);
       }
     }
+    rows.push(`<div class="pve-stages-grid">${stageCards.join("")}</div>`);
 
     // 选中关卡的详情 + 队伍选择 + 开战
     const stageInfo = selStage ? getStageById(selStage) : null;
@@ -485,7 +463,7 @@ export function createRenderPve({
       `;
     }
 
-    elPveList.innerHTML = rows.join("") + teamModalHtml + resultModalHtml;
+    setHtmlPreservingStage(elPveList, rows.join("") + teamModalHtml + resultModalHtml);
     bindEvents(elPveList, state);
   };
 

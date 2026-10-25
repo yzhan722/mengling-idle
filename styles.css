@@ -7136,6 +7136,67 @@ button.capture-wanderer:hover {
     inset 0 1px 0 rgba(255, 248, 220, 0.24) !important;
 }
 
+/* v0.7.13: Prevent row buttons from squishing into vertical multi-line wraps on mobile */
+.row__left {
+  flex: 1 1 150px;
+  min-width: 130px;
+}
+
+.row__right {
+  flex: 0 1 auto;
+}
+
+.row__right .btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 759px) {
+  .row {
+    flex-wrap: wrap;
+  }
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+  background: rgba(250, 204, 21, 0.14);
+  border: 1px solid rgba(250, 204, 21, 0.34);
+  color: #fde68a;
+  white-space: nowrap;
+}
+
+.row.is-locked .tag {
+  background: rgba(148, 163, 184, 0.14);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+}
+
+.func-mon-row .mon-icon,
+.pve-stage-row .mon-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.pve-stages-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 759px) {
+  .pve-stages-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
 
 
 
