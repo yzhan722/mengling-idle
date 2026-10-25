@@ -209,8 +209,10 @@ export function createRenderMons({
       if (region !== "all") filterChips.push(`地区：${REGION_LABELS[region] ?? region}`);
       if (typeFilter !== "all") filterChips.push(`属性：${TYPE_ZH_MAP[typeFilter] ?? typeFilter}`);
       if (searchQ) filterChips.push(`搜索：${searchQ}`);
-      const sortLabel = SORT_LABELS[ui.monSort || "created"] ?? ui.monSort;
-      filterChips.push(`排序：${sortLabel}`);
+      if ((ui.monSort || "created") !== "created") {
+        const sortLabel = SORT_LABELS[ui.monSort || "created"] ?? ui.monSort;
+        filterChips.push(`排序：${sortLabel}`);
+      }
 
       // 批量技能：统计各属性可用萌灵数（18 系全开）
       const BATCH_SKILL_TYPES = IMPLEMENTED_SKILL_TYPES;
@@ -311,8 +313,7 @@ export function createRenderMons({
         rows.push(`
           <div class="row row--full">
             <div class="row__left">
-              <div class="row__title">批量技能</div>
-              <div class="row__desc">可触发：冷却完毕即可一键释放 · 全局增益类每次发动 1 只</div>
+              <div class="row__title row__titleLine">${renderResSvg("energyDrink", 18)}<span>批量技能</span><span class="tag">冷却完毕一键释放</span></div>
             </div>
             <div class="row__right quickActions">${batchBtns}</div>
           </div>

@@ -7,6 +7,7 @@ import {
 import { typeZh } from "../systems/gameplay_fun.js";
 import { ZONE_IDS, ZONE_LABELS } from "../beast_defs.js";
 import { renderDexStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
+import { renderResSvg } from "./rpg_svg_icons.js";
 
 export function createRenderDex({
   elDexSummary,
@@ -75,15 +76,15 @@ export function createRenderDex({
         </div>`;
     }
 
-    let nextCatchHtml = "";
+    let nextCatchRightHtml = "";
     {
       const caughtMap = state.dex?.caught || {};
       const pool = area && typeof area.pool === "function" ? defs.beasts.filter(area.pool) : defs.beasts;
       const missing = pool.find((p) => !(typeof caughtMap[p.id] === "number" && caughtMap[p.id] > 0));
       if (missing) {
-        nextCatchHtml = `<div class="row__desc">下一只推荐：${escapeHtml(missing.name)} <button type="button" class="btn btn--small btn--primary" data-dex-goto-capture="1">去捕捉</button></div>`;
+        nextCatchRightHtml = `<span class="tag">下一推荐：${escapeHtml(missing.name)}</span><button type="button" class="btn btn--small btn--primary" data-dex-goto-capture="1">去捕捉</button>`;
       } else if (dexPct >= 100) {
-        nextCatchHtml = `<div class="row__desc"><span class="badge badge--ok">当前范围已全收集</span></div>`;
+        nextCatchRightHtml = `<span class="badge badge--ok">当前范围已全收集</span>`;
       }
     }
 
@@ -91,8 +92,7 @@ export function createRenderDex({
     const shareText = buildShinyShareText(state);
     const galleryHtml =
       gallery.length > 0
-        ? `<div class="row__desc" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px">
-            <span class="badge badge--ok">闪光馆 ${shinyUnique}</span>
+        ? `<div class="row__desc" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:4px">
             ${gallery
               .map(
                 (e) =>
@@ -124,17 +124,17 @@ export function createRenderDex({
       ${dexStageHtml}
       <div class="row dex-summary">
         <div class="row__left">
-          <div class="row__title">完成度</div>
-          <div class="row__desc">已登记：${unique}/${totalSpecies}（${dexPct}%） · 总捕获：${total}${shinyShow > 0 ? ` · 闪光 ${shinyShow}` : ""}${shinyUnique > 0 ? ` · 闪光图鉴 ${shinyUnique}` : ""}</div>
+          <div class="row__title row__titleLine">
+            ${renderResSvg("shinyCharm", 18)}<span>闪光馆与收集进度</span>
+            <span class="tag">已登记 ${unique}/${totalSpecies} (${dexPct}%)</span>
+            <span class="tag">总捕获 ${total}</span>
+            ${shinyUnique > 0 ? `<span class="tag">闪光 ${shinyUnique}</span>` : ""}
+          </div>
           ${regionGoalHtml}
-          ${nextCatchHtml}
           ${galleryHtml}
-          <div class="dex-progress" aria-label="图鉴完成度 ${dexPct}%"><div class="dex-progress__fill" style="width:${dexPct}%"></div></div>
         </div>
         <div class="row__right">
-          <div class="badge">灵果产量 x${dexEff.catnipPerSecMul.toFixed(2)}</div>
-          <div class="badge">灵木产量 x${dexEff.woodRateMul.toFixed(2)}</div>
-          <div class="badge">灵晶产量 x${dexEff.mineralsRateMul.toFixed(2)}</div>
+          ${nextCatchRightHtml}
         </div>
       </div>
     `,

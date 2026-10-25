@@ -210,8 +210,9 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
             recommendHtml = `
               <div class="row row--researchable tech-recommend-banner">
                 <div class="row__left">
-                  <div class="row__title">🌟 推荐下一研究：${tdef.name}</div>
+                  <div class="row__title row__titleLine">${renderResSvg("science", 18)}<span>🌟 推荐下一研究：${tdef.name}</span><span class="tag">耗时 ${fmtDuration(computeResearchTimeSec(tdef))}</span></div>
                   <div class="row__desc">${typeof tdef.desc === "string" && tdef.desc.trim() ? tdef.desc : ""}</div>
+                  <div class="row__desc muted">${TECH_PACING_BLURB}</div>
                 </div>
                 <div class="row__right">
                   <button class="btn btn--primary" data-research="${tid}">🔭 立即研究</button>
@@ -241,7 +242,6 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
 
     const sections = [
       stageHeroHtml,
-      `<p class="tech-pacing muted">${TECH_PACING_BLURB}</p>`,
     ];
 
     if (activeResearchTid && defs.tech[activeResearchTid]) {
@@ -250,14 +250,18 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
       recommendHtml = `
         <div class="row row--researching tech-recommend-banner">
           <div class="row__left">
-            <div class="row__title">⏳ 正在研究：${tdef.name}</div>
-            <div class="row__desc">${theater.label} · ${theater.pct}%（点击上方星盘可手动凝星加速）</div>
+            <div class="row__title row__titleLine">${renderResSvg("science", 18)}<span>⏳ 正在研究：${tdef.name}</span><span class="tag">${theater.pct}%</span></div>
+            <div class="row__desc">${theater.label} · 点击上方星盘可手动凝星加速</div>
             <div class="dex-progress" aria-label="研究进度 ${theater.pct}%"><div class="dex-progress__fill" style="width:${theater.pct}%"></div></div>
           </div>
         </div>
       `;
     }
-    if (recommendHtml) sections.push(recommendHtml);
+    if (recommendHtml) {
+      sections.push(recommendHtml);
+    } else {
+      sections.push(`<div class="row"><div class="row__left"><div class="row__desc muted">${TECH_PACING_BLURB}</div></div></div>`);
+    }
 
     const STAGE_ICONS = {
       early: { icon: renderTechSvg("berry", 22), sub: "营地开拓基石 · 快速解锁核心资源与灵球工艺", done: stageCounts.earlyDone, total: stageCounts.earlyTotal },
