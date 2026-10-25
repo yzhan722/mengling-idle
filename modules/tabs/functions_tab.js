@@ -437,9 +437,9 @@ export function createRenderFunctions({
           const typeText = types.map((t) => TYPE_ZH_MAP[t] ?? t).join("/");
           const reg = regionLabel(monRegionByDex(m.dex));
           return `
-            <div class="row">
+            <div class="row func-mon-row">
               <div class="row__left">
-                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
+                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span><span class="tag">Lv.${m.lvl}</span></div>
                 <div class="row__desc">${escapeHtml(reg)} · ${escapeHtml(typeText || "-")} · 战力 ${Math.floor(pow)}</div>
               </div>
               <div class="row__right">
@@ -452,8 +452,8 @@ export function createRenderFunctions({
 
       const title = `训练：选择萌灵（剩余槽位 ${capLeft}）`;
       const sub = `支持筛选/排序与多选，点击“开始训练”后会直接加入训练。`;
-      const empty = sorted.length === 0 ? `<div class="badge badge--muted">暂无可选萌灵</div>` : "";
-      const disabledReason = capLeft <= 0 ? `<div class="badge badge--muted">训练槽位已满</div>` : "";
+      const empty = sorted.length === 0 ? `<div class="row"><div class="row__left"><div class="row__desc muted">暂无可选萌灵</div></div></div>` : "";
+      const statusHint = capLeft <= 0 ? " · 训练槽位已满" : "";
       const canConfirm = capLeft > 0 && sel.length > 0;
 
       trainingModalHtml = `
@@ -462,17 +462,16 @@ export function createRenderFunctions({
             <div class="modal__header">
               <div class="modal__title">${escapeHtml(title)}</div>
               <div class="modal__right">
-                <button class="btn btn--primary btn--small" data-train-modal-confirm="1" ${canConfirm ? "" : "disabled"}>开始训练</button>
                 <button class="btn btn--small" data-train-modal-clear="1">清空</button>
                 <button class="btn btn--small" data-train-modal-close="1">关闭</button>
               </div>
             </div>
             <div class="modal__desc">${escapeHtml(sub)}</div>
             <div class="modal__body">
-              <div class="row">
+              <div class="row modal-filter-row">
                 <div class="row__left">
                   <div class="row__title">筛选/排序</div>
-                  <div class="row__desc">已选：${sel.length} / ${capLeft}</div>
+                  <div class="row__desc">已选：${sel.length} / ${capLeft}${statusHint}</div>
                 </div>
                 <div class="row__right">
                   <select class="input" data-train-modal-region>${regionOptions}</select>
@@ -482,9 +481,12 @@ export function createRenderFunctions({
                   <input class="input" type="text" inputmode="search" placeholder="搜索：图鉴编号或名称" value="${escapeHtml(q)}" data-train-modal-q />
                 </div>
               </div>
-              ${disabledReason}
               ${empty}
               ${candidateRows}
+            </div>
+            <div class="actions">
+              <button class="btn btn--ghost" data-train-modal-close="1">取消</button>
+              <button class="btn btn--primary" data-train-modal-confirm="1" ${canConfirm ? "" : "disabled"}>开始训练</button>
             </div>
           </div>
         </div>
@@ -572,9 +574,9 @@ export function createRenderFunctions({
           const typeText = types.map((t) => TYPE_ZH_MAP[t] ?? t).join("/");
           const reg = regionLabel(monRegionByDex(m.dex));
           return `
-            <div class="row">
+            <div class="row func-mon-row">
               <div class="row__left">
-                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
+                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span><span class="tag">Lv.${m.lvl}</span></div>
                 <div class="row__desc">${escapeHtml(reg)} · ${escapeHtml(typeText || "-")} · 战力 ${Math.floor(pow)}</div>
               </div>
               <div class="row__right">
@@ -587,7 +589,7 @@ export function createRenderFunctions({
 
       const title = `饲养：选择萌灵（需要 2 只）`;
       const sub = `支持筛选/排序与多选（最多 2 只），远征中的萌灵不会出现。点击“开始饲养”后会直接开始。`;
-      const empty = sorted.length === 0 ? `<div class="badge badge--muted">暂无可选萌灵</div>` : "";
+      const empty = sorted.length === 0 ? `<div class="row"><div class="row__left"><div class="row__desc muted">暂无可选萌灵</div></div></div>` : "";
       const canConfirm = sel.length === 2;
 
       breedingModalHtml = `
@@ -602,7 +604,7 @@ export function createRenderFunctions({
             </div>
             <div class="modal__desc">${escapeHtml(sub)}</div>
             <div class="modal__body">
-              <div class="row">
+              <div class="row modal-filter-row">
                 <div class="row__left">
                   <div class="row__title">筛选/排序</div>
                   <div class="row__desc">已选：${sel.length} / 2</div>
@@ -619,6 +621,7 @@ export function createRenderFunctions({
               ${candidateRows}
             </div>
             <div class="actions">
+              <button class="btn btn--ghost" data-breed-modal-close="1">取消</button>
               <button class="btn btn--primary" data-breed-modal-confirm="1" ${canConfirm ? "" : "disabled"}>开始饲养</button>
             </div>
           </div>
@@ -741,22 +744,25 @@ export function createRenderFunctions({
         const dungeonObj = dlist.find((x) => x && x.key === state.expedition.selectedDungeonKey) ?? dlist[0] ?? null;
         const dungeonType = dungeonObj?.type ?? null;
 
-        for (const d of dlist) {
-          const zh = typeMap[d.type] ?? d.type;
-          const selected = d.key === state.expedition.selectedDungeonKey;
-          rows.push(`
-        <div class="row">
+        const dungeonBtnsHtml = dlist
+          .map((d) => {
+            const zh = typeMap[d.type] ?? d.type;
+            const selected = d.key === state.expedition.selectedDungeonKey;
+            return `<button class="btn btn--small ${selected ? "btn--primary" : "btn--ghost"}" data-exp-dungeon="${escapeHtml(d.key)}" ${expOn ? "disabled" : ""}>${escapeHtml(zh)}副本${selected ? " ✓" : ""}</button>`;
+          })
+          .join("");
+        const selDungeonZh = dungeonType ? (typeMap[dungeonType] ?? dungeonType) : "默认";
+        rows.push(`
+        <div class="row modal-filter-row">
           <div class="row__left">
-            <div class="row__title">${escapeHtml(zh)}副本</div>
-            <div class="row__desc">战力需求：${lvlDef.req}</div>
+            <div class="row__title row__titleLine"><span>远征秘境属性</span><span class="tag">当前：${escapeHtml(selDungeonZh)}副本</span><span class="tag">需求战力 ${lvlDef.req}</span></div>
+            <div class="row__desc">选择克制目标属性的队伍出征，可获得最高 1.5× 收益加成。</div>
           </div>
           <div class="row__right">
-            <div class="badge ${selected ? "badge--ok" : ""}">${selected ? "已选择" : ""}</div>
-            <button class="btn btn--small" data-exp-dungeon="${escapeHtml(d.key)}" ${expOn ? "disabled" : ""}>选择</button>
+            ${dungeonBtnsHtml}
           </div>
         </div>
       `);
-        }
 
         // 远征与饲养互斥：饲养中的萌灵不可远征
         const breedBusyIds = new Set(
@@ -853,10 +859,10 @@ export function createRenderFunctions({
               const disabled = expOn || (!checked && selNow.length >= 20);
               const rightText = expOn ? "远征中" : "";
               return `
-            <div class="row">
+            <div class="row func-mon-row">
               <div class="row__left">
-                <div class="row__title">${escapeHtml(m.name)}</div>
-                <div class="row__desc">Lv.${m.lvl} · 战力 ${power} · 属性相性 x${mul.toFixed(2)}${rightText ? ` · ${escapeHtml(rightText)}` : ""}</div>
+                <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span><span class="tag">Lv.${m.lvl}</span></div>
+                <div class="row__desc">战力 ${power} · 属性相性 x${mul.toFixed(2)}${rightText ? ` · ${escapeHtml(rightText)}` : ""}</div>
               </div>
               <div class="row__right">
                 <input class="chk" type="checkbox" data-exp-team-check="${m.id}" ${checked ? "checked" : ""} ${disabled ? "disabled" : ""} />
@@ -880,6 +886,9 @@ export function createRenderFunctions({
             </div>
             <div class="modal__desc">多选请直接勾选（最多 20 只，技能冷却或饲养中的萌灵不会出现在列表中）。</div>
             <div class="modal__body">${candidateRows}</div>
+            <div class="actions">
+              <button class="btn btn--primary" data-exp-team-close="1">完成编队</button>
+            </div>
           </div>
         </div>
       `;

@@ -8,6 +8,8 @@ import {
 } from "../systems/gameplay_fun.js";
 import { renderItemsStageHtml } from "../render/tab_stages.js";
 import { renderResSvg } from "../render/rpg_svg_icons.js";
+import { renderBeastIcon } from "../sprites.js";
+import { escapeHtml } from "../utils.js";
 
 export function createRenderItems({ defs, getState, itemUsage, ui, render, markMonsDirty, addLog }) {
   const failMsg = (msg) => {
@@ -528,10 +530,22 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       const monList = state.mons?.list ?? [];
       const monsHtml = monList.map(m => {
         const selected = Number(ui.itemUseSelectedMon) === Number(m.id);
+        const aff = Math.max(0, Math.floor(m.affection ?? 0));
+        const ivLine = m.iv
+          ? `个体值 HP ${m.iv.hp ?? 0} · 攻 ${m.iv.atk ?? 0} · 防 ${m.iv.def ?? 0} · 特攻 ${m.iv.spa ?? 0} · 特防 ${m.iv.spd ?? 0} · 速 ${m.iv.spe ?? 0}`
+          : `当前经验 ${Math.floor(m.exp ?? 0)}`;
         return `
-          <button class="btn ${selected ? "btn--primary" : "btn--ghost"} btn--small" data-select-mon="${m.id}">
-            ${m.name} Lv.${m.lvl}
-          </button>
+          <div class="row func-mon-row ${selected ? "is-active" : ""}">
+            <div class="row__left">
+              <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span><span class="tag">Lv.${m.lvl}</span><span class="tag">亲密 ${aff}</span></div>
+              <div class="row__desc">${ivLine}</div>
+            </div>
+            <div class="row__right">
+              <button class="btn ${selected ? "btn--primary" : "btn--ghost"} btn--small" data-select-mon="${m.id}">
+                ${selected ? "已选中" : "选择"}
+              </button>
+            </div>
+          </div>
         `;
       }).join("");
 
@@ -551,9 +565,9 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           statSelectHtml = `
             <div class="row">
               <div class="row__left">
-                <div class="row__title">选择要提升的属性</div>
+                <div class="row__title">选择要提升的属性（提升至 31）</div>
               </div>
-              <div class="row__right">
+              <div class="row__right" style="flex-wrap: wrap; gap: 6px;">
                 ${Object.entries(statNames).map(([key, name]) => {
                   const iv = mon.iv[key] || 0;
                   const selected = ui.itemUseStatType === key;
@@ -572,32 +586,25 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       }
 
       const canConfirm = ui.itemUseSelectedMon && (itemType !== "bottleCap" || ui.itemUseStatType);
+      const itemEffectDesc = effectTextByRid[itemType] || "选择目标萌灵后点击下方确认使用";
 
       html += `
         <div class="modalOverlay">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">使用 ${itemName}</div>
+              <div class="modal__title">使用道具 · ${escapeHtml(itemName)}</div>
               <div class="modal__right">
                 <button class="btn btn--small" data-item-modal-close>关闭</button>
               </div>
             </div>
+            <div class="modal__desc">${escapeHtml(itemEffectDesc)}</div>
             <div class="modal__body">
-              <div class="row">
-                <div class="row__left">
-                  <div class="row__title">选择萌灵</div>
-                </div>
-                <div class="row__right" style="flex-wrap: wrap; gap: 4px;">
-                  ${monsHtml}
-                </div>
-              </div>
               ${statSelectHtml}
-              <div class="row">
-                <div class="row__left"></div>
-                <div class="row__right">
-                  <button class="btn btn--primary" data-item-confirm ${canConfirm ? "" : "disabled"}>确认使用</button>
-                </div>
-              </div>
+              ${monsHtml}
+            </div>
+            <div class="actions">
+              <button class="btn btn--ghost" data-item-modal-close>取消</button>
+              <button class="btn btn--primary" data-item-confirm ${canConfirm ? "" : "disabled"}>确认使用</button>
             </div>
           </div>
         </div>

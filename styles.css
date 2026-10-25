@@ -1940,6 +1940,22 @@ body {
   margin-top: 10px;
 }
 
+.modal-filter-row {
+  flex-wrap: wrap;
+}
+
+.modal-filter-row > .row__right {
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.modal-filter-row > .row__right > .input {
+  flex: 1 1 115px;
+  min-width: 100px;
+}
+
 .battle-result {
   text-align: center;
 }
@@ -7194,10 +7210,16 @@ button.capture-wanderer:hover {
     inset 0 1px 0 rgba(255, 248, 220, 0.24) !important;
 }
 
-/* v0.7.13: Prevent row buttons from squishing into vertical multi-line wraps on mobile */
-.row__left {
+/* v0.7.13+: Prevent row buttons from squishing into vertical multi-line wraps on mobile while keeping column cards (.bcard, .mon-card, .dex-card) compact */
+.row:not(.bcard):not(.mon-card):not(.dex-card) > .row__left {
   flex: 1 1 150px;
   min-width: 130px;
+}
+
+.bcard > .bcard__main,
+.mon-card > .row__left,
+.dex-card > .row__left {
+  flex: 1 1 auto;
 }
 
 .row__right {
