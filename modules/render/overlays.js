@@ -3,6 +3,7 @@
 
 import { escapeHtml, fmtDuration } from "../utils.js";
 import { SERVER_BUFF_KEYS, SERVER_BUFF_UI, SERVER_BUFF_BUY_MAX_MINUTES } from "../systems/server_buffs.js";
+import { renderResSvg } from "./rpg_svg_icons.js";
 
 export function createRenderOverlays({ elOverlays, ui, defs }) {
   return function renderOverlays() {
@@ -47,7 +48,7 @@ export function createRenderOverlays({ elOverlays, ui, defs }) {
         <div class="modalOverlay" data-exp-reward-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">远征归来 · 战利品结算</div>
+              <div class="modal__title">${renderResSvg("expeditionPost", 18)}<span>远征归来 · 战利品结算</span><span class="tag">探索完成</span></div>
               <div class="modal__right">
                 <button class="btn btn--small" data-exp-reward-close="1">关闭</button>
               </div>
@@ -57,7 +58,7 @@ export function createRenderOverlays({ elOverlays, ui, defs }) {
               <div class="row">
                 <div class="row__left">
                   <div class="row__title row__titleLine">
-                    <span>基础收益</span>
+                    ${renderResSvg("futurecoin", 18)}<span>基础收益</span>
                     ${expPerMon > 0 && monCount > 0 ? `<span class="tag">经验 +${expPerMon}/只（共${monCount}只）</span>` : ""}
                     ${fc > 0 ? `<span class="tag">${escapeHtml(defs.resources?.futurecoin?.name ?? "未来币")} +${fc}</span>` : ""}
                     ${mb > 0 ? `<span class="tag">${escapeHtml(defs.resources?.masterball?.name ?? "究极灵球")} +${mb}</span>` : ""}
@@ -65,8 +66,8 @@ export function createRenderOverlays({ elOverlays, ui, defs }) {
                   <div class="row__desc">属性药剂掉落：${potText}</div>
                 </div>
               </div>
-              ${expData.eventCard?.title ? `<div class="row"><div class="row__left"><div class="row__title row__titleLine"><span class="tag">秘境奇遇</span><span>${escapeHtml(expData.eventCard.title)}</span></div><div class="row__desc">${escapeHtml(expData.eventCard.blurb || "")}</div></div></div>` : ""}
-              ${expData.seasonRelic?.name ? `<div class="row"><div class="row__left"><div class="row__title row__titleLine"><span class="tag">赛季印记</span><span>${escapeHtml(expData.seasonRelic.name)}（累计 ${Math.floor(expData.seasonRelic.count || 1)}）</span></div><div class="row__desc">转化奖励：${escapeHtml(defs.resources?.[expData.seasonRelic.item]?.name ?? expData.seasonRelic.item)}</div></div></div>` : ""}
+              ${expData.eventCard?.title ? `<div class="row"><div class="row__left"><div class="row__title row__titleLine">${renderResSvg("shinyCharm", 18)}<span class="tag">秘境奇遇</span><span>${escapeHtml(expData.eventCard.title)}</span></div><div class="row__desc">${escapeHtml(expData.eventCard.blurb || "")}</div></div></div>` : ""}
+              ${expData.seasonRelic?.name ? `<div class="row"><div class="row__left"><div class="row__title row__titleLine">${renderResSvg("megaStone", 18)}<span class="tag">赛季印记</span><span>${escapeHtml(expData.seasonRelic.name)}（累计 ${Math.floor(expData.seasonRelic.count || 1)}）</span></div><div class="row__desc">转化奖励：${escapeHtml(defs.resources?.[expData.seasonRelic.item]?.name ?? expData.seasonRelic.item)}</div></div></div>` : ""}
             </div>
             <div class="actions">
               <button class="btn btn--primary" data-exp-reward-close="1">收下奖励</button>
@@ -95,7 +96,7 @@ export function createRenderOverlays({ elOverlays, ui, defs }) {
         <div class="modalOverlay" data-boss-bully-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">林佬奖励</div>
+              <div class="modal__title">${renderResSvg("goldBottleCap", 18)}<span>林佬奖励</span><span class="tag">第 ${killSeq} 次击破</span></div>
               <div class="modal__right">
                 <button class="btn btn--small" data-boss-bully-close="1">关闭</button>
               </div>
@@ -104,7 +105,7 @@ export function createRenderOverlays({ elOverlays, ui, defs }) {
             <div class="modal__body">
               <div class="row">
                 <div class="row__left">
-                  <div class="row__title">奖励</div>
+                  <div class="row__title row__titleLine">${renderResSvg("futurecoin", 18)}<span>奖励</span></div>
                   ${rewardLines}
                 </div>
                 <div class="row__right">
@@ -127,7 +128,7 @@ export function createRenderOverlays({ elOverlays, ui, defs }) {
         <div class="modalOverlay" data-sbuff-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">购买全服增益</div>
+              <div class="modal__title">${renderResSvg("shinyCharm", 18)}<span>购买全服增益</span><span class="tag">全服共享</span></div>
               <div class="modal__right">
                 <button class="btn btn--small" data-sbuff-close="1">关闭</button>
               </div>
@@ -136,7 +137,7 @@ export function createRenderOverlays({ elOverlays, ui, defs }) {
             <div class="modal__body">
               <div class="row">
                 <div class="row__left">
-                  <div class="row__title">购买时长（分钟）</div>
+                  <div class="row__title row__titleLine">${renderResSvg("futurecoin", 18)}<span>购买时长（分钟）</span><span class="tag">1 币 / 分钟</span></div>
                   <div class="row__desc">花费未来币 = 分钟数</div>
                 </div>
                 <div class="row__right">

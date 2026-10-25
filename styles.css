@@ -7532,7 +7532,8 @@ button.capture-wanderer:hover {
   flex-wrap: wrap;
 }
 
-input.chk[type="checkbox"] {
+input.chk[type="checkbox"],
+.check input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
   width: 20px;
@@ -7546,20 +7547,24 @@ input.chk[type="checkbox"] {
   place-content: center;
   flex-shrink: 0;
   transition: all 0.15s ease;
+  margin: 0;
 }
 
-input.chk[type="checkbox"]:hover:not(:disabled) {
+input.chk[type="checkbox"]:hover:not(:disabled),
+.check input[type="checkbox"]:hover:not(:disabled) {
   border-color: #facc15;
   box-shadow: 0 0 10px rgba(250, 204, 21, 0.32);
 }
 
-input.chk[type="checkbox"]:checked {
+input.chk[type="checkbox"]:checked,
+.check input[type="checkbox"]:checked {
   background: linear-gradient(135deg, #facc15 0%, #d97706 100%);
   border-color: #fef08a;
   box-shadow: 0 0 12px rgba(250, 204, 21, 0.45);
 }
 
-input.chk[type="checkbox"]:checked::before {
+input.chk[type="checkbox"]:checked::before,
+.check input[type="checkbox"]:checked::before {
   content: "✓";
   color: #090d16;
   font-size: 13px;
@@ -7567,7 +7572,8 @@ input.chk[type="checkbox"]:checked::before {
   line-height: 1;
 }
 
-input.chk[type="checkbox"]:disabled {
+input.chk[type="checkbox"]:disabled,
+.check input[type="checkbox"]:disabled {
   opacity: 0.42;
   cursor: not-allowed;
 }
@@ -7617,6 +7623,87 @@ details.cloudRecoverHint > summary::-webkit-details-marker {
 details.cloudRecoverHint > summary .tag {
   margin-left: auto;
 }
+
+.tab--more::before,
+.tabsMoreMenu__item[data-more-tab]::before {
+  content: "";
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-right: 5px;
+  vertical-align: -3px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
+}
+
+.tab--more::before { background-image: url("./assets/ui_icons/commandCenter.webp"); }
+.tabsMoreMenu__item[data-more-tab="pve"]::before { background-image: url("./assets/ui_icons/tab_pve.webp"); }
+.tabsMoreMenu__item[data-more-tab="items"]::before { background-image: url("./assets/ui_icons/mineralSilo.webp"); }
+.tabsMoreMenu__item[data-more-tab="social"]::before { background-image: url("./assets/ui_icons/friendshipBracelet.webp"); }
+.tabsMoreMenu__item[data-more-tab="leaderboard"]::before { background-image: url("./assets/ui_icons/tab_trophy.webp"); }
+.tabsMoreMenu__item[data-more-tab="help"]::before { background-image: url("./assets/ui_icons/library.webp"); }
+.tabsMoreMenu__item[data-more-tab="options"]::before { background-image: url("./assets/ui_icons/commandCenter.webp"); }
+
+.tabsMoreMenu {
+  border-color: rgba(250, 204, 21, 0.38);
+  background: rgba(11, 15, 23, 0.96);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.bulletin__summary,
+.serverBuffBar__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  color: #fef08a;
+}
+
+.bulletin__summary .tag,
+.serverBuffBar__toggle .tag {
+  margin-left: auto;
+}
+
+.serverBuffBar__btn {
+  width: 46px;
+  height: 48px;
+  flex-direction: column;
+  gap: 2px;
+  border-color: rgba(250, 204, 21, 0.35);
+  background: radial-gradient(circle at 50% 35%, rgba(250, 204, 21, 0.18), rgba(15, 23, 42, 0.92));
+}
+
+.serverBuffBar__btn.is-off {
+  opacity: 0.72;
+}
+
+.serverBuffBar__label {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.serverBuffBar__tipTitle,
+.shiny-showcase__eyebrow,
+.shiny-showcase__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.shiny-showcase__title {
+  margin-top: 3px;
+}
+
+[data-showcase-close] {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 
 
 

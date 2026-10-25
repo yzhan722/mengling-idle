@@ -1,6 +1,7 @@
 import { canClaimDexRegion, markDexRegionClaimed } from "../systems/gameplay_fun.js";
 import { buildShinyShareText, shinyGalleryEntries, shinyShareCardPayload, shinyUniqueCount } from "../systems/collection_fun.js";
 import { downloadDataUrl, drawShinyShareCard } from "../render/shiny_share.js";
+import { renderResSvg } from "../render/rpg_svg_icons.js";
 import { renderBeastIcon } from "../sprites.js";
 import { escapeHtml, pad3 } from "../utils.js";
 
@@ -44,8 +45,8 @@ function openShinyShowcaseModal(state, focusDex = null) {
       <div class="modal shiny-showcase" role="dialog" aria-modal="true" aria-label="闪光馆全屏陈列台">
         <div class="shiny-showcase__header">
           <div>
-            <div class="shiny-showcase__eyebrow">✨ SHINY GALLERY · 闪光星芒殿堂</div>
-            <div class="shiny-showcase__title">已点亮 ${unique} 种闪光萌灵</div>
+            <div class="shiny-showcase__eyebrow">${renderResSvg("shinyCharm", 16)}<span>SHINY GALLERY · 闪光星芒殿堂</span></div>
+            <div class="shiny-showcase__title"><span>已点亮 ${unique} 种闪光萌灵</span><span class="tag">异色珍藏</span></div>
           </div>
           <button type="button" class="btn btn--small btn--ghost" data-showcase-close>关闭 ✕</button>
         </div>

@@ -99,7 +99,7 @@ export function createRenderDex({
                   `<button type="button" class="shiny-gallery-chip" data-dex-shiny-showcase="${escapeHtml(String(e.dex))}" title="点击全屏鉴赏 ${escapeHtml(e.name)}">${renderBeastIcon(e.dex, e.name, true)}<span class="shiny-gallery-chip__name">${escapeHtml(e.name)}</span></button>`
               )
               .join("")}
-            <button type="button" class="btn btn--small btn--primary" data-dex-shiny-showcase="all">✨ 全屏陈列秀</button>
+            <button type="button" class="btn btn--small btn--primary" data-dex-shiny-showcase="all">${renderResSvg("shinyCharm", 14)}<span>全屏陈列秀</span></button>
             <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-share data-share="${escapeHtml(shareText)}">复制分享</button>
             <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-card>保存分享卡</button>
           </div>`

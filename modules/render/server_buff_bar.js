@@ -3,6 +3,16 @@
 
 import { escapeHtml, fmtDuration } from "../utils.js";
 import { SERVER_BUFF_KEYS, SERVER_BUFF_UI } from "../systems/server_buffs.js";
+import { renderResSvg } from "./rpg_svg_icons.js";
+
+const BUFF_RPG_ICON = {
+  exp: "luckyEgg",
+  resProd: "catnip",
+  resCap: "storehouse",
+  research: "science",
+  capture: "pokeball",
+  aff: "sootheBell",
+};
 
 export function createRenderServerBuffBar({ elServerBuffBar, ui, serverBuffEffectText }) {
   return function renderServerBuffBar() {
@@ -22,6 +32,7 @@ export function createRenderServerBuffBar({ elServerBuffBar, ui, serverBuffEffec
       const icon = cfg?.icon ?? key;
       const title = cfg?.name ?? key;
       const effectLine = serverBuffEffectText(key, lvl);
+      const rpgIconKey = BUFF_RPG_ICON[key] || "shinyCharm";
 
       const tipShift = idx * 52;
 
@@ -40,11 +51,12 @@ export function createRenderServerBuffBar({ elServerBuffBar, ui, serverBuffEffec
       rows.push(`
         <div class="serverBuffBar__slot">
           <button class="serverBuffBar__btn ${lvl > 0 ? "" : "is-off"}" data-sbuff-key="${escapeHtml(key)}" type="button" aria-label="${escapeHtml(title)}">
-            <span>${escapeHtml(icon)}</span>
+            ${renderResSvg(rpgIconKey, 16)}
+            <span class="serverBuffBar__label">${escapeHtml(icon)}</span>
             <span class="serverBuffBar__lvl">${lvl > 0 ? lvl : 0}</span>
           </button>
           <div class="serverBuffBar__tip" style="--sbuff-tip-shift:${tipShift}px">
-            <div class="serverBuffBar__tipTitle">${escapeHtml(title)} Lv.${lvl}</div>
+            <div class="serverBuffBar__tipTitle">${renderResSvg(rpgIconKey, 16)}<span>${escapeHtml(title)}</span><span class="tag">Lv.${lvl}</span></div>
             <div class="serverBuffBar__tipLine">效果：${escapeHtml(effectLine)}</div>
             <div class="serverBuffBar__tipLine">剩余：${escapeHtml(fmtDuration(rem))}</div>
             <div class="serverBuffBar__tipLine muted" style="margin-top:6px">贡献者（按贡献时间）</div>
