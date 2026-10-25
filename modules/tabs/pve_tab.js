@@ -6,6 +6,7 @@ import { natureIncomingDamageMul, abilityOutgoingDamageMul, bumpPveWinStreak, re
 import { ensureEra } from "../systems/era.js";
 import { ensureTowerState, getTowerFloor, isTowerCleared, PVE_TOWER_FLOORS } from "../systems/pve_tower.js";
 import { renderPveStageHtml, setHtmlPreservingStage } from "../render/tab_stages.js";
+import { renderResSvg, renderUiIcon } from "../render/rpg_svg_icons.js";
 
 // ponytail: blurbs live here — pve_defs is data-only, no chapter copy field yet
 const PVE_CHAPTER_BLURBS = {
@@ -167,6 +168,7 @@ export function createRenderPve({
       <div class="row pve-chapter-bar">
         <div class="row__left">
           <div class="row__title row__titleLine">
+            ${renderUiIcon("tab_pve", 18)}
             <span>${escapeHtml(chapter ? chapter.name : "PvE 关卡挑战")}</span>
             <span class="tag">今日剩余 ${Math.max(0, PVE_DAILY_MAX - state.pve.dailyAttempts)}/${PVE_DAILY_MAX}</span>
           </div>
@@ -255,9 +257,8 @@ export function createRenderPve({
       rows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">${cleared ? "重复挑战" : "首次通关"}奖励</div>
+            <div class="row__title row__titleLine">${renderResSvg("futurecoin", 18)}<span>${cleared ? "重复挑战" : "首次通关"}奖励</span><span class="tag">推荐：${escapeHtml(recText)}</span></div>
             <div class="row__desc">${escapeHtml(rewardText)}</div>
-            <div class="row__desc">推荐属性：${escapeHtml(recText)}（优先能打又抗）</div>
             <div class="row__desc muted">敌人战力约 ${enemyPower} · 建议队伍 ${Math.floor(enemyPower * 0.65)}+ · 等级 ${enemyAvgLvl}+${tutNote}</div>
             ${stageHint ? `<div class="row__desc">${escapeHtml(stageHint)}</div>` : ""}
           </div>
@@ -293,9 +294,8 @@ export function createRenderPve({
       rows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">挑战队伍</div>
-            <div class="row__desc">已选：${selectedMons.length} / 6 · 总战力：${Math.floor(teamPower)} / 建议 ${Math.floor(enemyPower * 0.65)}+</div>
-            <div class="row__desc">${escapeHtml(matchDesc)}</div>
+            <div class="row__title row__titleLine">${renderUiIcon("tab_mons", 18)}<span>挑战队伍</span><span class="tag">已选 ${selectedMons.length}/6</span><span class="tag">战力 ${Math.floor(teamPower)}</span></div>
+            <div class="row__desc">${escapeHtml(matchDesc)} · 建议战力 ${Math.floor(enemyPower * 0.65)}+</div>
             ${matchWarn}
             ${powerHint}
           </div>
@@ -321,7 +321,7 @@ export function createRenderPve({
       rows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">开始挑战</div>
+            <div class="row__title row__titleLine">${renderUiIcon("tab_pve", 18)}<span>开始挑战</span><span class="tag">${escapeHtml(st.name)}</span></div>
             <div class="row__desc">${
               practiceOn
                 ? practiceHalf
@@ -376,7 +376,7 @@ export function createRenderPve({
         <div class="modalOverlay" data-pve-team-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">选择挑战队伍（最多6只）</div>
+              <div class="modal__title">${renderUiIcon("tab_pve", 20)}<span>选择挑战队伍</span><span class="tag">已选 ${selectedIds.length}/6</span></div>
               <div class="modal__right">
                 <button class="btn btn--small" data-pve-team-auto>克制优先</button>
                 <button class="btn btn--small" data-pve-team-clear>清空</button>
@@ -417,7 +417,7 @@ export function createRenderPve({
         ? r.recTypes.map((t) => typeMap[t] ?? t).join("、") || "无"
         : "";
       const typeTipHtml = stageTypeZh
-        ? `<div class="row"><div class="row__left"><div class="row__title">属性提示</div><div class="row__desc">关卡属性：${escapeHtml(stageTypeZh)} · 推荐：${escapeHtml(recText)}</div></div></div>`
+        ? `<div class="row"><div class="row__left"><div class="row__title row__titleLine">${renderResSvg("megaStone", 18)}<span>属性提示</span><span class="tag">推荐：${escapeHtml(recText)}</span></div><div class="row__desc">关卡属性：${escapeHtml(stageTypeZh)} · 推荐克制属性：${escapeHtml(recText)}</div></div></div>`
         : "";
 
       let summaryHtml = "";
@@ -430,7 +430,7 @@ export function createRenderPve({
             : r.stars >= 3
               ? `完胜（${r.stars}星，剩余生命 ${hpPct}%）`
               : `胜利（${r.stars}星，剩余生命 ${hpPct}%）`;
-        summaryHtml = `<div class="row"><div class="row__left"><div class="row__title">结果摘要</div><div class="row__desc hint hint--ok">${escapeHtml(winLine)}${typeof r.winStreak === "number" && r.winStreak > 0 ? ` · 连胜 ×${r.winStreak}` : ""}</div><div class="row__meta">${escapeHtml(PVE_STAR_NARRATIVE[r.stars] || PVE_STAR_NARRATIVE[1])}</div>${r.rewardText ? `<div class="row__desc">奖励：${escapeHtml(r.rewardText)}</div>` : ""}</div></div>`;
+        summaryHtml = `<div class="row"><div class="row__left"><div class="row__title row__titleLine">${renderResSvg("shinyCharm", 18)}<span>结果摘要</span><span class="tag">${r.stars}★ 评价</span></div><div class="row__desc hint hint--ok">${escapeHtml(winLine)}${typeof r.winStreak === "number" && r.winStreak > 0 ? ` · 连胜 ×${r.winStreak}` : ""}</div><div class="row__meta">${escapeHtml(PVE_STAR_NARRATIVE[r.stars] || PVE_STAR_NARRATIVE[1])}</div>${r.rewardText ? `<div class="row__desc">奖励：${escapeHtml(r.rewardText)}</div>` : ""}</div></div>`;
         if (r.endReason === "decision") {
           tipHtml = `<div class="row"><div class="row__left"><div class="row__title">提升建议</div><div class="row__desc">超时按剩余生命险胜。想稳定三星请再练级或换推荐属性。</div></div></div>`;
         } else if (r.stars < 3 && r.superEffectiveHits === 0) {
@@ -453,14 +453,14 @@ export function createRenderPve({
             : r.superEffectiveHits === 0
               ? `试试推荐属性：${escapeHtml(recText)}。`
               : "参考关卡建议等级，升星/喂糖果后再战。";
-        summaryHtml = `<div class="row"><div class="row__left"><div class="row__title">失败原因</div><div class="row__desc hint hint--danger">${escapeHtml(failReason)}</div><div class="row__meta">${escapeHtml(PVE_STAR_NARRATIVE.loss)}</div><div class="row__desc">${fixTip}</div></div></div>`;
+        summaryHtml = `<div class="row"><div class="row__left"><div class="row__title row__titleLine">${renderUiIcon("tab_pve", 18)}<span>失败原因</span></div><div class="row__desc hint hint--danger">${escapeHtml(failReason)}</div><div class="row__meta">${escapeHtml(PVE_STAR_NARRATIVE.loss)}</div><div class="row__desc">${fixTip}</div></div></div>`;
       }
 
       resultModalHtml = `
         <div class="modalOverlay" data-pve-result-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">${r.win ? "挑战成功！" : "挑战失败"} ${r.win ? starIcons : ""}</div>
+              <div class="modal__title">${renderUiIcon("tab_pve", 20)}<span>${r.win ? "挑战成功！" : "挑战失败"}</span> ${r.win ? starIcons : ""}</div>
               <div class="modal__right">
                 <button class="btn btn--small" data-pve-result-close>关闭</button>
               </div>
@@ -472,7 +472,7 @@ export function createRenderPve({
                 ${tipHtml}
               </div>
               <div class="row" style="padding:8px 12px">
-                <div class="row__left"><div class="row__title">战斗日志（${r.rounds}回合）</div></div>
+                <div class="row__left"><div class="row__title row__titleLine">${renderResSvg("library", 16)}<span>战斗日志</span><span class="tag">共 ${r.rounds} 回合</span></div></div>
               </div>
               <div class="battle-log">${logHtml}</div>
               <div class="actions" style="margin-top:8px;justify-content:flex-end">

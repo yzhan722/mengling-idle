@@ -476,7 +476,7 @@ export function createRenderMons({
               <div class="modalOverlay" data-mon-starup-overlay="1">
                 <div class="modal">
                   <div class="modal__header">
-                    <div class="modal__title">${escapeHtml(title)}</div>
+                    <div class="modal__title">${renderResSvg("shinyCharm", 20)}<span>${escapeHtml(title)}</span><span class="tag">${stars < 5 ? `${stars}★ → ${stars + 1}★` : "满星 5★"}</span></div>
                     <div class="modal__right">
                       <button class="btn btn--small" data-mon-starup-auto="${m.id}">自动选择</button>
                       <button class="btn btn--small" data-mon-starup-clear="${m.id}">清空</button>

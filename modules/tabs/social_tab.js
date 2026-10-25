@@ -724,7 +724,7 @@ export function createSocialTab({
     modal.innerHTML = `
       <div class="modal">
         <div class="modal__header">
-          <div class="modal__title">选择出战队伍（最多 6 只）</div>
+          <div class="modal__title">${renderUiIcon("tab_pve", 20)}<span>选择出战队伍</span><span class="tag">最多 6 只</span></div>
           <div class="modal__right">
             <button type="button" class="btn btn--small" data-action="autofill">一键上阵</button>
             <button type="button" class="btn btn--small" data-action="cancel">关闭</button>
@@ -862,7 +862,7 @@ export function createSocialTab({
     modal.innerHTML = `
       <div class="modal">
         <div class="modal__header">
-          <div class="modal__title">演武战报 · ${winnerText}</div>
+          <div class="modal__title">${renderUiIcon("tab_pve", 20)}<span>演武战报 · ${winnerText}</span></div>
           <div class="modal__right">
             <span class="tag">共 ${result.rounds || 1} 回合</span>
             <button type="button" class="btn btn--small" data-action="close">关闭</button>
@@ -870,7 +870,7 @@ export function createSocialTab({
         </div>
         <div class="modal__body">
           <div class="pve-result-block ${isWin ? "pve-result-block--win" : "pve-result-block--lose"}">
-            <div class="row__title">${winnerText}</div>
+            <div class="row__title row__titleLine">${renderResSvg(isWin ? "shinyCharm" : "searchFlare", 18)}<span>${winnerText}</span></div>
             <div class="row__desc">${isWin ? "你的出战阵容成功击败对手，战绩已记入本机赛季！" : "本次演武惜败，提升萌灵等级或调整属性克制后再战。"}</div>
           </div>
           <div class="battle-log">

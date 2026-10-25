@@ -50,12 +50,24 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
             ? foldDefaults[k]
             : true
       );
-    const sectionHeader = (k, title) => {
+    const sectionIconMap = {
+      daily: "shinyCharm",
+      rebirth: "megaStone",
+      exchange: "futurecoin",
+      boost: "energyDrink",
+      permanent: "goldBottleCap",
+      item: "pokeball",
+      auto: "science",
+      craft: "evolutionStone",
+    };
+    const sectionHeader = (k, title, count = 0) => {
       const folded = isFolded(k);
       const icon = folded ? "▸" : "▾";
+      const iconRid = sectionIconMap[k] || "futurecoin";
+      const badgeHtml = count > 0 ? `<span class="tag">共 ${count} 项</span>` : "";
       return `
         <div class="sidebar__sectionTitleRow">
-          <div class="sidebar__sectionTitle">${title}</div>
+          <div class="sidebar__sectionTitle">${renderResSvg(iconRid, 18)}<span>${title}</span>${badgeHtml}</div>
           <button class="btn btn--small btn--ghost" data-fc-fold="${k}">${icon}</button>
         </div>
       `;
@@ -711,11 +723,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       </div>
     `);
 
-    rows.push(sectionHeader("daily", "每日福利"));
+    rows.push(sectionHeader("daily", "每日福利", dailyRows.length));
     if (!isFolded("daily")) rows.push(...dailyRows);
 
     if (state.era?.prestigeUnlocked) {
-      rows.push(sectionHeader("rebirth", "转生轮回"));
+      rows.push(sectionHeader("rebirth", "转生轮回", LEGACY_PERK_ORDER.length));
       if (!isFolded("rebirth")) {
         const essence = Math.max(0, Math.floor(state.meta?.legacy?.essence || 0));
         const rebirths = Math.max(0, Math.floor(state.era?.prestigeCount || 0));
@@ -748,22 +760,22 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       }
     }
 
-    rows.push(sectionHeader("exchange", "兑换"));
+    rows.push(sectionHeader("exchange", "兑换", exchangeRows.length));
     if (!isFolded("exchange")) rows.push(...exchangeRows);
 
-    rows.push(sectionHeader("boost", "限时增益"));
+    rows.push(sectionHeader("boost", "限时增益", boostRows.length));
     if (!isFolded("boost")) rows.push(...boostRows);
 
-    rows.push(sectionHeader("permanent", "永久"));
+    rows.push(sectionHeader("permanent", "永久", permanentRows.length));
     if (!isFolded("permanent")) rows.push(...permanentRows);
 
-    rows.push(sectionHeader("item", "道具"));
+    rows.push(sectionHeader("item", "道具", itemRows.length));
     if (!isFolded("item")) rows.push(...itemRows);
 
-    rows.push(sectionHeader("auto", "自动"));
+    rows.push(sectionHeader("auto", "自动", autoRows.length));
     if (!isFolded("auto")) rows.push(...autoRows);
 
-    rows.push(sectionHeader("craft", "合成"));
+    rows.push(sectionHeader("craft", "合成", craftRows.length));
     if (!isFolded("craft")) rows.push(...craftRows);
 
     setHtmlPreservingStage(elFutureShop, rows.join(""));

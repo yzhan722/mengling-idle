@@ -15,6 +15,7 @@ import { seasonRelicLines } from "../systems/collection_fun.js";
 import { getAbilityInfo, monPassive } from "../abilities.js";
 import { beastZone, ZONE_IDS, ZONE_LABELS } from "../beast_defs.js";
 import { renderFunctionsStageHtml, setHtmlPreservingStage } from "../render/tab_stages.js";
+import { renderBuildingSvg, renderResSvg, renderUiIcon } from "../render/rpg_svg_icons.js";
 
 export function createRenderFunctions({
   elFunctionsTraining,
@@ -121,7 +122,7 @@ export function createRenderFunctions({
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">功能摘要</div>
+          <div class="row__title row__titleLine">${renderUiIcon("tab_functions", 18)}<span>功能摘要</span><span class="tag">${expDaily.claimed ? "今日已领" : "每日 +10 币"}</span></div>
           <div class="row__desc">${statusBits.length ? escapeHtml(statusBits.join(" · ")) : "派遣训练或远征后，回来这里看进度与收获。"}</div>
           <div class="row__desc">${escapeHtml(expDailyDesc)}</div>
         </div>
@@ -134,7 +135,7 @@ export function createRenderFunctions({
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">训练场</div>
+          <div class="row__title row__titleLine">${renderBuildingSvg("trainingGround", 18)}<span>训练场</span><span class="tag">槽位 ${active.length}/${slotSize}</span></div>
           <div class="row__desc">训练中的萌灵：持续获取 10 倍实战经验，加速突破等级瓶颈。</div>
         </div>
         <div class="row__right">
@@ -170,8 +171,8 @@ export function createRenderFunctions({
         rows.push(`
           <div class="row">
             <div class="row__left">
-              <div class="row__title">选择萌灵</div>
-              <div class="row__desc">槽位：${used} / ${slotSize}</div>
+              <div class="row__title row__titleLine">${renderResSvg("expCandy", 18)}<span>选择训练萌灵</span><span class="tag">已用 ${used}/${slotSize}</span></div>
+              <div class="row__desc">派遣闲置萌灵进入训练槽位，自动积累实战经验。</div>
             </div>
             <div class="row__right">
               <button class="btn btn--primary" data-train-open ${canTrainStart ? "" : "disabled"}>选择训练萌灵</button>
@@ -216,7 +217,7 @@ export function createRenderFunctions({
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">育灵屋</div>
+          <div class="row__title row__titleLine">${renderBuildingSvg("breedingHouse", 18)}<span>育灵屋</span><span class="tag">经验 ×50</span></div>
           <div class="row__desc">饲养中的萌灵：双亲配对温养灵蛋（经验获取 ×50，消耗灵果 10/秒）。</div>
         </div>
         <div class="row__right">
@@ -255,7 +256,7 @@ export function createRenderFunctions({
           rows.push(`
             <div class="row">
               <div class="row__left">
-                <div class="row__title">选择萌灵</div>
+                <div class="row__title row__titleLine">${renderResSvg("luckyEgg", 18)}<span>选择饲养萌灵</span><span class="tag">双亲配对</span></div>
                 <div class="row__desc">选择两只萌灵开始饲养（同进化链或百变怪会自动生蛋）。</div>
               </div>
               <div class="row__right">
@@ -276,12 +277,12 @@ export function createRenderFunctions({
               ? Math.max(0, state.breeding.eggRemainingSec)
               : 0;
           const lvl = clamp(state.buildings?.breedingHouse?.owned ?? 0, 0, 10);
-          const eggText = rem > 0 ? `正在生蛋：剩余 ${fmtDuration(rem)}（育灵屋 Lv.${lvl}）` : "未在生蛋";
+          const eggText = rem > 0 ? `正在生蛋：剩余 ${fmtDuration(rem)}（育灵屋 Lv.${lvl}）` : "双亲温养中 · 尚未产蛋";
 
           rows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">饲养中</div>
+            <div class="row__title row__titleLine">${renderResSvg("luckyEgg", 18)}<span>饲养中</span><span class="tag">育灵屋 Lv.${lvl}</span></div>
             <div class="row__desc">${eggText}</div>
           </div>
           <div class="row__right">
@@ -460,7 +461,7 @@ export function createRenderFunctions({
         <div class="modalOverlay" data-train-modal-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">${escapeHtml(title)}</div>
+              <div class="modal__title">${renderBuildingSvg("trainingGround", 20)}<span>训练：选择萌灵</span><span class="tag">剩余槽位 ${capLeft}</span></div>
               <div class="modal__right">
                 <button class="btn btn--small" data-train-modal-clear="1">清空</button>
                 <button class="btn btn--small" data-train-modal-close="1">关闭</button>
@@ -470,8 +471,8 @@ export function createRenderFunctions({
             <div class="modal__body">
               <div class="row modal-filter-row">
                 <div class="row__left">
-                  <div class="row__title">筛选/排序</div>
-                  <div class="row__desc">已选：${sel.length} / ${capLeft}${statusHint}</div>
+                  <div class="row__title row__titleLine">${renderResSvg("searchFlare", 18)}<span>筛选 / 排序</span><span class="tag">已选 ${sel.length}/${capLeft}</span></div>
+                  <div class="row__desc">按栖息地、属性或战力筛选候补萌灵${statusHint}</div>
                 </div>
                 <div class="row__right">
                   <select class="input" data-train-modal-region>${regionOptions}</select>
@@ -596,7 +597,7 @@ export function createRenderFunctions({
         <div class="modalOverlay" data-breed-modal-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">${escapeHtml(title)}</div>
+              <div class="modal__title">${renderBuildingSvg("breedingHouse", 20)}<span>饲养：选择萌灵</span><span class="tag">需要 2 只</span></div>
               <div class="modal__right">
                 <button class="btn btn--small" data-breed-modal-clear="1">清空</button>
                 <button class="btn btn--small" data-breed-modal-close="1">关闭</button>
@@ -606,8 +607,8 @@ export function createRenderFunctions({
             <div class="modal__body">
               <div class="row modal-filter-row">
                 <div class="row__left">
-                  <div class="row__title">筛选/排序</div>
-                  <div class="row__desc">已选：${sel.length} / 2</div>
+                  <div class="row__title row__titleLine">${renderResSvg("searchFlare", 18)}<span>筛选 / 排序</span><span class="tag">已选 ${sel.length}/2</span></div>
+                  <div class="row__desc">同进化链双亲配对可温养灵蛋</div>
                 </div>
                 <div class="row__right">
                   <select class="input" data-breed-modal-region>${regionOptions}</select>
@@ -643,7 +644,7 @@ export function createRenderFunctions({
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">远征所 <span class="muted">· ${escapeHtml(expeditionSeasonLabel)}</span></div>
+          <div class="row__title row__titleLine">${renderBuildingSvg("expeditionPost", 18)}<span>远征所</span><span class="tag">${escapeHtml(expeditionSeasonLabel)}</span></div>
           <div class="row__desc">${escapeHtml(expeditionSeasonBlurb)}。派遣萌灵下副本：完成后获得经验与未来币，并概率掉落药剂。属性克制可提高远征收益。</div>
           <div class="row__desc">${escapeHtml(relicDesc)}</div>
         </div>
@@ -727,8 +728,8 @@ export function createRenderFunctions({
         rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">远征等级</div>
-          <div class="row__desc">远征所等级：Lv.${postLvl}</div>
+          <div class="row__title row__titleLine">${renderResSvg("searchFlare", 18)}<span>远征等级</span><span class="tag">远征所 Lv.${postLvl}</span></div>
+          <div class="row__desc">提升远征所建筑等级可解锁更高阶远征秘境</div>
         </div>
         <div class="row__right">
           <select class="input" data-exp-lvl ${expOn ? "disabled" : ""}>${levelOptions}</select>
@@ -755,7 +756,7 @@ export function createRenderFunctions({
         rows.push(`
         <div class="row modal-filter-row">
           <div class="row__left">
-            <div class="row__title row__titleLine"><span>远征秘境属性</span><span class="tag">当前：${escapeHtml(selDungeonZh)}副本</span><span class="tag">需求战力 ${lvlDef.req}</span></div>
+            <div class="row__title row__titleLine">${renderResSvg("megaStone", 18)}<span>远征秘境属性</span><span class="tag">当前：${escapeHtml(selDungeonZh)}副本</span><span class="tag">需求战力 ${lvlDef.req}</span></div>
             <div class="row__desc">选择克制目标属性的队伍出征，可获得最高 1.5× 收益加成。</div>
           </div>
           <div class="row__right">
@@ -808,8 +809,8 @@ export function createRenderFunctions({
         rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">远征队伍</div>
-          <div class="row__desc">已选：${selectedMons.length} / 20 · 总战力：${Math.floor(effPower)} / ${lvlDef.req} · 预计用时：${fmtDuration(totalSec)}${natureHint} · 属性相性 x${rewardMul.toFixed(2)}</div>
+          <div class="row__title row__titleLine">${renderUiIcon("tab_mons", 18)}<span>远征队伍</span><span class="tag">已选 ${selectedMons.length}/20</span><span class="tag">战力 ${Math.floor(effPower)}/${lvlDef.req}</span></div>
+          <div class="row__desc">预计用时：${fmtDuration(totalSec)}${natureHint} · 属性相性 x${rewardMul.toFixed(2)}</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small" data-exp-team-open ${expOn ? "disabled" : ""}>选择队员</button>
@@ -876,7 +877,7 @@ export function createRenderFunctions({
         <div class="modalOverlay" data-exp-team-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">选择远征队员</div>
+              <div class="modal__title">${renderBuildingSvg("expeditionPost", 20)}<span>选择远征队员</span><span class="tag">已选 ${selNow.length}/20</span></div>
               <div class="modal__right">
                 <select class="input" data-exp-team-type>${typeOptions}</select>
                 <button class="btn btn--small" data-exp-team-auto ${expOn ? "disabled" : ""}>一键选择</button>
@@ -899,7 +900,7 @@ export function createRenderFunctions({
           rows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">开始远征</div>
+            <div class="row__title row__titleLine">${renderResSvg("futurecoin", 18)}<span>开始远征</span><span class="tag">+${rewardCoin} 未来币</span></div>
             <div class="row__desc">奖励：经验 +${rewardExp}（每只参与萌灵）· 未来币 +${rewardCoin} · 药剂掉落总数 ${lvlDef.pot} · 属性相性 x${rewardMul.toFixed(2)}</div>
             <div class="row__desc muted">急行：时长约 ×0.3，奖励约 ×0.7</div>
           </div>
@@ -920,8 +921,8 @@ export function createRenderFunctions({
           rows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">远征中</div>
-            <div class="row__desc">剩余：${fmtDuration(rem)}</div>
+            <div class="row__title row__titleLine">${renderBuildingSvg("expeditionPost", 18)}<span>远征中</span><span class="tag">剩余 ${fmtDuration(rem)}</span></div>
+            <div class="row__desc">秘境探索进行中，归来后自动结算经验与未来币收益。</div>
           </div>
           <div class="row__right">
             <button class="btn btn--danger btn--small" data-exp-cancel>取消远征</button>

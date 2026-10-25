@@ -487,7 +487,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       ${itemsStageHtml}
       <div class="row row--full">
         <div class="row__left">
-          <div class="row__title">今日推荐</div>
+          <div class="row__title row__titleLine">${renderResSvg(recommendRid || "expCandy", 18)}<span>今日推荐</span><span class="tag">${care.claimed ? "今日已领" : "每日 +8 未来币"}</span></div>
           <div class="row__desc">${
             recommendName
               ? `建议使用：${recommendName}${recommendEffect ? ` — ${recommendEffect}` : ""}`
@@ -504,7 +504,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           <button class="btn btn--primary btn--small" data-item-care-claim ${care.canClaim ? "" : "disabled"}>${care.claimed ? "护理已领" : "领取护理 +8"}</button>
         </div>
       </div>
-      <div class="row row--full"><div class="row__left"><div class="row__title">道具状态</div><div class="row__desc">全局双倍经验：${globalExpRem > 0 ? fmtRemain(globalExpRem) : "未激活"}${shinyCharmRem > 0 ? ` · 虹彩护符：${fmtRemain(shinyCharmRem)}` : ""} · 捕捉类在捕捉页用，培养类点「使用」选萌灵</div></div></div>`;
+      <div class="row row--full"><div class="row__left"><div class="row__title row__titleLine">${renderResSvg("shinyCharm", 18)}<span>道具状态</span><span class="tag">${globalExpRem > 0 ? `双倍经验 ${fmtRemain(globalExpRem)}` : "常规速率"}</span></div><div class="row__desc">全局双倍经验：${globalExpRem > 0 ? fmtRemain(globalExpRem) : "未激活"}${shinyCharmRem > 0 ? ` · 虹彩护符：${fmtRemain(shinyCharmRem)}` : ""} · 捕捉类在捕捉页用，培养类点「使用」选萌灵</div></div></div>`;
     for (const [catName, rids] of Object.entries(categories)) {
       html += renderCategory(catName, rids);
     }
@@ -592,7 +592,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
         <div class="modalOverlay">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">使用道具 · ${escapeHtml(itemName)}</div>
+              <div class="modal__title">${renderResSvg(itemType, 20)}<span>使用道具 · ${escapeHtml(itemName)}</span><span class="tag">持有 ${fmtInt(state.res?.[itemType]?.value ?? 0)}</span></div>
               <div class="modal__right">
                 <button class="btn btn--small" data-item-modal-close>关闭</button>
               </div>
