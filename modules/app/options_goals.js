@@ -2,6 +2,7 @@
 // 维护者窗口：C
 
 import { escapeHtml } from "../utils.js";
+import { renderResSvg, renderUiIcon } from "../render/rpg_svg_icons.js";
 import {
   dailyGoalsChecklist,
   sessionHighlightsLine,
@@ -27,11 +28,11 @@ export function createOptionsGoals({ ui, getState, addRes, addLog, activateTab }
     el.innerHTML = `
       <div class="row">
         <div class="row__left">
-          <div class="row__title">今日指挥部</div>
+          <div class="row__title row__titleLine">${renderResSvg("futurecoin", 18)}<span>今日指挥部</span><span class="tag">${escapeHtml(streakLine)}</span><span class="tag">悬赏 +12 未来币</span></div>
           <div class="row__desc">${items
             .map((g) => `${g.done ? "☑" : "☐"} ${escapeHtml(g.label)}`)
             .join(" · ")}</div>
-          <div class="row__desc muted">${escapeHtml(highlights)}${highlights ? " · " : ""}${escapeHtml(streakLine)}</div>
+          ${highlights ? `<div class="row__desc muted">${escapeHtml(highlights)}</div>` : ""}
         </div>
         <div class="row__right">
           <button type="button" class="btn btn--primary btn--small" data-opt-goals-claim ${canBundle ? "" : "disabled"}>${bundleClaimed ? "日目标已领" : "完成三目标 +12"}</button>
@@ -39,7 +40,7 @@ export function createOptionsGoals({ ui, getState, addRes, addLog, activateTab }
       </div>
       <div class="row">
         <div class="row__left">
-          <div class="row__title">一键出发</div>
+          <div class="row__title row__titleLine">${renderUiIcon("tab_capture", 18)}<span>一键出发</span><span class="tag">快捷传送</span></div>
           <div class="row__desc">点按钮直达核心循环，不用在菜单里找。</div>
         </div>
         <div class="row__right">

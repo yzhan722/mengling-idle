@@ -7442,6 +7442,67 @@ button.capture-wanderer:hover {
   flex-wrap: wrap;
 }
 
+.dex-card .row__titleLine .dex-silhouette {
+  width: 50px;
+  height: 50px;
+  padding: 4px;
+  border-radius: 12px;
+  background: radial-gradient(circle at 50% 35%, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.95));
+  border: 1px dashed rgba(125, 211, 252, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 4px 10px rgba(0, 0, 0, 0.42);
+  flex-shrink: 0;
+}
+
+.dex-card .row__titleLine .dex-silhouette .mon-icon {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  filter: brightness(0) invert(0.14) sepia(1) hue-rotate(185deg) saturate(3.2) drop-shadow(0 0 3px rgba(125, 211, 252, 0.65)) !important;
+  opacity: 0.94 !important;
+}
+
+.mon-card .row__right {
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 8px;
+}
+
+.mon-card__skills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mon-card__btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.mon-card .row__titleLine,
+.dex-card .row__titleLine {
+  flex-wrap: wrap;
+  gap: 5px;
+  row-gap: 4px;
+}
+
+.mon-card .row__titleLine > span,
+.dex-card .row__titleLine > span,
+.beast-title-tag,
+.mon-card .row__titleLine .badge,
+.dex-card .row__titleLine .badge,
+.mons-toolbar-row .row__title {
+  white-space: nowrap;
+}
+
+
+
+
 
 
 

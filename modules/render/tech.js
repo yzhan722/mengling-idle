@@ -187,7 +187,6 @@ export function createRenderTech({ elTech, elAutoResearchToggle, elAutoResearchM
           <div class="row__right bcard__actions">
             <div class="badge ${owned || canBuy ? "badge--ok" : ""}${isActive && statusText.includes("即将完成") ? " badge--ok" : ""}">${statusText}</div>
             <div class="bcard__costs" title="花费：${costText || "-"}">${costChipsHtml || `<span class="badge">花费：-</span>`}</div>
-            <div class="badge">耗时：${timeText}</div>
             <button class="btn btn--primary btn--small bcard__btn" data-research="${tid}" ${canBuy ? "" : "disabled"}>${btnText}</button>
           </div>
         </div>
