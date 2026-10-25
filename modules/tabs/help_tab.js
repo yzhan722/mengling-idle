@@ -25,7 +25,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderResSvg("library", 18)}<span>帮助文档 · 星野冒险百科</span><span class="tag">版本 v0.7.26</span><span class="tag">点击标题展开</span></div>
+          <div class="row__title row__titleLine">${renderResSvg("library", 18)}<span>帮助文档 · 星野冒险百科</span><span class="tag">版本 v0.7.27</span><span class="tag">点击标题展开</span></div>
           <div class="row__desc muted">涵盖开荒路线、时代纪元、捕捉生态、培育远征、试炼演武与云存档同步指南。</div>
         </div>
       </div>

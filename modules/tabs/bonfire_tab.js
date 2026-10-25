@@ -236,7 +236,7 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
 
         <div class="row bonfire-gather-row">
           <div class="row__left">
-            <div class="row__title">营地采集</div>
+            <div class="row__title row__titleLine">${renderResSvg("catnip", 18)}<span>营地采集</span><span class="tag">${daily.claimed ? "今日已领" : "每日 +6 币"}</span></div>
             <div class="row__desc" data-bonfire-gather-line1>${escapeHtml(gatherLine1)}</div>
             <div class="row__desc" data-bonfire-gather-line2>${escapeHtml(gatherLine2)}</div>
           </div>

@@ -119,6 +119,29 @@ export function renderTechSvg(kind = "science", size = 34) {
   return renderIconImg(key, size, "rpg-svg-bldg");
 }
 
+const UI_ICON_MAP = {
+  tab_bonfire: "tab_bonfire",
+  tab_science: "science",
+  tab_capture: "tab_capture",
+  tab_mons: "tab_mons",
+  tab_functions: "expeditionPost",
+  tab_future: "tab_future",
+  tab_dex: "tab_dex",
+  tab_pve: "tab_pve",
+  tab_items: "mineralSilo",
+  tab_social: "friendshipBracelet",
+  tab_leaderboard: "tab_trophy",
+  tab_trophy: "tab_trophy",
+  tab_help: "library",
+  tab_options: "commandCenter",
+  cloudSync: "commandCenter",
+  pveSwords: "tab_pve",
+  compass: "tab_capture",
+  observatory: "researchLab",
+};
+
 export function renderUiIcon(iconKey = "tab_bonfire", size = 20) {
-  return renderIconImg(String(iconKey || "tab_bonfire"), size, "rpg-svg-res");
+  const raw = String(iconKey || "tab_bonfire");
+  const key = UI_ICON_MAP[raw] || BUILDING_ICON_MAP[raw] || RES_ICON_MAP[raw.toLowerCase()] || raw;
+  return renderIconImg(key, size, "rpg-svg-res");
 }

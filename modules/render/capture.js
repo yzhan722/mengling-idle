@@ -20,6 +20,7 @@ import {
 import { getNatureInfo } from "../mons.js";
 import { ballCatchMult } from "../systems/ball_catch.js";
 import { renderCaptureStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
+import { renderBuildingSvg, renderOrbSvg, renderResSvg, renderUiIcon } from "./rpg_svg_icons.js";
 
 const MUTATOR_LABELS = {
   berryYield_12: "灵果 +12%",
@@ -114,11 +115,11 @@ export function createRenderCapture({
     const luckyHtml =
       lucky?.type || week?.type || streak > 0 || streakBest > 0
         ? `<details class="helpBlock" style="margin-bottom:8px">
-          <summary class="helpBlock__title">${
+          <summary class="helpBlock__title">${renderResSvg("shinyCharm", 16)}<span>${
             lucky?.type ? `今日幸运 · ${escapeHtml(typeZh(lucky.type))}` : "幸运日程"
           }${week?.type ? ` · 本周 ${escapeHtml(typeZh(week.type))}` : ""}${
             streak > 0 ? ` · 连捕 ×${streak}` : streakBest > 0 ? ` · 纪录 ${streakBest}` : ""
-          }</summary>
+          }</span><span class="tag">属性吉日</span></summary>
           <div class="helpBlock__body">
             <div class="row__desc">${
               lucky?.type ? "今日属性捕获 ×1.1。" : ""
@@ -132,7 +133,7 @@ export function createRenderCapture({
     const sessionHtml = `
       <div class="row" style="margin-bottom:8px">
         <div class="row__left">
-          <div class="row__title">本会话目标</div>
+          <div class="row__title row__titleLine">${renderOrbSvg("pokeball", 18)}<span>本会话目标</span><span class="tag">奖励 +15 币</span></div>
           <div class="row__desc">再抓 ${Math.max(0, session.goal - session.delta)} 只达成（${session.delta}/${session.goal}）· 奖励 +15 未来币</div>
         </div>
         <div class="row__right">
@@ -143,7 +144,7 @@ export function createRenderCapture({
 
     const eraPanelHtml = `
       <details class="era-panel helpBlock" ${eraCanAdvance || eraCanPrestige ? "open" : ""}>
-        <summary class="helpBlock__title">时代 · ${escapeHtml(eraDef.name)}${era.mode === "distortion" ? " · 时空歪曲" : ""}</summary>
+        <summary class="helpBlock__title">${renderResSvg("megaStone", 16)}<span>时代 · ${escapeHtml(eraDef.name)}${era.mode === "distortion" ? " · 时空歪曲" : ""}</span><span class="tag">时代纪元</span></summary>
         <div class="helpBlock__body">
           ${era.mode === "distortion" ? `<div class="row__desc era-panel__distortion">${escapeHtml(DISTORTION_OPENER_BLURB)}</div>` : ""}
           ${eraDef.blurb ? `<div class="row__desc">${escapeHtml(eraDef.blurb)}</div>` : ""}
@@ -223,7 +224,7 @@ export function createRenderCapture({
       lockHtml = `
         <div class="row">
           <div class="row__left">
-            <div class="row__title">下一区域</div>
+            <div class="row__title row__titleLine">${renderUiIcon("tab_capture", 18)}<span>下一区域</span><span class="tag">秘境拓荒</span></div>
             <div class="row__desc">${escapeHtml(fmtLock(nextArea))}</div>
             ${nextHint ? `<div class="row__desc muted">${escapeHtml(nextHint)}</div>` : ""}
             ${
@@ -244,7 +245,7 @@ export function createRenderCapture({
       lockHtml = `
         <div class="row">
           <div class="row__left">
-            <div class="row__title">区域进度</div>
+            <div class="row__title row__titleLine">${renderUiIcon("tab_capture", 18)}<span>区域进度</span><span class="tag">全图解锁</span></div>
             <div class="row__desc hint hint--ok">全部捕捉区域已解锁</div>
           </div>
         </div>`;
@@ -323,7 +324,7 @@ export function createRenderCapture({
         <div class="row__left bcard__main">
           <div class="bcard__head">
             <div class="bcard__emblem bcard__emblem--emerald" aria-hidden="true">
-              <span class="bcard__icon">🗺️</span>
+              <span class="bcard__icon">${renderUiIcon("tab_capture", 34)}</span>
               <span class="bcard__lvlBadge">${pool.length}种</span>
             </div>
             <div class="bcard__titleWrap">
@@ -380,7 +381,7 @@ export function createRenderCapture({
         toolRows.push(`
           <div class="row">
             <div class="row__left">
-              <div class="row__title">球空了</div>
+              <div class="row__title row__titleLine">${renderOrbSvg("pokeball", 18)}<span>球空了</span><span class="tag">应急补给</span></div>
               <div class="row__desc">快捷制作 1 个灵球（花费：${oneCostText || "-"}）。</div>
             </div>
             <div class="row__right">
@@ -393,7 +394,7 @@ export function createRenderCapture({
       toolRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">制作灵球</div>
+            <div class="row__title row__titleLine">${renderBuildingSvg("ballBench", 18)}<span>制作灵球</span><span class="tag">批量合成</span></div>
             <div class="row__desc">消耗资源制作灵球（可批量）。</div>
           </div>
           <div class="row__right">
@@ -412,7 +413,7 @@ export function createRenderCapture({
         toolRows.push(`
           <div class="row">
             <div class="row__left">
-              <div class="row__title">自动搓球</div>
+              <div class="row__title row__titleLine">${renderBuildingSvg("ballFactory", 18)}<span>自动搓球</span><span class="tag">${autoBallOn ? "运行中" : "已就绪"}</span></div>
               <div class="row__desc">灵木满时自动制作 1 个灵球，直到灵球满。</div>
             </div>
             <div class="row__right">
@@ -427,7 +428,7 @@ export function createRenderCapture({
         toolRows.push(`
           <div class="row is-locked">
             <div class="row__left">
-              <div class="row__title">自动搓球</div>
+              <div class="row__title row__titleLine">${renderBuildingSvg("ballFactory", 18)}<span>自动搓球</span><span class="tag">未来币商店解锁</span></div>
               <div class="row__desc">在“未来币商店”解锁后可用。</div>
             </div>
             <div class="row__right">
@@ -446,12 +447,12 @@ export function createRenderCapture({
         rows.push(`
           <div class="row">
             <div class="row__left">
-              <div class="row__title">开始捕捉</div>
+              <div class="row__title row__titleLine">${renderResSvg("searchFlare", 18)}<span>开始捕捉</span><span class="tag">野外寻踪</span></div>
               <div class="row__desc">${escapeHtml(startDesc)}</div>
             </div>
           </div>
         `);
-        rows.push(`<details class="capture-tools"><summary class="capture-tools__summary">制球与自动化</summary>${toolRows.join("")}</details>`);
+        rows.push(`<details class="capture-tools"><summary class="capture-tools__summary">${renderBuildingSvg("ballBench", 16)}<span>制球与自动化</span><span class="tag">展开 / 收起</span></summary>${toolRows.join("")}</details>`);
       } else {
         rows.push(...toolRows);
       }
@@ -517,7 +518,7 @@ export function createRenderCapture({
           <div class="row__left bcard__main">
             <div class="bcard__head">
               <div class="bcard__emblem bcard__emblem--emerald" aria-hidden="true">
-                <span class="bcard__icon">🧭</span>
+                <span class="bcard__icon">${renderResSvg("searchFlare", 34)}</span>
                 <span class="bcard__lvlBadge">${encCharges}/100</span>
               </div>
               <div class="bcard__titleWrap">
@@ -593,7 +594,7 @@ export function createRenderCapture({
           <div class="row__left bcard__main">
             <div class="bcard__head">
               <div class="bcard__emblem bcard__emblem--rose" aria-hidden="true">
-                <span class="bcard__icon">🎯</span>
+                <span class="bcard__icon">${renderOrbSvg(selectedBall, 34)}</span>
                 <span class="bcard__lvlBadge">${enc ? `${Math.round(effChance * 100)}%` : "待命"}</span>
               </div>
               <div class="bcard__titleWrap">
@@ -619,8 +620,8 @@ export function createRenderCapture({
             <div class="badge capture-pity-row">${fails2 > 0 ? `失败 ${Math.max(0, Math.floor(fails2))} 次 · +${Math.round(pity2 * 100)}%` : "连续失败提升捕获率"} ${pityBarHtml}</div>
             <div class="badge">灵球：${pbVal}/${pbCap}</div>
             ${mbVal > 0 ? `<div class="badge">究极灵球：${mbVal}</div>` : ""}
-            <button class="btn btn--primary" data-capture-action="throw" ${throwOk ? "" : "disabled"}>🎯 捕捉</button>
-            ${mbVal > 0 ? `<button class="btn btn--small" data-capture-action="masterball" ${mbOk ? "" : "disabled"}>🟣 究极灵球捕捉</button>` : ""}
+            <button class="btn btn--primary" data-capture-action="throw" ${throwOk ? "" : "disabled"}>${renderOrbSvg(selectedBall, 14)} 捕捉</button>
+            ${mbVal > 0 ? `<button class="btn btn--small" data-capture-action="masterball" ${mbOk ? "" : "disabled"}>${renderOrbSvg("masterball", 14)} 究极灵球捕捉</button>` : ""}
             <label class="check" style="margin-left:8px">
               <input type="checkbox" data-auto-throw-toggle ${autoThrowOn ? "checked" : ""} />
               <span>自动捕捉${autoThrowOn ? "（开）" : "（关）"}</span>

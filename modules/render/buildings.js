@@ -121,7 +121,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
           <div class="row__right bcard__actions">
             <div class="badge ${isMax ? "badge--muted" : ok ? "badge--ok" : ""}">拥有：${owned}${isMax ? " / 满级" : ""}</div>
             <div class="bcard__costs" title="花费：${costText}">${isMax ? `<span class="badge badge--ok">★ 已满级</span>` : costChipsHtml}</div>
-            <button class="btn btn--primary btn--small bcard__btn" data-buy="${bid}" aria-label="${isMax ? `${bdef.name} 已满级` : `建造 ${bdef.name}`}" ${ok ? "" : "disabled"}>${isMax ? "已满级" : "🔨 建造"}</button>
+            <button class="btn btn--primary btn--small bcard__btn" data-buy="${bid}" aria-label="${isMax ? `${bdef.name} 已满级` : `建造 ${bdef.name}`}" ${ok ? "" : "disabled"}>${isMax ? "已满级" : "建造"}</button>
           </div>
         </div>
       `);
@@ -133,7 +133,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
       sections.push(`
         <div class="row bcard-autobuild">
           <div class="row__left">
-            <div class="row__title">⚙️ 自动建造鲁班枢机</div>
+            <div class="row__title row__titleLine">${renderBuildingSvg("commandCenter", 18)}<span>自动建造鲁班枢机</span><span class="tag">${autoOn ? "托管运行中" : "已就绪"}</span></div>
             <div class="row__desc">开启后会自动尝试建造可负担的营地建筑（每秒最多 1 次）。</div>
           </div>
           <div class="row__right">
@@ -152,7 +152,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
       sections.push(`
         <div class="row is-locked bcard-autobuild">
           <div class="row__left">
-            <div class="row__title">⚙️ 自动建造</div>
+            <div class="row__title row__titleLine">${renderBuildingSvg("commandCenter", 18)}<span>自动建造鲁班枢机</span><span class="tag">未来币商店解锁</span></div>
             <div class="row__desc">在“未来币商店”解锁后可用，自动托管营地扩建。</div>
           </div>
           <div class="row__right">

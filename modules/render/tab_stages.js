@@ -144,7 +144,7 @@ export function renderScienceStageHtml({
         ${renderSparksSvg("#38bdf8", "#fde047")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">🔭 星轨灵研天象台 · 已点亮 ${doneTech}/${totalTech}</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_science", 16)} 星轨灵研天象台 · 已点亮 ${doneTech}/${totalTech}</span>
         <span class="camp-stage__sub">灵研院 ×${researchEff.n} · 科研耗时 -${Math.round(researchEff.reduce * 100)}%</span>
       </div>
       <div class="tab-stage__body tab-stage__body--science">
@@ -165,14 +165,14 @@ export function renderScienceStageHtml({
           <div class="tab-stage__title">${centerTitle}</div>
           <div class="tab-stage__desc">${centerSub}</div>
           <div class="tab-stage__pills">
-            <button type="button" class="tab-stage__pill tab-stage__pill--btn" data-stage-act="tech-filter" data-tech-stage="early">🌱 起步科技 ${stageCounts.earlyDone}/${stageCounts.earlyTotal}</button>
-            <button type="button" class="tab-stage__pill tab-stage__pill--btn" data-stage-act="tech-filter" data-tech-stage="mid">⚙️ 扩产科技 ${stageCounts.midDone}/${stageCounts.midTotal}</button>
-            <button type="button" class="tab-stage__pill tab-stage__pill--btn" data-stage-act="tech-filter" data-tech-stage="late">🚀 飞跃科技 ${stageCounts.lateDone}/${stageCounts.lateTotal}</button>
+            <button type="button" class="tab-stage__pill tab-stage__pill--btn" data-stage-act="tech-filter" data-tech-stage="early">${renderResSvg("catnip", 14)} 起步科技 ${stageCounts.earlyDone}/${stageCounts.earlyTotal}</button>
+            <button type="button" class="tab-stage__pill tab-stage__pill--btn" data-stage-act="tech-filter" data-tech-stage="mid">${renderBuildingSvg("workshop", 14)} 扩产科技 ${stageCounts.midDone}/${stageCounts.midTotal}</button>
+            <button type="button" class="tab-stage__pill tab-stage__pill--btn" data-stage-act="tech-filter" data-tech-stage="late">${renderResSvg("science", 14)} 飞跃科技 ${stageCounts.lateDone}/${stageCounts.lateTotal}</button>
           </div>
         </div>
         <div class="tab-stage__cta">
           ${actionHtml}
-          <button type="button" class="btn btn--small" data-stage-act="astrolabe-pulse">🔭 凝星加速</button>
+          <button type="button" class="btn btn--small" data-stage-act="astrolabe-pulse">${renderResSvg("science", 14)} 凝星加速</button>
         </div>
       </div>
     </div>
@@ -318,11 +318,11 @@ export function renderCaptureStageHtml({
           </svg>
           <div class="capture-stage-encounter__art">${renderBeastIcon(enc.dex, enc.name, encIsShiny)}</div>
           <div class="capture-stage-encounter__tag">${encIsShiny ? "★ 闪光现身" : encIsMythic ? "✦ 幻灵降临" : isNewDex ? "★ 首次发现 NEW" : `No.${pad3(enc.order || enc.dex)}`}</div>
-          <span class="capture-reticle__hint">🎯 点击缩圈投球</span>
+          <span class="capture-reticle__hint">${renderOrbSvg(selectedBall, 12)} 点击缩圈投球</span>
         </button>
 
         <div class="capture-stage-encounter__hud">
-          <div class="tab-stage__eyebrow">🎯 野外实景遭遇 · ${escapeHtml(area.name)} ${isNewDex ? "· 【图鉴未收录！】" : `· 已捕获 ${encCaughtN} 次`}</div>
+          <div class="tab-stage__eyebrow">${renderOrbSvg(selectedBall, 14)} 野外实景遭遇 · ${escapeHtml(area.name)} ${isNewDex ? "· 【图鉴未收录！】" : `· 已捕获 ${encCaughtN} 次`}</div>
           <div class="tab-stage__title">
             ${escapeHtml(enc.name)}
             ${enc.title ? `<span class="beast-title-tag">【${escapeHtml(enc.title)}】</span>` : ""}
@@ -332,7 +332,7 @@ export function renderCaptureStageHtml({
           <div class="tab-stage__desc">${escapeHtml(enc.desc || "栖息于秘境深处的奇异灵兽。")}</div>
           <div class="capture-chance-meter">
             <div class="capture-chance-meter__top">
-              <span>🎯 综合捕获率预估：<strong>${pct}%</strong>（缩圈完美命中可再 +15%）</span>
+              <span>${renderOrbSvg(selectedBall, 14)} 综合捕获率预估：<strong>${pct}%</strong>（缩圈完美命中可再 +15%）</span>
               <span>当前球种：${renderOrbSvg(selectedBall, 14)} ${selectedBall === "pokeball" ? "灵球" : selectedBall === "ultraball" ? "高级灵球" : selectedBall === "quickball" ? "迅捷灵球" : selectedBall === "luxuryball" ? "豪华灵球" : selectedBall === "netball" ? "捕灵球" : "暗夜灵球"}</span>
             </div>
             <div class="capture-chance-meter__bar">
@@ -340,16 +340,16 @@ export function renderCaptureStageHtml({
             </div>
           </div>
           <div class="tab-stage__pills">
-            ${tacticalTags.length ? tacticalTags.join("") : `<span class="tab-stage__pill">💡 提示：投喂浆果或投掷泥团可大幅提高捕获率并防止逃跑</span>`}
+            ${tacticalTags.length ? tacticalTags.join("") : `<span class="tab-stage__pill">${renderResSvg("searchFlare", 14)} 提示：投喂浆果或投掷泥团可大幅提高捕获率并防止逃跑</span>`}
           </div>
         </div>
 
         <div class="tab-stage__cta capture-stage-encounter__cta">
-          <button type="button" class="btn btn--primary capture-throw-hero-btn" data-stage-act="reticle-throw" ${throwOk ? "" : "disabled"}>🎯 缩圈精准投球</button>
+          <button type="button" class="btn btn--primary capture-throw-hero-btn" data-stage-act="reticle-throw" ${throwOk ? "" : "disabled"}>${renderOrbSvg(selectedBall, 16)} 缩圈精准投球</button>
           <div class="capture-tactical-btns">
-            <button type="button" class="btn btn--small" data-stage-act="encounter-bait" title="消耗 10 灵果安抚野生灵兽，本场捕获率 +4%（最高3层）">🍓 浆果 (${baitStacks}/3)</button>
-            <button type="button" class="btn btn--small" data-stage-act="encounter-mud" title="消耗 5 灵果声东击西，本场捕获率 +5% 且防止失败逃跑（最高2层）">💣 泥团 (${mudStacks}/2)</button>
-            <button type="button" class="btn btn--small btn--ghost" data-capture-action="run">💨 撤离</button>
+            <button type="button" class="btn btn--small" data-stage-act="encounter-bait" title="消耗 10 灵果安抚野生灵兽，本场捕获率 +4%（最高3层）">${renderResSvg("bigBerry", 14)} 浆果 (${baitStacks}/3)</button>
+            <button type="button" class="btn btn--small" data-stage-act="encounter-mud" title="消耗 5 灵果声东击西，本场捕获率 +5% 且防止失败逃跑（最高2层）">${renderResSvg("minerals", 14)} 泥团 (${mudStacks}/2)</button>
+            <button type="button" class="btn btn--small btn--ghost" data-capture-action="run">${renderBuildingSvg("rangerPost", 14)} 撤离</button>
           </div>
         </div>
       </div>
@@ -432,7 +432,7 @@ export function renderCaptureStageHtml({
         ${renderSparksSvg("#4ade80", "#fde047")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">🧭 ${escapeHtml(area.name)} · 实景生态猎场与缩圈捕猎剧场</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_capture", 16)} ${escapeHtml(area.name)} · 实景生态猎场与缩圈捕猎剧场</span>
         <span class="camp-stage__sub">${luckyBadge}${streakBadge} · 灵球 ${pbVal} · 高级灵球 ${ubVal}</span>
       </div>
       ${biomeRibbonHtml}
@@ -489,7 +489,7 @@ export function renderMonsStageHtml({
         ${renderSparksSvg("#fde047", "#34d399")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">👑 首席灵兽星阵 · 主力战力 ${squadPower}</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_mons", 16)} 首席灵兽星阵 · 主力战力 ${squadPower}</span>
         <span class="camp-stage__sub">灵兽盒共 ${list.length} 只 · 技能就绪 ${skillReadyCount} · 可进化 ${evoReadyCount}</span>
       </div>
       <div class="tab-stage__body tab-stage__body--squad">
@@ -541,7 +541,7 @@ export function renderFunctionsStageHtml({
         ${renderSparksSvg("#34d399", "#fde047")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">🏛️ 育灵圣域三联实景台 · 训练 / 繁育 / 远征</span>
+        <span class="camp-stage__badge">${renderBuildingSvg("expeditionPost", 16)} 育灵圣域三联实景台 · 训练 / 繁育 / 远征</span>
         <span class="camp-stage__sub">离线挂机全自动结算经验、灵蛋孵化与次元远征战利品</span>
       </div>
       <div class="tab-stage__body tab-stage__body--triptych">
@@ -611,7 +611,7 @@ export function renderFutureStageHtml({
         ${renderSparksSvg("#fde047", "#c084fc")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">🏺 星辉奇珍炼金坊 · 贸易与奇物合成</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_future", 16)} 星辉奇珍炼金坊 · 贸易与奇物合成</span>
         <span class="camp-stage__sub">灵果 / 灵木可兑换未来币 · 每日星盘免费抽取奇珍</span>
       </div>
       <div class="tab-stage__body tab-stage__body--bazaar">
@@ -635,14 +635,14 @@ export function renderFutureStageHtml({
         </div>
         <div class="bazaar-wheel-actions">
           <div class="bazaar-cauldron-row">
-            <button type="button" class="btn btn--small" data-stage-act="cauldron-transmute" data-res="catnip" title="投入 1000 灵果凝练 1 未来币">⚗️ 灵果炼金</button>
-            <button type="button" class="btn btn--small" data-stage-act="cauldron-transmute" data-res="wood" title="投入 500 灵木凝练 1 未来币">⚗️ 灵木炼金</button>
+            <button type="button" class="btn btn--small" data-stage-act="cauldron-transmute" data-res="catnip" title="投入 1000 灵果凝练 1 未来币">${renderBuildingSvg("berryPress", 14)} 灵果炼金</button>
+            <button type="button" class="btn btn--small" data-stage-act="cauldron-transmute" data-res="wood" title="投入 500 灵木凝练 1 未来币">${renderBuildingSvg("workshop", 14)} 灵木炼金</button>
           </div>
           <button type="button" class="btn btn--primary btn--small" data-fc-daily-free ${claimedDailyFree ? "disabled" : ""}>
-            ${claimedDailyFree ? "✓ 今日免费币已领" : "🎁 领每日 +5 未来币"}
+            ${claimedDailyFree ? "✓ 今日免费币已领" : `${renderResSvg("futurecoin", 14)} 领每日 +5 未来币`}
           </button>
           <button type="button" class="btn btn--small" data-fc-daily-spin ${claimedDailySpin ? "disabled" : ""}>
-            ${claimedDailySpin ? "✓ 今日幸运转盘已转" : "🎡 免费转幸运星盘"}
+            ${claimedDailySpin ? "✓ 今日幸运转盘已转" : `${renderResSvg("shinyCharm", 14)} 免费转幸运星盘`}
           </button>
         </div>
       </div>
@@ -694,7 +694,7 @@ export function renderDexStageHtml({
         ${renderSparksSvg("#fde047", "#a78bfa")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">📜 《星野灵兽录》万灵星图殿堂</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_dex", 16)} 《星野灵兽录》万灵星图殿堂</span>
         <span class="camp-stage__sub">图鉴加成：灵果 ×${dexEff.catnipPerSecMul.toFixed(2)} · 灵木 ×${dexEff.woodRateMul.toFixed(2)} · 灵晶 ×${dexEff.mineralsRateMul.toFixed(2)}</span>
       </div>
       <div class="tab-stage__body tab-stage__body--dex">
@@ -779,21 +779,21 @@ export function renderPveStageHtml({
         ${renderSparksSvg("#f87171", "#fde047")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">⚔️ 星穹试炼竞技场 · ${escapeHtml(chapter?.name || "试炼巡礼")}</span>
-        <span class="camp-stage__sub">🗼 每周试炼塔：${towerDone ? "已通关" : `第 ${tower?.floor || 1} 层`} · 最佳 ${tower?.best || 0}F</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_pve", 16)} 星穹试炼竞技场 · ${escapeHtml(chapter?.name || "试炼巡礼")}</span>
+        <span class="camp-stage__sub">${renderBuildingSvg("commandCenter", 14)} 每周试炼塔：${towerDone ? "已通关" : `第 ${tower?.floor || 1} 层`} · 最佳 ${tower?.best || 0}F</span>
       </div>
       <div class="tab-stage__body tab-stage__body--arena">
         <div class="arena-side arena-side--ally">
-          <div class="arena-side__title">🛡️ 我方先锋 · 战力 ${allyPower}</div>
+          <div class="arena-side__title">${renderResSvg("shinyCharm", 14)} 我方先锋 · 战力 ${allyPower}</div>
           <div class="arena-side__fighters">${alliesHtml}</div>
         </div>
         <div class="arena-vs">
-          <button type="button" class="arena-vs__badge arena-vs__badge--btn" data-stage-act="pve-quick-fight" title="点击立即发起试炼对决！">⚔️ 开战</button>
+          <button type="button" class="arena-vs__badge arena-vs__badge--btn" data-stage-act="pve-quick-fight" title="点击立即发起试炼对决！">${renderUiIcon("tab_pve", 16)} 开战</button>
           <div class="arena-vs__stage">${escapeHtml(stage?.name || "选择关卡")}</div>
           ${recHtml ? `<div class="arena-vs__rec">推荐克制：${recHtml}</div>` : ""}
         </div>
         <div class="arena-side arena-side--enemy">
-          <div class="arena-side__title">🔥 守关阵容 · 预估 ${enemyPower}</div>
+          <div class="arena-side__title">${renderUiIcon("tab_bonfire", 14)} 守关阵容 · 预估 ${enemyPower}</div>
           <div class="arena-side__fighters">${enemiesHtml}</div>
         </div>
       </div>
@@ -940,7 +940,7 @@ export function renderLeaderboardStageHtml({
         ${renderSparksSvg("#fde047", "#f59e0b")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">🏆 星穹名人堂 · 全服育灵师荣耀圣坛</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_leaderboard", 16)} 星穹名人堂 · 全服育灵师荣耀圣坛</span>
         <span class="camp-stage__sub">100% 真实玩家提交成绩 · 绝无虚假机器人垫场</span>
       </div>
       <div class="tab-stage__body tab-stage__body--arena">
@@ -948,13 +948,13 @@ export function renderLeaderboardStageHtml({
           <div class="tab-stage__eyebrow">${renderUiIcon("tab_leaderboard", 15)} 我的育灵师荣耀名片 · ${escapeHtml(ui.lbName || "星野育灵师")}</div>
           <div class="tab-stage__title">主力战力 ${teamNow} · 图鉴 ${dexNow}/160</div>
           <div class="tab-stage__pills">
-            <span class="tab-stage__pill tab-stage__pill--gold">⚔️ 总战力 ${totalPowerNow}</span>
-            <span class="tab-stage__pill">✨ 闪光收藏 ${shinyNow}</span>
-            <span class="tab-stage__pill">📜 图鉴进度 ${Math.round((dexNow / 160) * 100)}%</span>
+            <span class="tab-stage__pill tab-stage__pill--gold">${renderUiIcon("tab_pve", 14)} 总战力 ${totalPowerNow}</span>
+            <span class="tab-stage__pill">${renderResSvg("shinyCharm", 14)} 闪光收藏 ${shinyNow}</span>
+            <span class="tab-stage__pill">${renderUiIcon("tab_dex", 14)} 图鉴进度 ${Math.round((dexNow / 160) * 100)}%</span>
           </div>
         </div>
         <div class="arena-side arena-side--ally">
-          <div class="arena-side__title">👑 我的三甲王牌伙伴</div>
+          <div class="arena-side__title">${renderUiIcon("tab_leaderboard", 15)} 我的三甲王牌伙伴</div>
           <div class="arena-side__fighters">${podiumHtml}</div>
         </div>
       </div>
