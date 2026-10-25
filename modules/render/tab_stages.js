@@ -945,7 +945,7 @@ export function renderLeaderboardStageHtml({
       </div>
       <div class="tab-stage__body tab-stage__body--arena">
         <div class="tab-stage__focal">
-          <div class="tab-stage__eyebrow">🪪 我的育灵师荣耀名片 · ${escapeHtml(ui.lbName || "星野育灵师")}</div>
+          <div class="tab-stage__eyebrow">${renderUiIcon("tab_leaderboard", 15)} 我的育灵师荣耀名片 · ${escapeHtml(ui.lbName || "星野育灵师")}</div>
           <div class="tab-stage__title">主力战力 ${teamNow} · 图鉴 ${dexNow}/160</div>
           <div class="tab-stage__pills">
             <span class="tab-stage__pill tab-stage__pill--gold">⚔️ 总战力 ${totalPowerNow}</span>
