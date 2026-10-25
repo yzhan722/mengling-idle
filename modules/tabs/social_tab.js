@@ -136,7 +136,7 @@ export function createSocialTab({
       <div class="social-container">
         ${socialStageHtml}
         <div class="social-section">
-          <h3>⚔️ 育灵师对战（离线演武）</h3>
+          <h3 class="row__titleLine">${renderUiIcon("tab_pve", 18)}<span>育灵师对战（离线演武）</span><span class="tag">每周悬赏 +20 币</span></h3>
           <div class="row pvp-team-selector">
             <div class="row__left">
               <div class="row__title row__titleLine">${renderUiIcon("tab_pve", 18)}<span>我的出战队伍</span><span class="tag">离线演武 · 无需登录</span></div>
@@ -162,22 +162,22 @@ export function createSocialTab({
             : ""
         }
         <div class="social-section" ${needCloud ? "hidden" : ""}>
-          <h3>好友</h3>
+          <h3 class="row__titleLine">${renderResSvg("friendshipBracelet", 16)}<span>好友列表</span></h3>
           <div id="friends" ${needCloud ? "hidden" : ""}></div>
         </div>
         <div class="social-section" ${needCloud ? "hidden" : ""}>
-          <h3>PVP 对战</h3>
+          <h3 class="row__titleLine">${renderUiIcon("tab_pve", 16)}<span>PVP 约战记录</span></h3>
           <div id="pvpRecent" ${needCloud ? "hidden" : ""}></div>
           <div id="pvpInvites" ${needCloud ? "hidden" : ""}></div>
         </div>
 
         <div class="social-section" ${needCloud ? "hidden" : ""}>
-          <h3>好友动态</h3>
+          <h3 class="row__titleLine">${renderResSvg("shinyCharm", 16)}<span>好友动态</span></h3>
           <div id="friendFeed"></div>
         </div>
 
         <div class="social-section" ${needCloud ? "hidden" : ""}>
-          <h3>好友消息</h3>
+          <h3 class="row__titleLine">${renderUiIcon("tab_help", 16)}<span>好友传讯</span></h3>
           <div id="friendMessages" ${needCloud ? "hidden" : ""}></div>
           <div class="message-input-container" ${needCloud ? "hidden" : ""}>
             <select id="messageRecipient" class="input">
@@ -189,7 +189,7 @@ export function createSocialTab({
         </div>
 
         <div class="social-section" ${needCloud ? "hidden" : ""}>
-          <h3>好友资料</h3>
+          <h3 class="row__titleLine">${renderUiIcon("tab_dex", 16)}<span>好友名片</span></h3>
           <select id="friendProfileSelect" class="input" ${needCloud ? "hidden" : ""}>
             <option value="">选择好友查看资料...</option>
           </select>

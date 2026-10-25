@@ -818,7 +818,7 @@ export function renderItemsStageHtml({ state, care }) {
         ${renderSparksSvg("#fde047", "#67e8f9")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">🎒 星辉百宝囊 · 炼金奇物陈列柜</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_items", 16)} 星辉百宝囊 · 炼金奇物陈列柜</span>
         <span class="camp-stage__sub">今日护理进度：${Math.min(care.uses || 0, care.goal || 3)}/${care.goal || 3} 次 ${care.done ? "（已达成）" : "（达成可领 +8 未来币）"}</span>
       </div>
       <div class="tab-stage__body tab-stage__body--bazaar">
@@ -886,20 +886,20 @@ export function renderSocialStageHtml({ state, selectedTeam, renderBeastIcon, es
         ${renderSparksSvg("#fde047", "#38bdf8")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">🏮 星野演武会馆 · 离线宗师切磋与云端好友约战</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_social", 16)} 星野演武会馆 · 离线宗师切磋与云端好友约战</span>
         <span class="camp-stage__sub">无需登录即可挑战 5 位星野馆主赢取每周未来币</span>
       </div>
       <div class="tab-stage__body tab-stage__body--arena">
         <div class="arena-side arena-side--ally">
-          <div class="arena-side__title">🛡️ 我的演武编队</div>
+          <div class="arena-side__title">${renderResSvg("defPotion", 14)} 我的演武编队</div>
           <div class="arena-side__fighters">${myIcons}</div>
         </div>
         <div class="arena-vs">
-          <div class="arena-vs__badge">切磋</div>
+          <div class="arena-vs__badge">${renderUiIcon("tab_pve", 14)} 切磋</div>
           <div class="arena-vs__stage">演武擂台</div>
         </div>
         <div class="arena-side arena-side--enemy">
-          <div class="arena-side__title">👑 馆主王牌灵兽</div>
+          <div class="arena-side__title">${renderUiIcon("tab_leaderboard", 14)} 馆主王牌灵兽</div>
           <div class="arena-side__fighters">${rivalIcons}</div>
         </div>
       </div>
@@ -972,12 +972,12 @@ export function renderHelpStageHtml({ nextGoal, dexPct, escapeHtml }) {
         ${renderSparksSvg("#fde047", "#38bdf8")}
       </div>
       <div class="tab-stage__header">
-        <span class="camp-stage__badge">📖 星野冒险百科图卷 · 育灵师指南</span>
+        <span class="camp-stage__badge">${renderUiIcon("tab_help", 16)} 星野冒险百科图卷 · 育灵师指南</span>
         <span class="camp-stage__sub">图鉴完成度 ${dexPct}% · 随时查阅生态克制与时代主线</span>
       </div>
       <div class="tab-stage__body">
         <div class="tab-stage__focal">
-          <div class="tab-stage__eyebrow">🧭 当前冒险罗盘指引</div>
+          <div class="tab-stage__eyebrow">${renderUiIcon("tab_capture", 14)} 当前冒险罗盘指引</div>
           <div class="tab-stage__title">${escapeHtml(nextGoal || "继续采集、研究与捕捉循环")}</div>
           <div class="tab-stage__desc">完成下方「今日下一目标」三项日常活跃清单，每天可额外领取 +12 未来币奖励。</div>
         </div>

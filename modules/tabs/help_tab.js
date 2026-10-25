@@ -25,7 +25,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title row__titleLine">${renderResSvg("library", 18)}<span>帮助文档 · 星野冒险百科</span><span class="tag">版本 v0.7.29</span><span class="tag">点击标题展开</span></div>
+          <div class="row__title row__titleLine">${renderResSvg("library", 18)}<span>帮助文档 · 星野冒险百科</span><span class="tag">版本 v0.7.30</span><span class="tag">点击标题展开</span></div>
           <div class="row__desc muted">涵盖开荒路线、时代纪元、捕捉生态、培育远征、试炼演武与云存档同步指南。</div>
         </div>
       </div>
@@ -70,9 +70,9 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         dexPctVal = dexPct;
         nextGoal = liveNextGoalLine(state, { dexPct, eraQuest, pveNext });
         const goals = liveGoalsChecklist(state, { dexPct, eraQuest, pveNext });
-        checklistHtml = goals
-          .map((g) => `<div>${g.done ? "☑" : "☐"} ${escapeHtml(g.label)}</div>`)
-          .join("");
+        checklistHtml = `<div class="daily-goal-chips">${goals
+          .map((g) => `<span class="goal-chip ${g.done ? "is-done" : ""}"><span class="goal-chip__mark">${g.done ? "✓" : "·"}</span><span>${escapeHtml(g.label)}</span></span>`)
+          .join("")}</div>`;
         canBundle = canClaimDailyGoalsBundle(state, localDateStr());
         bundleClaimed = state.meta?.dailyGoalsClaimDate === localDateStr();
       }
@@ -129,9 +129,9 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <tr><td>灵木营</td><td>产出灵木，提升灵球上限</td></tr>
         <tr><td>工坊</td><td>解锁并加速灵球制作</td></tr>
         <tr><td>训练场</td><td>每级 +1 训练槽，上限 10 只</td></tr>
-        <tr><td>🥚 育灵屋</td><td>解锁生蛋，支持孵化</td></tr>
-        <tr><td>🗺️ 远征所</td><td>解锁远征，完成任务获经验+未来币</td></tr>
-        <tr><td>💎 灵晶矿场</td><td>持续产出灵晶碎片</td></tr>
+        <tr><td>${renderResSvg("luckyEgg", 14)} 育灵屋</td><td>解锁生蛋，支持孵化</td></tr>
+        <tr><td>${renderUiIcon("tab_functions", 14)} 远征所</td><td>解锁远征，完成任务获经验+未来币</td></tr>
+        <tr><td>${renderResSvg("minerals", 14)} 灵晶矿场</td><td>持续产出灵晶碎片</td></tr>
       </table>
       ${tip('资源不够用？先升级灵果园和灵木营，再研究提升上限的科技。')}
     `, false, renderResSvg("catnip", 16), "资源与基建"));

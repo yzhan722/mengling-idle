@@ -6,8 +6,8 @@ export const NPC_TRAINERS = [
     name: "草帽少年豆豆",
     blurb: "路边育灵师：练手好对手。",
     team: [
-      { name: "啾啾", types: ["wind"], hp: 80, attack: 28, defense: 22, speed: 40, level: 12 },
-      { name: "毛茸茸", types: ["grass"], hp: 70, attack: 22, defense: 20, speed: 25, level: 10 },
+      { name: "绒翎雏", types: ["wind"], hp: 80, attack: 28, defense: 22, speed: 40, level: 12 },
+      { name: "芽尾叶兽", types: ["grass"], hp: 70, attack: 22, defense: 20, speed: 25, level: 10 },
     ],
   },
   {
@@ -15,9 +15,9 @@ export const NPC_TRAINERS = [
     name: "花裙少女蜜蜜",
     blurb: "喜欢草系，小心麻痹与缠绕。",
     team: [
-      { name: "跳跳草", types: ["grass", "dark"], hp: 90, attack: 32, defense: 30, speed: 30, level: 16 },
-      { name: "叭叭芽", types: ["grass", "dark"], hp: 95, attack: 36, defense: 28, speed: 28, level: 18 },
-      { name: "呆鸭鸭", types: ["water"], hp: 100, attack: 34, defense: 30, speed: 38, level: 18 },
+      { name: "风铃绒草", types: ["grass", "dark"], hp: 90, attack: 32, defense: 30, speed: 30, level: 16 },
+      { name: "甜苞花妖", types: ["grass", "dark"], hp: 95, attack: 36, defense: 28, speed: 28, level: 18 },
+      { name: "抱头水凫", types: ["water"], hp: 100, attack: 34, defense: 30, speed: 38, level: 18 },
     ],
   },
   {
@@ -25,10 +25,10 @@ export const NPC_TRAINERS = [
     name: "王牌育灵师阿哲",
     blurb: "赛季练兵：强度接近中期试炼。",
     team: [
-      { name: "焚天龙", types: ["fire", "wind"], hp: 160, attack: 70, defense: 55, speed: 72, level: 36 },
-      { name: "浪甲王", types: ["water"], hp: 170, attack: 60, defense: 75, speed: 50, level: 36 },
-      { name: "花蓬蓬", types: ["grass", "dark"], hp: 165, attack: 62, defense: 65, speed: 55, level: 36 },
-      { name: "电毛球", types: ["electric"], hp: 120, attack: 58, defense: 40, speed: 80, level: 34 },
+      { name: "焚天煌龙", types: ["fire", "wind"], hp: 160, attack: 70, defense: 55, speed: 72, level: 36 },
+      { name: "渊海玄龟", types: ["water"], hp: 170, attack: 60, defense: 75, speed: 50, level: 36 },
+      { name: "翠冠王兽", types: ["grass", "dark"], hp: 165, attack: 62, defense: 65, speed: 55, level: 36 },
+      { name: "雷鼓天貂", types: ["electric"], hp: 120, attack: 58, defense: 40, speed: 80, level: 34 },
     ],
   },
 ];

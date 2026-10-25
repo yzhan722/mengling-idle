@@ -550,21 +550,21 @@ export function initCaptureTab({
         const forced = partyHasAlwaysEscape(state);
         const ok = forced || randFloat() < 0.5;
         const okTexts = [
-          "你把命运关在门外，转身就走。",
-          "你与这里的因果断开了一瞬。",
-          "你从叙事里溜走了。",
-          "你把脚步写成了省略号…",
+          "你借着林间灌木的掩护轻巧脱身，平安撤回营地外围。",
+          "你果断收敛灵气退入秘境小径，成功避开了野生萌灵的纠缠。",
+          "你投出一缕草叶障目，转身稳步撤出了遭遇圈。",
+          "你顺着星辉风向悄然撤离，没有惊动草丛深处的动静。",
         ];
         const failTexts = [
-          "你试图离场，但世界索要签名。",
-          "你迈出一步，现实却拽住了衣角。",
-          "你想逃离，却撞上了概率的墙。",
-          "你从故事边缘滑落，留下了代价。",
+          "撤离时惊动了周遭灌木，慌乱间遗落了随身物资。",
+          "野生萌灵气势迫人，你仓促后撤时散落了少许行囊。",
+          "你试图绕开藤蔓脱身，却在跨越溪石时遗失了部分采集品。",
+          "秘境灵风骤起阻住了退路，撤离途中折损了些许物资。",
         ];
         const lossParts = [];
         if (!ok) {
-          const nameMap = { catnip: "灵果", wood: "木材", stone: "石头", iron: "铁矿" };
-          const keys0 = ["catnip", "wood", "stone", "iron"];
+          const nameMap = { catnip: "灵果", wood: "灵木", minerals: "灵晶碎片" };
+          const keys0 = ["catnip", "wood", "minerals"];
           const keys = keys0.filter((k) => state.res?.[k] && (state.res[k].value ?? 0) > 0);
 
           const maxPick = Math.min(2, keys.length);
@@ -675,7 +675,7 @@ export function initCaptureTab({
           const mudBlocked = Math.max(0, Math.floor(ui.encounterMudStacks || 0)) > 0;
           if (mudBlocked) {
             ui.encounterMudStacks = Math.max(0, Math.floor(ui.encounterMudStacks || 0) - 1);
-            addLog(`💣 泥团封路生效：${p.name} 被泥团绊住未能逃脱！可以继续投掷灵球。`);
+            addLog(`★ 泥团封路生效：${p.name} 被泥团绊住未能逃脱！可以继续投掷灵球。`);
           } else {
             const clearEncounter = randFloat() < 0.5;
             if (clearEncounter) {
