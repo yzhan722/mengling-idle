@@ -7380,6 +7380,68 @@ button.capture-wanderer:hover {
   font-weight: 700;
 }
 
+.diorama-mini-mon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.diorama-mini-mon > span {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(9, 13, 22, 0.84);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  font-size: 10px;
+  font-weight: 800;
+  color: #fef08a;
+  margin-top: -6px;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .tab-stage__body--bazaar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .bazaar-vault {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px;
+  }
+  .bazaar-vault__item {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8px 12px;
+  }
+  .bazaar-vault__label {
+    white-space: nowrap;
+  }
+  .bazaar-wheel-actions {
+    width: 100%;
+  }
+  .bazaar-cauldron-row .btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .stage-scene-actors--triptych .scene-actor-group .diorama-mini-mon:nth-child(n+2),
+  .tab-stage__body--squad .squad-pedestal:nth-child(n+4) {
+    display: none !important;
+  }
+}
+
+.helpBlock__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 
 
 

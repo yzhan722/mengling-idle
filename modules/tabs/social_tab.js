@@ -1,6 +1,7 @@
 // 社交标签页
 import { escapeHtml } from "../utils.js";
 import { renderBeastIcon } from "../sprites.js";
+import { renderResSvg, renderUiIcon } from "../render/rpg_svg_icons.js";
 import { renderSocialStageHtml } from "../render/tab_stages.js";
 import { summarizePvpBattle, bumpPvpSeasonStats, normalizePvpRecent } from "../systems/pvp_narrative.js";
 import {
@@ -135,10 +136,10 @@ export function createSocialTab({
       <div class="social-container">
         ${socialStageHtml}
         <div class="social-section">
-          <h3>育灵师对战（离线）</h3>
+          <h3>⚔️ 育灵师对战（离线演武）</h3>
           <div class="row pvp-team-selector">
             <div class="row__left">
-              <div class="row__title">我的出战队伍（离线演武 · 无需登录）</div>
+              <div class="row__title row__titleLine">${renderUiIcon("tab_pve", 18)}<span>我的出战队伍</span><span class="tag">离线演武 · 无需登录</span></div>
               <div id="myTeamDisplay"><div class="row__desc">未选择队伍 · 先选队伍即可挑战下方 NPC 育灵师，战绩计入本机赛季</div></div>
             </div>
             <div class="row__right">
@@ -151,8 +152,8 @@ export function createSocialTab({
           needCloud
             ? `<div class="row social-cta">
           <div class="row__left">
-            <div class="row__title">登录云账号解锁好友</div>
-            <div class="row__desc">加好友、约战、跨设备存档都要云账号。点右侧去「设置」注册/登录；离线 NPC 对战可先玩。</div>
+            <div class="row__title row__titleLine">${renderResSvg("friendshipBracelet", 18)}<span>登录云账号解锁好友与约战</span><span class="tag">跨端同步 · 好友 PvP</span></div>
+            <div class="row__desc">加好友、异步约战、好友动态与跨设备云存档需登录云账号；上方离线 NPC 演武可随时畅玩。</div>
           </div>
           <div class="row__right">
             <button type="button" class="btn btn--primary btn--small" data-social-goto-options>去设置注册</button>
@@ -160,43 +161,23 @@ export function createSocialTab({
         </div>`
             : ""
         }
-        <div class="social-section">
+        <div class="social-section" ${needCloud ? "hidden" : ""}>
           <h3>好友</h3>
-          ${
-            needCloud
-              ? `<div class="row"><div class="row__left"><div class="row__desc muted">登录后显示好友列表。先去设置开云账号。</div></div></div>`
-              : ""
-          }
           <div id="friends" ${needCloud ? "hidden" : ""}></div>
         </div>
-        <div class="social-section">
+        <div class="social-section" ${needCloud ? "hidden" : ""}>
           <h3>PVP 对战</h3>
-          ${
-            needCloud
-              ? `<div class="row"><div class="row__left"><div class="row__desc muted">云 PvP 需登录。离线 NPC 对战见上方。</div></div></div>`
-              : ""
-          }
           <div id="pvpRecent" ${needCloud ? "hidden" : ""}></div>
           <div id="pvpInvites" ${needCloud ? "hidden" : ""}></div>
         </div>
 
-        <div class="social-section">
+        <div class="social-section" ${needCloud ? "hidden" : ""}>
           <h3>好友动态</h3>
-          ${
-            needCloud
-              ? `<div class="row"><div class="row__left"><div class="row__desc muted">登录后可看好友动态。未登录时这里保持空，不会用 NPC 垫场。</div></div></div>`
-              : ""
-          }
           <div id="friendFeed"></div>
         </div>
 
-        <div class="social-section">
+        <div class="social-section" ${needCloud ? "hidden" : ""}>
           <h3>好友消息</h3>
-          ${
-            needCloud
-              ? `<div class="row"><div class="row__left"><div class="row__desc muted">消息需要云登录。</div></div></div>`
-              : ""
-          }
           <div id="friendMessages" ${needCloud ? "hidden" : ""}></div>
           <div class="message-input-container" ${needCloud ? "hidden" : ""}>
             <select id="messageRecipient" class="input">
@@ -207,7 +188,7 @@ export function createSocialTab({
           </div>
         </div>
 
-        <div class="social-section">
+        <div class="social-section" ${needCloud ? "hidden" : ""}>
           <h3>好友资料</h3>
           <select id="friendProfileSelect" class="input" ${needCloud ? "hidden" : ""}>
             <option value="">选择好友查看资料...</option>
@@ -350,7 +331,7 @@ export function createSocialTab({
         .join("") +
       `<div class="row">
         <div class="row__left">
-          <div class="row__title">本周挑战与战绩</div>
+          <div class="row__title row__titleLine">${renderResSvg("futurecoin", 18)}<span>本周挑战与战绩</span><span class="tag">${weekly.beatenIds.length}/${weekly.total} 已击败</span><span class="tag">+20 未来币</span></div>
           <div class="row__desc">${escapeHtml(weeklyLine)}</div>
           <div class="row__desc muted">${trainers.map((t) => `${escapeHtml(t.name)} ${escapeHtml(npcRecordLine(record, t.id))}`).join(" · ")}</div>
         </div>

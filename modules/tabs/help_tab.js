@@ -2,6 +2,7 @@ import { liveGoalsChecklist, liveNextGoalLine, canClaimDailyGoalsBundle, markDai
 import { ensureEra, questLabel, syncEraQuests } from "../systems/era.js";
 import { PVE_CHAPTERS, isStageUnlocked } from "../pve_defs.js";
 import { renderHelpStageHtml } from "../render/tab_stages.js";
+import { renderResSvg, renderUiIcon } from "../render/rpg_svg_icons.js";
 
 export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureAreas, dexCaughtUnique, defs, addRes, addLog, render }) {
   return function renderHelp() {
@@ -9,9 +10,9 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
     if (ui.activeTab !== "help" && ui.activeTab !== "options") return;
     if (!ui.helpDirty) return;
 
-    const block = (title, bodyHtml, open = false) =>
+    const block = (title, bodyHtml, open = false, iconHtml = "", badgeText = "") =>
       `<details class="helpBlock" ${open ? "open" : ""}>
-        <summary class="helpBlock__title">${title}</summary>
+        <summary class="helpBlock__title">${iconHtml}<span>${title}</span>${badgeText ? `<span class="tag">${badgeText}</span>` : ""}</summary>
         <div class="helpBlock__body">${bodyHtml}</div>
       </details>`;
     const h = (t) => `<strong>${t}</strong>`;
@@ -24,8 +25,8 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">帮助文档</div>
-          <div class="row__desc muted">版本 v0.7.21 · 时代纪元 / PvE / 道具 / 社交鉴权 · 点击各节标题展开详情</div>
+          <div class="row__title row__titleLine">${renderResSvg("library", 18)}<span>帮助文档 · 星野冒险百科</span><span class="tag">版本 v0.7.22</span><span class="tag">点击标题展开</span></div>
+          <div class="row__desc muted">涵盖开荒路线、时代纪元、捕捉生态、培育远征、试炼演武与云存档同步指南。</div>
         </div>
       </div>
     `);
@@ -92,7 +93,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <b>5. 可选云账号</b>：「设置」注册 → 换机不丢档，还能加好友约战
       </div>
       ${tip('球到手后游戏会轻推你去捕捉；第一只到手后再提醒看榜/开云。')}
-    `, true));
+    `, true, renderUiIcon("tab_capture", 16), "新手必读 · 5步开荒"));
 
     rows.push(block("今日下一目标", `
       <div style="line-height:1.9">
@@ -102,7 +103,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         ${gap}也可按上方「前30分钟路线」或下方「快速开始」起步。
       </div>
       ${tip('清单随存档进度刷新：捕捉/训练/挑战日目标 + 时代或关卡提示。')}
-    `, false));
+    `, false, renderResSvg("futurecoin", 16), "每日悬赏 +12币"));
 
     rows.push(block("快速开始", `
       <div style="line-height:1.9">
@@ -114,7 +115,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <b>⑥ 挑战</b>：图鉴≥5解锁试炼关卡；按推荐属性组队（能打又抗），失败也耗次数
       </div>
       ${tip('灵球不够？建灵木营产灵木，或研究「灵球容量」科技。')}
-    `, false));
+    `, false, renderUiIcon("tab_bonfire", 16), "核心循环"));
 
     rows.push(block("营地（篝火页）", `
       <div style="line-height:1.8">
@@ -133,7 +134,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <tr><td>💎 灵晶矿场</td><td>持续产出灵晶碎片</td></tr>
       </table>
       ${tip('资源不够用？先升级灵果园和灵木营，再研究提升上限的科技。')}
-    `));
+    `, false, renderResSvg("catnip", 16), "资源与基建"));
 
     rows.push(block("研究（科技页）", `
       <div style="line-height:1.8">
@@ -143,7 +144,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         ${h('推荐顺序')}：灵球上限 → 捕获率 → 资源产量 → 进化相关 → 高级科技
       </div>
       ${tip('有多余资源时可以点击「优先研究成本低」排序，效率更高。')}
-    `));
+    `, false, renderResSvg("science", 16), "科技树"));
 
     rows.push(block("捕捉系统", `
       <div style="line-height:1.8">
@@ -166,7 +167,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <tr><td>幻梦秘境</td><td>120种</td><td>幻</td></tr>
       </table>
       ${tip('暗系萌灵技能「霸凌」可在PvE压血线；抓幻灵前囤捕获加成道具。')}
-    `));
+    `, false, renderResSvg("pokeball", 16), "9大生态秘境"));
 
     rows.push(block("转生轮回", `
       <div style="line-height:1.8">
@@ -175,7 +176,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         ${h('灵珀')}：按图鉴数/闪光数/本轮速度结算，在「未来币·转生轮回」区兑换永久加成：产出/捕获/上限/开局科技/开局稀有萌灵。${br}
         ${h('循环')}：扭曲周目时代计数目标 ×1.5ⁿ 递增；轮回次数计入排行榜「轮回榜」。
       </div>
-    `));
+    `, false, renderResSvg("minerals", 16), "灵珀永久加成"));
 
     rows.push(block("萌灵培育", `
       <div style="line-height:1.9">
@@ -183,13 +184,13 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         ${h('生蛋')}：选两只萌灵放入育灵屋，亲密度越高越快生蛋，火系技能可加速。${br}
         ${h('进化')}：消耗灵晶碎片 → 灵晶石 → 跃级糖丸，逐步进化萌灵。${br}
         ${h('远征')}：派队去任务，完成后获得经验+未来币，概率掉落药剂道具。${br}
-        ${h('亲密度')}：喂食/训练/技能互动都能提升，影响生蛋速度和部分技能效果。
+        ${h('亲密度')}：训练/技能互动/抚摸都能提升，影响生蛋速度和部分技能效果。
       </div>
       ${tip('远征是最稳定的未来币来源，建议全天候保持远征队在线。')}
-    `));
+    `, false, renderResSvg("luckyEgg", 16), "训练 · 繁育 · 远征"));
 
     rows.push(block("萌灵技能一览", `
-      <div class="muted" style="margin-bottom:8px">技能消耗饱腹度，低于阈值会失败。技能有冷却时间，部分技能有前置状态要求。</div>
+      <div class="muted" style="margin-bottom:8px">技能有独立冷却时间，部分技能有前置状态要求；可在萌灵页一键批量释放。</div>
       <table style="width:100%;border-collapse:collapse;font-size:12px">
         
         <tr style='opacity:0.6'><td>属性</td><td>技能效果</td><td>前置条件</td></tr>
@@ -203,7 +204,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <tr><td>暗 · 霸凌</td><td>PvE 伤害 +50%（10分钟）</td><td>无</td></tr>
         <tr><td>幻 · 梦魇</td><td>攻击全服林佬 Boss</td><td>林佬存活（需服务器连接）</td></tr>
       </table>
-    `));
+    `, false, renderResSvg("energyDrink", 16), "9系天赋技能"));
 
     rows.push(block("未来币与全服 Buff", `
       <div style='line-height:1.8'>
@@ -220,7 +221,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <tr><td>全服亲密度</td><td>+5% 亲密度增长</td></tr>
       </table>
       <div class='muted' style='font-size:11px;margin-top:6px'>提示：全服Buff全服共享——你买了大家受益。</div>
-    `));
+    `, false, renderUiIcon("tab_future", 16), "全服共享增益"));
 
     rows.push(block("图鉴与排行榜", `
       <div style='line-height:1.8'>
@@ -229,7 +230,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <strong>筛选功能</strong>：图鉴页支持按地区/属性/稀有度筛选。
       </div>
       <div class='muted' style='font-size:11px;margin-top:6px'>提示：同种萌灵重复收集不增加图鉴加成，但可用于进化和远征。</div>
-    `));
+    `, false, renderUiIcon("tab_dex", 16), "图鉴全局加成"));
 
     rows.push(block("云存档与设置", `
       <div style='line-height:1.8'>
@@ -241,7 +242,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <strong>忘记密码</strong>：暂不支持自助找回，请联系管理员，或先导出本地存档备份。
       </div>
       <div class='muted' style='font-size:11px;margin-top:6px'>提示：换设备前务必手动同步一次，避免进度丢失。</div>
-    `));
+    `, false, renderResSvg("commandCenter", 16), "双槽云同步"));
 
     rows.push(block("常见问题", `
       <div style='line-height:1.9'>
@@ -257,7 +258,7 @@ export function createRenderHelp({ elHelp, ui, escapeHtml, getState, getCaptureA
         <b>Q: 存档丢失？</b><br/>
         A: 设置页从备份恢复，或登录云存档账号拉取云端存档
       </div>
-    `));
+    `, false, renderResSvg("friendshipBracelet", 16), "FAQ 排障"));
 
     elHelp.innerHTML = rows.join("");
     const claimBtn = elHelp.querySelector("[data-help-goals-claim]");
