@@ -6510,9 +6510,34 @@ select.select,
 
 .capture-stage-encounter {
   display: grid !important;
-  grid-template-columns: 1fr auto !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
   gap: 16px !important;
+}
+
+@media (max-width: 860px) {
+  .capture-stage-encounter,
+  .tab-stage__body--dex,
+  .tab-stage__body--science {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+  .capture-stage-encounter__cta {
+    width: 100%;
+    align-items: stretch !important;
+  }
+  .capture-stage-encounter__cta .capture-throw-hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .capture-stage-encounter__cta .capture-tactical-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .capture-stage-encounter__cta .capture-tactical-btns .btn {
+    flex: 1 1 auto;
+  }
 }
 
 button.capture-wanderer,
@@ -6640,8 +6665,10 @@ button.capture-wanderer:hover {
   border: 1px solid rgba(250, 204, 21, 0.4);
 }
 
-.tab-stage__body--dex {
-  grid-template-columns: auto 1fr !important;
+@media (min-width: 861px) {
+  .tab-stage__body--dex {
+    grid-template-columns: auto 1fr !important;
+  }
 }
 
 /* 竞技场/社交/排行榜：对战双方精灵透明立于竞技场画中左右两侧 */

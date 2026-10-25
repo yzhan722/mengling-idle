@@ -186,8 +186,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       autoRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">自动建造</div>
-            <div class="row__desc">一次性解锁：${autoBuildPrice} 未来币</div>
+            <div class="row__titleLine">
+              <div class="row__title">${renderResSvg("wood", 18)} 自动建造</div>
+              <span class="tag">${autoBuildPrice} 未来币</span>
+            </div>
+            <div class="row__desc">一次性解锁灵域建筑自动升级队列</div>
           </div>
           <div class="row__right">
             <button class="btn btn--primary" data-fc-buy="autoBuild" data-fc-price="${autoBuildPrice}" data-fc-amount="1" ${canBuyAutoBuild ? "" : "disabled"}>解锁</button>
@@ -201,8 +204,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       autoRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">自动科研</div>
-            <div class="row__desc">一次性解锁：${autoPrice} 未来币</div>
+            <div class="row__titleLine">
+              <div class="row__title">${renderResSvg("science", 18)} 自动科研</div>
+              <span class="tag">${autoPrice} 未来币</span>
+            </div>
+            <div class="row__desc">一次性解锁星象科研自动队列</div>
           </div>
           <div class="row__right">
             <button class="btn btn--primary" data-fc-buy="autoResearch" data-fc-price="${autoPrice}" data-fc-amount="1" ${canBuyAuto ? "" : "disabled"}>解锁</button>
@@ -216,8 +222,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       autoRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">自动合成</div>
-            <div class="row__desc">一次性解锁：${autoCraftPrice} 未来币</div>
+            <div class="row__titleLine">
+              <div class="row__title">${renderResSvg("megaStone", 18)} 自动合成</div>
+              <span class="tag">${autoCraftPrice} 未来币</span>
+            </div>
+            <div class="row__desc">一次性解锁炼金工坊自动合成</div>
           </div>
           <div class="row__right">
             <button class="btn btn--primary" data-fc-buy="autoCraft" data-fc-price="${autoCraftPrice}" data-fc-amount="1" ${canBuyAutoCraft ? "" : "disabled"}>解锁</button>
@@ -231,8 +240,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       autoRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">自动搓球</div>
-            <div class="row__desc">一次性解锁：${autoBallPrice} 未来币</div>
+            <div class="row__titleLine">
+              <div class="row__title">${renderResSvg("pokeball", 18)} 自动搓球</div>
+              <span class="tag">${autoBallPrice} 未来币</span>
+            </div>
+            <div class="row__desc">一次性解锁灵球自动制作流水线</div>
           </div>
           <div class="row__right">
             <button class="btn btn--primary" data-fc-buy="autoBall" data-fc-price="${autoBallPrice}" data-fc-amount="1" ${canBuyAutoBall ? "" : "disabled"}>解锁</button>
@@ -247,9 +259,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     autoRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">自动兑币</div>
-          <div class="row__desc">等级：Lv.${autoExLvl}（上限${AUTO_EX_MAX_LEVEL}）· 每级消耗 ${autoExPrice} 未来币</div>
-          <div class="row__desc">效果：每（100/等级）分钟自动把灵果、灵木全部兑换未来币${autoExLvl > 0 ? `（当前约每 ${autoExMinText} 分钟）` : ""}</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("futurecoin", 18)} 自动兑币</div>
+            <span class="tag">Lv.${autoExLvl}/${AUTO_EX_MAX_LEVEL}</span>
+          </div>
+          <div class="row__desc">每级消耗 ${autoExPrice} 未来币 · 每（100/等级）分钟自动把灵果、灵木全部兑换未来币${autoExLvl > 0 ? `（当前约每 ${autoExMinText} 分钟）` : ""}</div>
         </div>
         <div class="row__right">
           <button class="btn btn--primary" data-fc-autoex-up="1" data-fc-price="${autoExPrice}" ${canUpAutoEx && !autoExMaxed ? "" : "disabled"}>升级</button>
@@ -267,10 +281,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     boostRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">经验加成（全局双倍，限时）</div>
-          <div class="row__desc">价格：${expBoostPrice1} 未来币/1小时 · ${expBoostPrice10} 未来币/10小时</div>
-          <div class="row__desc">生效期：所有萌灵获得双倍经验。可叠加累积时长。</div>
-          <div class="row__desc">剩余时间：${expBoostRem > 0 ? fmtRemain(expBoostRem) : "无"}</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("expCandy", 18)} 经验加成（全局双倍）</div>
+            <span class="tag">${expBoostRem > 0 ? `剩余 ${fmtRemain(expBoostRem)}` : "未生效"}</span>
+          </div>
+          <div class="row__desc">价格：${expBoostPrice1} 未来币/1小时 · ${expBoostPrice10} 未来币/10小时 · 所有萌灵获得双倍经验（可叠加时长）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small" data-fc-boost="exp2" data-fc-price="${expBoostPrice1}" data-fc-sec="${expBoostSec1}" ${canBuyBoost1 ? "" : "disabled"}>兑换一小时（${expBoostPrice1}币）</button>
@@ -290,10 +305,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     boostRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">捕获率提升（限时）</div>
-          <div class="row__desc">价格：${captureBoostPrice1} 未来币/1小时 · ${captureBoostPrice10} 未来币/10小时</div>
-          <div class="row__desc">生效期：捕获率 +20%。可叠加累积时长。</div>
-          <div class="row__desc">剩余时间：${captureBoostRem > 0 ? fmtRemain(captureBoostRem) : "无"}</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("ultraball", 18)} 捕获率提升（限时）</div>
+            <span class="tag">${captureBoostRem > 0 ? `剩余 ${fmtRemain(captureBoostRem)}` : "未生效"}</span>
+          </div>
+          <div class="row__desc">价格：${captureBoostPrice1} 未来币/1小时 · ${captureBoostPrice10} 未来币/10小时 · 捕获率 +20%（可叠加时长）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small" data-fc-boost="capture" data-fc-price="${captureBoostPrice1}" data-fc-sec="${captureBoostSec1}" ${canBuyCaptureBoost1 ? "" : "disabled"}>兑换一小时（${captureBoostPrice1}币）</button>
@@ -313,10 +329,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     boostRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">资源产量加成（限时）</div>
-          <div class="row__desc">价格：${prodBoostPrice1} 未来币/1小时 · ${prodBoostPrice10} 未来币/10小时</div>
-          <div class="row__desc">生效期：所有资源产量 +50%。可叠加累积时长。</div>
-          <div class="row__desc">剩余时间：${prodBoostRem > 0 ? fmtRemain(prodBoostRem) : "无"}</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("catnip", 18)} 资源产量加成（限时）</div>
+            <span class="tag">${prodBoostRem > 0 ? `剩余 ${fmtRemain(prodBoostRem)}` : "未生效"}</span>
+          </div>
+          <div class="row__desc">价格：${prodBoostPrice1} 未来币/1小时 · ${prodBoostPrice10} 未来币/10小时 · 所有资源产量 +50%（可叠加时长）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small" data-fc-boost="production" data-fc-price="${prodBoostPrice1}" data-fc-sec="${prodBoostSec1}" ${canBuyProdBoost1 ? "" : "disabled"}>兑换一小时（${prodBoostPrice1}币）</button>
@@ -464,9 +481,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     permanentRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">永久经验加成</div>
-          <div class="row__desc">等级：Lv.${permExpLvl}/${MAX_PERM_LEVEL} · 每级消耗 ${permExpPrice} 未来币</div>
-          <div class="row__desc">效果：所有萌灵获得经验 +${permExpLvl * 10}%（每级 +10%）</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("expCandy", 18)} 永久经验加成</div>
+            <span class="tag">Lv.${permExpLvl}/${MAX_PERM_LEVEL}</span>
+          </div>
+          <div class="row__desc">每级消耗 ${permExpPrice} 未来币 · 所有萌灵获得经验 +${permExpLvl * 10}%（每级 +10%）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--primary" data-fc-perm="exp" data-fc-price="${permExpPrice}" ${canUpPermExp ? "" : "disabled"}>${permExpLvl >= MAX_PERM_LEVEL ? "已满级" : "升级"}</button>
@@ -480,9 +499,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     permanentRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">永久捕获加成</div>
-          <div class="row__desc">等级：Lv.${permCaptureLvl}/${MAX_PERM_LEVEL} · 每级消耗 ${permCapturePrice} 未来币</div>
-          <div class="row__desc">效果：捕获率 +${permCaptureLvl * 5}%（每级 +5%）</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("ultraball", 18)} 永久捕获加成</div>
+            <span class="tag">Lv.${permCaptureLvl}/${MAX_PERM_LEVEL}</span>
+          </div>
+          <div class="row__desc">每级消耗 ${permCapturePrice} 未来币 · 捕获率 +${permCaptureLvl * 5}%（每级 +5%）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--primary" data-fc-perm="capture" data-fc-price="${permCapturePrice}" ${canUpPermCapture ? "" : "disabled"}>${permCaptureLvl >= MAX_PERM_LEVEL ? "已满级" : "升级"}</button>
@@ -496,9 +517,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     permanentRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">永久资源产量加成</div>
-          <div class="row__desc">等级：Lv.${permProdLvl}/${MAX_PERM_LEVEL} · 每级消耗 ${permProdPrice} 未来币</div>
-          <div class="row__desc">效果：所有资源产量 +${permProdLvl * 10}%（每级 +10%）</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("catnip", 18)} 永久资源产量加成</div>
+            <span class="tag">Lv.${permProdLvl}/${MAX_PERM_LEVEL}</span>
+          </div>
+          <div class="row__desc">每级消耗 ${permProdPrice} 未来币 · 所有资源产量 +${permProdLvl * 10}%（每级 +10%）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--primary" data-fc-perm="production" data-fc-price="${permProdPrice}" ${canUpPermProd ? "" : "disabled"}>${permProdLvl >= MAX_PERM_LEVEL ? "已满级" : "升级"}</button>
@@ -512,9 +535,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     permanentRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">永久资源上限加成</div>
-          <div class="row__desc">等级：Lv.${permCapLvl}/${MAX_PERM_LEVEL} · 每级消耗 ${permCapPrice} 未来币</div>
-          <div class="row__desc">效果：所有资源上限 +${permCapLvl * 10}%（每级 +10%）</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("wood", 18)} 永久资源上限加成</div>
+            <span class="tag">Lv.${permCapLvl}/${MAX_PERM_LEVEL}</span>
+          </div>
+          <div class="row__desc">每级消耗 ${permCapPrice} 未来币 · 所有资源上限 +${permCapLvl * 10}%（每级 +10%）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--primary" data-fc-perm="capacity" data-fc-price="${permCapPrice}" ${canUpPermCap ? "" : "disabled"}>${permCapLvl >= MAX_PERM_LEVEL ? "已满级" : "升级"}</button>
@@ -529,9 +554,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     permanentRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">永久高级搜索上限</div>
-          <div class="row__desc">等级：Lv.${permEncPlusLvl}/20 · 每级消耗 ${permEncPlusPrice} 未来币</div>
-          <div class="row__desc">效果：高级遭遇次数上限 +1（当前上限 ${10 + permEncPlusLvl} 次）</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("pokeball", 18)} 永久高级搜索上限</div>
+            <span class="tag">Lv.${permEncPlusLvl}/20</span>
+          </div>
+          <div class="row__desc">每级消耗 ${permEncPlusPrice} 未来币 · 高级遭遇次数上限 +1（当前上限 ${10 + permEncPlusLvl} 次）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--primary" data-fc-perm="encPlusMax" data-fc-price="${permEncPlusPrice}" ${canUpPermEncPlus ? "" : "disabled"}>${permEncPlusLvl >= 20 ? "已满级" : "升级"}</button>

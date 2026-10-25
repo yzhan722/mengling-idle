@@ -475,6 +475,9 @@ export function createRenderPve({
                 <div class="row__left"><div class="row__title">战斗日志（${r.rounds}回合）</div></div>
               </div>
               <div class="battle-log">${logHtml}</div>
+              <div class="actions" style="margin-top:8px;justify-content:flex-end">
+                <button class="btn btn--primary" data-pve-result-close>完成</button>
+              </div>
             </div>
           </div>
         </div>
