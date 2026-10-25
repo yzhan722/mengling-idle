@@ -120,18 +120,16 @@ export function createSocialTab({
         ${socialStageHtml}
         <div class="social-section">
           <h3>育灵师对战（离线）</h3>
-          <div class="row">
+          <div class="row pvp-team-selector">
             <div class="row__left">
-              <div class="row__title">无需登录</div>
-              <div class="row__desc">先选「我的队伍」，再挑战下方 NPC。战绩写入本机赛季；云好友对战仍需登录。</div>
+              <div class="row__title">我的出战队伍（离线演武 · 无需登录）</div>
+              <div id="myTeamDisplay"><div class="row__desc">未选择队伍 · 先选队伍即可挑战下方 NPC 育灵师，战绩计入本机赛季</div></div>
+            </div>
+            <div class="row__right">
+              <button class="btn btn--primary btn--small" id="btnSelectTeam" type="button">选择队伍</button>
             </div>
           </div>
-          <div class="pvp-team-selector" style="margin-top: 0.5rem;">
-            <h4>我的队伍</h4>
-            <div id="myTeamDisplay"></div>
-            <button class="btn btn--primary" id="btnSelectTeam" type="button">选择队伍</button>
-          </div>
-          <div id="npcTrainers" style="margin-top: 0.75rem;"></div>
+          <div id="npcTrainers" class="list" style="margin-top: 8px;"></div>
         </div>
         ${
           needCloud
@@ -314,16 +312,19 @@ export function createSocialTab({
       : weekly.canClaim
         ? "已击败全部 3 位育灵师 — 可领取 +20 未来币"
         : `本周挑战：击败全部育灵师（${weekly.beatenIds.length}/${weekly.total}）→ +20 未来币`;
+    const npcLeadDex = { npc_youngster: 16, npc_lass: 43, npc_ace: 6 };
     el.innerHTML =
       trainers
         .map((t) => {
           const full = getNpcTrainer(t.id);
           const wl = npcRecordLine(record, t.id);
+          const leadLvl = full?.team?.[0]?.level ?? 12;
+          const dex = npcLeadDex[t.id] || 25;
           return `
-        <div class="row">
+        <div class="row func-mon-row">
           <div class="row__left">
-            <div class="row__title">${escapeHtml(t.name)}</div>
-            <div class="row__desc">${escapeHtml(full?.blurb || "")} · ${t.size} 只 · ${escapeHtml(wl)}</div>
+            <div class="row__title row__titleLine">${renderBeastIcon(dex, t.name, false)}<span>${escapeHtml(t.name)}</span><span class="tag">Lv.${leadLvl} · ${t.size}只</span><span class="tag">${escapeHtml(wl)}</span></div>
+            <div class="row__desc">${escapeHtml(full?.blurb || "")}</div>
           </div>
           <div class="row__right">
             <button type="button" class="btn btn--primary btn--small" data-npc-fight="${escapeHtml(t.id)}">挑战</button>
@@ -331,11 +332,11 @@ export function createSocialTab({
         </div>`;
         })
         .join("") +
-      `<div class="row"><div class="row__left"><div class="row__title">NPC 战绩榜</div>${ladderRows}</div></div>` +
       `<div class="row">
         <div class="row__left">
-          <div class="row__title">本周挑战</div>
+          <div class="row__title">本周挑战与战绩</div>
           <div class="row__desc">${escapeHtml(weeklyLine)}</div>
+          <div class="row__desc muted">${trainers.map((t) => `${escapeHtml(t.name)} ${escapeHtml(npcRecordLine(record, t.id))}`).join(" · ")}</div>
         </div>
         <div class="row__right">
           <button type="button" class="btn btn--primary btn--small" data-npc-weekly-claim ${weekly.canClaim ? "" : "disabled"}>领取 +20</button>

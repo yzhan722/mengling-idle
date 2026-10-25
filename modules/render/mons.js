@@ -60,9 +60,10 @@ export function createRenderMons({
     const selected = typeof selectedId === "number" ? list.find((m) => m.id === selectedId) : null;
 
     const showDetail = Boolean(selected);
-    if (showDetail && elMonBack && elMonDetail?.parentElement) {
-      const actBar = elMonBack.closest?.(".actions");
-      if (actBar && actBar.parentElement !== elMonDetail.parentElement) {
+    const actBar = elMonBack.closest?.(".actions");
+    if (actBar) {
+      actBar.classList.toggle("is-detail-mode", showDetail);
+      if (showDetail && elMonDetail?.parentElement && actBar.parentElement !== elMonDetail.parentElement) {
         elMonDetail.parentElement.insertBefore(actBar, elMonDetail);
       }
     }
@@ -595,7 +596,6 @@ export function createRenderMons({
         <div class="row__right">
           <div class="badge">Lv.${selected.lvl}</div>
           <div class="badge">EXP ${selected.exp}/${need}</div>
-          <div class="badge">饱腹度 ${Math.ceil(clamp(typeof selected.satiety === "number" ? selected.satiety : 100, 0, 100))}/100</div>
           <div class="badge">亲密度 ${Math.floor(clamp(typeof selected.affection === "number" ? selected.affection : 0, 0, 100))}/100</div>
           <div class="badge">战力 ${monPower(selected)}</div>
         </div>
@@ -633,7 +633,7 @@ export function createRenderMons({
       <div class="row">
         <div class="row__left">
           <div class="row__title">药剂强化</div>
-          <div class="row__desc">消耗药剂：对应属性永久 +5（无上限）</div>
+          <div class="row__desc">消耗药剂：对应六维永久 +5（单项上限 +50）</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small" data-mon-potion="hpPotion" data-mon-potion-mon="${selected.id}" ${(state.res.hpPotion?.value ?? 0) >= 1 ? "" : "disabled"}>疗伤药剂</button>
@@ -648,7 +648,7 @@ export function createRenderMons({
       <div class="row">
         <div class="row__left">
           <div class="row__title">属性</div>
-          <div class="row__desc"></div>
+          <div class="row__desc">星野元素属性共鸣 · 影响属性技能与试炼克制</div>
         </div>
         <div class="row__right">
           ${typeBadges}

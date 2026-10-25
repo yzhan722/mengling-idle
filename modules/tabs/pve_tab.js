@@ -394,7 +394,21 @@ export function createRenderPve({
     if (ui.pveBattleResult) {
       const r = ui.pveBattleResult;
       const starIcons = [1, 2, 3].map((i) => `<span style="color:${i <= r.stars ? "#f5c542" : "#666"};font-size:1.5em">★</span>`).join("");
-      const logHtml = r.log.map((l) => `<div class="row__desc">${escapeHtml(l)}</div>`).join("");
+      const logHtml = r.log
+        .map((l) => {
+          const isTurn = /^—\s*第\s*\d+\s*回合|^—\s*战斗/.test(l);
+          const isKo = /倒下了|击败|胜利|全灭/.test(l);
+          const isSe = /效果拔群|暴击/.test(l);
+          const cls = isTurn
+            ? "battle-log__line battle-log__line--turn"
+            : isKo
+              ? "battle-log__line battle-log__line--ko"
+              : isSe
+                ? "battle-log__line battle-log__line--se"
+                : "battle-log__line";
+          return `<div class="${cls}">${escapeHtml(l)}</div>`;
+        })
+        .join("");
       const stageTypeZh = r.stageType ? (typeMap[r.stageType] ?? r.stageType) : "";
       const recText = Array.isArray(r.recTypes)
         ? r.recTypes.map((t) => typeMap[t] ?? t).join("、") || "无"
@@ -448,15 +462,16 @@ export function createRenderPve({
                 <button class="btn btn--small" data-pve-result-close>关闭</button>
               </div>
             </div>
-              <div class="modal__body battle-log">
+            <div class="modal__body">
               <div class="pve-result-block ${r.win ? "pve-result-block--win" : "pve-result-block--lose"}">
-              ${summaryHtml}
-              ${typeTipHtml}
-              ${tipHtml}
+                ${summaryHtml}
+                ${typeTipHtml}
+                ${tipHtml}
               </div>
-              <div class="sidebar__divider"></div>
-              <div class="row"><div class="row__left"><div class="row__title">战斗日志（${r.rounds}回合）</div></div></div>
-              ${logHtml}
+              <div class="row" style="padding:8px 12px">
+                <div class="row__left"><div class="row__title">战斗日志（${r.rounds}回合）</div></div>
+              </div>
+              <div class="battle-log">${logHtml}</div>
             </div>
           </div>
         </div>

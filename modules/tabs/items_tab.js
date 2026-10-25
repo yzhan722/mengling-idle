@@ -32,7 +32,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
       megaStone: "超级觉醒：1小时内 PvE 能力+20%",
       linkRope: "用于萌灵页的通信进化（消耗 x1）",
       rareCandy: "喂食萌灵 +1Lv",
-      bigBerry: "使用：全体萌灵饱腹度 +50",
+      bigBerry: "使用：全体萌灵活力恢复并推进护理进度",
       hugeBerry: "使用：获得 24 小时巨大灵果加成",
       expCandyS: "使用：萌灵获得 200 经验",
       expCandy: "使用：萌灵获得 1000 经验",
@@ -430,9 +430,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
         `;
       }).join("");
 
-      const autoFeedRow = catName === "消耗品"
-        ? `<div class="row row--full"><div class="row__left"><div class="row__title">自动喂食大灵果</div><div class="row__desc"><input class="chk" type="checkbox" data-auto-feed-big-berry ${Boolean(state.auto?.autoFeedBigBerry) ? "checked" : ""} /> 任一萌灵饱腹度低于 30 时，消耗1个大灵果为全体 +50</div></div></div>`
-        : "";
+      const autoFeedRow = "";
       const catIconRid = {
         "捕捉": "pokeball",
         "货币": "futurecoin",
@@ -479,7 +477,7 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
     const care = itemsCareProgress(state, localDateStr());
     const careDesc = care.claimed
       ? `今日护理已领 · 使用 ${Math.min(care.uses, care.goal)}/${care.goal}`
-      : `护理进度 ${Math.min(care.uses, care.goal)}/${care.goal}（喂食/用药）→ +8 未来币`;
+      : `护理进度 ${Math.min(care.uses, care.goal)}/${care.goal}（培养/用药）→ +8 未来币`;
 
     const itemsStageHtml = ui.activeTab === "items" ? renderItemsStageHtml({ state, care }) : "";
 
@@ -499,7 +497,6 @@ export function createRenderItems({ defs, getState, itemUsage, ui, render, markM
           ${recommendRid && ["bigBerry", "hugeBerry", "shinyCharm", "energyDrink", "searchFlare", "advSearchCell", "sootheBell", "expCandyS", "expCandy", "expCandyL", "expCandyXL", "affectionTreat", "friendshipBracelet", "luckyEgg", "bottleCap", "goldBottleCap", "megaStone"].includes(recommendRid)
             ? `<button class="btn btn--small" data-item-use="${recommendRid}">去使用</button>`
             : ""}
-          <button class="btn btn--small" data-item-feed-hungry="1" ${feedOk ? "" : "disabled"}>一键补饱${hungry ? `（${hungry.name}）` : ""}</button>
           <button class="btn btn--small" data-item-team-hppotion="1" ${hpStock >= 1 ? "" : "disabled"}>队伍各用1瓶HP（${teamSizeHint} · 库存${hpStock}）</button>
           <button class="btn btn--small" data-item-sortie-kit="1" ${feedOk || hpStock >= 1 ? "" : "disabled"}>出征套装</button>
           <button class="btn btn--primary btn--small" data-item-care-claim ${care.canClaim ? "" : "disabled"}>${care.claimed ? "护理已领" : "领取护理 +8"}</button>

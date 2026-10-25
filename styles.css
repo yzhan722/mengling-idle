@@ -2590,10 +2590,13 @@ body {
 @media (max-width: 768px) {
   .toast-container {
     top: auto;
-    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
     right: 50%;
     transform: translateX(50%);
     align-items: center;
+  }
+  .toast-container .toast:not(:last-child) {
+    display: none;
   }
   .toast { animation: toastInMobile 0.22s cubic-bezier(0.34,1.56,0.64,1); }
   @keyframes toastInMobile {
@@ -2897,7 +2900,10 @@ body::before {
   100% { opacity: 1;   transform: scale(1.04) translateY(-8px); }
 }
 /* ponytail: .topbar 不能进这个组——relative 会覆盖它的 sticky，顶栏失效 */
-.shell, .bottomLog, .footer, #overlays { position: relative; z-index: 1; }
+.bottomLog, .footer { position: relative; z-index: 1; }
+.shell { position: relative; z-index: auto; }
+.shell:has(.modalOverlay) { z-index: 220 !important; }
+#overlays { position: relative; z-index: 250; }
 
 /* 2. 面板边框发光 */
 .sidebar {
@@ -7194,6 +7200,52 @@ button.capture-wanderer:hover {
   .pve-stages-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.actions.is-detail-mode > :not(#monBack) {
+  display: none !important;
+}
+
+.battle-log {
+  max-height: 220px;
+  overflow-y: auto;
+  background: rgba(9, 13, 22, 0.85);
+  border: 1px solid rgba(250, 204, 21, 0.22);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.battle-log__line {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(248, 250, 252, 0.86);
+}
+
+.battle-log__line--turn {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(250, 204, 21, 0.2);
+  color: #facc15;
+  font-weight: 700;
+}
+
+.battle-log__line--turn:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.battle-log__line--se {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.battle-log__line--ko {
+  color: #34d399;
+  font-weight: 700;
 }
 
 
