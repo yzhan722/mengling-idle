@@ -887,15 +887,17 @@ export function createSocialTab({
             <button type="button" class="btn btn--small" data-action="close">关闭</button>
           </div>
         </div>
-        <div class="pve-result-block ${isWin ? "pve-result-block--win" : "pve-result-block--lose"}">
-          <div class="row__title">${winnerText}</div>
-          <div class="row__desc">${isWin ? "你的出战阵容成功击败对手，战绩已记入本机赛季！" : "本次演武惜败，提升萌灵等级或调整属性克制后再战。"}</div>
-        </div>
-        <div class="battle-log">
-          ${formattedLog}
-        </div>
-        <div class="actions">
-          <button type="button" class="btn btn--primary" data-action="close">完成</button>
+        <div class="modal__body">
+          <div class="pve-result-block ${isWin ? "pve-result-block--win" : "pve-result-block--lose"}">
+            <div class="row__title">${winnerText}</div>
+            <div class="row__desc">${isWin ? "你的出战阵容成功击败对手，战绩已记入本机赛季！" : "本次演武惜败，提升萌灵等级或调整属性克制后再战。"}</div>
+          </div>
+          <div class="battle-log">
+            ${formattedLog}
+          </div>
+          <div class="actions" style="margin-top:8px;justify-content:flex-end">
+            <button type="button" class="btn btn--primary" data-action="close">完成</button>
+          </div>
         </div>
       </div>
     `;

@@ -2,7 +2,8 @@
 // 维护者窗口：C（渲染）/ 数据刷新仍在 app.js SECTION:LEADERBOARD_DATA
 
 import { cleanLeaderboard } from "../systems/world_presence.js";
-import { renderLeaderboardStageHtml } from "./tab_stages.js";
+import { renderLeaderboardStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
+import { renderResSvg } from "./rpg_svg_icons.js";
 
 export function createRenderLeaderboard({
   elLeaderboard,
@@ -115,21 +116,15 @@ export function createRenderLeaderboard({
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">排行榜</div>
-          <div class="row__desc">只显示提交过成绩的真人。人少时榜单会空，不会用 NPC 垫场。</div>
-        </div>
-      </div>
-    `);
-
-    rows.push(`
-      <div class="row">
-        <div class="row__left">
-          <div class="row__title">昵称</div>
-          <div class="row__desc">用于榜单展示（本地保存）。</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("pokeball", 18)} 育灵师名片与昵称</div>
+            <span class="tag">本地保存</span>
+          </div>
+          <div class="row__desc">用于全服名人堂榜单展示，可自定义专属昵称与头像。</div>
         </div>
         <div class="row__right">
-          <div style="display:flex;align-items:center;gap:8px">
-            <input class="input" data-lb-name value="${escapeHtml(ui.lbName || "")}" placeholder="育灵师" />
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <input class="input" style="max-width:160px" data-lb-name value="${escapeHtml(ui.lbName || "")}" placeholder="育灵师" />
             ${renderSelfAvatarPreview()}
             <input type="file" accept="image/*" data-lb-avatar style="display:none" />
             <button class="btn btn--small" data-lb-act="pickAvatar" ${ui.lbBusy ? "disabled" : ""}>上传头像</button>
@@ -141,12 +136,17 @@ export function createRenderLeaderboard({
     rows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">当前成绩</div>
-          <div class="row__desc">图鉴 ${dexNow} · 队伍战力(前6) ${teamNow} · 总战力 ${totalPowerNow}</div>
+          <div class="row__titleLine">
+            <div class="row__title">${renderResSvg("futurecoin", 18)} 当前成绩与榜单同步</div>
+            <span class="tag">图鉴 ${dexNow}</span>
+            <span class="tag">前6战力 ${teamNow}</span>
+            <span class="tag">总战力 ${totalPowerNow}</span>
+          </div>
           <div class="row__desc">孵蛋 ${hatchNow} · 闪光 ${shinyNow} · 采集 ${gatherNow} · 产出 ${resourceNow} · 捕获 ${catchNow} · 轮回 ${Math.max(0, Math.floor(state.era?.prestigeCount || 0))}${ui.lbErr ? ` · <span class=\"badge badge--danger\">${escapeHtml(ui.lbErr)}</span>` : ""}</div>
+          <div class="row__desc muted">只显示提交过成绩的真人。人少时榜单会空，不会用 NPC 垫场。</div>
         </div>
         <div class="row__right">
-          <button class="btn btn--primary" data-lb-act="submit" ${ui.lbBusy ? "disabled" : ""}>刷新</button>
+          <button class="btn btn--primary" data-lb-act="submit" ${ui.lbBusy ? "disabled" : ""}>上传并刷新榜单</button>
         </div>
       </div>
     `);
@@ -273,7 +273,7 @@ export function createRenderLeaderboard({
       }
     }
 
-    elLeaderboard.innerHTML = rows.join("");
+    setHtmlPreservingStage(elLeaderboard, rows.join(""));
     ui.leaderboardDirty = false;
   };
 }
