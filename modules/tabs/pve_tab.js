@@ -360,9 +360,9 @@ export function createRenderPve({
         const lean = stats && (stats.spa ?? 0) >= (stats.atk ?? 0) ? "特" : "物";
         const tag = match.se && match.resist ? "克+抗" : match.se ? "克制" : match.resist ? "抗性" : match.weak ? "被克" : "普通";
         return `
-          <div class="row">
+          <div class="row func-mon-row">
             <div class="row__left">
-              <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)} Lv.${m.lvl}</span></div>
+              <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}<span>${escapeHtml(m.name)}</span><span class="tag">Lv.${m.lvl}</span></div>
               <div class="row__desc">${escapeHtml(types || "-")} · ${lean} · ${tag} · 战力 ${Math.floor(power)}</div>
             </div>
             <div class="row__right">
@@ -376,14 +376,17 @@ export function createRenderPve({
         <div class="modalOverlay" data-pve-team-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">选择挑战队员（最多 6 只）</div>
+              <div class="modal__title">选择挑战队伍（最多6只）</div>
               <div class="modal__right">
-                <button class="btn btn--small" data-pve-team-auto>一键克制优先</button>
+                <button class="btn btn--small" data-pve-team-auto>克制优先</button>
                 <button class="btn btn--small" data-pve-team-clear>清空</button>
                 <button class="btn btn--small" data-pve-team-close>关闭</button>
               </div>
             </div>
             <div class="modal__body">${candidateRows || '<div class="badge badge--muted">暂无萌灵</div>'}</div>
+            <div class="actions">
+              <button class="btn btn--primary" data-pve-team-close>完成编队</button>
+            </div>
           </div>
         </div>
       `;

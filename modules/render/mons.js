@@ -440,11 +440,11 @@ export function createRenderMons({
             const candidateRows = candidates
               .map((x) => {
                 const checked = validSel.includes(x.id);
-                const label = `${x.name} Lv.${x.lvl}`;
+                const label = `${x.name}`;
                 return `
-                  <div class="row">
+                  <div class="row func-mon-row">
                     <div class="row__left">
-                      <div class="row__title">${escapeHtml(label)}</div>
+                      <div class="row__title row__titleLine">${renderBeastIcon(x.dex, x.name, x.isShiny)}<span>${escapeHtml(label)}</span><span class="tag">Lv.${x.lvl}</span></div>
                       <div class="row__desc">同进化系材料</div>
                     </div>
                     <div class="row__right">
@@ -458,17 +458,16 @@ export function createRenderMons({
             const title = `升星：${m.name}`;
             const gateText = gate ? `需 Lv.${gate.lvl}+ 且亲密度 ${gate.aff}+` : "";
             const sub = `选择材料萌灵（下一星需要 ${need} 只同进化系材料${gateText ? `；${gateText}` : ""}）`;
-            const empty = candidates.length === 0 ? `<div class="badge badge--muted">暂无可用材料</div>` : "";
-            const disabledReason =
+            const statusText =
               stars >= 5
-                ? `<div class="badge badge--muted">已满星</div>`
+                ? "已达最高星级（5★）"
                 : !gateOk && gate
-                  ? `<div class="badge badge--muted">未达门槛（当前 Lv.${m.lvl} / 亲密度 ${aff}，需要 Lv.${gate.lvl}+ 且亲密度 ${gate.aff}+）</div>`
+                  ? `未达升星门槛：当前 Lv.${m.lvl} / 亲密度 ${aff}（需要 Lv.${gate.lvl}+ 且亲密度 ${gate.aff}+）`
                   : candidates.length === 0
-                    ? ""
+                    ? "暂无可用同进化系材料萌灵（可前往捕捉同进化系伙伴作为升星材料）"
                     : validSel.length !== need
-                      ? `<div class="badge badge--muted">材料不足（下一星需要 ${need} 只）</div>`
-                      : "";
+                      ? `材料待选择：下一星需要勾选 ${need} 只同进化系材料萌灵`
+                      : `已选齐 ${need} 只材料萌灵，点击下方确认即可升星`;
 
             starUpModalHtml = `
               <div class="modalOverlay" data-mon-starup-overlay="1">
@@ -483,11 +482,19 @@ export function createRenderMons({
                   </div>
                   <div class="modal__desc">${escapeHtml(sub)}</div>
                   <div class="modal__body">
-                    ${disabledReason}
-                    ${empty}
+                    <div class="row func-mon-row">
+                      <div class="row__left">
+                        <div class="row__title row__titleLine">${renderBeastIcon(m.dex, m.name, m.isShiny)}<span>${escapeHtml(m.name)}</span><span class="tag">Lv.${m.lvl} · 亲密 ${aff}</span></div>
+                        <div class="row__desc">${escapeHtml(statusText)}</div>
+                      </div>
+                      <div class="row__right">
+                        <span class="tag">材料 ${validSel.length}/${need}</span>
+                      </div>
+                    </div>
                     ${candidateRows}
                   </div>
                   <div class="actions">
+                    <button class="btn btn--ghost" data-mon-starup-close="1">取消</button>
                     <button class="btn btn--primary" data-mon-starup-confirm="${m.id}" ${canStarUp ? "" : "disabled"}>确认升星</button>
                   </div>
                 </div>

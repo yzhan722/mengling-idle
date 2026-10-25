@@ -5,5 +5,5 @@ export async function onRequest(context) {
   const opt = handleOptions(req);
   if (opt) return opt;
   if (req.method !== "GET") return json({ error: "method not allowed" }, { status: 405, req });
-  return json({ ok: true, version: "0.7.14", service: "mengling-idle-api" }, { req });
+  return json({ ok: true, version: "0.7.15", service: "mengling-idle-api" }, { req });
 }

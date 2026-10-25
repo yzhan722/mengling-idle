@@ -69,10 +69,24 @@ export function createSocialTab({
     return renderSocial.renderPvpRecent();
   }
 
+  function ensureDefaultTeam() {
+    if (selectedTeam.length > 0) return;
+    const list = (getState())?.mons?.list;
+    if (!Array.isArray(list) || list.length === 0) return;
+    const fighters = list
+      .map((m) => toPvpFighter(m))
+      .filter((m) => m && m.hp > 0)
+      .sort((a, b) => (b.level || 1) - (a.level || 1));
+    if (fighters.length > 0) {
+      selectedTeam = fighters.slice(0, 3);
+    }
+  }
+
   // 渲染我的队伍
   function renderMyTeam() {
     const elMyTeam = document.getElementById("myTeamDisplay");
     if (!elMyTeam) return;
+    ensureDefaultTeam();
 
     if (selectedTeam.length === 0) {
       elMyTeam.innerHTML = `<div class="row__desc">未选择队伍</div>`;
@@ -81,11 +95,13 @@ export function createSocialTab({
 
     let html = "<div class='team-display'>";
     for (const mon of selectedTeam) {
-      const shinyIcon = mon.isShiny ? "✨" : "";
       html += `
         <div class="team-mon">
-          ${shinyIcon} ${escapeHtml(mon.name)} Lv.${mon.level}
-          <br><small>HP:${mon.hp} ATK:${mon.attack} DEF:${mon.defense}</small>
+          ${renderBeastIcon(mon.dex, mon.name, mon.isShiny)}
+          <div class="team-mon__info">
+            <div class="team-mon__name">${escapeHtml(mon.name)} <span class="tag">Lv.${mon.level}</span></div>
+            <div class="team-mon__stats">HP ${mon.hp} · 攻 ${mon.attack} · 防 ${mon.defense}</div>
+          </div>
         </div>
       `;
     }
@@ -727,15 +743,19 @@ export function createSocialTab({
     modal.innerHTML = `
       <div class="modal">
         <div class="modal__header">
-          <div class="modal__title">选择队伍（最多6只）</div>
-          <button type="button" class="btn btn--small" data-action="cancel">关闭</button>
+          <div class="modal__title">选择出战队伍（最多 6 只）</div>
+          <div class="modal__right">
+            <button type="button" class="btn btn--small" data-action="autofill">一键上阵</button>
+            <button type="button" class="btn btn--small" data-action="cancel">关闭</button>
+          </div>
         </div>
+        <div class="modal__desc">勾选最多 6 只萌灵组成演武阵容，用于离线育灵师挑战与好友约战。</div>
         <div class="modal__body">
           <div id="monSelector" class="mon-selector"></div>
         </div>
         <div class="actions">
           <button type="button" class="btn btn--ghost" data-action="cancel">取消</button>
-          <button type="button" class="btn btn--primary" data-action="confirm">确认</button>
+          <button type="button" class="btn btn--primary" data-action="confirm">确认出战</button>
         </div>
       </div>
     `;
@@ -746,13 +766,15 @@ export function createSocialTab({
     const monSelector = modal.querySelector("#monSelector");
     let html = "";
     for (const mon of mons.slice(0, 30)) {
-      const shinyIcon = mon.isShiny ? "闪光 " : "";
       const isSelected = selectedTeam.some((m) => m.id === mon.id);
       html += `
         <div class="mon-selector-item ${isSelected ? "selected" : ""}" data-mon-id="${mon.id}">
-          <input type="checkbox" ${isSelected ? "checked" : ""} />
-          <span>${shinyIcon}${escapeHtml(mon.name)} Lv.${mon.level}</span>
-          <small>HP:${mon.hp} ATK:${mon.attack} DEF:${mon.defense}</small>
+          <input class="chk" type="checkbox" ${isSelected ? "checked" : ""} />
+          ${renderBeastIcon(mon.dex, mon.name, mon.isShiny)}
+          <div class="mon-selector-item__info">
+            <div class="row__title row__titleLine"><span>${escapeHtml(mon.name)}</span><span class="tag">Lv.${mon.level}</span></div>
+            <div class="row__desc">HP ${mon.hp} · 攻击 ${mon.attack} · 防御 ${mon.defense} · 速度 ${mon.speed}</div>
+          </div>
         </div>
       `;
     }
@@ -765,6 +787,22 @@ export function createSocialTab({
 
       const checkbox = item.querySelector("input[type=checkbox]");
       if (!checkbox) return;
+
+      if (e.target === checkbox) {
+        if (checkbox.checked) {
+          const selectedCount = monSelector.querySelectorAll("input[type=checkbox]:checked").length;
+          if (selectedCount > 6) {
+            checkbox.checked = false;
+            item.classList.remove("selected");
+            addLog("最多只能选择6只萌灵", true);
+            return;
+          }
+          item.classList.add("selected");
+        } else {
+          item.classList.remove("selected");
+        }
+        return;
+      }
 
       // 切换选中状态
       if (checkbox.checked) {
@@ -779,6 +817,17 @@ export function createSocialTab({
         checkbox.checked = true;
         item.classList.add("selected");
       }
+    });
+
+    modal.querySelector('[data-action="autofill"]')?.addEventListener("click", () => {
+      const allItems = Array.from(monSelector.querySelectorAll(".mon-selector-item"));
+      allItems.forEach((item, idx) => {
+        const cb = item.querySelector("input[type=checkbox]");
+        if (!cb) return;
+        const on = idx < 6;
+        cb.checked = on;
+        item.classList.toggle("selected", on);
+      });
     });
 
     const close = () => {
@@ -809,42 +858,56 @@ export function createSocialTab({
   // 显示战斗结果
   function showBattleResult(result) {
     const modal = document.createElement("div");
-    modal.className = "modal";
+    modal.className = "modalOverlay";
     
+    const isWin = result.winner === 2;
     const winnerText = result.winner === 1 ? "对手获胜" : 
-                       result.winner === 2 ? "你获胜了！" : "平局";
+                       result.winner === 2 ? "演武胜利！" : "战成平局";
+    const logLines = Array.isArray(result.battleLog) ? result.battleLog : [];
+    const formattedLog = logLines
+      .map((l) => {
+        const s = String(l || "");
+        const cls = s.startsWith("---")
+          ? "battle-log__line battle-log__line--turn"
+          : s.includes("倒下了") || s.includes("获胜")
+            ? "battle-log__line battle-log__line--ko"
+            : s.includes("效果绝佳")
+              ? "battle-log__line battle-log__line--se"
+              : "battle-log__line";
+        return `<div class="${cls}">${escapeHtml(s)}</div>`;
+      })
+      .join("");
     
     modal.innerHTML = `
-      <div class="modal__content">
+      <div class="modal">
         <div class="modal__header">
-          <h3>战斗结果</h3>
-          <button class="modal__close">&times;</button>
-        </div>
-        <div class="modal__body">
-          <div class="battle-result">
-            <h2>${winnerText}</h2>
-            <div class="battle-log">
-              ${result.battleLog.map(log => `<div>${escapeHtml(log)}</div>`).join("")}
-            </div>
-            <div class="battle-stats">
-              回合数：${result.rounds}
-            </div>
+          <div class="modal__title">演武战报 · ${winnerText}</div>
+          <div class="modal__right">
+            <span class="tag">共 ${result.rounds || 1} 回合</span>
+            <button type="button" class="btn btn--small" data-action="close">关闭</button>
           </div>
         </div>
-        <div class="modal__footer">
-          <button class="btn btn--primary" data-action="close">关闭</button>
+        <div class="pve-result-block ${isWin ? "pve-result-block--win" : "pve-result-block--lose"}">
+          <div class="row__title">${winnerText}</div>
+          <div class="row__desc">${isWin ? "你的出战阵容成功击败对手，战绩已记入本机赛季！" : "本次演武惜败，提升萌灵等级或调整属性克制后再战。"}</div>
+        </div>
+        <div class="battle-log">
+          ${formattedLog}
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn--primary" data-action="close">完成</button>
         </div>
       </div>
     `;
 
     document.body.appendChild(modal);
 
-    modal.querySelector(".modal__close").addEventListener("click", () => {
-      document.body.removeChild(modal);
-    });
+    const close = () => {
+      if (modal.parentNode) modal.parentNode.removeChild(modal);
+    };
 
-    modal.querySelector('[data-action="close"]').addEventListener("click", () => {
-      document.body.removeChild(modal);
+    modal.querySelectorAll('[data-action="close"]').forEach((btn) => {
+      btn.addEventListener("click", close);
     });
   }
 
