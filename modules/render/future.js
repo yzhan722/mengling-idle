@@ -1,5 +1,6 @@
 import { LEGACY_PERK_ORDER, LEGACY_PERKS, canBuyPerk, perkCost, perkLevel } from "../systems/rebirth.js";
 import { renderFutureStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
+import { renderResSvg } from "./rpg_svg_icons.js";
 
 export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }) {
   return function renderFutureShop() {
@@ -109,7 +110,7 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       dailyRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">每日免费未来币</div>
+            <div class="row__title row__titleLine">${renderResSvg("futurecoin", 20)}<span>每日免费未来币</span><span class="tag">+5 未来币</span></div>
             <div class="row__desc">每天可领 +5 未来币（本地日界）。</div>
           </div>
           <div class="row__right">
@@ -121,7 +122,7 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       dailyRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">每日幸运转盘</div>
+            <div class="row__title row__titleLine">${renderResSvg("shinyCharm", 20)}<span>每日幸运转盘</span><span class="tag">每日 1 次</span></div>
             <div class="row__desc">免费转一次：未来币或大灵果（加权随机，诚实表）。</div>
           </div>
           <div class="row__right">
@@ -141,12 +142,12 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       exchangeRows.push(`
         <div class="row">
           <div class="row__left">
-            <div class="row__title">${def.name}</div>
-            <div class="row__desc">${perCoin} ${def.name} = 1 未来币（当前 ${fmt(have)}）</div>
+            <div class="row__title row__titleLine">${renderResSvg(rid, 20)}<span>${def.name}炼金</span><span class="tag">当前 ${fmt(have)}</span></div>
+            <div class="row__desc">${perCoin} ${def.name} = 1 未来币</div>
           </div>
           <div class="row__right">
             <button class="btn btn--small" data-fc="${rid}" data-fc-qty="1" ${can1 ? "" : "disabled"}>兑换 1</button>
-            <button class="btn btn--primary" data-fc="${rid}" data-fc-qty="max" ${canMax ? "" : "disabled"}>兑换全部（+${maxCoins}）</button>
+            <button class="btn btn--primary btn--small" data-fc="${rid}" data-fc-qty="max" ${canMax ? "" : "disabled"}>全部(+${maxCoins})</button>
           </div>
         </div>
       `);
@@ -161,11 +162,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     exchangeRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">兑换跃级糖丸</div>
-          <div class="row__desc">${candyPrice} 未来币 = 跃级糖丸 x${candyQty}</div>
+          <div class="row__title row__titleLine">${renderResSvg("rareCandy", 20)}<span>兑换跃级糖丸</span><span class="tag">库存 ${fmt(state.res.rareCandy?.value ?? 0)}</span></div>
+          <div class="row__desc">${candyPrice} 未来币 = 跃级糖丸 x${candyQty}（直接提升萌灵 1 级）</div>
         </div>
         <div class="row__right">
-          <button class="btn btn--primary" data-fc-buy="rareCandy" data-fc-price="${candyPrice}" data-fc-amount="${candyQty}" ${canBuyCandy ? "" : "disabled"}>兑换1个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="rareCandy" data-fc-price="${candyPrice}" data-fc-amount="${candyQty}" ${canBuyCandy ? "" : "disabled"}>兑换1个</button>
           <button class="btn btn--small" data-fc-buy="rareCandy" data-fc-price="${candyPrice10}" data-fc-amount="${candyQty10}" ${canBuyCandy10 ? "" : "disabled"}>兑换10个</button>
         </div>
       </div>
@@ -330,13 +331,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">究极灵球</div>
-          <div class="row__desc">价格：${masterballPrice} 未来币/个</div>
-          <div class="row__desc">效果：100% 捕获任何萌灵</div>
+          <div class="row__title row__titleLine">${renderResSvg("masterball", 20)}<span>究极灵球</span><span class="tag">库存 ${fmt(state.res.masterball?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${masterballPrice} 未来币/个 · 100% 捕获任何萌灵</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.masterball?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="masterball" data-fc-price="${masterballPrice}" data-fc-amount="1" ${canBuyMasterball ? "" : "disabled"}>购买1个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="masterball" data-fc-price="${masterballPrice}" data-fc-amount="1" ${canBuyMasterball ? "" : "disabled"}>购买1个</button>
         </div>
       </div>
     `);
@@ -347,13 +346,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">高级灵球</div>
-          <div class="row__desc">价格：${ultraballPrice} 未来币/10个</div>
-          <div class="row__desc">效果：捕获率 x2（比普通灵球更强）</div>
+          <div class="row__title row__titleLine">${renderResSvg("ultraball", 20)}<span>高级灵球</span><span class="tag">库存 ${fmt(state.res.ultraball?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${ultraballPrice} 未来币/10个 · 捕获率 x2</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.ultraball?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="ultraball" data-fc-price="${ultraballPrice}" data-fc-amount="10" ${canBuyUltraball ? "" : "disabled"}>购买10个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="ultraball" data-fc-price="${ultraballPrice}" data-fc-amount="10" ${canBuyUltraball ? "" : "disabled"}>购买10个</button>
         </div>
       </div>
     `);
@@ -364,13 +361,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">历练糖丸</div>
-          <div class="row__desc">价格：${expCandyPrice} 未来币/10个</div>
-          <div class="row__desc">效果：使用后萌灵获得 1000 经验值</div>
+          <div class="row__title row__titleLine">${renderResSvg("expCandy", 20)}<span>历练糖丸</span><span class="tag">库存 ${fmt(state.res.expCandy?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${expCandyPrice} 未来币/10个 · 萌灵获得 1000 经验值</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.expCandy?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="expCandy" data-fc-price="${expCandyPrice}" data-fc-amount="10" ${canBuyExpCandy ? "" : "disabled"}>购买10个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="expCandy" data-fc-price="${expCandyPrice}" data-fc-amount="10" ${canBuyExpCandy ? "" : "disabled"}>购买10个</button>
         </div>
       </div>
     `);
@@ -381,13 +376,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">亲密点心</div>
-          <div class="row__desc">价格：${affectionTreatPrice} 未来币/10个</div>
-          <div class="row__desc">效果：使用后萌灵亲密度 +5</div>
+          <div class="row__title row__titleLine">${renderResSvg("affectionTreat", 20)}<span>亲密点心</span><span class="tag">库存 ${fmt(state.res.affectionTreat?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${affectionTreatPrice} 未来币/10个 · 萌灵亲密度 +5</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.affectionTreat?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="affectionTreat" data-fc-price="${affectionTreatPrice}" data-fc-amount="10" ${canBuyAffectionTreat ? "" : "disabled"}>购买10个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="affectionTreat" data-fc-price="${affectionTreatPrice}" data-fc-amount="10" ${canBuyAffectionTreat ? "" : "disabled"}>购买10个</button>
         </div>
       </div>
     `);
@@ -397,13 +390,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">友谊手环</div>
-          <div class="row__desc">价格：${friendshipBraceletPrice} 未来币/个</div>
-          <div class="row__desc">效果：使用后萌灵亲密度直接提升至 100</div>
+          <div class="row__title row__titleLine">${renderResSvg("friendshipBracelet", 20)}<span>友谊手环</span><span class="tag">库存 ${fmt(state.res.friendshipBracelet?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${friendshipBraceletPrice} 未来币/个 · 亲密度直接提升至 100</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.friendshipBracelet?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="friendshipBracelet" data-fc-price="${friendshipBraceletPrice}" data-fc-amount="1" ${canBuyFriendshipBracelet ? "" : "disabled"}>购买1个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="friendshipBracelet" data-fc-price="${friendshipBraceletPrice}" data-fc-amount="1" ${canBuyFriendshipBracelet ? "" : "disabled"}>购买1个</button>
         </div>
       </div>
     `);
@@ -414,13 +405,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">虹彩护符</div>
-          <div class="row__desc">价格：${shinyCharmPrice} 未来币/个</div>
-          <div class="row__desc">效果：使用后消耗1个，闪光萌灵出现率 x2（持续24小时）</div>
+          <div class="row__title row__titleLine">${renderResSvg("shinyCharm", 20)}<span>虹彩护符</span><span class="tag">库存 ${fmt(state.res.shinyCharm?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${shinyCharmPrice} 未来币/个 · 闪光率 x2（持续24小时）</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.shinyCharm?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="shinyCharm" data-fc-price="${shinyCharmPrice}" data-fc-amount="1" ${canBuyShinyCharm ? "" : "disabled"}>购买1个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="shinyCharm" data-fc-price="${shinyCharmPrice}" data-fc-amount="1" ${canBuyShinyCharm ? "" : "disabled"}>购买1个</button>
         </div>
       </div>
     `);
@@ -430,13 +419,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">福缘蛋</div>
-          <div class="row__desc">价格：${luckyEggPrice} 未来币/个</div>
-          <div class="row__desc">效果：对指定萌灵使用，1小时经验 x1.5（与上方「全局双倍」可叠加）</div>
+          <div class="row__title row__titleLine">${renderResSvg("luckyEgg", 20)}<span>福缘蛋</span><span class="tag">库存 ${fmt(state.res.luckyEgg?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${luckyEggPrice} 未来币/个 · 指定萌灵 1小时经验 x1.5</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.luckyEgg?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="luckyEgg" data-fc-price="${luckyEggPrice}" data-fc-amount="1" ${canBuyLuckyEgg ? "" : "disabled"}>购买1个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="luckyEgg" data-fc-price="${luckyEggPrice}" data-fc-amount="1" ${canBuyLuckyEgg ? "" : "disabled"}>购买1个</button>
         </div>
       </div>
     `);
@@ -446,13 +433,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">银桂冠</div>
-          <div class="row__desc">价格：${bottleCapPrice} 未来币/个</div>
-          <div class="row__desc">效果：将萌灵单项个体值提升至31（最大）</div>
+          <div class="row__title row__titleLine">${renderResSvg("bottleCap", 20)}<span>银桂冠</span><span class="tag">库存 ${fmt(state.res.bottleCap?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${bottleCapPrice} 未来币/个 · 单项个体值提升至 31</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.bottleCap?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="bottleCap" data-fc-price="${bottleCapPrice}" data-fc-amount="1" ${canBuyBottleCap ? "" : "disabled"}>购买1个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="bottleCap" data-fc-price="${bottleCapPrice}" data-fc-amount="1" ${canBuyBottleCap ? "" : "disabled"}>购买1个</button>
         </div>
       </div>
     `);
@@ -462,13 +447,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     itemRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">金桂冠</div>
-          <div class="row__desc">价格：${goldBottleCapPrice} 未来币/个</div>
-          <div class="row__desc">效果：将萌灵所有个体值提升至31（6V）</div>
+          <div class="row__title row__titleLine">${renderResSvg("goldBottleCap", 20)}<span>金桂冠</span><span class="tag">库存 ${fmt(state.res.goldBottleCap?.value ?? 0)}</span></div>
+          <div class="row__desc">价格：${goldBottleCapPrice} 未来币/个 · 所有个体值提升至 31（6V）</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前：${fmt(state.res.goldBottleCap?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-fc-buy="goldBottleCap" data-fc-price="${goldBottleCapPrice}" data-fc-amount="1" ${canBuyGoldBottleCap ? "" : "disabled"}>购买1个</button>
+          <button class="btn btn--primary btn--small" data-fc-buy="goldBottleCap" data-fc-price="${goldBottleCapPrice}" data-fc-amount="1" ${canBuyGoldBottleCap ? "" : "disabled"}>购买1个</button>
         </div>
       </div>
     `);
@@ -562,13 +545,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     craftRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">制作大灵果</div>
-          <div class="row__desc">消耗：灵果 x${bigBerryCost} → 大灵果 x1（立即完成）</div>
+          <div class="row__title row__titleLine">${renderResSvg("bigBerry", 20)}<span>制作大灵果</span><span class="tag">持有 ${fmt(state.res.bigBerry?.value ?? 0)}</span></div>
+          <div class="row__desc">消耗：灵果 x${bigBerryCost}（当前 ${fmt(state.res.catnip?.value ?? 0)}）→ 立即获得大灵果 x1</div>
         </div>
         <div class="row__right">
-          <div class="badge">当前灵果：${fmt(state.res.catnip?.value ?? 0)}</div>
-          <div class="badge">当前大灵果：${fmt(state.res.bigBerry?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-craft="bigBerry" ${canCraftBigBerry ? "" : "disabled"}>制作</button>
+          <button class="btn btn--primary btn--small" data-craft="bigBerry" ${canCraftBigBerry ? "" : "disabled"}>制作</button>
         </div>
       </div>
     `);
@@ -603,15 +584,13 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     craftRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">合成灵晶石</div>
+          <div class="row__title row__titleLine">${renderResSvg("evolutionStone", 20)}<span>合成灵晶石</span><span class="tag">持有 ${fmt(state.res.evolutionStone?.value ?? 0)}</span></div>
           ${autoCraftOn ? `<div class="row__desc"><input class="chk" type="checkbox" data-auto-craft="evolutionEnergy" ${autoCraftEnergy ? "checked" : ""} /> 自动合成</div>` : ""}
-          <div class="row__desc">消耗：灵晶碎片 x${stoneCost}，耗时：10分钟 → 灵晶石 x1</div>
+          <div class="row__desc">消耗：灵晶碎片 x${stoneCost}（当前 ${fmt(state.res.minerals?.value ?? 0)}）· 耗时 10 分钟</div>
           ${isCrafting ? `<div class="row__desc" style="margin-top: 4px;">进度：${Math.round(progress)}% · 剩余：${timeText}</div>` : ""}
         </div>
         <div class="row__right">
-          <div class="badge">当前灵晶：${fmt(state.res.minerals?.value ?? 0)}</div>
-          <div class="badge">当前灵晶石：${fmt(state.res.evolutionStone?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-craft="evolutionStone" ${canStart ? "" : "disabled"}>${stoneBtnText}</button>
+          <button class="btn btn--primary btn--small" data-craft="evolutionStone" ${canStart ? "" : "disabled"}>${stoneBtnText}</button>
         </div>
       </div>
     `);
@@ -634,15 +613,13 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     craftRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">合成灵契绳</div>
+          <div class="row__title row__titleLine">${renderResSvg("linkRope", 20)}<span>合成灵契绳</span><span class="tag">持有 ${fmt(state.res.linkRope?.value ?? 0)}</span></div>
           ${autoCraftOn ? `<div class="row__desc"><input class="chk" type="checkbox" data-auto-craft="linkRope" ${autoCraftRope ? "checked" : ""} /> 自动合成</div>` : ""}
-          <div class="row__desc">消耗：灵晶石 x${ropeCostStone}，耗时：15分钟</div>
+          <div class="row__desc">消耗：灵晶石 x${ropeCostStone}（当前 ${fmt(state.res.evolutionStone?.value ?? 0)}）· 耗时 15 分钟</div>
           ${isRopeCrafting ? `<div class="row__desc" style="margin-top: 4px;">进度：${Math.round(ropeProgress)}% · 剩余：${ropeTimeText}</div>` : ""}
         </div>
         <div class="row__right">
-          <div class="badge">当前灵晶石：${fmt(state.res.evolutionStone?.value ?? 0)}</div>
-          <div class="badge">当前灵契绳：${fmt(state.res.linkRope?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-craft="linkRope" ${ropeCanStart ? "" : "disabled"}>${ropeBtnText}</button>
+          <button class="btn btn--primary btn--small" data-craft="linkRope" ${ropeCanStart ? "" : "disabled"}>${ropeBtnText}</button>
         </div>
       </div>
     `);
@@ -651,7 +628,7 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     const megaCostStone = 10;
     const megaTime = 1200; // 20分钟
     const megaHaveStone = (state.res.evolutionStone?.value ?? 0) >= megaCostStone;
-    const megaTask = craftObj && craftObj.megaStone && typeof megaTask.remainingSec === "number" && megaTask.remainingSec > 0 ? craftObj.megaStone : null;
+    const megaTask = craftObj && craftObj.megaStone && typeof craftObj.megaStone === "object" ? craftObj.megaStone : null;
     const isMegaCrafting = Boolean(megaTask && typeof megaTask.remainingSec === "number" && megaTask.remainingSec > 0);
     const megaRemainingSec = isMegaCrafting ? megaTask.remainingSec : 0;
     const megaTotalSec = isMegaCrafting && typeof megaTask.totalSec === "number" && megaTask.totalSec > 0 ? megaTask.totalSec : megaTime;
@@ -665,15 +642,13 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     craftRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">合成觉醒石</div>
+          <div class="row__title row__titleLine">${renderResSvg("megaStone", 20)}<span>合成觉醒石</span><span class="tag">持有 ${fmt(state.res.megaStone?.value ?? 0)}</span></div>
           ${autoCraftOn ? `<div class="row__desc"><input class="chk" type="checkbox" data-auto-craft="megaStone" ${autoCraftMega ? "checked" : ""} /> 自动合成</div>` : ""}
-          <div class="row__desc">消耗：灵晶石 x${megaCostStone}，耗时：20分钟</div>
+          <div class="row__desc">消耗：灵晶石 x${megaCostStone}（当前 ${fmt(state.res.evolutionStone?.value ?? 0)}）· 耗时 20 分钟</div>
           ${isMegaCrafting ? `<div class="row__desc" style="margin-top: 4px;">进度：${Math.round(megaProgress)}% · 剩余：${megaTimeText}</div>` : ""}
         </div>
         <div class="row__right">
-          <div class="badge">当前灵晶石：${fmt(state.res.evolutionStone?.value ?? 0)}</div>
-          <div class="badge">当前觉醒石：${fmt(state.res.megaStone?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-craft="megaStone" ${megaCanStart ? "" : "disabled"}>${megaBtnText}</button>
+          <button class="btn btn--primary btn--small" data-craft="megaStone" ${megaCanStart ? "" : "disabled"}>${megaBtnText}</button>
         </div>
       </div>
     `);
@@ -698,16 +673,13 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
     craftRows.push(`
       <div class="row">
         <div class="row__left">
-          <div class="row__title">合成巨大灵果</div>
+          <div class="row__title row__titleLine">${renderResSvg("hugeBerry", 20)}<span>合成巨大灵果</span><span class="tag">持有 ${fmt(state.res.hugeBerry?.value ?? 0)}</span></div>
           ${autoCraftOn ? `<div class="row__desc"><input class="chk" type="checkbox" data-auto-craft="hugeBerry" ${autoCraftHuge ? "checked" : ""} /> 自动合成</div>` : ""}
-          <div class="row__desc">消耗：灵果 x${hugeCostCatnip} + 大灵果 x${hugeCostBig}，耗时：15分钟</div>
+          <div class="row__desc">消耗：灵果 x${hugeCostCatnip}（${fmt(state.res.catnip?.value ?? 0)}）+ 大灵果 x${hugeCostBig}（${fmt(state.res.bigBerry?.value ?? 0)}）· 耗时 15 分钟</div>
           ${isHugeCrafting ? `<div class="row__desc" style="margin-top: 4px;">进度：${Math.round(hugeProgress)}% · 剩余：${hugeTimeText}</div>` : ""}
         </div>
         <div class="row__right">
-          <div class="badge">当前灵果：${fmt(state.res.catnip?.value ?? 0)}</div>
-          <div class="badge">当前大灵果：${fmt(state.res.bigBerry?.value ?? 0)}</div>
-          <div class="badge">当前巨大灵果：${fmt(state.res.hugeBerry?.value ?? 0)}</div>
-          <button class="btn btn--primary" data-craft="hugeBerry" ${hugeCanStart ? "" : "disabled"}>${hugeBtnText}</button>
+          <button class="btn btn--primary btn--small" data-craft="hugeBerry" ${hugeCanStart ? "" : "disabled"}>${hugeBtnText}</button>
         </div>
       </div>
     `);

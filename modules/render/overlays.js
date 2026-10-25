@@ -47,19 +47,29 @@ export function createRenderOverlays({ elOverlays, ui, defs }) {
         <div class="modalOverlay" data-exp-reward-overlay="1">
           <div class="modal">
             <div class="modal__header">
-              <div class="modal__title">远征完成</div>
+              <div class="modal__title">远征归来 · 战利品结算</div>
               <div class="modal__right">
                 <button class="btn btn--small" data-exp-reward-close="1">关闭</button>
               </div>
             </div>
-            <div class="modal__desc">本次远征获得如下奖励。</div>
+            <div class="modal__desc">本次远征探索顺利结束，获得如下战利品奖励：</div>
             <div class="modal__body">
-              ${expPerMon > 0 && monCount > 0 ? `<div class="badge">经验：每只 +${expPerMon}（参与 ${monCount} 只）</div>` : ""}
-              ${fc > 0 ? `<div class="badge">${escapeHtml(defs.resources?.futurecoin?.name ?? "未来币")} x${fc}</div>` : ""}
-              ${mb > 0 ? `<div class="badge">${escapeHtml(defs.resources?.masterball?.name ?? "究极灵球")} x${mb}</div>` : ""}
-              <div class="badge">药剂：${potText}</div>
-              ${expData.eventCard?.title ? `<div class="badge badge--ok">奇遇 · ${escapeHtml(expData.eventCard.title)}：${escapeHtml(expData.eventCard.blurb || "")}</div>` : ""}
-              ${expData.seasonRelic?.name ? `<div class="badge badge--ok">赛季印记 · ${escapeHtml(expData.seasonRelic.name)}（累计 ${Math.floor(expData.seasonRelic.count || 1)}）→ ${escapeHtml(defs.resources?.[expData.seasonRelic.item]?.name ?? expData.seasonRelic.item)}</div>` : ""}
+              <div class="row">
+                <div class="row__left">
+                  <div class="row__title row__titleLine">
+                    <span>基础收益</span>
+                    ${expPerMon > 0 && monCount > 0 ? `<span class="tag">经验 +${expPerMon}/只（共${monCount}只）</span>` : ""}
+                    ${fc > 0 ? `<span class="tag">${escapeHtml(defs.resources?.futurecoin?.name ?? "未来币")} +${fc}</span>` : ""}
+                    ${mb > 0 ? `<span class="tag">${escapeHtml(defs.resources?.masterball?.name ?? "究极灵球")} +${mb}</span>` : ""}
+                  </div>
+                  <div class="row__desc">属性药剂掉落：${potText}</div>
+                </div>
+              </div>
+              ${expData.eventCard?.title ? `<div class="row"><div class="row__left"><div class="row__title row__titleLine"><span class="tag">秘境奇遇</span><span>${escapeHtml(expData.eventCard.title)}</span></div><div class="row__desc">${escapeHtml(expData.eventCard.blurb || "")}</div></div></div>` : ""}
+              ${expData.seasonRelic?.name ? `<div class="row"><div class="row__left"><div class="row__title row__titleLine"><span class="tag">赛季印记</span><span>${escapeHtml(expData.seasonRelic.name)}（累计 ${Math.floor(expData.seasonRelic.count || 1)}）</span></div><div class="row__desc">转化奖励：${escapeHtml(defs.resources?.[expData.seasonRelic.item]?.name ?? expData.seasonRelic.item)}</div></div></div>` : ""}
+            </div>
+            <div class="actions">
+              <button class="btn btn--primary" data-exp-reward-close="1">收下奖励</button>
             </div>
           </div>
         </div>
