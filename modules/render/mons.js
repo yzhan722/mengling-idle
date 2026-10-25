@@ -13,6 +13,7 @@ import {
 } from "../type_skills.js";
 import { beastZone, ZONE_INDEX } from "../beast_defs.js";
 import { renderMonsStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
+import { renderResSvg } from "./rpg_svg_icons.js";
 
 export function createRenderMons({
   elMonList,
@@ -601,16 +602,16 @@ export function createRenderMons({
           ${selDesc ? `<div class="row__desc dex-lore">${escapeHtml(selDesc)}</div>` : ""}
         </div>
         <div class="row__right">
-          <div class="badge">Lv.${selected.lvl}</div>
-          <div class="badge">EXP ${selected.exp}/${need}</div>
-          <div class="badge">亲密度 ${Math.floor(clamp(typeof selected.affection === "number" ? selected.affection : 0, 0, 100))}/100</div>
-          <div class="badge">战力 ${monPower(selected)}</div>
+          <span class="tag">Lv.${selected.lvl}</span>
+          <span class="tag">EXP ${selected.exp}/${need}</span>
+          <span class="tag">亲密度 ${Math.floor(clamp(typeof selected.affection === "number" ? selected.affection : 0, 0, 100))}/100</span>
+          <span class="tag">战力 ${monPower(selected)}</span>
         </div>
       </div>
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title">性格 / 特性</div>
+          <div class="row__title row__titleLine">${renderResSvg("shinyCharm", 18)}<span>性格 / 特性</span></div>
           <div class="row__desc">性格只影响六维；特性影响挂机/捕捉/挑战等玩法。</div>
         </div>
         <div class="row__right">
@@ -624,22 +625,22 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title">能力值</div>
+          <div class="row__title row__titleLine">${renderResSvg("energyDrink", 18)}<span>能力值</span></div>
           <div class="row__desc">HP/攻击/防御/特攻/特防/速度</div>
         </div>
         <div class="row__right">
-          <div class="badge">HP ${s.hp}</div>
-          <div class="badge">Atk ${s.atk}</div>
-          <div class="badge">Def ${s.def}</div>
-          <div class="badge">SpA ${s.spa}</div>
-          <div class="badge">SpD ${s.spd}</div>
-          <div class="badge">Spe ${s.spe}</div>
+          <span class="tag">HP ${s.hp}</span>
+          <span class="tag">Atk ${s.atk}</span>
+          <span class="tag">Def ${s.def}</span>
+          <span class="tag">SpA ${s.spa}</span>
+          <span class="tag">SpD ${s.spd}</span>
+          <span class="tag">Spe ${s.spe}</span>
         </div>
       </div>
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title">药剂强化</div>
+          <div class="row__title row__titleLine">${renderResSvg("hpPotion", 18)}<span>药剂强化</span></div>
           <div class="row__desc">消耗药剂：对应六维永久 +5（单项上限 +50）</div>
         </div>
         <div class="row__right">
@@ -654,7 +655,7 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title">属性</div>
+          <div class="row__title row__titleLine">${renderResSvg("megaStone", 18)}<span>属性</span></div>
           <div class="row__desc">星野元素属性共鸣 · 影响属性技能与试炼克制</div>
         </div>
         <div class="row__right">
@@ -664,7 +665,7 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title">种族值</div>
+          <div class="row__title row__titleLine">${renderResSvg("science", 18)}<span>种族值</span></div>
           <div class="row__desc">星野灵兽本源六维潜能</div>
         </div>
         <div class="row__right">
@@ -674,20 +675,25 @@ export function createRenderMons({
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title">升级</div>
+          <div class="row__title row__titleLine">
+            ${renderResSvg("rareCandy", 18)}<span>升级</span>
+            <span class="tag">跃级糖丸 ×${candyHave}</span>
+            <span class="tag">历练糖丸 ×${Math.max(0, Math.floor(state.res.expCandy?.value ?? 0))}</span>
+          </div>
           <div class="row__desc">跃级糖丸可提升等级，历练糖丸可增加经验值。</div>
         </div>
         <div class="row__right">
           <button class="btn btn--small" data-mon-feed="${selected.id}" data-feed="rareCandy" ${canFeedCandy ? "" : "disabled"}>跃级糖丸(1)+1Lv</button>
-          <div class="badge badge--muted">x${candyHave}</div>
           <button class="btn btn--small" data-mon-exp="${selected.id}" data-exp="expCandy" ${(state.res.expCandy?.value ?? 0) >= 1 ? "" : "disabled"}>历练糖丸+1000</button>
-          <div class="badge badge--muted">x${state.res.expCandy?.value ?? 0}</div>
         </div>
       </div>
 
       <div class="row">
         <div class="row__left">
-          <div class="row__title">进化</div>
+          <div class="row__title row__titleLine">
+            ${renderResSvg("evolutionStone", 18)}<span>进化</span>
+            <span class="tag">灵晶石 ×${Math.max(0, Math.floor(state.res.evolutionStone?.value ?? 0))}</span>
+          </div>
           <div class="row__desc">需求：达到对应分支等级（见按钮）且 消耗灵晶石 x1</div>
         </div>
         <div class="row__right">

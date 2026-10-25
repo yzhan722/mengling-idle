@@ -720,9 +720,9 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
         const essence = Math.max(0, Math.floor(state.meta?.legacy?.essence || 0));
         const rebirths = Math.max(0, Math.floor(state.era?.prestigeCount || 0));
         rows.push(`
-          <div class="row">
+          <div class="row row--full">
             <div class="row__left">
-              <div class="row__title">灵珀 ×${essence} · 已轮回 ${rebirths} 次</div>
+              <div class="row__title row__titleLine">${renderResSvg("megaStone", 20)}<span>灵珀 ×${essence}</span><span class="tag">已轮回 ${rebirths} 次</span></div>
               <div class="row__desc">悖梦主线全清且持有闪光萌灵后，在萌灵页时代面板发起「时空歪曲」。灵珀买轮回加成，永久生效。</div>
             </div>
           </div>
@@ -736,11 +736,11 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
           rows.push(`
             <div class="row">
               <div class="row__left">
-                <div class="row__title">${pdef.name} <span class="badge">${lvl}/${pdef.max}</span></div>
+                <div class="row__title row__titleLine">${renderResSvg("shinyCharm", 18)}<span>${pdef.name}</span><span class="tag">${lvl}/${pdef.max}</span></div>
                 <div class="row__desc">${pdef.desc}</div>
               </div>
               <div class="row__right">
-                ${maxed ? `<span class="badge">已满</span>` : `<button class="btn btn--primary" data-legacy-perk="${pid}" ${canBuy ? "" : "disabled"}>${cost} 灵珀</button>`}
+                ${maxed ? `<span class="tag">已满</span>` : `<button class="btn btn--primary btn--small" data-legacy-perk="${pid}" ${canBuy ? "" : "disabled"}>${cost} 灵珀</button>`}
               </div>
             </div>
           `);
