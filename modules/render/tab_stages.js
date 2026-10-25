@@ -131,7 +131,7 @@ export function renderScienceStageHtml({
     centerTitle = `推荐课题：${escapeHtml(recommendDef.name)}`;
     centerSub = escapeHtml(recommendDef.desc || "点亮此项星轨课题以推进营地生产力。");
     centerBadge = "天象就绪 · 可立即研究";
-    actionHtml = `<button type="button" class="btn btn--primary btn--small" data-research="${escapeHtml(recommendTid)}">✨ 立即推演</button>`;
+    actionHtml = `<button type="button" class="btn btn--primary btn--small" data-research="${escapeHtml(recommendTid)}">${renderResSvg("science", 14)} 立即推演</button>`;
   }
 
   const dash = Math.round((activePct / 100) * 264);
@@ -710,7 +710,7 @@ export function renderDexStageHtml({
           </div>
         </div>
         <div class="tab-stage__focal">
-          <div class="tab-stage__eyebrow">✨ 已收录 ${unique} / ${totalSpecies} 种星野灵兽 · 闪光珍藏 ${shinyUnique} 种</div>
+          <div class="tab-stage__eyebrow">${renderUiIcon("shinySparkle", 14)} 已收录 ${unique} / ${totalSpecies} 种星野灵兽 · 闪光珍藏 ${shinyUnique} 种</div>
           <div class="tab-stage__title">星野生态全图鉴</div>
           <div class="tab-stage__desc">每收录一种新灵兽都会永久提升营地全资源产出效率；集齐区域全图鉴还可领取额外未来币悬赏。</div>
         </div>

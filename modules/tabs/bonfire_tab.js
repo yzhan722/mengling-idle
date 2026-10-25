@@ -125,6 +125,7 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
 
       const gatherLine1 = `顶栏【采集】消耗次数换灵果。当前 ${charges}/1000 · ${cdText} · 累计 ${clicks} 次`;
       const gatherLine2 = `${mileText} · ${dailyText}`;
+      const cleanWhy = String(compass.whyText || "").replace(/^💡\s*/, "");
 
       if (stageSig === lastStageSig && elBonfireActions.querySelector("#campStage")) {
         const cardEl = elBonfireActions.querySelector(".compass-card");
@@ -139,7 +140,7 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
           const descEl = cardEl.querySelector("[data-compass-desc]");
           if (descEl) descEl.textContent = compass.desc;
           const whyEl = cardEl.querySelector(".compass-card__why");
-          if (whyEl) whyEl.textContent = compass.whyText;
+          if (whyEl) whyEl.innerHTML = `${renderResSvg("searchFlare", 14)}<span>${escapeHtml(cleanWhy)}</span>`;
           const fillEl = cardEl.querySelector(".compass-bar__fill");
           if (fillEl) fillEl.style.width = `${compass.pct}%`;
           const labelEl = cardEl.querySelector(".compass-bar__label");
@@ -175,11 +176,11 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
                 <button type="button" class="camp-companion camp-companion--slot${idx}" data-camp-pet="${escapeHtml(String(c.id))}" data-camp-name="${escapeHtml(c.name)}" title="点击与 ${escapeHtml(c.name)} 互动">
                   <div class="camp-companion__bubble">${escapeHtml(c.mood)}</div>
                   <div class="camp-companion__avatar">${renderBeastIcon(c.dex, c.name, c.isShiny)}</div>
-                  <div class="camp-companion__tag">Lv.${c.lvl} ${escapeHtml(c.name)}${c.isShiny ? " ✨" : ""}</div>
+                  <div class="camp-companion__tag">Lv.${c.lvl} ${escapeHtml(c.name)}${c.isShiny ? " ★" : ""}</div>
                 </button>`
               )
               .join("")
-          : `<div class="camp-stage__emptyHint">🔥 篝火正暖 · 完成第 3 步抓获萌灵后，伙伴们会围坐在火堆旁陪伴你</div>`;
+          : `<div class="camp-stage__emptyHint">${renderUiIcon("tab_bonfire", 15)} 篝火正暖 · 完成第 3 步抓获萌灵后，伙伴们会围坐在火堆旁陪伴你</div>`;
 
       elBonfireActions.innerHTML = `
         <div class="camp-stage" id="campStage">
@@ -223,7 +224,7 @@ export function createRenderBonfireActions({ elBonfireActions, elBtnGather, ui, 
             </div>
             <div class="row__title compass-card__title">${escapeHtml(compass.title)}</div>
             <div class="row__desc" data-compass-desc>${escapeHtml(compass.desc)}</div>
-            <div class="compass-card__why">${escapeHtml(compass.whyText)}</div>
+            <div class="compass-card__why">${renderResSvg("searchFlare", 14)}<span>${escapeHtml(cleanWhy)}</span></div>
             <div class="compass-bar" aria-label="当前目标进度 ${compass.pct}%">
               <div class="compass-bar__fill" style="width:${compass.pct}%"></div>
               <span class="compass-bar__label">${compass.progressCur} / ${compass.progressMax}（${compass.pct}%）</span>

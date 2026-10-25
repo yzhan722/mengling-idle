@@ -7,7 +7,7 @@ import {
 import { typeZh } from "../systems/gameplay_fun.js";
 import { ZONE_IDS, ZONE_LABELS } from "../beast_defs.js";
 import { renderDexStageHtml, setHtmlPreservingStage } from "./tab_stages.js";
-import { renderResSvg } from "./rpg_svg_icons.js";
+import { renderResSvg, renderUiIcon } from "./rpg_svg_icons.js";
 
 export function createRenderDex({
   elDexSummary,
@@ -82,7 +82,7 @@ export function createRenderDex({
       const pool = area && typeof area.pool === "function" ? defs.beasts.filter(area.pool) : defs.beasts;
       const missing = pool.find((p) => !(typeof caughtMap[p.id] === "number" && caughtMap[p.id] > 0));
       if (missing) {
-        nextCatchRightHtml = `<span class="tag">下一推荐：${escapeHtml(missing.name)}</span><button type="button" class="btn btn--small btn--primary" data-dex-goto-capture="1">去捕捉</button>`;
+        nextCatchRightHtml = `<span class="tag">下一推荐：${escapeHtml(missing.name)}</span><button type="button" class="btn btn--small btn--primary" data-dex-goto-capture="1">${renderUiIcon("tab_capture", 14)}<span>去捕捉</span></button>`;
       } else if (dexPct >= 100) {
         nextCatchRightHtml = `<span class="badge badge--ok">当前范围已全收集</span>`;
       }
@@ -100,8 +100,8 @@ export function createRenderDex({
               )
               .join("")}
             <button type="button" class="btn btn--small btn--primary" data-dex-shiny-showcase="all">${renderResSvg("shinyCharm", 14)}<span>全屏陈列秀</span></button>
-            <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-share data-share="${escapeHtml(shareText)}">复制分享</button>
-            <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-card>保存分享卡</button>
+            <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-share data-share="${escapeHtml(shareText)}">${renderUiIcon("tab_social", 14)}<span>复制分享</span></button>
+            <button type="button" class="btn btn--small btn--ghost" data-dex-shiny-card>${renderUiIcon("tab_dex", 14)}<span>保存分享卡</span></button>
           </div>`
         : `<div class="row__desc muted">闪光馆空空如也 — 捕捉或孵出闪光后会出现在这里，并可开启全屏星芒陈列秀。</div>`;
 
