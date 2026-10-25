@@ -32,9 +32,20 @@ export function setHtmlPreservingStage(containerEl, fullHtmlString) {
     const restHtml = tmp.innerHTML;
     containerEl.innerHTML = `${stageOuter}<div class="tab-stage-rows" style="display:contents">${restHtml}</div>`;
     containerEl.__lastFullHtml = html;
+    const newStage = containerEl.querySelector(":scope > .tab-stage");
     const newRows = containerEl.querySelector(":scope > .tab-stage-rows");
     if (newRows) newRows.__lastHtml = restHtml;
+    const parentPanel = containerEl.closest?.(".panel");
+    const panelActions = parentPanel?.querySelector?.(":scope > .actions");
+    if (panelActions && newStage && (containerEl.id === "tech" || containerEl.id === "monList")) {
+      newStage.insertAdjacentElement("afterend", panelActions);
+    }
     return;
+  }
+  const parentPanel0 = containerEl.closest?.(".panel");
+  const panelActions0 = parentPanel0?.querySelector?.(":scope > .actions");
+  if (panelActions0 && existingStage && (containerEl.id === "tech" || containerEl.id === "monList")) {
+    existingStage.insertAdjacentElement("afterend", panelActions0);
   }
   if (containerEl.__lastFullHtml === html) return;
   containerEl.__lastFullHtml = html;
@@ -463,7 +474,6 @@ export function renderMonsStageHtml({
               </button>
               <div class="squad-pedestal__actions">
                 <button type="button" class="squad-micro-btn" data-stage-act="mon-pet" data-mon-id="${m.id}" title="抚摸互动（亲密度 +2）">💖 抚摸</button>
-                <button type="button" class="squad-micro-btn" data-stage-act="mon-feed" data-mon-id="${m.id}" title="直接投喂灵果（饱腹 +18）">🍓 喂食</button>
               </div>
             </div>
           `;
@@ -480,7 +490,7 @@ export function renderMonsStageHtml({
       </div>
       <div class="tab-stage__header">
         <span class="camp-stage__badge">👑 首席灵兽星阵 · 主力战力 ${squadPower}</span>
-        <span class="camp-stage__sub">灵兽盒共 ${list.length} 只 · 技能就绪 ${skillReadyCount} · 可进化 ${evoReadyCount} · 饥饿 ${hungryCount}</span>
+        <span class="camp-stage__sub">灵兽盒共 ${list.length} 只 · 技能就绪 ${skillReadyCount} · 可进化 ${evoReadyCount}</span>
       </div>
       <div class="tab-stage__body tab-stage__body--squad">
         ${slotsHtml}

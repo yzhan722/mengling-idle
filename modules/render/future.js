@@ -85,18 +85,19 @@ export function createRenderFutureShop({ elFutureShop, ui, defs, fmt, getState }
       }),
     );
 
-    rows.push(`
-      <div class="row row--full">
-        <div class="row__left">
-          <div class="row__title">当前未来币</div>
-          <div class="row__desc">可用灵果/灵木兑换未来币。</div>
-          <div class="row__desc"><input class="chk" type="checkbox" data-auto-exchange ${autoExOn ? "checked" : ""} ${autoExLvl > 0 ? "" : "disabled"} /> 自动兑币${autoExLvl > 0 ? `（每 ${autoExMinText} 分钟）` : "（需升级）"}</div>
+    if (autoExLvl > 0) {
+      exchangeRows.push(`
+        <div class="row row--full">
+          <div class="row__left">
+            <div class="row__title">自动兑币总开关</div>
+            <div class="row__desc"><input class="chk" type="checkbox" data-auto-exchange ${autoExOn ? "checked" : ""} /> 自动兑币（每 ${autoExMinText} 分钟自动把灵果、灵木兑换为未来币）</div>
+          </div>
+          <div class="row__right">
+            <div class="badge">Lv.${autoExLvl}/${AUTO_EX_MAX_LEVEL}</div>
+          </div>
         </div>
-        <div class="row__right">
-          <div class="badge">当前未来币：${fmt(state.res.futurecoin.value)}</div>
-        </div>
-      </div>
-    `);
+      `);
+    }
 
     {
       const today = (() => {

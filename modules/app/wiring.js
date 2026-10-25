@@ -139,6 +139,12 @@ export function initGameUi(ctx) {
     ui,
     elTabs: els.elTabs,
     elPanels: els.elPanels,
+    renderBonfire: () => {
+      renders.renderBonfireActions?.();
+      renders.renderBuildings?.();
+    },
+    renderScience: () => renders.renderTech?.(),
+    renderFutureShop: () => renders.renderFutureShop?.(),
     renderDex: () => renders.renderDex(),
     renderCapture: () => renders.renderCapture(),
     renderItems: () => renders.renderItems(),

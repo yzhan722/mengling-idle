@@ -60,6 +60,12 @@ export function createRenderMons({
     const selected = typeof selectedId === "number" ? list.find((m) => m.id === selectedId) : null;
 
     const showDetail = Boolean(selected);
+    if (showDetail && elMonBack && elMonDetail?.parentElement) {
+      const actBar = elMonBack.closest?.(".actions");
+      if (actBar && actBar.parentElement !== elMonDetail.parentElement) {
+        elMonDetail.parentElement.insertBefore(actBar, elMonDetail);
+      }
+    }
     elMonBack.hidden = !showDetail;
     elMonDetail.hidden = !showDetail;
     elMonList.hidden = showDetail;
@@ -271,21 +277,15 @@ export function createRenderMons({
       }
 
       rows.push(`
-        <div class="row row--full">
-          <div class="row__left">
-            <input class="input input--search" data-mon-search type="search" placeholder="搜索萌灵名称…" value="${escapeHtml(searchQ)}" />
+        <div class="row row--full mons-toolbar-row">
+          <div class="row__left" style="flex:1 1 240px">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <input class="input input--search" data-mon-search type="search" placeholder="搜索萌灵名称…" value="${escapeHtml(searchQ)}" style="max-width:220px" />
+              <span class="row__desc">技能就绪 <strong>${skillReadyCount}</strong> 只 · 跃级糖丸 <strong>${candyHave}</strong>${evoReadyCount > 0 ? ` · 可进化 <strong>${evoReadyCount}</strong> 只` : ""}</span>
+            </div>
             ${filterChips.length ? `<div class="filter-chips">${filterChips.map((c) => `<span class="filter-chip">${escapeHtml(c)}</span>`).join("")}</div>` : ""}
           </div>
-        </div>
-        <div class="row row--full">
-          <div class="row__left">
-            <div class="row__title">快捷操作</div>
-            <div class="row__desc">饱腹不足：${feedAllCount} 只 · 饥饿(&lt;50)：${hungryCount} 只 · 灵果：${Math.floor(state.res.catnip?.value ?? 0)} · 糖果：${candyHave}</div>
-            <div class="row__desc">技能就绪 ${skillReadyCount} 只${evoReadyCount > 0 ? ` · 可进化 ${evoReadyCount} 只` : ""}</div>
-          </div>
           <div class="row__right">
-            <button class="btn btn--small${hungryCount > 0 ? ' btn--warning' : ''}" data-mons-feed-hungry="1" ${canFeedHungry ? "" : "disabled"}>喂食饥饿${hungryCount > 0 ? `（${hungryCount}）` : ""}</button>
-            <button class="btn btn--small${feedAllCount > 0 ? ' btn--warning' : ''}" data-mon-feed-all="1" ${canFeedAll ? "" : "disabled"}>一键喂食${feedAllCount > 0 ? `（${feedAllCount}只）` : '（已满）'}</button>
             <button class="btn btn--small${evoReadyCount > 0 ? ' btn--warning' : ''}" data-mons-focus-evo="1" ${evoReadyCount > 0 ? "" : "disabled"}>查看可进化${evoReadyCount > 0 ? `（${evoReadyCount}）` : ""}</button>
             <button class="btn btn--small" data-mon-batch-candy="1" ${canBatchCandy ? "" : "disabled"}>各喂1糖${canBatchCandy ? `（${batchCandyCount}只）` : ""}</button>
             <button class="btn btn--small btn--danger" data-mon-batch-release="1" ${canBatchRelease ? "" : "disabled"}>批量放生弱宠${canBatchRelease ? `（${batchReleaseIds.length}只）` : ""}</button>

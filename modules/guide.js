@@ -43,6 +43,8 @@ const GUIDE_STEPS = [
 ];
 
 export function initGuideSystem({ getState, activateTab, addLog } = {}) {
+  // 主线引导已全面整合至篝火首屏「新手罗盘 (.compass-card)」，禁用遮挡顶栏与画卷的旧版悬浮黑框气泡
+  return;
   try {
     if (localStorage.getItem(GUIDE_KEY) === "1") return;
   } catch {

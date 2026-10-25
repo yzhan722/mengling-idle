@@ -20,6 +20,9 @@ export function createTabController({
   ui,
   elTabs,
   elPanels,
+  renderBonfire,
+  renderScience,
+  renderFutureShop,
   renderDex,
   renderCapture,
   renderItems,
@@ -194,9 +197,12 @@ export function createTabController({
       if (tabId && !p.getAttribute("aria-labelledby")) p.setAttribute("aria-labelledby", tabId);
     });
 
+    if (name === "bonfire" && typeof renderBonfire === "function") renderBonfire();
+    if (name === "science" && typeof renderScience === "function") renderScience();
     if (name === "dex") renderDex();
     if (name === "capture") renderCapture();
     if (name === "items" || name === "future") {
+      if (typeof renderFutureShop === "function") renderFutureShop();
       if (typeof renderItems === "function") renderItems();
     }
     if (name === "mons") renderMons();
