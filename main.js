@@ -2,7 +2,7 @@ const BOOT_PANEL_ID = "bootStatus";
 const MAX_RETRY = 5;
 const RELOAD_GUARD_KEY = "bootReloadCount";
 const VERSION_CHECK_KEY = "lastKnownVersion";
-const CURRENT_VERSION = "0.7.30";
+const CURRENT_VERSION = "0.7.31";
 
 // 版本检测：版本变化时清缓存并刷新
 (function checkVersion() {
@@ -26,7 +26,7 @@ function ensureBootPanel() {
   if (el) return el;
   el = document.createElement("div");
   el.id = BOOT_PANEL_ID;
-  el.style.cssText = "position:fixed;left:12px;right:12px;top:12px;z-index:99999;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.78);color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;font-size:14px;line-height:1.4;backdrop-filter:blur(6px)";
+  el.style.cssText = "position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99999;padding:8px 18px;border-radius:999px;border:1px solid rgba(250,204,21,0.38);background:rgba(11,15,23,0.92);color:#fef08a;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;font-size:13px;font-weight:700;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,0.55);backdrop-filter:blur(8px)";
   (document.body || document.documentElement).appendChild(el);
   return el;
 }

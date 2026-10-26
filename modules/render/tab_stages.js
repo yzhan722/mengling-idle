@@ -468,7 +468,7 @@ export function renderMonsStageHtml({
             <div class="squad-pedestal squad-pedestal--slot${idx} ${m.isShiny ? "is-shiny" : ""}">
               <button type="button" class="squad-pedestal__mainBtn" data-mon-open="${m.id}" title="点击查看 ${escapeHtml(m.name)} 详情">
                 <div class="squad-pedestal__art">${renderBeastIcon(m.dex, m.name, Boolean(m.isShiny))}</div>
-                <div class="squad-pedestal__name">${escapeHtml(m.name)}${m.isShiny ? " ✨" : ""}</div>
+                <div class="squad-pedestal__name">${escapeHtml(m.name)}${m.isShiny ? " ★" : ""}</div>
                 <div class="squad-pedestal__meta">Lv.${m.lvl} · 战力 ${monPower(m)} · ${renderResSvg("affection", 12)}${aff}</div>
                 <div class="squad-pedestal__sat"><span style="width:${sat}%"></span></div>
               </button>

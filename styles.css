@@ -7819,13 +7819,24 @@ details.capture-tools[open] > summary.capture-tools__summary {
    v0.7.29: Mobile Sanctuary 3-Column Toolbar & Compass/Stage RPG Icon Alignment
    ========================================================================= */
 .compass-card__why,
-.tab-stage__eyebrow {
+.tab-stage__eyebrow,
+.bcard__effect {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 @media (max-width: 760px) {
+  .daily-goal-chips {
+    gap: 4px !important;
+  }
+
+  .daily-goal-chips .goal-chip {
+    padding: 2px 7px !important;
+    font-size: 11px !important;
+    gap: 4px !important;
+  }
+
   .mons-toolbar-row .row__right {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;

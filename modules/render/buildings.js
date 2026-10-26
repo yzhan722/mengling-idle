@@ -1,4 +1,4 @@
-import { renderBuildingSvg, renderResSvg } from "./rpg_svg_icons.js";
+import { renderBuildingSvg, renderResSvg, renderUiIcon } from "./rpg_svg_icons.js";
 
 const BUILDING_MAX_LEVEL = 50;
 
@@ -108,7 +108,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
                   <span class="bcard__tag">${vis.tag}</span>
                 </div>
                 <div class="row__desc">${bdef.desc}</div>
-                <div class="bcard__effect">✨ 单级效果：${vis.perLvl}</div>
+                <div class="bcard__effect">${renderUiIcon("shinySparkle", 13)}<span>单级效果：${vis.perLvl}</span></div>
               </div>
             </div>
             <div class="building-level-bar" aria-label="等级 ${owned}/${maxLvl}">
@@ -164,7 +164,7 @@ export function createRenderBuildings({ elBuildings, defs, canAfford, getBuildin
 
     const pushCat = (cat, rows) => {
       if (!rows || rows.length === 0) return;
-      const meta = CATEGORY_META[cat] || { icon: "🏛️", sub: "" };
+      const meta = CATEGORY_META[cat] || { icon: renderBuildingSvg("commandCenter", 22), sub: "" };
       const totLv = groupLevels.get(cat) || 0;
       sections.push(`
         <div class="building-section" role="group" aria-label="${cat}">
